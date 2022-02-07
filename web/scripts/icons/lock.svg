@@ -1,0 +1,17 @@
+<svg
+  viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg"
+  fill="none"
+  stroke="__STROKE__"
+>
+  <path
+    d="M2.5 20L2.5 11C2.5 10.1716 3.17158 9.5 4 9.5H20C20.8284 9.5 21.5 10.1716 21.5 11V20C21.5 20.8284 20.8284 21.5 20 21.5H4C3.17157 21.5 2.5 20.8284 2.5 20Z"
+    fill="__STROKE__"
+    stroke="__STROKE__"
+  />
+  <path
+    d="M7 9L7 8C7 5.23858 9.23858 3 12 3V3C14.7614 3 17 5.23858 17 8V9"
+    stroke="__STROKE__"
+    stroke-width="2"
+  />
+</svg>
