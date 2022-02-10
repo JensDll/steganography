@@ -39,6 +39,6 @@ jobs:
           env
 
       - name: Run my action
-        uses: ./.github/actions/needsToRun
+        uses: ./.github/actions/needsToRun.yaml
         with:
           project: web
