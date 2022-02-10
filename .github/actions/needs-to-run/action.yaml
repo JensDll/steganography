@@ -11,7 +11,14 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Echo debug information in action
+    - name: Set pull request base commit sha
+      run: echo "PR_BASE_SHA=${{ github.event.pull_request.base.sha }}" >> $GITHUB_ENV
+      shell: bash
+    - name: Checkout pull request base commit sha
+      uses: actions/checkout@v2
+      with:
+        sha: ${{ env.PR_BASE_SHA }}
+    - name: Echo debug information
       env:
         GITHUB_CONTEXT: ${{ toJSON(github) }}
       run: |
@@ -20,6 +27,8 @@ runs:
       shell: bash
       working-directory: ${{ github.action_path }}
     - name: Run script
+      env:
+        PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
       run: ./check.sh ${{ inputs.project }}
       shell: bash
       working-directory: ${{ github.action_path }}

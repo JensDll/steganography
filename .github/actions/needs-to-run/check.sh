@@ -1,6 +1,6 @@
 #!/bin/bash
 
-result=$(git diff --name-only "$GITHUB_BASE_REF" HEAD)
+result=$(git diff --name-only "$PR_BASE_SHA" HEAD)
 readonly result
 
 echo "$result"

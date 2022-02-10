@@ -1,19 +1,14 @@
 name: Debug Action
-
 on:
   pull_request:
     branches:
       - main
-
 jobs:
   debug:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
-
       - name: Run my action
         uses: ./.github/actions/needs-to-run
         with:
