@@ -1,0 +1,37 @@
+name: Debug
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  abc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install pnpm version 6.x.x
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.x.x
+
+      - name: Use node version 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Echo debug information
+        env:
+          STEPS_CONTEXT: ${{ toJSON(steps) }}
+        run: |
+          pwd
+          echo "==================================="
+          ls -la
+          echo "==================================="
+          echo "Node version: $(node --version)"
+          echo "==================================="
+          echo "Pnpm version: $(pnpm --version)"
+          echo "==================================="
+          env
