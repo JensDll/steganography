@@ -35,3 +35,6 @@ jobs:
           echo "Pnpm version: $(pnpm --version)"
           echo "==================================="
           env
+
+      - name: Run bash
+        run: bash ./.github/check.sh
