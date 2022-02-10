@@ -14,11 +14,6 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Echo debug information
-        env:
-          STEPS_CONTEXT: ${{ toJSON(steps) }}
-        run: env
-
       - name: Run my action
         uses: ./.github/actions/needs-to-run
         with:

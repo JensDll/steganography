@@ -12,11 +12,10 @@ runs:
   using: 'composite'
   steps:
     - name: Echo debug information in action
-      env:
-        STEPS_CONTEXT: ${{ toJSON(steps) }}
       run: |
         ls -la
         env
+        echo ${{ toJSON(github) }}
       shell: bash
       working-directory: ${{ github.action_path }}
     - name: Run script
