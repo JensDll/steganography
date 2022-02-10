@@ -7,7 +7,7 @@ inputs:
 outputs:
   random-number:
     description: 'Random number'
-    value: ${{ steps.random-number-generator.outputs.random-id }}
+    value: ${{ 1 }}
 runs:
   using: 'composite'
   steps:
@@ -15,9 +15,7 @@ runs:
       env:
         STEPS_CONTEXT: ${{ toJSON(steps) }}
       run: |
-        pwd
-        echo "==================================="
-        ls -la
+        ls -la ${{ github.action_path }}
         echo "==================================="
         echo "Node version: $(node --version)"
         echo "==================================="
@@ -26,5 +24,6 @@ runs:
         env
       shell: bash
     - name: Run script
-      run: ./.github/actions/needs-to-run/check.sh ${{ inputs.project }}
+      run: check.sh ${{ inputs.project }}
       shell: bash
+      working-directory: ${{ github.action_path }}
