@@ -18,6 +18,8 @@ runs:
       uses: actions/checkout@v2
       with:
         sha: ${{ env.PR_BASE_SHA }}
+    - name: Checkout repository
+      uses: actions/checkout@v2
     - name: Echo debug information
       env:
         GITHUB_CONTEXT: ${{ toJSON(github) }}
