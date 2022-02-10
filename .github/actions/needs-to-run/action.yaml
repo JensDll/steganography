@@ -11,7 +11,7 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Echo debug information
+    - name: Echo debug information in action
       env:
         STEPS_CONTEXT: ${{ toJSON(steps) }}
       run: |
@@ -24,6 +24,7 @@ runs:
         echo "Pnpm version: $(pnpm --version)"
         echo "==================================="
         env
+      shell: bash
     - name: Run script
-      run: ./.github/actions/check.sh ${{ inputs.project }}
+      run: ./.github/actions/needs-to-run/check.sh ${{ inputs.project }}
       shell: bash
