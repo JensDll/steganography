@@ -1,0 +1,29 @@
+name: Need to run
+description: Checks if a job needs to be run
+inputs:
+  project:
+    description: The project to check for
+    required: true
+outputs:
+  random-number:
+    description: 'Random number'
+    value: ${{ steps.random-number-generator.outputs.random-id }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Echo debug information
+      env:
+        STEPS_CONTEXT: ${{ toJSON(steps) }}
+      run: |
+        pwd
+        echo "==================================="
+        ls -la
+        echo "==================================="
+        echo "Node version: $(node --version)"
+        echo "==================================="
+        echo "Pnpm version: $(pnpm --version)"
+        echo "==================================="
+        env
+    - name: Run script
+      run: ./.github/actions/check.sh ${{ inputs.project }}
+      shell: bash

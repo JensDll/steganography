@@ -1,4 +1,4 @@
-name: Debug
+name: Debug Action
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  abc:
+  debug:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -38,5 +38,7 @@ jobs:
           echo "==================================="
           env
 
-      - name: Run bash
-        run: bash ./.github/check.sh
+      - name: Run my action
+        uses: ./.github/actions/needsToRun
+        with:
+          project: web
