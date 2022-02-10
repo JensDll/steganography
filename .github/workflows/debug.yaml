@@ -14,29 +14,10 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Install pnpm version 6.x.x
-        uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.x.x
-
-      - name: Use node version 16
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-
       - name: Echo debug information
         env:
           STEPS_CONTEXT: ${{ toJSON(steps) }}
-        run: |
-          pwd
-          echo "==================================="
-          ls -la
-          echo "==================================="
-          echo "Node version: $(node --version)"
-          echo "==================================="
-          echo "Pnpm version: $(pnpm --version)"
-          echo "==================================="
-          env
+        run: env
 
       - name: Run my action
         uses: ./.github/actions/needs-to-run
