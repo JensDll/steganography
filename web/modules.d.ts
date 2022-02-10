@@ -5,7 +5,8 @@ declare module '@tailwindcss/forms' {
 }
 
 declare module 'tailwindcss/lib/util/flattenColorPalette' {
-  export default (colors: object) => any
+  declare function flattenColorPalette(colors: object): any
+  export default flattenColorPalette
 }
 
 declare module 'tailwindcss/lib/util/color' {
@@ -18,4 +19,10 @@ declare module 'tailwindcss/lib/util/color' {
   function parseColor(value: string): Color
 
   function formatColor(color: Color): string
+}
+
+declare module 'tailwindcss/defaultTheme' {
+  import { TailwindConfigDefault } from 'tailwindcss/tailwind-config-default'
+  declare const defaultTheme: TailwindConfigDefault['theme']
+  export default defaultTheme
 }

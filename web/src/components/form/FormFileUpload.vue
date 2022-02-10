@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+import { computed, type PropType } from 'vue'
 
 type FileHelper = {
   src: string
@@ -7,12 +7,13 @@ type FileHelper = {
 }
 
 const emit = defineEmits({
-  'update:modelValue': (files: File[]) => true
+  'update:modelValue': (files: File[]) => Array.isArray(files)
 })
 
 const props = defineProps({
   label: {
-    type: String
+    type: String,
+    default: ''
   },
   modelValue: {
     type: Array as PropType<File[]>,
@@ -29,7 +30,8 @@ const props = defineProps({
     type: Boolean
   },
   accept: {
-    type: String
+    type: String,
+    default: ''
   }
 })
 
@@ -43,7 +45,7 @@ const files = computed<File[]>({
   }
 })
 const fileHelpers = computed<FileHelper[]>(() =>
-  files.value.map((file) => ({
+  files.value.map(file => ({
     src: URL.createObjectURL(file),
     file
   }))
@@ -57,7 +59,7 @@ const removeFile = (i: number) => {
 
 const unique = (files: File[]) => {
   const lookup = new Set<string>()
-  return files.filter((f) => {
+  return files.filter(f => {
     const keep = !lookup.has(f.name)
     lookup.add(f.name)
     return keep
@@ -83,27 +85,28 @@ const handleChange = (e: Event) => {
     <label v-if="label" class="label" :for="`file-${label}`">{{ label }}</label>
     <div
       :class="[
-        'input border-2 group relative py-6 px-10 border-dashed grid place-items-center hover:bg-slate-50',
+        'input group relative grid place-items-center border-2 border-dashed py-6 px-10 hover:bg-slate-50',
         { error: hasError }
       ]"
     >
       <input
         :id="`file-${label}`"
-        class="w-full h-full absolute opacity-0 cursor-pointer"
+        class="absolute h-full w-full cursor-pointer opacity-0"
         type="file"
         :accept="accept"
         :multiple="multiple"
         @change="handleChange"
       />
-      <image-plus-icon
-        class="w-12 h-12 text-slate-400 group-hover:text-slate-500"
+      <AppIcon
+        icon="ImagePlus"
+        class="h-12 w-12 text-slate-400 group-hover:text-slate-500"
       />
       <div class="text-center">
         <p>
           <span
             :class="[
-              'font-semibold text-sky-500 group-hover:text-sky-600',
-              { '!text-red-500 group-hover:!text-red-700': hasError }
+              'font-semibold text-sky-600 group-hover:text-sky-700',
+              { '!text-red-600 group-hover:!text-red-700': hasError }
             ]"
           >
             Upload a file
@@ -113,27 +116,25 @@ const handleChange = (e: Event) => {
         <slot></slot>
         <div v-if="image && isFileSelected" class="flex flex-col items-center">
           <template v-for="{ file, src } in fileHelpers" :key="src">
-            <img :src="src" class="w-32 h-32 mx-auto mb-2 mt-8" />
+            <img :src="src" class="mx-auto mb-2 mt-8 h-32 w-32" />
             <p>{{ file.name }}</p>
           </template>
         </div>
       </div>
     </div>
-    <form-errors :errors="errors" class="mt-1" />
+    <FormErrors :errors="errors" class="mt-1" />
     <ul v-if="files.length" class="mt-2">
       <li
         v-for="(file, i) in files"
-        class="flex items-center cursor-pointer group"
         :key="file.name"
+        class="group flex cursor-pointer items-center"
         @click="removeFile(i)"
       >
-        <ic:twotone-remove-circle
-          class="mr-2 group-hover:text-red-700 text-red-500 w-6 h-6"
+        <Ic:twotoneRemoveCircle
+          class="mr-2 h-6 w-6 text-red-500 group-hover:text-red-700"
         />
         <span class="group-hover:line-through">{{ file.name }}</span>
       </li>
     </ul>
   </div>
 </template>
-
-<style lang="postcss" scoped></style>

@@ -1,0 +1,101 @@
+<script setup lang="ts">
+import { onMounted, ref, onUnmounted, type Ref } from 'vue'
+import { gsap } from 'gsap'
+
+import { useMediaQuery, type AnimationHooks } from '~/domain'
+
+const emit = defineEmits(['click'])
+
+const isReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
+
+const containerRef = ref() as Ref<HTMLDivElement>
+const lockDim = 24
+const numLocks = 10
+const animationState = {
+  x: 0,
+  randomY: () => 0,
+  randomDuration: gsap.utils.random(1.5, 4, true)
+}
+
+const animate = (icon: SVGElement) => {
+  gsap.set(icon, {
+    x: 0,
+    y: animationState.randomY()
+  })
+  gsap.to(icon, {
+    x: animationState.x,
+    duration: animationState.randomDuration(),
+    ease: 'none',
+    onCompleteParams: [icon],
+    onComplete: animate
+  })
+}
+
+const animation: AnimationHooks<SVGElement> = {
+  afterAppear(icon) {
+    const duration = animationState.randomDuration()
+
+    gsap.set(icon, {
+      x: isReducedMotion.value ? lockDim : 0,
+      y: animationState.randomY()
+    })
+
+    const tween = gsap
+      .to(icon, {
+        x: animationState.x,
+        duration,
+        ease: 'none',
+        onCompleteParams: [icon],
+        onComplete: animate
+      })
+      .pause(gsap.utils.random(0, duration))
+
+    if (!isReducedMotion.value) {
+      tween.resume()
+    }
+  }
+}
+
+const observer = new ResizeObserver(([entry]) => {
+  animationState.x = entry.borderBoxSize[0].inlineSize
+  !isReducedMotion.value && (animationState.x += lockDim)
+  animationState.randomY = gsap.utils.random(
+    0,
+    entry.borderBoxSize[0].blockSize - lockDim,
+    true
+  )
+})
+
+onMounted(() => {
+  observer.observe(containerRef.value)
+})
+
+onUnmounted(() => {
+  observer.disconnect()
+})
+</script>
+
+<template>
+  <div
+    ref="containerRef"
+    class="relative grid h-28 place-items-center overflow-x-hidden"
+  >
+    <AppButton class="z-10" type="landing" @click="emit('click')">
+      Getting Started
+    </AppButton>
+    <TransitionGroup appear v-on="animation">
+      <HeroiconsSolid:lockClosed
+        v-for="i in numLocks"
+        :id="`closed-${i}`"
+        :key="i"
+        class="absolute top-0 right-full h-6 w-6 origin-center text-sky-200"
+      />
+      <HeroiconsSolid:lockOpen
+        v-for="i in numLocks"
+        :id="`open-${i}`"
+        :key="i"
+        class="absolute top-0 right-full h-6 w-6 text-emerald-200"
+      />
+    </TransitionGroup>
+  </div>
+</template>

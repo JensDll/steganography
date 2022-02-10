@@ -1,1 +1,3 @@
-export { useFixedPoint } from './useFixedPoint'
+export { useMediaQuery } from './useMediaQuery'
+
+export { useScrollTo } from './useScrollTo'

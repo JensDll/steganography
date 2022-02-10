@@ -2,10 +2,11 @@
   "compilerOptions": {
     "baseUrl": "./",
     "target": "ESNext",
-    "useDefineForClassFields": true,
     "module": "ESNext",
     "moduleResolution": "Node",
     "isolatedModules": true,
+    "preserveValueImports": true,
+    "allowJs": true,
     "strict": true,
     "jsx": "preserve",
     "sourceMap": true,

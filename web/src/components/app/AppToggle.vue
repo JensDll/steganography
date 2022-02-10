@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, PropType } from 'vue'
+import { computed, type PropType } from 'vue'
 
 const emit = defineEmits({
   'update:modelValue': (isActive: boolean) => typeof isActive === 'boolean',
@@ -20,7 +20,7 @@ const props = defineProps({
       toggle?: string
       handle?: string
     }>,
-    default: {}
+    default: () => ({})
   }
 })
 
@@ -43,13 +43,13 @@ const isActive = computed<boolean>({
         'transition-duration': `${duration}ms`
       }"
     >
-      <slot name="active" v-if="isActive" class="h-6 w-6"></slot>
-      <slot name="inactive" v-else></slot>
+      <slot v-if="isActive" name="active" class="h-6 w-6"></slot>
+      <slot v-else name="inactive"></slot>
     </div>
   </div>
 </template>
 
-<style lang="postcss" scoped>
+<style scoped>
 .toggle {
   --handle-width: 2rem;
   --toggle-width: calc(2.5 * var(--handle-width));
