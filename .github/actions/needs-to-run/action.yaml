@@ -21,6 +21,9 @@ runs:
         GITHUB_CONTEXT: ${{ toJSON(github) }}
       run: env
       shell: bash
+    - name: Git diff
+      run: git diff ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+      shell: bash
     - name: Run script
       run: ./check.sh ${{ inputs.project }}
       shell: bash
