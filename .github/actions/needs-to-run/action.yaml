@@ -16,6 +16,8 @@ runs:
       shell: bash
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Echo debug information
       env:
         GITHUB_CONTEXT: ${{ toJSON(github) }}
