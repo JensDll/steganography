@@ -9,7 +9,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Run my action
-        uses: ./.github/actions/needs-to-run
         with:
-          project: web
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Debug information
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: |
+          env
+          echo "############################################"
+          git branch -a
+          git remote
+          git log --oneline
+        shell: bash

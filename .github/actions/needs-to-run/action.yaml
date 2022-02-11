@@ -11,13 +11,13 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Set pull request base commit sha
-      run: echo "PR_BASE_SHA=${{ github.event.pull_request.base.sha }}" >> $GITHUB_ENV
-      shell: bash
-    - name: Checkout repository
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
+    # - name: Set pull request base commit sha
+    #   run: echo "PR_BASE_SHA=${{ github.event.pull_request.base.sha }}" >> $GITHUB_ENV
+    #   shell: bash
+    # - name: Checkout repository
+    #   uses: actions/checkout@v2
+    #   with:
+    #     ref: ${{ github.event.pull_request.head.sha }}
     - name: Echo debug information
       env:
         GITHUB_CONTEXT: ${{ toJSON(github) }}
