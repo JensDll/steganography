@@ -14,10 +14,8 @@ runs:
     - name: Set pull request base commit sha
       run: echo "PR_BASE_SHA=${{ github.event.pull_request.base.sha }}" >> $GITHUB_ENV
       shell: bash
-    - name: Checkout pull request base commit sha
+    - name: Checkout repository
       uses: actions/checkout@v2
-      with:
-        ref: ${{ env.PR_BASE_SHA }}
     - name: Echo debug information
       env:
         GITHUB_CONTEXT: ${{ toJSON(github) }}
