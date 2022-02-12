@@ -7,7 +7,10 @@ on:
         description: The projects to match against
         type: string
         required: true
-    outputs: ${{ fromJSON(jobs.main.outputs.result) }}
+    outputs:
+      result:
+        description: JSON result - One property for each input project
+        value: ${{ jobs.main.outputs.result }}
 
 jobs:
   main:
@@ -15,7 +18,7 @@ jobs:
     outputs:
       result: ${{ toJSON(steps.match.outputs) }}
     steps:
-      - name: Checkout repository
+      - name: Checkout the repository
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.sha }}

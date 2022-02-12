@@ -22,15 +22,15 @@ do
   git fetch --deepen=5 origin "$GITHUB_BASE_REF"
 done
 
-echo "The pattern is: $pattern"
 echo "Checking for changes ..."
+echo "The pattern is \"$pattern\""
 
 while read -r line
 do
   line="/$line"
   if [[ $line =~ $pattern ]]
   then
-    echo "Match found in: $line. The match was: ${BASH_REMATCH[1]}"
+    echo "Match found in \"$line\" ... The match was \"${BASH_REMATCH[1]}\""
     echo "::set-output name=${BASH_REMATCH[1]}::true"
   fi
 done < <(git diff --name-only HEAD "$mergeBase")
