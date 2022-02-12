@@ -7,12 +7,15 @@ on:
         description: The projects to match against
         type: string
         required: true
-    outputs: ${{ jobs.main.outputs }}
+    outputs:
+      result:
+        value: ${{ jobs.main.outputs }}
 
 jobs:
   main:
     runs-on: ubuntu-latest
-    outputs: ${{ steps.match.outputs }}
+    outputs:
+      result: ${{ steps.match.outputs }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
