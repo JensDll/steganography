@@ -9,13 +9,13 @@ on:
         required: true
     outputs:
       result:
-        value: ${{ jobs.main.outputs }}
+        value: ${{ jobs.main.outputs.result }}
 
 jobs:
   main:
     runs-on: ubuntu-latest
     outputs:
-      result: ${{ steps.match.outputs }}
+      result: ${{ toJSON(steps.match.outputs) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
