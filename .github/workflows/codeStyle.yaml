@@ -1,4 +1,4 @@
-name: Normalize code style
+name: Run code style fixes
 
 on:
   pull_request:
@@ -6,18 +6,19 @@ on:
       - main
 
 jobs:
-  needs_to_run:
-    uses: ./.github/workflows/needsToRun.yaml
+  should_run:
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
     with:
       projects: api web
 
   api:
-    if: fromJSON(needs.needs_to_run.outputs.result).api == 'true'
+    if: fromJSON(needs.should_run.outputs.result).api == 'true'
     runs-on: ubuntu-latest
-    needs: needs_to_run
+    needs: should_run
     steps:
-      - name: Checkout repository
+      - name: Checkout the repository
         uses: actions/checkout@v2
+
       - name: Debug information
         env:
           NEEDS_CONTEXT: ${{ toJSON(needs) }}
@@ -28,12 +29,13 @@ jobs:
           echo "$NEEDS_CONTEXT"
 
   web:
-    if: fromJSON(needs.needs_to_run.outputs.result).web == 'true'
+    if: fromJSON(needs.should_run.outputs.result).web == 'true'
     runs-on: ubuntu-latest
-    needs: needs_to_run
+    needs: should_run
     steps:
-      - name: Checkout repository
+      - name: Checkout the repository
         uses: actions/checkout@v2
+
       - name: Debug information
         env:
           NEEDS_CONTEXT: ${{ toJSON(needs) }}
