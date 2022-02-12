@@ -1,5 +1,7 @@
 #!/bin/bash
 
+declare -r pattern=".*/(${1//+([ ,])/|})/.*"
+
 git fetch --depth=1 origin +refs/heads/"$GITHUB_BASE_REF":refs/remotes/origin/"$GITHUB_BASE_REF"
 git branch --track "$GITHUB_BASE_REF" origin/"$GITHUB_BASE_REF"
 
@@ -10,12 +12,9 @@ done
 
 while read -r line
 do
-  if [[ $line == $1* ]]
+  if [[ $line =~ $pattern ]]
   then
     echo "Change found in: $line"
-    echo "::set-output name=result::true"
-    exit 0
+    echo "::set-output name=${BASH_REMATCH[1]}::true"
   fi
 done < <(git diff --name-only HEAD "$mergeBase")
-
-echo "::set-output name=result::false"

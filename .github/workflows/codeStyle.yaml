@@ -7,7 +7,9 @@ on:
 
 jobs:
   needs-to-run:
-    uses: ./.github/workflows/needs-to-run.yaml
+    uses: ./.github/workflows/needsToRun.yaml
+    with:
+      projects: api web
 
   api:
     runs-on: ubuntu-latest
