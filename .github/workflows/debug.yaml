@@ -7,17 +7,14 @@ jobs:
   debug:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Run my action
+        id: needs-to-run
+        uses: ./.github/actions/needs-to-run
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          project: web
       - name: Debug information
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: |
-          env
-          echo "############################################"
           git branch -a
           git remote
           git log --oneline
-        shell: bash
+          echo ${{ toJSON(steps) }}

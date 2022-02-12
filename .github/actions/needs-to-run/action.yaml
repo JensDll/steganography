@@ -5,33 +5,23 @@ inputs:
     description: The project to check for
     required: true
 outputs:
-  random-number:
-    description: 'Random number'
-    value: ${{ 1 }}
+  result:
+    description: If the step should be run
+    value: ${{ steps.foo.outputs.result }}
 runs:
   using: 'composite'
   steps:
-    # - name: Set pull request base commit sha
-    #   run: echo "PR_BASE_SHA=${{ github.event.pull_request.base.sha }}" >> $GITHUB_ENV
-    #   shell: bash
-    # - name: Checkout repository
-    #   uses: actions/checkout@v2
-    #   with:
-    #     ref: ${{ github.event.pull_request.head.sha }}
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+    - name: Run script
+      id: foo
+      run: ./check.sh ${{ inputs.project }}
+      shell: bash
+      working-directory: ${{ github.action_path }}
     - name: Echo debug information
       env:
         GITHUB_CONTEXT: ${{ toJSON(github) }}
-      run: |
-        env
-        echo "############################################"
-        git branch -a
-        git remote
-        git log --oneline
+      run: env
       shell: bash
-    # - name: Git diff
-    #   run: git diff ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
-    #   shell: bash
-    # - name: Run script
-    #   run: ./check.sh ${{ inputs.project }}
-    #   shell: bash
-    #   working-directory: ${{ github.action_path }}
