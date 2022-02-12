@@ -10,9 +10,9 @@ done
 
 while read -r line
 do
-  echo "$line"
   if [[ $line == $1* ]]
   then
+    echo "Change found in: $line"
     echo "::set-output name=result::true"
     exit 0
   fi

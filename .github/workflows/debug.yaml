@@ -13,7 +13,7 @@ jobs:
         id: needs-to-run
         uses: ./.github/actions/needs-to-run
         with:
-          project: web
+          project: api
       - name: Debug information
         env:
           STEP_CONTEXT: ${{ toJSON(steps) }}
