@@ -7,13 +7,12 @@ on:
         description: The projects to match against
         type: string
         required: true
-    outputs:
-      result:
-        value: ${{ steps.match.outputs.web }}
+    outputs: ${{ jobs.main.outputs }}
 
 jobs:
   main:
     runs-on: ubuntu-latest
+    outputs: ${{ steps.match.outputs }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -28,6 +27,6 @@ jobs:
       - name: Echo debug information
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
-          STEPS_CONTEXT: ${{ toJSON(steps )}}
+          STEPS_CONTEXT: ${{ toJSON(steps) }}
         run: env
         shell: bash
