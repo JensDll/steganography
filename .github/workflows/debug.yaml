@@ -15,8 +15,10 @@ jobs:
         with:
           project: web
       - name: Debug information
+        env:
+          STEP_CONTEXT: ${{ toJSON(steps) }}
         run: |
           git branch -a
           git remote
           git log --oneline
-          echo ${{ toJSON(steps) }}
+          echo "$STEP_CONTEXT"
