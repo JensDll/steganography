@@ -8,10 +8,14 @@ do
   git fetch --deepen=1 origin "$GITHUB_BASE_REF"
 done
 
-echo "The project to search for is: $1"
-echo "The head is: $(git rev-parse HEAD)"
-echo "The merge base is: $mergeBase"
-echo "The diff is:"
-git diff --name-only HEAD "$mergeBase"
+while read -r line
+do
+  echo "$line"
+  if [[ $line == $1* ]]
+  then
+    echo "::set-output name=result::true"
+    exit 0
+  fi
+done < <(git diff --name-only HEAD "$mergeBase")
 
-echo "::set-output name=result::true"
+echo "::set-output name=result::false"
