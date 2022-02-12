@@ -7,7 +7,7 @@ on:
 
 jobs:
   should_run:
-    uses: JensDll/should-run/.github/workflows/main.yaml@main
+    uses: JensDll/should-run/.github/workflows/main.yaml@dev
     with:
       projects: api web
 
