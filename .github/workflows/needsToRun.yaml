@@ -1,0 +1,34 @@
+name: Needs to run
+
+on:
+  workflow_call:
+    inputs:
+      projects:
+        description: The projects to match against
+        type: string
+        required: true
+    outputs:
+      result:
+        description: If the step should be run
+        value: ${{ steps.match.outputs.result }}
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Run the match script
+        id: match
+        run: ./.github/workflows/match.sh ${{ inputs.projects }}
+        shell: bash
+
+      - name: Echo debug information
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+          STEPS_CONTEXT: ${{ toJSON(steps )}}
+        run: env
+        shell: bash
