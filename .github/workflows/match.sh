@@ -13,6 +13,7 @@ done
 while read -r line
 do
   line="/$line"
+  echo "$line"
   if [[ $line =~ $pattern ]]
   then
     echo "Change found in: $line"

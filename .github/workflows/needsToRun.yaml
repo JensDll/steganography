@@ -19,7 +19,7 @@ jobs:
 
       - name: Run the match script
         id: match
-        run: ./.github/workflows/match.sh ${{ inputs.projects }}
+        run: ./.github/workflows/match.sh "${{ inputs.projects }}"
         shell: bash
 
       - name: Echo debug information
