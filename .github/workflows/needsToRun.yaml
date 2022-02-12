@@ -9,7 +9,7 @@ on:
         required: true
     outputs:
       result:
-        value: ${{ steps.match.outputs }}
+        value: ${{ steps.match.outputs.web }}
 
 jobs:
   main:
