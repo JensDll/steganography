@@ -7,10 +7,6 @@ on:
         description: The projects to match against
         type: string
         required: true
-    outputs:
-      result:
-        description: If the step should be run
-        value: ${{ steps.match.outputs.result }}
 
 jobs:
   main:
