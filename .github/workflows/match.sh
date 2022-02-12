@@ -1,6 +1,9 @@
 #!/bin/bash
 
+shopt -s extglob
+
 declare -r pattern=".*/(${1//+([ ,])/|})/.*"
+echo "The pattern is: $pattern"
 
 git fetch --depth=1 origin +refs/heads/"$GITHUB_BASE_REF":refs/remotes/origin/"$GITHUB_BASE_REF"
 git branch --track "$GITHUB_BASE_REF" origin/"$GITHUB_BASE_REF"
@@ -13,7 +16,7 @@ done
 while read -r line
 do
   line="/$line"
-  echo "$line"
+  echo "Matching change: $line"
   if [[ $line =~ $pattern ]]
   then
     echo "Change found in: $line"
