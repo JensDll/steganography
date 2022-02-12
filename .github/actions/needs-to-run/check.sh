@@ -5,7 +5,7 @@ git branch --track "$GITHUB_BASE_REF" origin/"$GITHUB_BASE_REF"
 
 while [ -z "${mergeBase:=$(git merge-base "$GITHUB_BASE_REF" HEAD)}" ]
 do     
-  git fetch --deepen=5 origin "$GITHUB_BASE_REF"
+  git fetch --deepen=1 origin "$GITHUB_BASE_REF"
 done
 
 echo "The project to search for is: $1"
