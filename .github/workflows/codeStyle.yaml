@@ -14,7 +14,7 @@ jobs:
   api:
     if: fromJSON(needs.needs_to_run.outputs.result).api == 'true'
     runs-on: ubuntu-latest
-    needs: needs-to-run
+    needs: needs_to_run
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -30,7 +30,7 @@ jobs:
   web:
     if: fromJSON(needs.needs_to_run.outputs.result).web == 'true'
     runs-on: ubuntu-latest
-    needs: needs-to-run
+    needs: needs_to_run
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
