@@ -21,17 +21,18 @@ jobs:
 
       - name: Debug information
         env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+          STEPS_CONTEXT: ${{ toJSON(steps) }}
           NEEDS_CONTEXT: ${{ toJSON(needs) }}
-        run: |
-          git branch -a
-          git remote
-          git log --oneline
-          echo "$NEEDS_CONTEXT"
+        run: env
 
   web:
     if: fromJSON(needs.should_run.outputs.result).web == 'true'
     runs-on: ubuntu-latest
     needs: should_run
+    defaults:
+      run:
+        working-directory: web
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
@@ -56,5 +57,11 @@ jobs:
         run: env
 
       - name: Install dependencies
-        run: pnpm install
-        working-directory: web
+        run: pnpm install --dev
+
+      - name: Run code style fixes
+        run: pnpm run fix
+
+      - name: Commit changes
+        run: |
+          git config --show-origin --list
