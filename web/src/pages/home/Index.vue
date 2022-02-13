@@ -12,8 +12,8 @@ import CallToAction from './CallToAction.vue'
         <p class="mt-6 text-center text-lg">Embed secret messages in images</p>
       </div>
       <CallToAction
-        @click="$router.push({ name: 'encode' })"
         class="mt-6 w-full max-w-4xl px-4 lg:px-6"
+        @click="$router.push({ name: 'encode' })"
       />
     </div>
   </section>
