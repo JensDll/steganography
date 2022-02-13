@@ -57,7 +57,7 @@ jobs:
         run: env
 
       - name: Install dependencies
-        run: pnpm install --dev
+        run: pnpm install
 
       - name: Run code style fixes
         run: pnpm run fix
