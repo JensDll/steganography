@@ -7,7 +7,7 @@ on:
 
 jobs:
   should_run:
-    uses: JensDll/should-run/.github/workflows/main.yaml@dev
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
     with:
       projects: api web
 
@@ -37,36 +37,37 @@ jobs:
       run:
         working-directory: web
     steps:
-      - name: Checkout the repository
+      - name: Checking out the repository
         uses: actions/checkout@v2
 
-      - name: Install pnpm
+      - name: Installing pnpm version 6.x.x
         uses: pnpm/action-setup@v2.0.1
         with:
           version: 6.x.x
 
-      - name: Use node version to 16
+      - name: Using node version 16
         uses: actions/setup-node@v2
         with:
           node-version: 16
           cache: 'pnpm'
           cache-dependency-path: web/pnpm-lock.yaml
 
-      - name: Install dependencies
+      - name: Installing dependencies
         run: pnpm install
 
-      - name: Run code style fixes
+      - name: Checking for unfixable code style issues
+        run: pnpm run lint
+
+      - name: Running code style fixes
         run: pnpm run fix
 
-      - name: Commit changes
+      - name: Committing changes
         run: |
-          git config user.name code-style-action
-          git config user.email jens@doellmann.com
-          git log --oneline
-          git status
           if ! git diff --quiet
           then
+            git config user.name github-actions
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
             git add --update
-            git commit -m "fix(github-action): code style"
+            git commit -m "fix: code style"
             git push
           fi

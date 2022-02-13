@@ -7,7 +7,7 @@ on:
 
 jobs:
   should_run:
-    uses: JensDll/should-run/.github/workflows/main.yaml@dev
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
     with:
       projects: api web
 
@@ -17,7 +17,7 @@ jobs:
     needs: should_run
     defaults:
       run:
-        working-directory: api
+        working-directory: services/api
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
@@ -35,25 +35,25 @@ jobs:
     needs: should_run
     defaults:
       run:
-        working-directory: web
+        working-directory: services/web
     steps:
-      - name: Checkout the repository
+      - name: Checking out the repository
         uses: actions/checkout@v2
 
-      - name: Install pnpm
+      - name: Installing pnpm version 6.x.x
         uses: pnpm/action-setup@v2.0.1
         with:
           version: 6.x.x
 
-      - name: Use node version to 16
+      - name: Using node version 16
         uses: actions/setup-node@v2
         with:
           node-version: 16
           cache: 'pnpm'
           cache-dependency-path: web/pnpm-lock.yaml
 
-      - name: Install dependencies
+      - name: Installing dependencies
         run: pnpm install
 
-      - name: Run code style fixes
-        run: pnpm run fix
+      - name: Checking for unfixable code style issues
+        run: pnpm run lint
