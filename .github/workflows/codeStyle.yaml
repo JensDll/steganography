@@ -46,6 +46,7 @@ jobs:
         with:
           node-version: 16
           cache: 'pnpm'
+          cache-dependency-path: web/pnpm-lock.yaml
 
       - name: Debug information
         env:
