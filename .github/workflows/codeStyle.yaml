@@ -64,4 +64,12 @@ jobs:
 
       - name: Commit changes
         run: |
+          git config user.name code-style-action
+          git config user.email jens@doellmann.com
           git config --show-origin --list
+          if ! git diff --quiet
+          then
+            git add --update
+            git commit -m "github-action: fix code style"
+            git push
+          fi
