@@ -39,8 +39,6 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2.0.1
@@ -54,30 +52,8 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: web/pnpm-lock.yaml
 
-      - name: Debug information
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-          STEPS_CONTEXT: ${{ toJSON(steps) }}
-          NEEDS_CONTEXT: ${{ toJSON(needs) }}
-        run: env
-
       - name: Install dependencies
         run: pnpm install
 
-      - name: Check code style
+      - name: Run code style fixes
         run: pnpm run fix
-
-      - name: Commit changes
-        run: |
-          git config user.name code-style-action
-          git config user.email jens@doellmann.com
-          git config --show-origin --list
-          git branch -a
-          git status
-          git log --oneline
-          if ! git diff --quiet
-          then
-            git add --update
-            git commit -m "fix(github-action): code style"
-            git push
-          fi
