@@ -1,0 +1,59 @@
+name: Check code style
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  should_run:
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
+    with:
+      projects: api web
+
+  api:
+    if: fromJSON(needs.should_run.outputs.result).api == 'true'
+    runs-on: ubuntu-latest
+    needs: should_run
+    defaults:
+      run:
+        working-directory: services/api
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Debug information
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+          STEPS_CONTEXT: ${{ toJSON(steps) }}
+          NEEDS_CONTEXT: ${{ toJSON(needs) }}
+        run: env
+
+  web:
+    if: fromJSON(needs.should_run.outputs.result).web == 'true'
+    runs-on: ubuntu-latest
+    needs: should_run
+    defaults:
+      run:
+        working-directory: services/web
+    steps:
+      - name: Checking out the repository
+        uses: actions/checkout@v2
+
+      - name: Installing pnpm version 6.x.x
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.x.x
+
+      - name: Using node version 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'pnpm'
+          cache-dependency-path: services/web/pnpm-lock.yaml
+
+      - name: Installing dependencies
+        run: pnpm install
+
+      - name: Checking for unfixable code style issues
+        run: pnpm run lint

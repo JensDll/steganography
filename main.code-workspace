@@ -1,10 +1,10 @@
 {
   "folders": [
     {
-      "path": "api"
+      "path": "services/api"
     },
     {
-      "path": "web"
+      "path": "services/web"
     },
     {
       "name": "root",
@@ -12,6 +12,8 @@
     }
   ],
   "settings": {
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "files.exclude": {
+      "services": true
+    }
   }
 }
