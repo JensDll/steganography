@@ -17,7 +17,7 @@ jobs:
     needs: should_run
     defaults:
       run:
-        working-directory: api
+        working-directory: services/api
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
@@ -50,7 +50,7 @@ jobs:
         with:
           node-version: 16
           cache: 'pnpm'
-          cache-dependency-path: web/pnpm-lock.yaml
+          cache-dependency-path: services/web/pnpm-lock.yaml
 
       - name: Installing dependencies
         run: pnpm install
