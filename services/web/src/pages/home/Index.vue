@@ -13,6 +13,7 @@ import CallToAction from './CallToAction.vue'
       </div>
       <CallToAction
       @click="$router.push({ name: 'encode' })"
+      
         class="mt-6 w-full max-w-4xl px-4 lg:px-6"
         
       />

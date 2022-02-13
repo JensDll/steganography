@@ -35,7 +35,7 @@ jobs:
     needs: should_run
     defaults:
       run:
-        working-directory: web
+        working-directory: services/web
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v2
