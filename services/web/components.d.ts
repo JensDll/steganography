@@ -7,19 +7,16 @@ declare module 'vue' {
     AppButton: typeof import('./src/components/app/AppButton.vue')['default']
     AppIcon: typeof import('./src/components/app/AppIcon.vue')['default']
     AppToggle: typeof import('./src/components/app/AppToggle.vue')['default']
-    ArrowDown: typeof import('./src/components/app/icon/ArrowDown.vue')['default']
     FormErrors: typeof import('./src/components/form/FormErrors.vue')['default']
     FormFileUpload: typeof import('./src/components/form/FormFileUpload.vue')['default']
     'HeroiconsSolid:lockClosed': typeof import('~icons/heroicons-solid/lock-closed')['default']
     'HeroiconsSolid:lockOpen': typeof import('~icons/heroicons-solid/lock-open')['default']
     'Ic:twotoneRemoveCircle': typeof import('~icons/ic/twotone-remove-circle')['default']
     ImagePlus: typeof import('./src/components/app/icon/ImagePlus.vue')['default']
-    LockClosed: typeof import('./src/components/app/icon/LockClosed.vue')['default']
-    LockOpen: typeof import('./src/components/app/icon/LockOpen.vue')['default']
     'Mdi:github': typeof import('~icons/mdi/github')['default']
     TheHeader: typeof import('./src/components/layout/TheHeader.vue')['default']
     TheMain: typeof import('./src/components/layout/TheMain.vue')['default']
   }
 }
 
-export {}
+export { }

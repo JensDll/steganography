@@ -5,7 +5,7 @@ import CallToAction from './CallToAction.vue'
 <template>
   <section class="bg-gradient grid h-screen">
     <div
-      class="grid grid-rows-[auto_auto_1fr] justify-items-center self-center"
+      class="grid grid-rows-[auto_auto_1fr] justify-items-center self-center md:-translate-y-8"
     >
       <div class="px-4 lg:px-6">
         <h1 class="text-center">Image Data Hiding</h1>
