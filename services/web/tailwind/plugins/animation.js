@@ -1,6 +1,6 @@
 import plugin from 'tailwindcss/plugin'
 
-export const AnimationPlugin = plugin(({ matchUtilities }) => {
+export const Animation = plugin(({ matchUtilities }) => {
   matchUtilities(
     {
       'animate-iteration': timing => {

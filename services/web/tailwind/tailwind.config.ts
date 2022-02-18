@@ -1,9 +1,7 @@
-import FormPlugin from '@tailwindcss/forms'
 import { type TailwindConfig } from 'tailwindcss/tailwind-config'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
-import { GridAreaPlugin } from './plugins/gridArea'
-import { AnimationPlugin } from './plugins/animation'
+import { Form, Animation, GridArea, Typography } from './plugins'
 
 export const config: TailwindConfig = {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
@@ -32,5 +30,5 @@ export const config: TailwindConfig = {
       }
     }
   },
-  plugins: [FormPlugin, GridAreaPlugin, AnimationPlugin]
+  plugins: [GridArea, Animation, Form, Typography]
 }

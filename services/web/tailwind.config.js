@@ -1,2 +1,2 @@
 require('esbuild-register')
-module.exports = require('./scripts/tailwindcss/tailwind.config.ts').config
+module.exports = require('./tailwind/tailwind.config.ts').config

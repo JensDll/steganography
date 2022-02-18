@@ -1,6 +1,6 @@
 import plugin from 'tailwindcss/plugin'
 
-export const GridAreaPlugin = plugin(({ matchUtilities }) => {
+export const GridArea = plugin(({ matchUtilities }) => {
   matchUtilities({
     'grid-area': values => {
       return {

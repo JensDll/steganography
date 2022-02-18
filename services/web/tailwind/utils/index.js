@@ -1,0 +1,1 @@
+export { flattenColors } from './flattenColors'
