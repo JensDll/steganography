@@ -1,22 +1,20 @@
 <script setup lang="ts"></script>
 
 <template>
-  <section
-    id="mainSection"
-    class="mt-48 grid grid-rows-[auto_1fr] items-start justify-items-center px-4 lg:px-6"
-  >
-    <nav class="mb-16">
-      <ul class="flex">
+  <section>
+    <nav
+      class="mb-8 flex flex-col container sm:mb-12 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <ul class="mb-12 flex space-x-4 sm:order-2 sm:m-0">
         <RouterLink
-          v-slot="{ navigate, isActive, isExactActive }"
+          v-slot="{ navigate, isExactActive }"
           :to="{ name: 'encode' }"
           custom
         >
           <li
             :class="[
-              'cursor-pointer rounded-md py-2 px-6 text-xl font-medium hover:text-sky-500',
-              isActive && 'router-link-active',
-              isExactActive && 'bg-sky-50 font-semibold text-sky-600'
+              'cursor-pointer rounded-md bg-slate-100 py-2 px-6 font-medium hover:bg-slate-200',
+              isExactActive && '!bg-blue-100 font-semibold text-blue-600'
             ]"
             @click="navigate"
           >
@@ -24,15 +22,14 @@
           </li>
         </RouterLink>
         <RouterLink
-          v-slot="{ navigate, isActive, isExactActive }"
+          v-slot="{ navigate, isExactActive }"
           :to="{ name: 'decode' }"
           custom
         >
           <li
             :class="[
-              'cursor-pointer rounded-md py-2 px-6 text-xl font-medium hover:text-emerald-500',
-              isActive && 'router-link-active',
-              isExactActive && 'bg-emerald-50 font-semibold text-emerald-600'
+              'cursor-pointer rounded-md bg-slate-100 py-2 px-6 font-medium hover:bg-slate-200',
+              isExactActive && '!bg-pink-100 font-semibold text-pink-600'
             ]"
             @click="navigate"
           >
@@ -40,6 +37,7 @@
           </li>
         </RouterLink>
       </ul>
+      <h1 class="sm:order-1">{{ $route.meta.title }}</h1>
     </nav>
     <RouterView></RouterView>
   </section>

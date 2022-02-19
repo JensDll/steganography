@@ -2,35 +2,41 @@
 import { useValidation, type Field } from 'validierung'
 
 type FormData = {
-  files: Field<File[]>
+  key: Field<string>
 }
 
 const { form } = useValidation<FormData>({
-  files: {
-    $value: []
+  key: {
+    $value: ''
   }
 })
+
+function handleSubmit() {
+  console.log('submit')
+}
 </script>
 
 <template>
-  <div class="w-full max-w-5xl">
-    <h2 class="mb-8 pl-8">Decode</h2>
-    <form
-      class="rounded-lg bg-white bg-gradient-to-bl from-emerald-50 shadow-md shadow-slate-200"
-    >
-      <div class="p-8">
-        <FormFileUpload
-          v-model="form.files.$value"
-          label="Select a cover image"
-        ></FormFileUpload>
-        <div class="mt-4">
-          <label class="label" for="message">Secret key</label>
-          <input class="input w-full" type="text" />
+  <AppSection class="justify-self-center">
+    <form class="decode" @submit="handleSubmit">
+      <section class="pt-12 container">
+        <div>
+          <label class="label" for="key">Key phrase</label>
+          <input
+            id="key"
+            v-model="form.key.$value"
+            class="w-full"
+            type="text"
+          />
         </div>
-      </div>
-      <div class="flex justify-end bg-emerald-50 px-8 py-4">
-        <AppButton class="py-2 px-6" type="decode">Decode</AppButton>
-      </div>
+      </section>
+      <section class="mt-12 bg-pink-50 py-4">
+        <div class="flex justify-end container">
+          <AppButton type="decode" html-type="submit">Decode</AppButton>
+        </div>
+      </section>
     </form>
-  </div>
+  </AppSection>
 </template>
+
+<style scoped></style>

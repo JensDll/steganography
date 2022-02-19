@@ -1,7 +1,7 @@
 import { type TailwindConfig } from 'tailwindcss/tailwind-config'
 import defaultTheme from 'tailwindcss/defaultTheme'
-
-import { Form, Animation, GridArea, Typography } from './plugins'
+import plugin from 'tailwindcss/plugin'
+import Form from '@tailwindcss/forms'
 
 export const config: TailwindConfig = {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
@@ -30,5 +30,35 @@ export const config: TailwindConfig = {
       }
     }
   },
-  plugins: [GridArea, Animation, Form, Typography]
+  plugins: [
+    Form,
+    plugin(({ matchUtilities }) => {
+      matchUtilities(
+        {
+          'animate-iteration': timing => {
+            return {
+              '--tw-iteration-count': timing
+            }
+          }
+        },
+        {
+          values: {
+            infinite: 'infinite'
+          }
+        }
+      )
+    }),
+    plugin(({ matchUtilities }) => {
+      matchUtilities({
+        'grid-area': values => {
+          return {
+            gridArea: values
+          }
+        }
+      })
+    })
+  ],
+  corePlugins: {
+    container: false
+  } as never
 }

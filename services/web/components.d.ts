@@ -6,6 +6,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppButton: typeof import('./src/components/app/AppButton.vue')['default']
     AppIcon: typeof import('./src/components/app/AppIcon.vue')['default']
+    AppSection: typeof import('./src/components/app/AppSection.vue')['default']
     AppToggle: typeof import('./src/components/app/AppToggle.vue')['default']
     FormErrors: typeof import('./src/components/form/FormErrors.vue')['default']
     FormFileUpload: typeof import('./src/components/form/FormFileUpload.vue')['default']
@@ -19,4 +20,4 @@ declare module 'vue' {
   }
 }
 
-export {}
+export { }

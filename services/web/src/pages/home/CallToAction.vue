@@ -88,13 +88,13 @@ onUnmounted(() => {
         v-for="i in numLocks"
         :id="`closed-${i}`"
         :key="i"
-        class="absolute top-0 right-full h-6 w-6 origin-center text-sky-200"
+        class="absolute top-0 right-full h-6 w-6 origin-center text-blue-200"
       />
       <HeroiconsSolid:lockOpen
         v-for="i in numLocks"
         :id="`open-${i}`"
         :key="i"
-        class="absolute top-0 right-full h-6 w-6 text-emerald-200"
+        class="absolute top-0 right-full h-6 w-6 text-pink-200"
       />
     </TransitionGroup>
   </div>

@@ -20,21 +20,17 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'encode',
         path: 'encode',
-        components: {
-          default: EncodeForm
-        },
+        component: EncodeForm,
         meta: {
-          transition: 'slide-left'
+          title: 'Encode'
         }
       },
       {
         name: 'decode',
         path: 'decode',
-        components: {
-          default: DecodeForm
-        },
+        component: DecodeForm,
         meta: {
-          transition: 'slide-right'
+          title: 'Decode'
         }
       }
     ]
@@ -48,6 +44,6 @@ export const router = createRouter({
 
 declare module 'vue-router' {
   interface RouteMeta {
-    transition?: 'slide-left' | 'slide-right'
+    title?: string
   }
 }

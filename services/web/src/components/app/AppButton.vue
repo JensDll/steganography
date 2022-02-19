@@ -7,9 +7,7 @@ const emit = defineEmits(['click'])
 
 const props = defineProps({
   type: {
-    type: String as PropType<
-      'default' | 'encode' | 'decode' | 'danger' | 'landing'
-    >,
+    type: String as PropType<'default' | 'encode' | 'decode' | 'landing'>,
     default: 'default'
   },
   htmlType: {
@@ -68,17 +66,15 @@ const eventListeners = {
     ref="buttonRef"
     :type="htmlType"
     :class="[
-      'block rounded border-2 py-1 px-4 font-medium outline-offset-2 transition-colors focus:outline',
+      'block rounded border-2 py-1 px-4 font-medium outline-offset-2 focus:outline focus:outline-2',
       {
         default: 'border-gray-300 hover:bg-gray-100 focus:outline-gray-300',
         landing:
           'border-slate-900 bg-slate-900 text-white hover:border-slate-700 hover:bg-slate-700 focus:outline-gray-400',
         encode:
-          'border-sky-500 bg-sky-500 text-white hover:border-sky-400 hover:bg-sky-400 focus:outline-sky-300',
+          'border-blue-500 bg-blue-500 text-white hover:border-blue-400 hover:bg-blue-400 focus:outline-blue-300',
         decode:
-          'border-emerald-500 bg-emerald-500 text-white hover:border-emerald-400 hover:bg-emerald-400 focus:outline-emerald-300',
-        danger:
-          'border-red-500 bg-red-500 text-white hover:border-red-600 hover:bg-red-600 focus:outline-red-500'
+          'border-pink-500 bg-pink-500 text-white hover:border-pink-400 hover:bg-pink-400 focus:outline-pink-300'
       }[type]
     ]"
     :aria-disabled="disabled"
