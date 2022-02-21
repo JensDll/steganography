@@ -2,6 +2,8 @@ import type { BaseTransitionProps, RendererElement } from 'vue'
 
 export type AnyFunction = (...args: any[]) => any
 
+export type NoInfer<A> = [A][A extends any ? 0 : never]
+
 export type AnimationHooks<HostElement = RendererElement> = {
   [K in keyof BaseTransitionProps as K extends `on${infer HookName}`
     ? Uncapitalize<HookName>

@@ -7,18 +7,17 @@
     "isolatedModules": true,
     "preserveValueImports": true,
     "allowJs": true,
-    "checkJs": true,
     "strict": true,
     "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "unplugin-icons/types/vue"],
     "paths": {
       "~/*": ["src/*"]
     },
     "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"],
     "skipLibCheck": true
   },
-  "include": ["*.ts", "src/**/*", "src/**/*.vue", "scripts"]
+  "include": ["*.ts", "src/**/*", "src/**/*.vue", "tailwind"]
 }

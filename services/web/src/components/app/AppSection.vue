@@ -8,7 +8,7 @@
 
 <style scoped>
 .section {
-  overflow: clip;
+  overflow: hidden;
   width: 100%;
   box-shadow: 0 6px 30px 0 rgba(0, 0, 0, 0.1);
 }

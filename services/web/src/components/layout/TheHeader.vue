@@ -1,8 +1,11 @@
 <script setup lang="ts"></script>
 
 <template>
-  <header class="z-10 border-b bg-slate-50 grid-area-[header]">
-    <div class="flex items-end justify-between py-6 container">
+  <header
+    class="z-10 border-b bg-slate-50 grid-area-[header]"
+    :class="{ 'border-b-0': $route.name === 'home' }"
+  >
+    <div class="container flex items-end justify-between py-6">
       <div
         class="cursor-pointer text-xl font-semibold"
         @click="$router.push({ name: 'home' })"

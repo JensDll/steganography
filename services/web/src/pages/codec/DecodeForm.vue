@@ -3,35 +3,45 @@ import { useValidation, type Field } from 'validierung'
 
 type FormData = {
   key: Field<string>
+  coverImage: Field<File[]>
 }
 
-const { form } = useValidation<FormData>({
+const { form, validateFields } = useValidation<FormData>({
   key: {
     $value: ''
+  },
+  coverImage: {
+    $value: []
   }
 })
 
-function handleSubmit() {
-  console.log('submit')
+async function handleSubmit() {
+  try {
+    const formData = await validateFields()
+    console.log(formData)
+  } catch (e) {
+    console.log(e)
+  }
 }
 </script>
 
 <template>
   <AppSection class="justify-self-center">
     <form class="decode" @submit="handleSubmit">
-      <section class="pt-12 container">
+      <section class="container py-12">
         <div>
           <label class="label" for="key">Key phrase</label>
           <input
             id="key"
             v-model="form.key.$value"
             class="w-full"
-            type="text"
+            type="password"
           />
         </div>
+        <FormFileInput v-model="form.coverImage.$value" class="mt-6" />
       </section>
-      <section class="mt-12 bg-pink-50 py-4">
-        <div class="flex justify-end container">
+      <section class="bg-pink-50 py-4">
+        <div class="container flex justify-end">
           <AppButton type="decode" html-type="submit">Decode</AppButton>
         </div>
       </section>

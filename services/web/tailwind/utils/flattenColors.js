@@ -1,3 +1,9 @@
+/**
+ * Flatten colors implementation.
+ * @param {object} colors
+ * @param {Record<string, any>} result
+ * @param {string[]} path
+ */
 function _flattenColors(colors, result, path = []) {
   for (const [key, value] of Object.entries(colors)) {
     const pathWithCurrentKey = [...path, key]
@@ -12,9 +18,9 @@ function _flattenColors(colors, result, path = []) {
 
 /**
  * Flattens a nested object of colors into a single object.
- * @param {Object} colors - The nested object of colors.
+ * @param {object} colors - The nested object of colors.
  */
-export function flattenColors(colors) {
+module.exports.flattenColors = function (colors) {
   const result = {}
   _flattenColors(colors, result)
   return result

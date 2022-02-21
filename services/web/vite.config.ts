@@ -6,12 +6,15 @@ import Components from 'unplugin-vue-components/vite'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 
+const srcPath = url.fileURLToPath(new url.URL('./src', import.meta.url))
+
 export default defineConfig({
   resolve: {
     alias: {
-      '~': url.fileURLToPath(new url.URL('./src', import.meta.url))
+      '~': srcPath
     }
   },
+
   plugins: [
     Vue(),
     Components({
