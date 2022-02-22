@@ -1,20 +1,33 @@
 import { computed, type WritableComputedRef } from 'vue'
 
-import { type NoInfer } from '..'
+export function useVModel<
+  TProps extends Record<'modelValue', any>,
+  TEmit extends (event: `update:modelValue`, value: TProps['modelValue']) => any
+>(
+  props: TProps,
+  emit: TEmit
+): {
+  modelValue: WritableComputedRef<TProps['modelValue']>
+}
 
 export function useVModel<
   TProps extends Record<TEvent, any>,
   TEmit extends (event: `update:${TEvent}`, value: TProps[TEvent]) => any,
-  TEvent extends string = 'modelValue'
+  TEvent extends string
 >(
   props: TProps,
   emit: TEmit,
-  // @ts-expect-error Ignore subtype of constraint warning
-  event: TEvent = 'modelValue'
+  event: TEvent
 ): {
-  [K in NoInfer<TEvent>]: WritableComputedRef<TProps[K]>
-} {
-  const data = computed<TProps[TEvent]>({
+  [K in TEvent]: WritableComputedRef<TProps[TEvent]>
+}
+
+export function useVModel(
+  props: Record<string, any>,
+  emit: (event: `update:${string}`, value: unknown) => any,
+  event = 'modelValue'
+) {
+  const data = computed({
     get() {
       return props[event]
     },
@@ -25,5 +38,5 @@ export function useVModel<
 
   return {
     [event]: data
-  } as never
+  }
 }

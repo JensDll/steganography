@@ -1,25 +1,44 @@
-import { computed, reactive, type ComponentPublicInstance } from 'vue'
+import { computed, type ComputedRef } from 'vue'
+
+import { type EventWithTarget } from '..'
 
 export type FileHelper = {
   file: File
-  loading: boolean
-  loaded: boolean
+  size: string
 }
 
 export function useVModelFiles<
-  TProps extends Record<TEvent, File[]>,
-  TEmit extends (event: `update:${TEvent}`, value: File[]) => any,
-  TEvent extends string = 'modelValue'
+  TProps extends Record<'modelValue', any>,
+  TEmit extends (event: `update:modelValue`, value: TProps['modelValue']) => any
+>(
+  props: TProps,
+  emit: TEmit
+): {
+  files: ComputedRef<File[]>
+  removeFile: (i: number) => void
+  fileListeners: Record<string, (e: Event) => void>
+}
+
+export function useVModelFiles<
+  TProps extends Record<TEvent, any>,
+  TEmit extends (event: `update:${TEvent}`, value: TProps[TEvent]) => any,
+  TEvent extends string
 >(
   props: TProps,
   emit: TEmit,
-  // @ts-expect-error Ignore subtype of constraint warning
-  event: TEvent = 'modelValue'
+  event: TEvent
+): {
+  files: ComputedRef<File[]>
+  removeFile: (i: number) => void
+  fileListeners: Record<string, (e: Event) => void>
+}
+
+export function useVModelFiles(
+  props: Record<string, any>,
+  emit: (event: `update:${string}`, value: unknown) => any,
+  event = 'modelValue'
 ) {
-  let fileInput: HTMLInputElement | null
-  const fileInputRef = (el: Element | ComponentPublicInstance | null) => {
-    fileInput = el as never
-  }
+  let input: HTMLInputElement
 
   const files = computed<File[]>({
     get() {
@@ -29,19 +48,16 @@ export function useVModelFiles<
       emit(`update:${event}`, files)
     }
   })
-  const fileHelpers = computed<FileHelper[]>(() =>
-    files.value.map(file => reactive({ file, loading: false, loaded: false }))
-  )
 
   const removeFile = (i: number) => {
-    if (fileInput) {
-      fileInput.value = ''
+    if (input) {
+      input.value = ''
     }
     files.value.splice(i, 1)
   }
 
-  const handleFileChange = (e: Event) => {
-    const input = e.target as HTMLInputElement
+  const change = (e: EventWithTarget<HTMLInputElement>) => {
+    input = e.target
     const fileList = input.files
 
     if (fileList) {
@@ -55,10 +71,13 @@ export function useVModelFiles<
     }
   }
 
+  const fileListeners: Record<string, any> = {
+    change
+  }
+
   return {
-    files: fileHelpers,
-    fileInputRef,
+    files,
     removeFile,
-    handleFileChange
+    fileListeners
   }
 }

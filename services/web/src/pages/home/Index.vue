@@ -23,9 +23,9 @@ import CallToAction from './CallToAction.vue'
 .bg-gradient {
   background-image: linear-gradient(
       20deg,
-      theme('colors.blue.100'),
+      theme('colors.emerald.50'),
       rgba(0, 0, 0, 0) 50%
     ),
-    linear-gradient(-20deg, theme('colors.pink.100'), rgba(0, 0, 0, 0) 50%);
+    linear-gradient(-20deg, theme('colors.blue.100'), rgba(0, 0, 0, 0) 50%);
 }
 </style>

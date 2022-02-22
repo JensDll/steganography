@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useValidation, type Field } from 'validierung'
+import { rules } from '~/domain'
 
 type FormData = {
   key: Field<string>
@@ -8,10 +9,12 @@ type FormData = {
 
 const { form, validateFields } = useValidation<FormData>({
   key: {
-    $value: ''
+    $value: '',
+    $rules: [rules.required('Please enter a key')]
   },
   coverImage: {
-    $value: []
+    $value: [],
+    $rules: [rules.minMax(1, 1)('Please select a cover image')]
   }
 })
 
@@ -35,12 +38,19 @@ async function handleSubmit() {
             id="key"
             v-model="form.key.$value"
             class="w-full"
+            :class="{ error: form.key.$hasError }"
             type="password"
           />
+          <FormErrors :errors="form.key.$errors" />
         </div>
-        <FormFileInput v-model="form.coverImage.$value" class="mt-6" />
+        <FormFileInput
+          v-model="form.coverImage.$value"
+          :errors="form.coverImage.$errors"
+          label="Attach a cover image"
+          class="mt-6"
+        />
       </section>
-      <section class="bg-pink-50 py-4">
+      <section class="bg-blue-50 py-4">
         <div class="container flex justify-end">
           <AppButton type="decode" html-type="submit">Decode</AppButton>
         </div>

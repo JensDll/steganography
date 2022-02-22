@@ -3,7 +3,7 @@
 <template>
   <main
     :class="[
-      'bg-slate-50 pb-24',
+      'bg-slate-50 pb-48',
       $route.name === 'home'
         ? 'grid-area-[header/header/main/main]'
         : 'pt-12 grid-area-[main] sm:pt-16 lg:pt-20 xl:pt-24 2xl:pt-28'

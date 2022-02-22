@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useValidation, type Field } from 'validierung'
+import { rules } from '~/domain'
 
 type FormData = {
   message: Field<string>
@@ -8,10 +9,12 @@ type FormData = {
 
 const { form, validateFields } = useValidation<FormData>({
   message: {
-    $value: ''
+    $value: '',
+    $rules: [rules.required('Please enter a message')]
   },
   coverImage: {
-    $value: []
+    $value: [],
+    $rules: [rules.minMax(1, 1)('Please select a cover image')]
   }
 })
 
@@ -27,7 +30,7 @@ async function handleSubmit() {
 
 <template>
   <AppSection>
-    <form @submit.prevent="handleSubmit">
+    <form class="encode" @submit.prevent="handleSubmit">
       <section class="container py-12">
         <div>
           <label class="label" for="message">Secret message</label>
@@ -35,12 +38,19 @@ async function handleSubmit() {
             id="message"
             v-model="form.message.$value"
             placeholder="Better not trust me to much"
-            class="max-h-[400px] min-h-[100px] w-full lg:min-h-[200px]"
+            class="max-h-[400px] min-h-[150px] w-full"
+            :class="{ error: form.message.$hasError }"
           />
+          <FormErrors :errors="form.message.$errors" />
         </div>
-        <FormFileInput v-model="form.coverImage.$value" class="mt-6" />
+        <FormFileInput
+          v-model="form.coverImage.$value"
+          :errors="form.coverImage.$errors"
+          label="Attach a cover image"
+          class="mt-6"
+        />
       </section>
-      <section class="bg-blue-50 py-4">
+      <section class="bg-emerald-50 py-4">
         <div class="container flex justify-end">
           <AppButton type="encode" html-type="submit">Encode</AppButton>
         </div>

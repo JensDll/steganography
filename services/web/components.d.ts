@@ -6,7 +6,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppButton: typeof import('./src/components/app/AppButton.vue')['default']
     AppIcon: typeof import('./src/components/app/AppIcon.vue')['default']
-    AppImage: typeof import('./src/components/app/AppImage.vue')['default']
+    AppImagePreview: typeof import('./src/components/app/AppImagePreview.vue')['default']
     AppSection: typeof import('./src/components/app/AppSection.vue')['default']
     AppToggle: typeof import('./src/components/app/AppToggle.vue')['default']
     FormErrors: typeof import('./src/components/form/FormErrors.vue')['default']
@@ -16,7 +16,6 @@ declare module 'vue' {
     'HeroiconsSolid:paperClip': typeof import('~icons/heroicons-solid/paper-clip')['default']
     'Ic:twotoneRemoveCircle': typeof import('~icons/ic/twotone-remove-circle')['default']
     ImagePlus: typeof import('./src/components/app/icons/ImagePlus.vue')['default']
-    'Mdi:fileImageOutline': typeof import('~icons/mdi/file-image-outline')['default']
     'Mdi:github': typeof import('~icons/mdi/github')['default']
     TheHeader: typeof import('./src/components/layout/TheHeader.vue')['default']
     TheMain: typeof import('./src/components/layout/TheMain.vue')['default']

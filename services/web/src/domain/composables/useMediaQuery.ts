@@ -1,11 +1,20 @@
 import { onMounted, onUnmounted, ref } from 'vue'
+import { type TailwindTheme } from 'tailwind-theme'
 
-export function useMediaQuery(query: string) {
+type Query =
+  | '(prefers-reduced-motion: reduce)'
+  | `(max-width: ${TailwindTheme['screen'][keyof TailwindTheme['screen']]})`
+
+export function useMediaQuery(
+  query: Query,
+  onUpdate?: (matches: boolean) => void
+) {
   const mediaQuery = window.matchMedia(query)
   const matches = ref(false)
 
   const update = () => {
     matches.value = mediaQuery.matches
+    onUpdate?.(matches.value)
   }
 
   onMounted(() => {

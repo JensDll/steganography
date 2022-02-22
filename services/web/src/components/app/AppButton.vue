@@ -72,9 +72,9 @@ const eventListeners = {
         landing:
           'border-slate-900 bg-slate-900 text-white hover:border-slate-700 hover:bg-slate-700 focus:outline-gray-400',
         encode:
-          'border-blue-500 bg-blue-500 text-white hover:border-blue-400 hover:bg-blue-400 focus:outline-blue-400',
+          'border-emerald-500 bg-emerald-500 text-white hover:border-emerald-400 hover:bg-emerald-400 focus:outline-emerald-400',
         decode:
-          'border-pink-500 bg-pink-500 text-white hover:border-pink-400 hover:bg-pink-400 focus:outline-pink-400'
+          'border-blue-500 bg-blue-500 text-white hover:border-blue-400 hover:bg-blue-400 focus:outline-blue-400'
       }[type]
     ]"
     :aria-disabled="disabled"
