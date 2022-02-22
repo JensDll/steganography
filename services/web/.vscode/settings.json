@@ -1,15 +1,26 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
   "css.validate": false,
+  "scss.validate": false,
   "editor.quickSuggestions": {
     "strings": true
   },
-  "[vue]": {
+  "[vue][scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.fixAll": true
     }
   },
-  "volar.completion.preferredTagNameCase": "pascal"
+  "[javascript][typescript][css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": true
+    }
+  },
+  "volar.completion.preferredTagNameCase": "pascal",
+  "files.associations": {
+    "*.css": "scss"
+  }
 }

@@ -1,6 +1,12 @@
-import type { BaseTransitionProps, RendererElement } from 'vue'
+import type {
+  BaseTransitionProps,
+  ComponentPublicInstance,
+  RendererElement
+} from 'vue'
 
 export type AnyFunction = (...args: any[]) => any
+
+export type NoInfer<A> = [A][A extends any ? 0 : never]
 
 export type AnimationHooks<HostElement = RendererElement> = {
   [K in keyof BaseTransitionProps as K extends `on${infer HookName}`
@@ -12,4 +18,14 @@ export type AnimationHooks<HostElement = RendererElement> = {
       : [el: HostElement]
   ) => // @ts-expect-error Ignore ReturnType's generic constraint
   ReturnType<BaseTransitionProps[K]>
+}
+
+export type FunctionRef = (el: Element | ComponentPublicInstance | null) => void
+
+export interface EventWithTarget<T extends EventTarget> extends Event {
+  target: T
+}
+
+export interface Lengthy {
+  length: number
 }

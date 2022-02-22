@@ -1,10 +1,11 @@
 <script setup lang="ts"></script>
 
 <template>
-  <header class="z-10 border-b bg-slate-50 grid-area-[header]">
-    <div
-      class="flex items-end justify-between px-4 py-6 md:container md:mx-auto lg:px-6"
-    >
+  <header
+    class="z-10 border-b bg-slate-50 grid-area-[header]"
+    :class="{ 'border-b-0': $route.name === 'home' }"
+  >
+    <div class="container flex items-end justify-between py-6">
       <div
         class="cursor-pointer text-xl font-semibold"
         @click="$router.push({ name: 'home' })"
@@ -13,7 +14,7 @@
       </div>
       <nav>
         <ul class="flex">
-          <li class="mr-4 font-medium hover:text-sky-400">
+          <li class="mr-4 font-medium hover:text-blue-400">
             <RouterLink to="#">About</RouterLink>
           </li>
           <li class="border-l pl-4">

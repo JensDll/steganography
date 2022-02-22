@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
-import HomePage from '~/pages/home/Index.vue'
+import HomeIndex from '~/pages/home/Index.vue'
 
-import CodecPage from '~/pages/codec/Index.vue'
+import CodecIndex from '~/pages/codec/Index.vue'
 import EncodeForm from '~/pages/codec/EncodeForm.vue'
 import DecodeForm from '~/pages/codec/DecodeForm.vue'
 
@@ -10,31 +10,27 @@ const routes: RouteRecordRaw[] = [
   {
     name: 'home',
     path: '/',
-    component: HomePage
+    component: HomeIndex
   },
   {
     name: 'codec',
     path: '/codec',
-    component: CodecPage,
+    component: CodecIndex,
     children: [
       {
         name: 'encode',
         path: 'encode',
-        components: {
-          default: EncodeForm
-        },
+        component: EncodeForm,
         meta: {
-          transition: 'slide-left'
+          title: 'Encode'
         }
       },
       {
         name: 'decode',
         path: 'decode',
-        components: {
-          default: DecodeForm
-        },
+        component: DecodeForm,
         meta: {
-          transition: 'slide-right'
+          title: 'Decode'
         }
       }
     ]
@@ -48,6 +44,6 @@ export const router = createRouter({
 
 declare module 'vue-router' {
   interface RouteMeta {
-    transition?: 'slide-left' | 'slide-right'
+    title?: string
   }
 }

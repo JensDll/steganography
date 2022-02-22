@@ -1,36 +1,62 @@
 <script setup lang="ts">
 import { useValidation, type Field } from 'validierung'
+import { rules } from '~/domain'
 
 type FormData = {
-  files: Field<File[]>
+  key: Field<string>
+  coverImage: Field<File[]>
 }
 
-const { form } = useValidation<FormData>({
-  files: {
-    $value: []
+const { form, validateFields } = useValidation<FormData>({
+  key: {
+    $value: '',
+    $rules: [rules.required('Please enter a key')]
+  },
+  coverImage: {
+    $value: [],
+    $rules: [rules.minMax(1, 1)('Please select a cover image')]
   }
 })
+
+async function handleSubmit() {
+  try {
+    const formData = await validateFields()
+    console.log(formData)
+  } catch (e) {
+    console.log(e)
+  }
+}
 </script>
 
 <template>
-  <div class="w-full max-w-5xl">
-    <h2 class="mb-8 pl-8">Decode</h2>
-    <form
-      class="rounded-lg bg-white bg-gradient-to-bl from-emerald-50 shadow-md shadow-slate-200"
-    >
-      <div class="p-8">
-        <FormFileUpload
-          v-model="form.files.$value"
-          label="Select a cover image"
-        ></FormFileUpload>
-        <div class="mt-4">
-          <label class="label" for="message">Secret key</label>
-          <input class="input w-full" type="text" />
+  <AppSection class="justify-self-center">
+    <form class="decode" @submit="handleSubmit">
+      <section class="container py-12">
+        <div>
+          <label class="label" for="key">Key phrase</label>
+          <input
+            id="key"
+            v-model="form.key.$value"
+            class="w-full"
+            :class="{ error: form.key.$hasError }"
+            type="password"
+          />
+          <FormErrors :errors="form.key.$errors" />
         </div>
-      </div>
-      <div class="flex justify-end bg-emerald-50 px-8 py-4">
-        <AppButton class="py-2 px-6" type="decode">Decode</AppButton>
-      </div>
+        <FormFileInput
+          v-model="form.coverImage.$value"
+          :errors="form.coverImage.$errors"
+          label="Attach a cover image"
+          class="mt-6"
+        />
+      </section>
+      <section class="bg-blue-50 py-4">
+        <div class="container flex justify-end">
+          <AppButton type="decode" html-type="submit">Decode</AppButton>
+        </div>
+      </section>
     </form>
-  </div>
+  </AppSection>
 </template>
+
+<style scoped></style>

@@ -2,37 +2,15 @@
 
 <template>
   <main
-    class="min-h-screen bg-slate-50 transition-all duration-500 grid-area-[header/header/main/main]"
+    :class="[
+      'bg-slate-50 pb-48',
+      $route.name === 'home'
+        ? 'grid-area-[header/header/main/main]'
+        : 'pt-12 grid-area-[main] sm:pt-16 lg:pt-20 xl:pt-24 2xl:pt-28'
+    ]"
   >
     <RouterView></RouterView>
   </main>
 </template>
 
-<style scoped>
-.bg-gradient-sky-emerald {
-  background-image: linear-gradient(
-      20deg,
-      theme('colors.sky.100'),
-      rgba(0, 0, 0, 0) 50%
-    ),
-    linear-gradient(-20deg, theme('colors.emerald.100'), rgba(0, 0, 0, 0) 50%);
-}
-
-.bg-gradient-sky {
-  background-image: linear-gradient(
-      20deg,
-      theme('colors.sky.100'),
-      rgba(0, 0, 0, 0) 50%
-    ),
-    linear-gradient(-20deg, theme('colors.sky.100'), rgba(0, 0, 0, 0) 50%);
-}
-
-.bg-gradient-emerald {
-  background-image: linear-gradient(
-      20deg,
-      theme('colors.emerald.100'),
-      rgba(0, 0, 0, 0) 50%
-    ),
-    linear-gradient(-20deg, theme('colors.emerald.100'), rgba(0, 0, 0, 0) 50%);
-}
-</style>
+<style scoped></style>

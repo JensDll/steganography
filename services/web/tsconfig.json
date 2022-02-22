@@ -12,12 +12,13 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "unplugin-icons/types/vue"],
     "paths": {
+      "tailwind-theme": ["./tailwind/theme"],
       "~/*": ["src/*"]
     },
     "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"],
     "skipLibCheck": true
   },
-  "include": ["*.ts", "src/**/*", "src/**/*.vue", "scripts"]
+  "include": ["*.ts", "src/**/*", "src/**/*.vue", "tailwind"]
 }

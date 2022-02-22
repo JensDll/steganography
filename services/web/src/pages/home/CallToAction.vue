@@ -6,16 +6,23 @@ import { useMediaQuery, type AnimationHooks } from '~/domain'
 
 const emit = defineEmits(['click'])
 
-const isReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
-
 const containerRef = ref() as Ref<HTMLDivElement>
 const lockDim = 24
-const numLocks = 10
+const numLocks = ref(10)
 const animationState = {
   x: 0,
   randomY: () => 0,
   randomDuration: gsap.utils.random(1.5, 4, true)
 }
+
+const isReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
+// useMediaQuery('(max-width: 640px)', isSm => {
+//   if (isSm) {
+//     numLocks.value = 3
+//   } else {
+//     numLocks.value = 10
+//   }
+// })
 
 const animate = (icon: SVGElement) => {
   gsap.set(icon, {
@@ -86,15 +93,13 @@ onUnmounted(() => {
     <TransitionGroup appear v-on="animation">
       <HeroiconsSolid:lockClosed
         v-for="i in numLocks"
-        :id="`closed-${i}`"
-        :key="i"
-        class="absolute top-0 right-full h-6 w-6 origin-center text-sky-200"
+        :key="`closed-${i}`"
+        class="lock absolute top-0 right-full h-6 w-6 origin-center text-emerald-200"
       />
       <HeroiconsSolid:lockOpen
         v-for="i in numLocks"
-        :id="`open-${i}`"
-        :key="i"
-        class="absolute top-0 right-full h-6 w-6 text-emerald-200"
+        :key="`open-${i}`"
+        class="lock absolute top-0 right-full h-6 w-6 text-blue-200"
       />
     </TransitionGroup>
   </div>

@@ -1,44 +1,62 @@
 <script setup lang="ts">
 import { useValidation, type Field } from 'validierung'
+import { rules } from '~/domain'
 
 type FormData = {
-  files: Field<File[]>
+  message: Field<string>
+  coverImage: Field<File[]>
 }
 
-const { form } = useValidation<FormData>({
-  files: {
-    $value: []
+const { form, validateFields } = useValidation<FormData>({
+  message: {
+    $value: '',
+    $rules: [rules.required('Please enter a message')]
+  },
+  coverImage: {
+    $value: [],
+    $rules: [rules.minMax(1, 1)('Please select a cover image')]
   }
 })
+
+async function handleSubmit() {
+  try {
+    const formData = await validateFields()
+    console.log(formData)
+  } catch (e) {
+    console.log(e)
+  }
+}
 </script>
 
 <template>
-  <div class="w-full max-w-5xl">
-    <h1 class="mb-12 text-center">Encode</h1>
-    <form>
-      <div class="bg-gradient-to-br from-sky-50 p-6">
+  <AppSection>
+    <form class="encode" @submit.prevent="handleSubmit">
+      <section class="container py-12">
         <div>
           <label class="label" for="message">Secret message</label>
           <textarea
             id="message"
-            class="input max-h-[400px] min-h-[100px] w-full lg:min-h-[200px]"
+            v-model="form.message.$value"
+            placeholder="Better not trust me to much"
+            class="max-h-[400px] min-h-[150px] w-full"
+            :class="{ error: form.message.$hasError }"
           />
+          <FormErrors :errors="form.message.$errors" />
         </div>
-        <FormFileUpload
-          v-model="form.files.$value"
-          class="mt-4"
-          label="Select a cover image"
-        ></FormFileUpload>
-      </div>
-      <div class="flex justify-end bg-sky-100 p-6">
-        <AppButton class="py-2 px-6" type="encode">Encode</AppButton>
-      </div>
+        <FormFileInput
+          v-model="form.coverImage.$value"
+          :errors="form.coverImage.$errors"
+          label="Attach a cover image"
+          class="mt-6"
+        />
+      </section>
+      <section class="bg-emerald-50 py-4">
+        <div class="container flex justify-end">
+          <AppButton type="encode" html-type="submit">Encode</AppButton>
+        </div>
+      </section>
     </form>
-  </div>
+  </AppSection>
 </template>
 
-<style>
-.my-shadow {
-  box-shadow: 0 0 8px 2px rgb(203 213 225 / 0.3);
-}
-</style>
+<style scoped></style>
