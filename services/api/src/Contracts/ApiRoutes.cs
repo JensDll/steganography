@@ -6,6 +6,8 @@ public static class ApiRoutes
 
     public static class CodecRoutes
     {
-        public const string Encode = Base + "/codec/encode";
+        public const string EncodeText = Base + "/codec/encode/text";
+
+        public const string EncodeBinary = Base + "/codec/encode/binary";
     }
 }
