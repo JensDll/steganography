@@ -7,7 +7,7 @@ specifiers:
   '@iconify-json/mdi': ^1.1.0
   '@tailwindcss/forms': ^0.4.0
   '@tailwindcss/typography': ^0.5.2
-  '@types/node': ^17.0.20
+  '@types/node': ^17.0.21
   '@types/tailwindcss': ^3.0.9
   '@typescript-eslint/eslint-plugin': ^5.12.1
   '@typescript-eslint/parser': ^5.12.1
@@ -27,10 +27,10 @@ specifiers:
   typescript: ^4.5.5
   unplugin-auto-import: ^0.6.1
   unplugin-icons: ^0.13.2
-  unplugin-vue-components: ^0.17.20
+  unplugin-vue-components: ^0.17.21
   validierung: ^1.0.1
   vite: ^2.8.4
-  vitest: ^0.5.3
+  vitest: ^0.5.5
   vue: ^3.2.31
   vue-router: ^4.0.12
   vue-tsc: ^0.31.4
@@ -48,7 +48,7 @@ dependencies:
   tailwindcss: 3.0.23_autoprefixer@10.4.2
   unplugin-auto-import: 0.6.1_esbuild@0.14.23+vite@2.8.4
   unplugin-icons: 0.13.2_esbuild@0.14.23+vite@2.8.4
-  unplugin-vue-components: 0.17.20_91ef40bda87ab42b5d70aaba0014a426
+  unplugin-vue-components: 0.17.21_91ef40bda87ab42b5d70aaba0014a426
   validierung: 1.0.1_vue@3.2.31
   vite: 2.8.4
   vue: 3.2.31
@@ -60,7 +60,7 @@ devDependencies:
   '@iconify-json/heroicons-solid': 1.1.1
   '@iconify-json/ic': 1.1.1
   '@iconify-json/mdi': 1.1.0
-  '@types/node': 17.0.20
+  '@types/node': 17.0.21
   '@types/tailwindcss': 3.0.9
   '@typescript-eslint/eslint-plugin': 5.12.1_aa3af6382115a42a71cc388b7b2c30b3
   '@typescript-eslint/parser': 5.12.1_eslint@8.9.0+typescript@4.5.5
@@ -70,7 +70,7 @@ devDependencies:
   prettier: 2.5.1
   prettier-plugin-tailwindcss: 0.1.7_prettier@2.5.1
   typescript: 4.5.5
-  vitest: 0.5.3
+  vitest: 0.5.5
 
 packages:
 
@@ -165,8 +165,8 @@ packages:
       - supports-color
     dev: true
 
-  /@humanwhocodes/config-array/0.9.3:
-    resolution: {integrity: sha512-3xSMlXHh03hCcCmFc0rbKp3Ivt2PFEJnQUJDDMTJQ2wkECZWdq4GePs2ctc5H8zV+cHPaq8k2vU8mrQjA6iHdQ==}
+  /@humanwhocodes/config-array/0.9.5:
+    resolution: {integrity: sha512-ObyMyWxZiCu/yTisA7uzx81s40xR2fD5Cg/2Kq7G02ajkNubJf6BopgDTmDyc3U7sXpNKM8cYOw7s7Tyr+DnCw==}
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 1.2.1
@@ -280,8 +280,8 @@ packages:
     resolution: {integrity: sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ==}
     dev: true
 
-  /@types/node/17.0.20:
-    resolution: {integrity: sha512-Q15Clj3lZSLnhVA6yKw1G7SQz46DeL9gO1TEgfK1OQGvMdQ6TUWmCeWf1QBUNkw2BDfV52i2YuYd9OF3ZwGhjw==}
+  /@types/node/17.0.21:
+    resolution: {integrity: sha512-DBZCJbhII3r90XbQxI8Y9IjjiiOGlZ0Hr32omXIZvwwZ7p4DMMXGrKXVyPfuoBOri9XNtL0UK69jYIBIsRX3QQ==}
     dev: true
 
   /@types/parse-json/4.0.0:
@@ -724,7 +724,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001312
-      electron-to-chromium: 1.4.71
+      electron-to-chromium: 1.4.72
       escalade: 3.1.1
       node-releases: 2.0.2
       picocolors: 1.0.0
@@ -951,8 +951,8 @@ packages:
       domhandler: 4.3.0
     dev: false
 
-  /electron-to-chromium/1.4.71:
-    resolution: {integrity: sha512-Hk61vXXKRb2cd3znPE9F+2pLWdIOmP7GjiTj45y6L3W/lO+hSnUSUhq+6lEaERWBdZOHbk2s3YV5c9xVl3boVw==}
+  /electron-to-chromium/1.4.72:
+    resolution: {integrity: sha512-9LkRQwjW6/wnSfevR21a3k8sOJ+XWSH7kkzs9/EUenKmuDkndP3W9y1yCZpOxufwGbX3JV8glZZSDb4o95zwXQ==}
     dev: false
 
   /emmet/2.3.6:
@@ -1244,7 +1244,7 @@ packages:
     hasBin: true
     dependencies:
       '@eslint/eslintrc': 1.1.0
-      '@humanwhocodes/config-array': 0.9.3
+      '@humanwhocodes/config-array': 0.9.5
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
@@ -2360,8 +2360,8 @@ packages:
       - webpack
     dev: false
 
-  /unplugin-vue-components/0.17.20_91ef40bda87ab42b5d70aaba0014a426:
-    resolution: {integrity: sha512-YSofs2RFzLUZWnMyEZ25PnK1WR6etiS2Wl2TdU5T6nvyvn9HqUD54V5JAdKmybgLym6M+YoOE+Mzxtj/bTWDpQ==}
+  /unplugin-vue-components/0.17.21_91ef40bda87ab42b5d70aaba0014a426:
+    resolution: {integrity: sha512-jkXksUF6zkNbzHQbw1DdrsQyVoMZGESRZDIGd9x7nUP+65nHdpBCY/JmlxSjKbuTrOwfMsk6FQFa0RpRueOCKg==}
     engines: {node: '>=14'}
     peerDependencies:
       '@babel/parser': ^7.15.8
@@ -2471,8 +2471,8 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
 
-  /vitest/0.5.3:
-    resolution: {integrity: sha512-tAV96lEUvycgiqsQKoQRjzXwDg+ae/R2jBLtt6MnFywOXbC9wYl+nRT9qT+d/+Mlw2B4dvVa9zuekY3emdcXJA==}
+  /vitest/0.5.5:
+    resolution: {integrity: sha512-oBKIXpFOGN7jDdK0MO4uWcB+UOPRyEJveB8XDx74XsFNbjGF7vHmHqwAomNE8MGtDW8hBKvSSbr58hibFiQc5Q==}
     engines: {node: '>=14.14.0'}
     hasBin: true
     peerDependencies:
