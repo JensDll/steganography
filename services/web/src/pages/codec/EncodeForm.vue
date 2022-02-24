@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useValidation, type Field } from 'validierung'
-import { rules } from '~/domain'
+
+import { rules, useApi } from '~/domain'
 
 type FormData = {
   message: Field<string>
@@ -18,10 +19,12 @@ const { form, validateFields } = useValidation<FormData>({
   }
 })
 
+const { loading, api } = useApi()
+
 async function handleSubmit() {
   try {
     const formData = await validateFields()
-    console.log(formData)
+    await api.encodeText(formData.coverImage[0], formData.message)
   } catch (e) {
     console.log(e)
   }

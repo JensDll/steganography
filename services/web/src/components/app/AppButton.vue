@@ -49,10 +49,7 @@ const handleSubmit = (e: MouseEvent) => {
   e.preventDefault()
   const target = e.target as HTMLButtonElement
   if (!target.disabled && target.ariaDisabled !== 'true' && parentForm) {
-    parentForm.dispatchEvent(
-      // eslint-disable-next-line no-undef
-      new SubmitEvent('submit', { submitter: buttonRef.value })
-    )
+    parentForm.dispatchEvent(new Event('submit'))
   }
 }
 

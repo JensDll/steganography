@@ -40,7 +40,7 @@ const { files, fileListeners, removeFile } = useVModelFiles(props, emit)
         <HeroiconsSolid:paperClip class="h-6 w-6" />
       </label>
       <div
-        class="custom-file-input relative mr-4 cursor-pointer px-4 py-3"
+        class="custom-file-input relative mr-4 cursor-pointer p-3"
         :class="{ error: errors.length }"
       >
         <input
