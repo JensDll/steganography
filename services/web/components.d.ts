@@ -5,6 +5,7 @@
 declare module 'vue' {
   export interface GlobalComponents {
     AppButton: typeof import('./src/components/app/AppButton.vue')['default']
+    AppFilePreview: typeof import('./src/components/app/AppFilePreview.vue')['default']
     AppIcon: typeof import('./src/components/app/AppIcon.vue')['default']
     AppImagePreview: typeof import('./src/components/app/AppImagePreview.vue')['default']
     AppSection: typeof import('./src/components/app/AppSection.vue')['default']
@@ -14,7 +15,10 @@ declare module 'vue' {
     'HeroiconsSolid:lockClosed': typeof import('~icons/heroicons-solid/lock-closed')['default']
     'HeroiconsSolid:lockOpen': typeof import('~icons/heroicons-solid/lock-open')['default']
     'HeroiconsSolid:paperClip': typeof import('~icons/heroicons-solid/paper-clip')['default']
+    'Ic:outlineUploadFile': typeof import('~icons/ic/outline-upload-file')['default']
     'Ic:twotoneRemoveCircle': typeof import('~icons/ic/twotone-remove-circle')['default']
+    'Ic:twotoneUploadFile': typeof import('~icons/ic/twotone-upload-file')['default']
+    'Ic:TwotoneUploadFile': typeof import('~icons/ic/-twotone-upload-file')['default']
     ImagePlus: typeof import('./src/components/app/icons/ImagePlus.vue')['default']
     'Mdi:github': typeof import('~icons/mdi/github')['default']
     TheHeader: typeof import('./src/components/layout/TheHeader.vue')['default']

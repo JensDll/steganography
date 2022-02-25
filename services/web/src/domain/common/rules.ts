@@ -1,4 +1,6 @@
-import { type Lengthy } from '..'
+import { type ComputedRef, type Ref } from 'vue'
+
+import { type AnyFunction, type Lengthy } from './types'
 
 export const rules = {
   required: (msg: string) => (value: unknown) => !value && msg,
@@ -12,5 +14,10 @@ export const rules = {
   equal:
     (msg: string) =>
     (...values: unknown[]) =>
-      values.every(value => value === values[0]) || msg
+      values.every(value => value === values[0]) || msg,
+  withPre:
+    (...pre: (Ref<boolean> | ComputedRef<boolean>)[]) =>
+    (rule: AnyFunction) =>
+    (...args: unknown[]) =>
+      pre.every(r => r.value) && rule(...args)
 }

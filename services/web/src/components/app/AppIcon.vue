@@ -3,7 +3,7 @@ import { type PropType } from 'vue'
 
 type IconName = 'ImagePlus'
 
-const icons: Record<`./icon/${IconName}.vue`, any> = import.meta.globEager(
+const icons: Record<`./icons/${IconName}.vue`, any> = import.meta.globEager(
   './icons/*.vue'
 )
 
@@ -16,5 +16,5 @@ defineProps({
 </script>
 
 <template>
-  <component :is="icons[`./icon/${icon}.vue`].default" />
+  <component :is="icons[`./icons/${icon}.vue`].default" />
 </template>

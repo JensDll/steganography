@@ -1,48 +1,47 @@
 <script setup lang="ts">
 import { watch, computed, ref, type PropType } from 'vue'
+import { useFileSize } from '~/domain'
 
-const emit = defineEmits(['click', 'remove'])
+const emit = defineEmits(['remove'])
 
 const props = defineProps({
-  src: {
+  file: {
     type: Object as PropType<File | undefined>,
     default: undefined
   },
   alt: {
     type: String,
     default: 'image'
+  },
+  type: {
+    type: String as PropType<'default' | 'reduced'>,
+    default: 'default'
   }
 })
 
 const loading = ref(false)
 const loaded = ref(false)
 
+const isImage = computed(() => props.file?.type.startsWith('image/'))
+
 const src = computed(() => {
-  if (props.src) {
+  if (props.file) {
+    console.log()
     if (src.value) {
       URL.revokeObjectURL(src.value)
     }
-    return URL.createObjectURL(props.src)
+    return URL.createObjectURL(props.file)
   }
 
   return undefined
 })
 
-const fileSize = computed<string>(() => {
-  if (props.src) {
-    const sizeInKB = props.src.size / 1024
-    return sizeInKB >= 1024
-      ? `${(sizeInKB / 1024).toFixed(2)} MB`
-      : `${sizeInKB.toFixed(2)} kB`
-  }
-
-  return ''
-})
+const fileSize = useFileSize(props)
 
 watch(
-  () => props.src,
-  src => {
-    if (src) {
+  () => props.file,
+  file => {
+    if (file) {
       loading.value = true
     } else {
       loaded.value = false
@@ -56,7 +55,6 @@ watch(
 function handleClick() {
   loaded.value = false
   loading.value = false
-  emit('click')
   emit('remove')
 }
 
@@ -68,14 +66,21 @@ function handleLoad() {
 
 <template>
   <div
-    class="group relative center-children"
-    :class="{ 'cursor-pointer': loaded }"
+    class="group"
+    :class="[
+      { 'cursor-pointer': !isImage || loaded },
+      {
+        default: 'flex flex-col items-center rounded-lg ',
+        reduced: 'relative center-children'
+      }[type]
+    ]"
+    @click="handleClick"
   >
     <div
+      v-if="isImage"
       v-show="loaded || loading"
       class="h-12 w-12 overflow-clip rounded-full shadow center-children"
       :class="{ 'group-hover:opacity-30': loaded }"
-      @click="handleClick"
     >
       <img
         v-if="src"
@@ -91,11 +96,23 @@ function handleLoad() {
         }"
       ></div>
     </div>
-    <span
-      class="absolute top-full whitespace-nowrap pt-1 text-xs text-slate-600"
-      :class="{ 'group-hover:line-through': loaded }"
+    <p
+      v-if="type === 'default'"
+      class="break-all text-sm text-slate-700 group-hover:line-through"
+    >
+      {{ file?.name }}
+    </p>
+    <p
+      class="whitespace-nowrap pt-1 text-xs text-slate-600"
+      :class="[
+        { 'group-hover:line-through': !isImage || loaded },
+        {
+          default: '',
+          reduced: 'absolute top-full'
+        }[type]
+      ]"
     >
       {{ fileSize }}
-    </span>
+    </p>
   </div>
 </template>

@@ -50,6 +50,7 @@ export function useVModelFiles(
   })
 
   const removeFile = (i: number) => {
+    console.log(i)
     if (input) {
       input.value = ''
     }

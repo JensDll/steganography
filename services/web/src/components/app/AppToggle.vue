@@ -9,18 +9,15 @@ const emit = defineEmits({
 const props = defineProps({
   modelValue: {
     type: Boolean,
-    default: true
+    default: false
   },
   duration: {
     type: Number,
     default: 150
   },
-  classNames: {
-    type: Object as PropType<{
-      toggle?: string
-      handle?: string
-    }>,
-    default: () => ({})
+  type: {
+    type: String as PropType<'encode' | 'decode'>,
+    default: 'encode'
   }
 })
 
@@ -36,9 +33,25 @@ const isActive = computed<boolean>({
 </script>
 
 <template>
-  <div :class="['toggle', classNames.toggle]" @click="isActive = !isActive">
+  <div
+    :class="[
+      'toggle',
+      {
+        encode: 'bg-emerald-50',
+        decode: 'bg-blue-50'
+      }[type]
+    ]"
+    @click="isActive = !isActive"
+  >
     <div
-      :class="['handle', isActive && 'handle-active', classNames.handle]"
+      :class="[
+        'handle',
+        isActive && 'handle-active',
+        {
+          encode: 'bg-emerald-500',
+          decode: 'bg-blue-500'
+        }[type]
+      ]"
       :style="{
         'transition-duration': `${duration}ms`
       }"
@@ -51,10 +64,10 @@ const isActive = computed<boolean>({
 
 <style scoped>
 .toggle {
-  --handle-width: 2rem;
+  --handle-width: 1.25rem;
   --toggle-width: calc(2.5 * var(--handle-width));
 
-  @apply relative box-content grid cursor-pointer place-items-center rounded-full border-2 p-1;
+  @apply relative box-content grid cursor-pointer place-items-center rounded-full border border-slate-300 p-1 shadow-sm;
   grid-template-columns: var(--handle-width) 1fr var(--handle-width);
   grid-template-areas: 'active . inactive';
   width: var(--toggle-width);

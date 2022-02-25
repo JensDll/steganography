@@ -1,21 +1,37 @@
 <script setup lang="ts">
 import { useValidation, type Field } from 'validierung'
+import { ref, computed } from 'vue'
 
 import { rules, useApi } from '~/domain'
 
 type FormData = {
-  message: Field<string>
+  textData: Field<string>
+  binaryData: Field<File[]>
   coverImage: Field<File[]>
 }
 
+const messageMode = ref<'text' | 'binary'>('text')
+const isTextMode = computed(() => messageMode.value === 'text')
+const isBinaryMode = computed(() => messageMode.value === 'binary')
+
 const { form, validateFields } = useValidation<FormData>({
-  message: {
+  textData: {
     $value: '',
-    $rules: [rules.required('Please enter a message')]
+    $rules: [
+      rules.withPre(isTextMode)(rules.required('Please enter a message'))
+    ]
+  },
+  binaryData: {
+    $value: [],
+    $rules: [
+      rules.withPre(isBinaryMode)(
+        rules.min(1)('Please attach one or more files')
+      )
+    ]
   },
   coverImage: {
     $value: [],
-    $rules: [rules.minMax(1, 1)('Please select a cover image')]
+    $rules: [rules.minMax(1, 1)('Please attach a cover image')]
   }
 })
 
@@ -24,7 +40,8 @@ const { loading, api } = useApi()
 async function handleSubmit() {
   try {
     const formData = await validateFields()
-    await api.encodeText(formData.coverImage[0], formData.message)
+    console.log(formData)
+    // await api.encodeText(formData.coverImage[0], formData.textData)
   } catch (e) {
     console.log(e)
   }
@@ -36,15 +53,48 @@ async function handleSubmit() {
     <form class="encode" @submit.prevent="handleSubmit">
       <section class="container py-12">
         <div>
-          <label class="label" for="message">Secret message</label>
-          <textarea
-            id="message"
-            v-model="form.message.$value"
-            placeholder="Better not trust me to much"
-            class="max-h-[400px] min-h-[150px] w-full"
-            :class="{ error: form.message.$hasError }"
+          <label for="message">Secret message</label>
+          <div class="mb-2 flex items-center">
+            <input
+              id="text-mode"
+              v-model="messageMode"
+              :class="{ error: isTextMode && form.textData.$hasError }"
+              type="radio"
+              name="messageType"
+              value="text"
+            />
+            <label for="text-mode" class="mb-0 ml-1 font-normal">
+              Text data
+            </label>
+            <input
+              id="binary-mode"
+              v-model="messageMode"
+              :class="{ error: isBinaryMode && form.binaryData.$hasError }"
+              type="radio"
+              name="messageType"
+              class="ml-3"
+              value="binary"
+            />
+            <label for="binary-mode" class="mb-0 ml-1 font-normal">
+              Binary data
+            </label>
+          </div>
+          <template v-if="isTextMode">
+            <textarea
+              id="message"
+              v-model="form.textData.$value"
+              placeholder="Your secret message here"
+              class="max-h-[24rem] min-h-[8rem] w-full"
+              :class="{ error: form.textData.$hasError }"
+            />
+            <FormErrors :errors="form.textData.$errors" />
+          </template>
+          <FormFileInput
+            v-else
+            v-model="form.binaryData.$value"
+            :errors="form.binaryData.$errors"
+            multiple
           />
-          <FormErrors :errors="form.message.$errors" />
         </div>
         <FormFileInput
           v-model="form.coverImage.$value"
