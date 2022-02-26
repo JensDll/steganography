@@ -8,11 +8,16 @@ public static class MultipartRequestHelper
     {
         string boundary = HeaderUtilities.RemoveQuotes(contentType.Boundary).Value;
 
-        if (string.IsNullOrWhiteSpace(boundary)) throw new InvalidDataException("Missing content-type boundary.");
+        if (string.IsNullOrWhiteSpace(boundary))
+        {
+            throw new InvalidDataException("Missing content-type boundary.");
+        }
 
         if (boundary.Length > lengthLimit)
+        {
             throw new InvalidDataException(
                 $"Multipart boundary length limit {lengthLimit} exceeded.");
+        }
 
         return boundary;
     }
@@ -23,9 +28,9 @@ public static class MultipartRequestHelper
                && contentType.StartsWith("multipart/", StringComparison.OrdinalIgnoreCase);
     }
 
-    public static bool HasFormDataContentDisposition(ContentDispositionHeaderValue contentDisposition)
+    public static bool HasFormDataContentDisposition(
+        ContentDispositionHeaderValue contentDisposition)
     {
-        // Content-Disposition: form-data; name="key";
         return contentDisposition.DispositionType.Equals("form-data")
                && string.IsNullOrEmpty(contentDisposition.FileName.Value)
                && string.IsNullOrEmpty(contentDisposition.FileNameStar.Value);

@@ -51,13 +51,20 @@ public static class FileHelper
         return image;
     }
 
-    private static bool IsValidFileExtensionAndSignature(string fileName, Stream data, string[] permittedExtensions)
+    private static bool IsValidFileExtensionAndSignature(string fileName, Stream data,
+        string[] permittedExtensions)
     {
-        if (string.IsNullOrEmpty(fileName) || data.Length == 0) return false;
+        if (string.IsNullOrEmpty(fileName) || data.Length == 0)
+        {
+            return false;
+        }
 
         string extension = Path.GetExtension(fileName).ToLowerInvariant();
 
-        if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension)) return false;
+        if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
+        {
+            return false;
+        }
 
         data.Position = 0;
 
@@ -66,6 +73,7 @@ public static class FileHelper
         List<byte[]> signatures = _fileSignature[extension];
         byte[] headerBytes = reader.ReadBytes(signatures.Max(m => m.Length));
 
-        return signatures.Any(signature => headerBytes.Take(signature.Length).SequenceEqual(signature));
+        return signatures.Any(signature =>
+            headerBytes.Take(signature.Length).SequenceEqual(signature));
     }
 }

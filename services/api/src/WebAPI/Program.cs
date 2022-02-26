@@ -1,16 +1,26 @@
+using Domain;
 using Microsoft.AspNetCore.Http.Features;
+using WebApi.ModelBinding.Providers;
 
-string corsDevPolicy = "cors:dev";
+const string corsDevPolicy = "cors:dev";
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder webBuilder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options => { options.AddPolicy(corsDevPolicy, builder => { builder.AllowAnyOrigin(); }); });
-builder.Services.Configure<FormOptions>(options => { options.MultipartBodyLengthLimit = 268435456; });
+webBuilder.Services.AddControllers(mvcOptions =>
+{
+    mvcOptions.ModelBinderProviders.Insert(0, new EncodeRequestModelBinderProvider());
+});
+webBuilder.Services.AddEndpointsApiExplorer();
+webBuilder.Services.AddSwaggerGen();
+webBuilder.Services.AddCors(options =>
+{
+    options.AddPolicy(corsDevPolicy, corsBuilder => { corsBuilder.AllowAnyOrigin(); });
+});
+webBuilder.Services.Configure<FormOptions>(options => { options.MultipartBodyLengthLimit = 268435456; });
+webBuilder.Services.AddDataProtection();
+webBuilder.Services.AddDomain();
 
-WebApplication app = builder.Build();
+WebApplication app = webBuilder.Build();
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,29 +1,29 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using Contracts;
-using Domain.Extensions;
+﻿using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
-using SixLabors.ImageSharp;
+using WebApi.Attributes;
+using WebApi.Contracts;
+using WebApi.Contracts.Request;
 using WebApi.Helpers;
 
 namespace WebApi.Controllers;
 
 [ApiController]
+[DisableFormDataModelBinding]
 public class CodecController : ControllerBase
 {
-    private readonly string[] _permittedExtensions = {".png"};
+    private readonly IKeyGenerator _keyGenerator;
+
+    public CodecController(IKeyGenerator keyGenerator)
+    {
+        _keyGenerator = keyGenerator;
+    }
 
     [HttpPost(ApiRoutes.CodecRoutes.EncodeText)]
-    public async Task<IActionResult> EncodeText()
+    public async Task<IActionResult> EncodeText(EncodeRequest encodeRequest)
     {
-        if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType)) return BadRequest();
-
-        string boundary = MultipartRequestHelper.GetBoundary(
-            MediaTypeHeaderValue.Parse(Request.ContentType));
-        MultipartReader multipartReader = new(boundary, Request.Body);
-        MultipartSection? section = await multipartReader.ReadNextSectionAsync();
+        MultipartSection? section = await encodeRequest.MultipartReader.ReadNextSectionAsync();
 
         while (section != null)
         {
@@ -36,34 +36,28 @@ public class CodecController : ControllerBase
             {
                 section.Body.Position = 0;
 
-                if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
+                if (MultipartRequestHelper.HasFormDataContentDisposition(contentDisposition))
                 {
-                    using Image? image = await Image.LoadAsync(section.Body);
-
-                    int width = image.Width;
-                }
-                else if (MultipartRequestHelper.HasFormDataContentDisposition(contentDisposition))
-                {
-                    using StreamReader streamReader = new(section.Body, Encoding.UTF8);
-                    string formData = await streamReader.ReadToEndAsync();
+                    await using MemoryStream memoryStream = new();
+                    await section.Body.CopyToAsync(memoryStream);
+                    byte[] data = memoryStream.ToArray();
                 }
                 else
                 {
-                    return BadRequest();
+                    return ValidationProblem();
                 }
             }
 
-            section = await multipartReader.ReadNextSectionAsync();
+            section = await encodeRequest.MultipartReader.ReadNextSectionAsync();
         }
 
         return Ok();
     }
 
     [HttpPost(ApiRoutes.CodecRoutes.EncodeBinary)]
-    public IActionResult EncodeBinary()
+    public IActionResult EncodeBinary(EncodeRequest encodeRequest)
     {
-        RandomNumberGenerator rng = RandomNumberGenerator.Create();
-
-        return Ok(rng.GenerateKey(256));
+        string key = _keyGenerator.GenerateKey(256);
+        return Ok(key);
     }
 }

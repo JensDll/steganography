@@ -1,11 +1,10 @@
-﻿using System.Security.Cryptography;
-using Domain.Extensions;
+﻿using Domain.Entities;
 using NUnit.Framework;
 
-namespace Domain.Unit.Extensions;
+namespace Domain.UnitTests.Entities;
 
 [TestFixture]
-internal class RandomNumberGeneratorExtensionTest
+internal class KeyGeneratorTest
 {
     [TestCase(4, 4)]
     [TestCase(8, 8)]
@@ -22,12 +21,26 @@ internal class RandomNumberGeneratorExtensionTest
     public void ShouldGenerateKeyOfGivenLength(int length, int expectedLength)
     {
         // Arrange
-        RandomNumberGenerator rng = RandomNumberGenerator.Create();
+        KeyGenerator generator = new();
 
         // Act
-        string key = rng.GenerateKey(length);
+        string key = generator.GenerateKey(length);
 
         // Assert
         Assert.That(key, Has.Length.EqualTo(expectedLength));
+    }
+
+    [Test]
+    public void ShouldGenerateUniqueKeys()
+    {
+        // Arrange
+        KeyGenerator generator = new();
+
+        // Act
+        string key1 = generator.GenerateKey(256);
+        string key2 = generator.GenerateKey(256);
+
+        // Assert
+        Assert.That(key1, Is.Not.EqualTo(key2));
     }
 }
