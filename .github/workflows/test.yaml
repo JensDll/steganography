@@ -42,11 +42,24 @@ jobs:
 
   api:
     if: fromJSON(needs.should-run.outputs.result).api == 'true'
-    runs-on: ubuntu-latest
     needs: should-run
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: services/api
     steps:
-      - name: Checkout the repository
+      - name: Checking out the repository
         uses: actions/checkout@v2
+      - name: Setting up dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - name: Installing dependencies
+        run: dotnet restore
+      - name: Building the project
+        run: dotnet build --configuration Release --no-restore
+      - name: Running tests
+        run: dotnet test --no-restore --verbosity normal
