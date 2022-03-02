@@ -1,24 +1,26 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32210.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A2C41B50-FB95-4BA7-96E5-C6C13271D069}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{20326E77-B359-4456-A302-215A2048BEE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain.csproj", "{20326E77-B359-4456-A302-215A2048BEE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "src\WebApi\WebApi.csproj", "{76C8F76D-B37B-4C1A-8B23-24269C127084}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "src\WebApi\WebApi.csproj", "{76C8F76D-B37B-4C1A-8B23-24269C127084}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5A573C92-E7F4-49D5-ABC7-D5302F8F9861}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.UnitTests", "tests\Domain.UnitTests\Domain.UnitTests.csproj", "{6D6FE651-C0DD-4409-AF36-04E57CEA381A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.UnitTests", "tests\Domain.UnitTests\Domain.UnitTests.csproj", "{6D6FE651-C0DD-4409-AF36-04E57CEA381A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniApi", "src\MiniApi\MiniApi.csproj", "{0A04D0CF-3AA0-4633-83A3-B23F9AF184FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.IntegrationTests", "tests\Domain.IntegrationTests\Domain.IntegrationTests.csproj", "{65B56172-BB03-4403-BBFB-257B1B04139F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{20326E77-B359-4456-A302-215A2048BEE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -33,10 +35,26 @@ Global
 		{6D6FE651-C0DD-4409-AF36-04E57CEA381A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D6FE651-C0DD-4409-AF36-04E57CEA381A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D6FE651-C0DD-4409-AF36-04E57CEA381A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A04D0CF-3AA0-4633-83A3-B23F9AF184FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A04D0CF-3AA0-4633-83A3-B23F9AF184FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A04D0CF-3AA0-4633-83A3-B23F9AF184FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A04D0CF-3AA0-4633-83A3-B23F9AF184FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65B56172-BB03-4403-BBFB-257B1B04139F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65B56172-BB03-4403-BBFB-257B1B04139F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65B56172-BB03-4403-BBFB-257B1B04139F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65B56172-BB03-4403-BBFB-257B1B04139F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{20326E77-B359-4456-A302-215A2048BEE1} = {A2C41B50-FB95-4BA7-96E5-C6C13271D069}
 		{76C8F76D-B37B-4C1A-8B23-24269C127084} = {A2C41B50-FB95-4BA7-96E5-C6C13271D069}
 		{6D6FE651-C0DD-4409-AF36-04E57CEA381A} = {5A573C92-E7F4-49D5-ABC7-D5302F8F9861}
+		{0A04D0CF-3AA0-4633-83A3-B23F9AF184FA} = {A2C41B50-FB95-4BA7-96E5-C6C13271D069}
+		{65B56172-BB03-4403-BBFB-257B1B04139F} = {5A573C92-E7F4-49D5-ABC7-D5302F8F9861}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {516C2484-6A3B-4326-9048-1B3923654DE5}
 	EndGlobalSection
 EndGlobal

@@ -1,38 +1,63 @@
 using Domain;
 using Microsoft.AspNetCore.Http.Features;
-using WebApi.ModelBinding.Providers;
+using MiniApi;
+using WebApi.Endpoints.Codec.Request;
+using static MiniApi.EndpointAuthenticationDeclaration;
 
 const string corsDevPolicy = "cors:dev";
+const string corsProdPolicy = "cors:prod";
 
-WebApplicationBuilder webBuilder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-webBuilder.Services.AddControllers(mvcOptions =>
+builder.WebHost.ConfigureKestrel(options =>
 {
-    mvcOptions.ModelBinderProviders.Insert(0, new EncodeRequestModelBinderProvider());
+    options.Limits.MaxRequestBodySize = 52_428_800; // 50 MB;
 });
-webBuilder.Services.AddEndpointsApiExplorer();
-webBuilder.Services.AddSwaggerGen();
-webBuilder.Services.AddCors(options =>
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsDevPolicy, corsBuilder => { corsBuilder.AllowAnyOrigin(); });
+    options.AddPolicy(corsProdPolicy, corsBuilder => { corsBuilder.AllowAnyOrigin(); });
 });
-webBuilder.Services.Configure<FormOptions>(options => { options.MultipartBodyLengthLimit = 268435456; });
-webBuilder.Services.AddDataProtection();
-webBuilder.Services.AddDomain();
+builder.Services.AddDataProtection();
+builder.Services.AddDomain();
+builder.Services.AddEndpoints<Program>();
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 52_428_800; // 50 MB
+});
 
-WebApplication app = webBuilder.Build();
+WebApplication app = builder.Build();
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/codec"))
+    {
+        IHttpBodyControlFeature? syncIoFeature = context.Features.Get<IHttpBodyControlFeature>();
+        if (syncIoFeature != null)
+        {
+            syncIoFeature.AllowSynchronousIO = true;
+        }
+    }
+
+    await next();
+});
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseCors(corsDevPolicy);
 }
 
 app.UseHttpsRedirection();
+app.UseCors(app.Environment.IsDevelopment() ? corsDevPolicy : corsProdPolicy);
 
-app.UseAuthorization();
-
-app.MapControllers();
+Anonymous(
+    app.MapPost<EncodeTextRequest>("/codec/encode/text"),
+    app.MapPost<EncodeBinaryRequest>("/codec/encode/binary"),
+    app.MapPost<DecodeRequest>("/codec/decode")
+);
 
 app.Run();
