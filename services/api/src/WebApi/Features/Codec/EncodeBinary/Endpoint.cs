@@ -1,41 +1,44 @@
 ﻿using System.IO.Compression;
+using ApiBuilder;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
-using MiniApi;
 using SixLabors.ImageSharp.Formats.Png;
-using WebApi.Endpoints.Codec.Request;
 
-namespace WebApi.Endpoints.Codec.Endpoint;
+namespace WebApi.Features.Codec.EncodeBinary;
 
-public class EncodeBinaryEndpoint : Endpoint<EncodeBinaryRequest>
+public class EncodeBinary : EndpointWithoutResponse<Request>
 {
+    private static readonly PngEncoder _pngEncoder = new();
+
     private readonly IEncoder _encoder;
     private readonly IKeyGenerator _keyGenerator;
     private readonly IDataProtectionProvider _protectionProvider;
 
-    public EncodeBinaryEndpoint(IEncoder encoder, IKeyGenerator keyGenerator,
-        IDataProtectionProvider protectionProvider)
+    public EncodeBinary(IEncoder encoder, IKeyGenerator keyGenerator, IDataProtectionProvider protectionProvider)
     {
         _encoder = encoder;
         _keyGenerator = keyGenerator;
         _protectionProvider = protectionProvider;
     }
 
-    public override async Task HandleAsync(EncodeBinaryRequest request)
+    protected override async Task HandleAsync(Request request)
     {
+        ushort seed = (ushort) Random.Shared.Next();
         string key = _keyGenerator.GenerateKey(128);
         IDataProtector protector = _protectionProvider.CreateProtector(key);
-        request.Data = protector.Protect(request.Data);
+        request.Message = protector.Protect(request.Message);
+        key = _keyGenerator.AddMetaData(key, seed, request.Message.Length);
 
-        _encoder.Encode(request.CoverImage, request.Data);
+        _encoder.Encode(request.CoverImage, request.Message, seed);
 
         HttpContext.Response.ContentType = "application/zip";
 
-        using ZipArchive archive = new(HttpContext.Response.Body, ZipArchiveMode.Create, true);
+        using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
         ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
-        await using Stream coverImageStream = coverImageEntry.Open();
-        await request.CoverImage.SaveAsync(coverImageStream, new PngEncoder());
+        Stream coverImageStream = coverImageEntry.Open();
+        await request.CoverImage.SaveAsync(coverImageStream, _pngEncoder);
         request.CoverImage.Dispose();
+        await coverImageStream.DisposeAsync();
 
         ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);
         await using Stream keyStream = keyEntry.Open();

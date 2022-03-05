@@ -1,8 +1,10 @@
+using ApiBuilder;
 using Domain;
 using Microsoft.AspNetCore.Http.Features;
-using MiniApi;
-using WebApi.Endpoints.Codec.Request;
-using static MiniApi.EndpointAuthenticationDeclaration;
+using WebApi.Features.Codec.Decode;
+using WebApi.Features.Codec.EncodeBinary;
+using WebApi.Features.Codec.EncodeText;
+using static ApiBuilder.EndpointAuthenticationDeclaration;
 
 const string corsDevPolicy = "cors:dev";
 const string corsProdPolicy = "cors:prod";
@@ -31,20 +33,6 @@ builder.Services.Configure<FormOptions>(options =>
 
 WebApplication app = builder.Build();
 
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path.StartsWithSegments("/codec"))
-    {
-        IHttpBodyControlFeature? syncIoFeature = context.Features.Get<IHttpBodyControlFeature>();
-        if (syncIoFeature != null)
-        {
-            syncIoFeature.AllowSynchronousIO = true;
-        }
-    }
-
-    await next();
-});
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -55,9 +43,9 @@ app.UseHttpsRedirection();
 app.UseCors(app.Environment.IsDevelopment() ? corsDevPolicy : corsProdPolicy);
 
 Anonymous(
-    app.MapPost<EncodeTextRequest>("/codec/encode/text"),
-    app.MapPost<EncodeBinaryRequest>("/codec/encode/binary"),
-    app.MapPost<DecodeRequest>("/codec/decode")
+    app.MapPost<EncodeText>("/codec/encode/text"),
+    app.MapPost<EncodeBinary>("/codec/encode/binary"),
+    app.MapPost<Decode>("/codec/decode")
 );
 
 app.Run();

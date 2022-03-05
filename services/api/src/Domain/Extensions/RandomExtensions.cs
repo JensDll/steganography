@@ -2,13 +2,23 @@
 
 public static class RandomExtensions
 {
-    public static int[] Permutation(this Random rand, int start, int count)
+    public static int[] Permutation(this Random prng, int start, int end, int step)
     {
-        int[] values = Enumerable.Range(start, count).ToArray();
-
-        for (int i = count - 1; i > 0; --i)
+        if (start > end)
         {
-            int j = rand.Next(i + 1);
+            throw new ArgumentException("Start cannot be greater than end");
+        }
+
+        int[] values = new int[(end - start) / step + 1];
+
+        for (int i = start, j = 0; i <= end; i += step, ++j)
+        {
+            values[j] = i;
+        }
+
+        for (int i = values.Length - 1; i > 0; --i)
+        {
+            int j = prng.Next(i + 1);
             (values[i], values[j]) = (values[j], values[i]);
         }
 

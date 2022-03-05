@@ -6,7 +6,7 @@ namespace Domain.Interfaces;
 
 public interface IDecoder
 {
-    public byte[] Decode(Image<Rgb24> coverImage);
+    public byte[] Decode(Image<Rgb24> coverImage, ushort seed, int messageLength);
 
-    public List<DecodedItem> ParseBytes(byte[] data, out bool isText);
+    public List<DecodedItem> ParseMessage(ReadOnlySpan<byte> message, out bool isText);
 }

@@ -1,26 +1,33 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MiniApi;
+namespace ApiBuilder;
 
 public static class DependencyInjection
 {
     public static void AddEndpoints<T>(this IServiceCollection services)
     {
-        services.RegisterEndpoints<T>().RegisterValidators<T>();
+        services.RegisterEndpoints<T>();
+        services.RegisterValidators<T>();
     }
 
     private static IServiceCollection RegisterEndpoints<T>(this IServiceCollection services)
     {
-        IEnumerable<(Type endpoint, Type endpointBase)> endpoints = typeof(T).Assembly.GetTypes()
-            .Where(type => type.BaseType?.BaseType != null)
-            .Where(type => type.BaseType!.BaseType == typeof(EndpointBase))
-            .Select(endpoint => (endpoint, endpointBase: endpoint.BaseType))!;
+        IEnumerable<Type> endpoints = typeof(T).Assembly.GetTypes()
+            .Where(type =>
+            {
+                while (type.BaseType != null && type.BaseType != typeof(object))
+                {
+                    type = type.BaseType;
+                }
+
+                return type == typeof(EndpointBase);
+            });
 
 
-        foreach ((Type endpoint, Type endpointBase) in endpoints)
+        foreach (Type endpoint in endpoints)
         {
-            services.AddScoped(endpointBase, endpoint);
+            services.AddScoped(endpoint);
         }
 
         return services;

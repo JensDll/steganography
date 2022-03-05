@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5A573C92
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.UnitTests", "tests\Domain.UnitTests\Domain.UnitTests.csproj", "{6D6FE651-C0DD-4409-AF36-04E57CEA381A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniApi", "src\MiniApi\MiniApi.csproj", "{0A04D0CF-3AA0-4633-83A3-B23F9AF184FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiBuilder", "src\ApiBuilder\ApiBuilder.csproj", "{0A04D0CF-3AA0-4633-83A3-B23F9AF184FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.IntegrationTests", "tests\Domain.IntegrationTests\Domain.IntegrationTests.csproj", "{65B56172-BB03-4403-BBFB-257B1B04139F}"
 EndProject

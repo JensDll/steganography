@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace MiniApi;
+namespace ApiBuilder;
 
 public static class EndpointAuthenticationDeclaration
 {

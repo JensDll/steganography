@@ -1,56 +1,54 @@
 ﻿using System.Net;
 using System.Text;
+using ApiBuilder;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using WebApi.Extensions;
 
-namespace WebApi.Endpoints.Codec.Request;
+namespace WebApi.Features.Codec.EncodeBinary;
 
-public class EncodeBinaryRequest : MiniApi.Request
+public class Request : IBindRequest
 {
+    private static readonly byte[] _emptyLength = new byte[4];
+
     public Image<Rgb24> CoverImage { get; set; } = null!;
 
-    public byte[] Data { get; set; } = null!;
+    public byte[] Message { get; set; } = null!;
 
-    public override async Task BindAsync(HttpContext context, List<string> validationErrors)
+    public async Task BindAsync(HttpContext context, List<string> validationErrors)
     {
-        if (!IsMultipartContentType(context))
+        if (!context.IsMultipartContentType())
         {
             validationErrors.Add("Content-Type must be multipart/form-data");
             return;
         }
 
-        string boundary = GetBoundary(context);
+        string boundary = context.GetBoundary();
         MultipartReader multipartReader = new(boundary, context.Request.Body);
         MultipartSection? section = await multipartReader.ReadNextSectionAsync();
 
-        if (section == null)
-        {
-            validationErrors.Add("Request is empty");
-            return;
-        }
-
         bool hasContentDispositionHeader =
             ContentDispositionHeaderValue.TryParse(
-                section.ContentDisposition,
+                section?.ContentDisposition,
                 out ContentDispositionHeaderValue? contentDisposition);
 
         if (!hasContentDispositionHeader || contentDisposition == null ||
-            !HasFileContentDisposition(contentDisposition) ||
+            !contentDisposition.HasFileContentDisposition() ||
             contentDisposition.Name != "coverImage")
         {
             validationErrors.Add("Request must contain a cover image");
             return;
         }
 
-        section.Body.Position = 0;
+        section!.Body.Position = 0;
 
         CoverImage = await Image.LoadAsync<Rgb24>(section.Body);
 
         long? difference = context.Request.ContentLength - section.Body.Length;
 
-        if (difference >= section.Body.Length)
+        if (difference > section.Body.Length)
         {
             validationErrors.Add("Message is too large for the image");
             return;
@@ -58,7 +56,7 @@ public class EncodeBinaryRequest : MiniApi.Request
 
         section = await multipartReader.ReadNextSectionAsync();
 
-        await using MemoryStream data = new();
+        await using MemoryStream messageStream = new();
 
         while (section != null)
         {
@@ -66,7 +64,7 @@ public class EncodeBinaryRequest : MiniApi.Request
                 ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out contentDisposition);
 
             if (!hasContentDispositionHeader || contentDisposition == null ||
-                !HasFileContentDisposition(contentDisposition))
+                !contentDisposition.HasFileContentDisposition())
             {
                 validationErrors.Add("Request contains invalid data");
                 return;
@@ -75,19 +73,20 @@ public class EncodeBinaryRequest : MiniApi.Request
             string fileName = WebUtility.HtmlEncode(contentDisposition.FileName.Value);
             byte[] fileNameBytes = Encoding.UTF8.GetBytes(fileName);
 
-            await data.WriteAsync(BitConverter.GetBytes(fileNameBytes.Length));
-            await data.WriteAsync(fileNameBytes);
+            await messageStream.WriteAsync(BitConverter.GetBytes(fileNameBytes.Length));
+            await messageStream.WriteAsync(fileNameBytes);
 
-            await using MemoryStream bodyContent = new();
-            await section.Body.CopyToAsync(bodyContent);
-
-            await data.WriteAsync(BitConverter.GetBytes((int) section.Body.Length));
-            bodyContent.Seek(0, SeekOrigin.Begin);
-            await bodyContent.CopyToAsync(data);
+            // Write an empty length first until the length of the section is available
+            await messageStream.WriteAsync(_emptyLength);
+            await section.Body.CopyToAsync(messageStream);
+            messageStream.Seek(-section.Body.Length - 4, SeekOrigin.Current);
+            // Write the length of the section
+            await messageStream.WriteAsync(BitConverter.GetBytes((int) section.Body.Length));
+            messageStream.Seek(0, SeekOrigin.End);
 
             section = await multipartReader.ReadNextSectionAsync();
         }
 
-        Data = data.ToArray();
+        Message = messageStream.ToArray();
     }
 }
