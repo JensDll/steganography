@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { watch, computed, ref, type PropType } from 'vue'
-import { useFileSize } from '~/domain'
+import { guards, useFileSize } from '~/domain'
 
 const emit = defineEmits(['remove'])
 
 const props = defineProps({
   file: {
-    type: Object as PropType<File | undefined>,
+    type: File as PropType<File | undefined>,
     default: undefined
   },
   alt: {
     type: String,
     default: 'image'
   },
-  type: {
+  variant: {
     type: String as PropType<'default' | 'reduced'>,
     default: 'default'
   }
@@ -41,7 +41,7 @@ const fileSize = useFileSize(props)
 watch(
   () => props.file,
   file => {
-    if (file) {
+    if (guards.isImage(file)) {
       loading.value = true
     } else {
       loaded.value = false
@@ -66,21 +66,23 @@ function handleLoad() {
 
 <template>
   <div
-    class="group"
     :class="[
+      'group',
       { 'cursor-pointer': !isImage || loaded },
       {
         default: 'flex flex-col items-center rounded-lg ',
         reduced: 'relative center-children'
-      }[type]
+      }[variant]
     ]"
     @click="handleClick"
   >
     <div
       v-if="isImage"
       v-show="loaded || loading"
-      class="h-12 w-12 overflow-clip rounded-full shadow center-children"
-      :class="{ 'group-hover:opacity-30': loaded }"
+      :class="[
+        'h-12 w-12 overflow-clip rounded-full shadow center-children',
+        { 'group-hover:opacity-30': loaded }
+      ]"
     >
       <img
         v-if="src"
@@ -90,26 +92,28 @@ function handleLoad() {
         @load="handleLoad"
       />
       <div
-        class="h-6 w-6"
-        :class="{
-          'group-hover:bg-heroicons-outline-trash-black': loaded
-        }"
+        :class="[
+          'h-6 w-6',
+          {
+            'group-hover:bg-heroicons-outline-trash-black': loaded
+          }
+        ]"
       ></div>
     </div>
     <p
-      v-if="type === 'default'"
-      class="break-all text-sm text-slate-700 group-hover:line-through"
+      v-if="variant === 'default'"
+      class="break-all text-sm text-gray-700 group-hover:line-through"
     >
       {{ file?.name }}
     </p>
     <p
-      class="whitespace-nowrap pt-1 text-xs text-slate-600"
       :class="[
+        'whitespace-nowrap pt-1 text-xs text-gray-600',
         { 'group-hover:line-through': !isImage || loaded },
         {
           default: '',
           reduced: 'absolute top-full'
-        }[type]
+        }[variant]
       ]"
     >
       {{ fileSize }}

@@ -42,8 +42,11 @@ const totalFileSize = useFileSize(files)
         <HeroiconsSolid:paperClip class="h-6 w-6" />
       </label>
       <div
-        class="custom-file-input relative mr-4 cursor-pointer p-3"
-        :class="{ error: errors.length }"
+        class="custom-file-input relative cursor-pointer py-4 px-8"
+        :class="{
+          error: errors.length,
+          'mr-4': files[0]
+        }"
       >
         <input
           id="file-input"
@@ -51,7 +54,7 @@ const totalFileSize = useFileSize(files)
           class="absolute inset-0 h-full w-full opacity-0"
           v-on="fileListeners"
         />
-        <span>
+        <div class="text-center">
           <template v-if="files.length">
             {{ files[0].name }}
           </template>
@@ -62,14 +65,14 @@ const totalFileSize = useFileSize(files)
             >
               Choose
             </span>
-            or drag and drop here
+            <span class="hidden md:inline-block">or drag and drop</span> here
           </template>
-        </span>
+        </div>
       </div>
       <AppFilePreview
         :file="files[0]"
         title="Remove attachment"
-        type="reduced"
+        variant="reduced"
         @remove="removeFile(0)"
       />
     </div>
@@ -108,13 +111,16 @@ const totalFileSize = useFileSize(files)
             class="highlight font-semibold"
             :class="{ error: errors.length }"
           >
-            Attach a file
+            Select files
           </span>
-          or drag and drop
+          <span class="hidden md:inline-block">or drag and drop</span>
+          here
         </p>
       </template>
     </div>
-    <p class="mt-2">{{ totalFileSize }}</p>
+    <p class="mt-2">
+      {{ totalFileSize }}
+    </p>
     <FormErrors :errors="errors" />
   </div>
 </template>

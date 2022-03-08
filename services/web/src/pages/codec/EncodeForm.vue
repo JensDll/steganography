@@ -18,13 +18,15 @@ const { form, validateFields } = useValidation<FormData>({
   textData: {
     $value: '',
     $rules: [
-      rules.withPre(isTextMode)(rules.required('Please enter a message'))
+      rules.withPrecondition(isTextMode)(
+        rules.required('Please enter a message')
+      )
     ]
   },
   binaryData: {
     $value: [],
     $rules: [
-      rules.withPre(isBinaryMode)(
+      rules.withPrecondition(isBinaryMode)(
         rules.min(1)('Please attach one or more files')
       )
     ]
@@ -35,13 +37,16 @@ const { form, validateFields } = useValidation<FormData>({
   }
 })
 
-const { loading, api } = useApi()
+const { loading, codec } = useApi()
 
 async function handleSubmit() {
   try {
     const formData = await validateFields()
-    console.log(formData)
-    // await api.encodeText(formData.coverImage[0], formData.textData)
+    if (messageMode.value === 'text') {
+      await codec.encodeText(formData.coverImage[0], formData.textData)
+    } else {
+      await codec.encodeBinary(formData.coverImage[0], formData.binaryData)
+    }
   } catch (e) {
     console.log(e)
   }
@@ -51,7 +56,7 @@ async function handleSubmit() {
 <template>
   <AppSection>
     <form class="encode" @submit.prevent="handleSubmit">
-      <section class="container py-12">
+      <section class="py-8 container lg:py-12">
         <div>
           <label for="message">Secret message</label>
           <div class="mb-2 flex items-center">
@@ -103,13 +108,22 @@ async function handleSubmit() {
           class="mt-6"
         />
       </section>
-      <section class="bg-emerald-50 py-4">
-        <div class="container flex justify-end">
-          <AppButton type="encode" html-type="submit">Encode</AppButton>
+      <section class="bg-encode-50 py-4">
+        <div
+          class="grid grid-cols-[1fr_auto] gap-x-12 container"
+          :class="{ 'justify-between': loading }"
+        >
+          <AppProgressBar class="mr-12 w-full lg:w-2/3" :active="loading" />
+          <AppButton
+            type="submit"
+            variant="encode"
+            class="grid-area-[1/2/2/3]"
+            :disabled="loading"
+          >
+            Encode
+          </AppButton>
         </div>
       </section>
     </form>
   </AppSection>
 </template>
-
-<style scoped></style>

@@ -1,9 +1,21 @@
-import { computed, isRef } from 'vue'
+import { computed, isRef, type ComputedRef } from 'vue'
 
 import type { AnyRef } from '..'
 
+export function useFileSize(files: AnyRef<File[]>): ComputedRef<string>
+
 export function useFileSize(
-  files: Record<string, any> | AnyRef<File[]>,
+  files: { file?: File },
+  key?: 'file'
+): ComputedRef<string>
+
+export function useFileSize<T extends { [key in K]?: File }, K extends string>(
+  files: T,
+  key: K
+): ComputedRef<string>
+
+export function useFileSize(
+  files: { [key: string]: File | undefined } | AnyRef<File[]>,
   key = 'file'
 ) {
   return computed<string>(() => {

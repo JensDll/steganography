@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useValidation, type Field } from 'validierung'
-import { rules } from '~/domain'
+import { rules, useApi } from '~/domain'
 
 type FormData = {
   key: Field<string>
@@ -18,10 +18,12 @@ const { form, validateFields } = useValidation<FormData>({
   }
 })
 
+const { loading, codec } = useApi()
+
 async function handleSubmit() {
   try {
     const formData = await validateFields()
-    console.log(formData)
+    await codec.decode(formData.coverImage[0], formData.key)
   } catch (e) {
     console.log(e)
   }
@@ -31,7 +33,7 @@ async function handleSubmit() {
 <template>
   <AppSection class="justify-self-center">
     <form class="decode" @submit="handleSubmit">
-      <section class="container py-12">
+      <section class="py-12 container">
         <div>
           <label class="label" for="key">Key phrase</label>
           <input
@@ -50,9 +52,9 @@ async function handleSubmit() {
           class="mt-6"
         />
       </section>
-      <section class="bg-blue-50 py-4">
-        <div class="container flex justify-end">
-          <AppButton type="decode" html-type="submit">Decode</AppButton>
+      <section class="bg-decode-50 py-4">
+        <div class="flex justify-end container">
+          <AppButton type="submit" variant="decode"> Decode</AppButton>
         </div>
       </section>
     </form>

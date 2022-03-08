@@ -8,6 +8,8 @@ declare module 'vue' {
     AppFilePreview: typeof import('./src/components/app/AppFilePreview.vue')['default']
     AppIcon: typeof import('./src/components/app/AppIcon.vue')['default']
     AppImagePreview: typeof import('./src/components/app/AppImagePreview.vue')['default']
+    AppLoading: typeof import('./src/components/app/AppLoading.vue')['default']
+    AppProgressBar: typeof import('./src/components/app/AppProgressBar.vue')['default']
     AppSection: typeof import('./src/components/app/AppSection.vue')['default']
     AppToggle: typeof import('./src/components/app/AppToggle.vue')['default']
     FormErrors: typeof import('./src/components/form/FormErrors.vue')['default']
@@ -20,10 +22,12 @@ declare module 'vue' {
     'Ic:twotoneUploadFile': typeof import('~icons/ic/twotone-upload-file')['default']
     'Ic:TwotoneUploadFile': typeof import('~icons/ic/-twotone-upload-file')['default']
     ImagePlus: typeof import('./src/components/app/icons/ImagePlus.vue')['default']
+    Loading: typeof import('./src/components/app/icons/Loading.vue')['default']
+    LoadingCircle: typeof import('./src/components/app/icons/LoadingCircle.vue')['default']
     'Mdi:github': typeof import('~icons/mdi/github')['default']
     TheHeader: typeof import('./src/components/layout/TheHeader.vue')['default']
     TheMain: typeof import('./src/components/layout/TheMain.vue')['default']
   }
 }
 
-export { }
+export {}

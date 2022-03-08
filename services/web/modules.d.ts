@@ -20,9 +20,3 @@ declare module 'tailwindcss/lib/util/color' {
 
   function formatColor(color: Color): string
 }
-
-declare module 'tailwindcss/defaultTheme' {
-  import { TailwindConfigDefault } from 'tailwindcss/tailwind-config-default'
-  declare const defaultTheme: TailwindConfigDefault['theme']
-  export default defaultTheme
-}

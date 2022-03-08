@@ -15,7 +15,7 @@ export const rules = {
     (msg: string) =>
     (...values: unknown[]) =>
       values.every(value => value === values[0]) || msg,
-  withPre:
+  withPrecondition:
     (...pre: (Ref<boolean> | ComputedRef<boolean>)[]) =>
     (rule: AnyFunction) =>
     (...args: unknown[]) =>

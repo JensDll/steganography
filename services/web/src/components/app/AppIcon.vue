@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type PropType } from 'vue'
 
-type IconName = 'ImagePlus'
+type IconName = 'ImagePlus' | 'LoadingCircle'
 
 const icons: Record<`./icons/${IconName}.vue`, any> = import.meta.globEager(
   './icons/*.vue'

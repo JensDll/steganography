@@ -2,10 +2,10 @@
 
 <template>
   <header
-    class="z-10 border-b bg-slate-50 grid-area-[header]"
+    class="z-10 border-b bg-gray-50 grid-area-[header]"
     :class="{ 'border-b-0': $route.name === 'home' }"
   >
-    <div class="container flex items-end justify-between py-6">
+    <div class="flex items-end justify-between py-6 container">
       <div
         class="cursor-pointer text-xl font-semibold"
         @click="$router.push({ name: 'home' })"
@@ -20,7 +20,7 @@
           <li class="border-l pl-4">
             <a
               href="https://github.com/JensDll/image-data-hiding"
-              class="text-slate-400 hover:text-slate-500"
+              class="text-gray-400 hover:text-gray-500"
             >
               <Mdi:github class="h-6 w-6" />
             </a>
