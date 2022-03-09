@@ -47,6 +47,11 @@ jobs:
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v2
+      - name: Debug
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: |
+          env
       - name: Setting up dotnet
         uses: actions/setup-dotnet@v1
         with:
