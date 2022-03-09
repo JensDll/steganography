@@ -9,7 +9,7 @@ jobs:
     with:
       projects: /services/web /services/api
   web:
-    if: fromJSON(needs.should-run.outputs.result)["/services/web"] == "true"
+    if: fromJSON(needs.should-run.outputs.result)."/services/web" == "true"
     runs-on: ubuntu-latest
     needs: should-run
     defaults:
@@ -34,7 +34,7 @@ jobs:
       - name: Checking for unfixable code style issues
         run: pnpm run lint
   api:
-    if: fromJSON(needs.should-run.outputs.result).["/services/api"] == "true"
+    if: fromJSON(needs.should-run.outputs.result)."/services/web" == "true"
     needs: should-run
     strategy:
       matrix:
