@@ -9,7 +9,7 @@ jobs:
     with:
       projects: /services/web /services/api
   web:
-    if: fromJSON(needs.should-run.outputs.result)[/services/web] == "true"
+    if: fromJSON(needs.should-run.outputs.result)['/services/web'] == 'true'
     runs-on: ubuntu-latest
     needs: should-run
     defaults:
@@ -46,7 +46,7 @@ jobs:
             echo "Nothing to commit!"
           fi
   api:
-    if: fromJSON(needs.should-run.outputs.result)[/services/api] == "true"
+    if: fromJSON(needs.should-run.outputs.result)['/services/api'] == 'true'
     runs-on: ubuntu-latest
     needs: should-run
     defaults:
