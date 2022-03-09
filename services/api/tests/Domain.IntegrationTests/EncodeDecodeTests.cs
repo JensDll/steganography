@@ -21,7 +21,7 @@ internal class EncodeDecodeTests
         Decoder decoder = new();
 
         byte[] message = new byte[messageLength];
-        new Random().NextBytes(message);
+        Random.Shared.NextBytes(message);
 
         Image<Rgb24> coverImage = new(500, 500);
 

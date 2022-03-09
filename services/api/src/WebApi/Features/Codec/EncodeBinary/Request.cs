@@ -17,7 +17,7 @@ public class Request : IBindRequest
 
     public byte[] Message { get; set; } = null!;
 
-    public async Task BindAsync(HttpContext context, List<string> validationErrors)
+    public async ValueTask BindAsync(HttpContext context, List<string> validationErrors)
     {
         if (!context.IsMultipartContentType())
         {
@@ -79,8 +79,8 @@ public class Request : IBindRequest
             // Write an empty length first until the length of the section is available
             await messageStream.WriteAsync(_emptyLength);
             await section.Body.CopyToAsync(messageStream);
-            messageStream.Seek(-section.Body.Length - 4, SeekOrigin.Current);
             // Write the length of the section
+            messageStream.Seek(-section.Body.Length - 4, SeekOrigin.Current);
             await messageStream.WriteAsync(BitConverter.GetBytes((int) section.Body.Length));
             messageStream.Seek(0, SeekOrigin.End);
 

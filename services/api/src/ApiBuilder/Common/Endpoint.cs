@@ -37,7 +37,7 @@ public abstract class Endpoint<TRequest, TResponse> : EndpointBase
         });
     }
 
-    internal override async Task ExecuteAsync(HttpContext context)
+    internal override async Task ExecuteAsync(HttpContext context, CancellationToken cancellationToken)
     {
         HttpContext = context;
         ValidationErrors = new List<string>();
@@ -55,7 +55,7 @@ public abstract class Endpoint<TRequest, TResponse> : EndpointBase
         {
             try
             {
-                await (Task) RequestTypeCache<TRequest>.BindAsync.Invoke(request,
+                await (ValueTask) RequestTypeCache<TRequest>.BindAsync.Invoke(request,
                     new object[] {HttpContext, ValidationErrors})!;
             }
             catch (ModelBindingException e)
@@ -74,11 +74,11 @@ public abstract class Endpoint<TRequest, TResponse> : EndpointBase
 
         if (isValid)
         {
-            await HandleAsync(request);
+            await HandleAsync(request, cancellationToken);
         }
     }
 
-    protected abstract Task HandleAsync(TRequest request);
+    protected abstract Task HandleAsync(TRequest request, CancellationToken cancellationToken);
 
     private async Task<bool> ValidateAsync(TRequest request)
     {
@@ -111,12 +111,12 @@ public abstract class Endpoint<TRequest, TResponse> : EndpointBase
 public abstract class EndpointWithoutRequest<TResponse> : Endpoint<EmptyRequest, TResponse>
     where TResponse : notnull, new()
 {
-    protected sealed override Task HandleAsync(EmptyRequest _)
+    protected sealed override Task HandleAsync(EmptyRequest _, CancellationToken cancellationToken)
     {
-        return HandleAsync();
+        return HandleAsync(cancellationToken);
     }
 
-    protected abstract Task HandleAsync();
+    protected abstract Task HandleAsync(CancellationToken cancellationToken);
 }
 
 public abstract class EndpointWithoutResponse<TRequest> : Endpoint<TRequest, object>

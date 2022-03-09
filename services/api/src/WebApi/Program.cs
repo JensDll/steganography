@@ -20,8 +20,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(corsDevPolicy, corsBuilder => { corsBuilder.AllowAnyOrigin(); });
-    options.AddPolicy(corsProdPolicy, corsBuilder => { corsBuilder.AllowAnyOrigin(); });
+    options.AddPolicy(corsDevPolicy, corsBuilder =>
+    {
+        corsBuilder.AllowAnyOrigin();
+    });
+    options.AddPolicy(corsProdPolicy, corsBuilder =>
+    {
+        corsBuilder.AllowAnyOrigin();
+    });
 });
 builder.Services.AddDataProtection();
 builder.Services.AddDomain();
@@ -29,6 +35,10 @@ builder.Services.AddEndpoints<Program>();
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 52_428_800; // 50 MB
+});
+builder.Services.Configure<ApiBuilderOptions>(options =>
+{
+    options.BaseUri = "api";
 });
 
 WebApplication app = builder.Build();

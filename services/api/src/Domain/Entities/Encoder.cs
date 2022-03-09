@@ -16,6 +16,7 @@ public class Encoder : IEncoder
             Random prng = new(seed);
             int pixelNumber = accessor.Width * accessor.Height;
             int step = pixelNumber / _permutationSize;
+            step = step == 0 ? 1 : step;
 
             int messagePosition = 0;
             byte bitPosition = 0;

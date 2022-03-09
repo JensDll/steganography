@@ -19,7 +19,7 @@ public class Decode : EndpointWithoutResponse<Request>
         _keyGenerator = keyGenerator;
     }
 
-    protected override async Task HandleAsync(Request request)
+    protected override async Task HandleAsync(Request request, CancellationToken _)
     {
         if (!_keyGenerator.TryParseKey(request.Key, out ushort seed, out int messageLength, out string key))
         {
@@ -35,7 +35,7 @@ public class Decode : EndpointWithoutResponse<Request>
             message = _decoder.Decode(request.CoverImage, seed, messageLength);
             message = protector.Unprotect(message);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             await SendValidationErrorAsync("Decoding failed");
             return;
@@ -50,6 +50,7 @@ public class Decode : EndpointWithoutResponse<Request>
         }
 
         HttpContext.Response.ContentType = "application/zip";
+        HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
 
         using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
 

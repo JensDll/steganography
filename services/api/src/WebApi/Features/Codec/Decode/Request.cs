@@ -14,7 +14,7 @@ public class Request : IBindRequest
 
     public string Key { get; set; } = null!;
 
-    public async Task BindAsync(HttpContext context, List<string> validationErrors)
+    public async ValueTask BindAsync(HttpContext context, List<string> validationErrors)
     {
         if (!context.IsMultipartContentType())
         {

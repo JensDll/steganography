@@ -8,5 +8,5 @@ public abstract class EndpointBase
 
     protected internal List<string> ValidationErrors { get; internal set; } = null!;
 
-    internal abstract Task ExecuteAsync(HttpContext context);
+    internal abstract Task ExecuteAsync(HttpContext context, CancellationToken cancellationToken);
 }

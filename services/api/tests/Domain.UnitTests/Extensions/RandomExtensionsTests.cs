@@ -9,6 +9,7 @@ internal class RandomExtensionsTests
 {
     [TestCase(0, 10, 5, new[] {0, 5, 10})]
     [TestCase(1, 10, 5, new[] {1, 6})]
+    [TestCase(3, 31, 9, new[] {3, 12, 21, 30})]
     [TestCase(2, 18, 6, new[] {2, 8, 14})]
     [TestCase(3, 18, 7, new[] {3, 10, 17})]
     [TestCase(4, 18, 7, new[] {4, 11, 18})]

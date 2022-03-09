@@ -14,6 +14,7 @@ public class EncodeText : EndpointWithoutResponse<Request>
     private readonly IKeyGenerator _keyGenerator;
     private readonly IDataProtectionProvider _protectionProvider;
 
+
     public EncodeText(IEncoder encoder, IKeyGenerator keyGenerator, IDataProtectionProvider protectionProvider)
     {
         _encoder = encoder;
@@ -21,7 +22,7 @@ public class EncodeText : EndpointWithoutResponse<Request>
         _protectionProvider = protectionProvider;
     }
 
-    protected override async Task HandleAsync(Request request)
+    protected override async Task HandleAsync(Request request, CancellationToken _)
     {
         ushort seed = (ushort) Random.Shared.Next();
         string key = _keyGenerator.GenerateKey(128);
@@ -32,6 +33,7 @@ public class EncodeText : EndpointWithoutResponse<Request>
         _encoder.Encode(request.CoverImage, request.Message, seed);
 
         HttpContext.Response.ContentType = "application/zip";
+        HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
 
         using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
         ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
