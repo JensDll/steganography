@@ -56,3 +56,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
+      - name: Debug
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: |
+          env
