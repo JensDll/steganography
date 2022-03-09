@@ -9,7 +9,7 @@ jobs:
   should-run:
     uses: JensDll/should-run/.github/workflows/main.yaml@main
     with:
-      projects: api web
+      projects: /services/api /services/web
 
   web:
     if: fromJSON(needs.should-run.outputs.result).web == 'true'
@@ -60,6 +60,7 @@ jobs:
     needs: should-run
     defaults:
       run:
+        shell: bash
         working-directory: services/api
     steps:
       - name: Checkout the repository
