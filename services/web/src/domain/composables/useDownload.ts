@@ -13,8 +13,8 @@ export function useDownload(fileName: string) {
     file(file: Blob) {
       createAndDownload(file)
     },
-    text(content: string, contentType: string) {
-      const file = new Blob([content], { type: contentType })
+    text(content: string) {
+      const file = new Blob([content], { type: 'text/plain' })
       createAndDownload(file)
     }
   }

@@ -38,11 +38,8 @@ const totalFileSize = useFileSize(files)
   <div v-if="!multiple">
     <label v-if="label" for="file-input">{{ label }}</label>
     <div class="flex items-center">
-      <label class="mb-0 mr-4" for="file-input">
-        <HeroiconsSolid:paperClip class="h-6 w-6" />
-      </label>
       <div
-        class="custom-file-input relative cursor-pointer py-4 px-8"
+        class="custom-file-input relative flex cursor-pointer items-center py-4 px-8"
         :class="{
           error: errors.length,
           'mr-4': files[0]
@@ -54,6 +51,7 @@ const totalFileSize = useFileSize(files)
           class="absolute inset-0 h-full w-full opacity-0"
           v-on="fileListeners"
         />
+        <HeroiconsSolid:paperClip class="mr-2 h-6 w-6" />
         <div class="text-center">
           <template v-if="files.length">
             {{ files[0].name }}
@@ -111,7 +109,7 @@ const totalFileSize = useFileSize(files)
             class="highlight font-semibold"
             :class="{ error: errors.length }"
           >
-            Select files
+            Choose files
           </span>
           <span class="hidden md:inline-block">or drag and drop</span>
           here

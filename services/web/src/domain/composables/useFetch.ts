@@ -6,8 +6,9 @@ const toUrlParams = (obj: Record<string, unknown>) =>
 type RequestInitMinusMethod = Omit<RequestInit, 'method'>
 
 async function makeRequest(uri: string, init: RequestInit) {
-  let response: Response | undefined = undefined
+  let response: Response = undefined!
   let responseType: 'json' | 'text' | 'blob' = 'text'
+  let isNetworkError = false
 
   try {
     response = await fetch(uri, init)
@@ -22,13 +23,14 @@ async function makeRequest(uri: string, init: RequestInit) {
       default:
         responseType = 'blob'
     }
-  } catch (e) {
-    console.log('Unexpected network error: ', e)
+  } catch {
+    isNetworkError = true
   }
 
   return {
     response,
-    responseType
+    responseType,
+    isNetworkError
   }
 }
 
@@ -59,16 +61,16 @@ function verbs(uri: string) {
   }
 }
 
-export function createFetch(baseUri: string) {
-  return {
-    useFetch(uri: string, params: Record<string | number, unknown> = {}) {
-      uri = baseUri + uri
+function createFetch(baseUri: string) {
+  return function (uri: string, params: Record<string | number, unknown> = {}) {
+    uri = baseUri + uri
 
-      if (Object.keys(params).length > 0) {
-        uri += `?${toUrlParams(params)}`
-      }
-
-      return verbs(uri)
+    if (Object.keys(params).length > 0) {
+      uri += `?${toUrlParams(params)}`
     }
+
+    return verbs(uri)
   }
 }
+
+export const useFetch = createFetch('https://localhost:5001/api')

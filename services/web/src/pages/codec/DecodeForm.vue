@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useValidation, type Field } from 'validierung'
-import { rules, useApi } from '~/domain'
+import { rules, api } from '~/domain'
 
 type FormData = {
   key: Field<string>
@@ -10,20 +10,20 @@ type FormData = {
 const { form, validateFields } = useValidation<FormData>({
   key: {
     $value: '',
-    $rules: [rules.required('Please enter a key')]
+    $rules: [rules.required('Enter a valid key')]
   },
   coverImage: {
     $value: [],
-    $rules: [rules.minMax(1, 1)('Please select a cover image')]
+    $rules: [rules.minMax(1, 1)('Attach a cover image')]
   }
 })
 
-const { loading, codec } = useApi()
+const { loading, decode } = api.codec()
 
 async function handleSubmit() {
   try {
     const formData = await validateFields()
-    await codec.decode(formData.coverImage[0], formData.key)
+    await decode(formData.coverImage[0], formData.key)
   } catch (e) {
     console.log(e)
   }
@@ -53,8 +53,23 @@ async function handleSubmit() {
         />
       </section>
       <section class="bg-decode-50 py-4">
-        <div class="flex justify-end container">
-          <AppButton type="submit" variant="decode"> Decode</AppButton>
+        <div
+          class="grid grid-cols-[1fr_auto] gap-x-8 container md:gap-x-12"
+          :class="{ 'justify-between': loading }"
+        >
+          <AppProgressBar
+            class="mr-12 w-full lg:w-2/3"
+            variant="decode"
+            :active="loading"
+          />
+          <AppButton
+            type="submit"
+            variant="decode"
+            class="grid-area-[1/2/2/3]"
+            :disabled="loading"
+          >
+            Encode
+          </AppButton>
         </div>
       </section>
     </form>

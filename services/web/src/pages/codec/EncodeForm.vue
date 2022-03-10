@@ -2,7 +2,7 @@
 import { useValidation, type Field } from 'validierung'
 import { ref, computed } from 'vue'
 
-import { rules, useApi } from '~/domain'
+import { rules, api } from '~/domain'
 
 type FormData = {
   textData: Field<string>
@@ -18,34 +18,32 @@ const { form, validateFields } = useValidation<FormData>({
   textData: {
     $value: '',
     $rules: [
-      rules.withPrecondition(isTextMode)(
-        rules.required('Please enter a message')
-      )
+      rules.withPrecondition(isTextMode)(rules.required('Enter a message'))
     ]
   },
   binaryData: {
     $value: [],
     $rules: [
       rules.withPrecondition(isBinaryMode)(
-        rules.min(1)('Please attach one or more files')
+        rules.min(1)('Attach one or more files')
       )
     ]
   },
   coverImage: {
     $value: [],
-    $rules: [rules.minMax(1, 1)('Please attach a cover image')]
+    $rules: [rules.minMax(1, 1)('Attach a cover image')]
   }
 })
 
-const { loading, codec } = useApi()
+const { loading, encodeText, encodeBinary } = api.codec()
 
 async function handleSubmit() {
   try {
     const formData = await validateFields()
     if (messageMode.value === 'text') {
-      await codec.encodeText(formData.coverImage[0], formData.textData)
+      await encodeText(formData.coverImage[0], formData.textData)
     } else {
-      await codec.encodeBinary(formData.coverImage[0], formData.binaryData)
+      await encodeBinary(formData.coverImage[0], formData.binaryData)
     }
   } catch (e) {
     console.log(e)
@@ -110,10 +108,14 @@ async function handleSubmit() {
       </section>
       <section class="bg-encode-50 py-4">
         <div
-          class="grid grid-cols-[1fr_auto] gap-x-12 container"
+          class="grid grid-cols-[1fr_auto] gap-x-8 container md:gap-x-12"
           :class="{ 'justify-between': loading }"
         >
-          <AppProgressBar class="mr-12 w-full lg:w-2/3" :active="loading" />
+          <AppProgressBar
+            class="mr-12 w-full lg:w-2/3"
+            variant="encode"
+            :active="loading"
+          />
           <AppButton
             type="submit"
             variant="encode"

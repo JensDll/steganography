@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, type PropType } from 'vue'
 import { gsap } from 'gsap'
 
 import { type AnimationHooks } from '~/domain'
@@ -9,6 +9,10 @@ const emit = defineEmits(['longLoad'])
 const props = defineProps({
   active: {
     type: Boolean
+  },
+  variant: {
+    type: String as PropType<'encode' | 'decode'>,
+    required: true
   }
 })
 
@@ -97,7 +101,7 @@ watch(
       barReset()
       barAnimate()
     } else if (barTween) {
-      barTween.timeScale(6).resume()
+      barTween.timeScale(7).resume()
     }
   }
 )
@@ -110,13 +114,28 @@ watch(
   >
     <div class="text-sm">{{ progress }}</div>
     <div class="relative h-2 overflow-hidden rounded-full bg-white shadow-sm">
-      <div id="bar" class="absolute inset-0 rounded-full bg-encode-500"></div>
+      <div
+        id="bar"
+        :class="[
+          `absolute inset-0 rounded-full`,
+          {
+            encode: 'bg-encode-500',
+            decode: 'bg-decode-500'
+          }[variant]
+        ]"
+      ></div>
     </div>
     <Transition v-on="loadingHooks">
       <AppIcon
         v-if="isLongLoad"
         icon="LoadingCircle"
-        class="justify-self-end text-encode-500"
+        :class="[
+          `justify-self-end`,
+          {
+            encode: 'text-encode-500',
+            decode: 'text-decode-500'
+          }[variant]
+        ]"
       />
     </Transition>
   </div>

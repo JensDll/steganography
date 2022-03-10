@@ -69,9 +69,9 @@ const eventListeners = {
         landing: `border-gray-900 bg-gray-900 text-white hover:border-gray-700 hover:bg-gray-700 focus:outline-gray-400
           disabled:!border-gray-900 disabled:!bg-gray-900`,
         encode: `border-encode-500 bg-encode-500 text-white hover:border-encode-400 hover:bg-encode-400 focus:outline-encode-400
-           disabled:!border-encode-500 disabled:!bg-encode-500`,
+           disabled:!border-encode-600 disabled:!bg-encode-600`,
         decode: `border-decode-500 bg-decode-500 text-white hover:border-decode-400 hover:bg-decode-400
-          focus:outline-decode-400 disabled:!border-decode-500 disabled:!bg-decode-500`
+          focus:outline-decode-400 disabled:!border-decode-600 disabled:!bg-decode-600`
       }[variant],
       {
         'cursor-not-allowed opacity-30': disabled
