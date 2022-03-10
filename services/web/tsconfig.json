@@ -6,13 +6,13 @@
     "moduleResolution": "Node",
     "isolatedModules": true,
     "preserveValueImports": true,
-    "allowJs": true,
+    "allowJs": false,
     "strict": true,
     "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "types": ["vite/client", "unplugin-icons/types/vue"],
+    "types": ["vite/client", "unplugin-icons/types/vue", "vitest"],
     "paths": {
       "tailwind-theme": ["./tailwind/theme"],
       "~/*": ["src/*"]

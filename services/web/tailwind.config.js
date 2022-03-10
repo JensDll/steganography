@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
+const colors = require('tailwindcss/colors')
 const Forms = require('@tailwindcss/forms')
 
 const { Icons } = require('./tailwind/plugins/icons')
@@ -20,28 +21,21 @@ module.exports = {
       ...tailwindTheme.screen
     },
     extend: {
-      colors: {
-        red: {
-          white: 'rgb(255, 250, 250)'
-        }
-      },
       fontFamily: {
-        sans: ['Montserrat Alternates', ...defaultTheme.fontFamily.sans]
+        sans: ['Montserrat', ...defaultTheme.fontFamily.sans]
       },
-      spacing: {
-        13: '3.25rem'
+      colors: {
+        gray: colors.slate,
+        encode: colors.emerald,
+        decode: colors.blue
       }
     }
   },
   plugins: [
     Forms,
     Icons({
-      'heroicons-solid': ['trash'],
       'heroicons-outline': ['trash']
     }),
     Utils()
-  ],
-  corePlugins: {
-    container: false
-  }
+  ]
 }

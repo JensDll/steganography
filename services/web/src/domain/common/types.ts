@@ -1,6 +1,8 @@
 import type {
   BaseTransitionProps,
   ComponentPublicInstance,
+  ComputedRef,
+  Ref,
   RendererElement
 } from 'vue'
 
@@ -29,3 +31,5 @@ export interface EventWithTarget<T extends EventTarget> extends Event {
 export interface Lengthy {
   length: number
 }
+
+export type AnyRef<T> = Ref<T> | ComputedRef<T>
