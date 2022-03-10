@@ -1,18 +1,15 @@
 name: Testing
-
 on:
   pull_request:
     branches:
       - main
-
 jobs:
   should-run:
     uses: JensDll/should-run/.github/workflows/main.yaml@main
     with:
-      projects: /services/api /services/web
-
+      projects: services/web services/api
   web:
-    if: fromJSON(needs.should-run.outputs.result).web == 'true'
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     runs-on: ubuntu-latest
     needs: should-run
     defaults:
@@ -22,33 +19,46 @@ jobs:
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v2
-
       - name: Installing pnpm version 6.x.x
         uses: pnpm/action-setup@v2.1.0
         with:
           version: 6.x.x
-
       - name: Using node version 16
         uses: actions/setup-node@v2
         with:
           node-version: 16
           cache: 'pnpm'
           cache-dependency-path: services/web/pnpm-lock.yaml
-
       - name: Installing dependencies
         run: pnpm install
-
       - name: Checking for unfixable code style issues
         run: pnpm run lint
-
   api:
-    if: fromJSON(needs.should-run.outputs.result).api == 'true'
-    runs-on: ubuntu-latest
+    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     needs: should-run
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash
         working-directory: services/api
     steps:
-      - name: Checkout the repository
+      - name: Checking out the repository
         uses: actions/checkout@v2
+      - name: Debug
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: |
+          env
+      - name: Setting up dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - name: Installing dependencies
+        run: dotnet restore
+      - name: Building the project
+        run: dotnet build --configuration Release --no-restore
+      - name: Running tests
+        run: dotnet test --no-restore --verbosity normal

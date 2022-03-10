@@ -1,18 +1,15 @@
 name: Formatting
-
 on:
   push:
     branches:
       - main
-
 jobs:
   should-run:
     uses: JensDll/should-run/.github/workflows/main.yaml@main
     with:
-      projects: /services/api /services/web
-
+      projects: services/web services/api
   web:
-    if: fromJSON(needs.should-run.outputs.result).web == 'true'
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     runs-on: ubuntu-latest
     needs: should-run
     defaults:
@@ -22,25 +19,20 @@ jobs:
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v2
-
       - name: Installing pnpm version 6.x.x
         uses: pnpm/action-setup@v2.1.0
         with:
           version: 6.x.x
-
       - name: Using node version 16
         uses: actions/setup-node@v2
         with:
           node-version: 16
           cache: 'pnpm'
           cache-dependency-path: services/web/pnpm-lock.yaml
-
       - name: Installing dependencies
         run: pnpm install
-
       - name: Running code style fixes
         run: pnpm run fix
-
       - name: Committing changes
         run: |
           if ! git diff --quiet
@@ -53,9 +45,8 @@ jobs:
           else
             echo "Nothing to commit!"
           fi
-
   api:
-    if: fromJSON(needs.should-run.outputs.result).api == 'true'
+    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     runs-on: ubuntu-latest
     needs: should-run
     defaults:
