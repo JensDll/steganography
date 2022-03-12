@@ -3,9 +3,10 @@
 <template>
   <section>
     <nav
-      class="mb-8 flex flex-col container sm:mb-12 sm:flex-row sm:items-center sm:justify-between"
+      class="mb-8 flex flex-col container sm:mb-16 sm:flex-row sm:items-end sm:justify-between"
     >
-      <ul class="mb-12 flex space-x-4 sm:order-2 sm:m-0">
+      <h1 class="mb-10 sm:order-1 sm:mb-0">{{ $route.meta.title }}</h1>
+      <ul class="mb-4 flex space-x-4 border-b sm:order-2 sm:m-0">
         <RouterLink
           v-slot="{ navigate, isExactActive }"
           :to="{ name: 'encode' }"
@@ -13,8 +14,9 @@
         >
           <li
             :class="[
-              'cursor-pointer rounded-md bg-gray-100 py-2 px-6 font-medium hover:bg-gray-200',
-              isExactActive && '!bg-encode-100 font-semibold text-encode-600'
+              'cursor-pointer py-3 px-4 font-semibold hover:-mb-px hover:border-b-2 hover:border-gray-300 dark:hover:border-gray-700',
+              isExactActive &&
+                '-mb-px border-b-2 !border-encode-500 text-encode-500 dark:border-encode-600'
             ]"
             @click="navigate"
           >
@@ -28,8 +30,9 @@
         >
           <li
             :class="[
-              'cursor-pointer rounded-md bg-gray-100 py-2 px-6 font-medium hover:bg-gray-200',
-              isExactActive && '!bg-decode-100 font-semibold text-decode-600'
+              'cursor-pointer py-3 px-4 font-semibold hover:-mb-px hover:border-b-2 hover:border-gray-300 dark:hover:border-gray-700',
+              isExactActive &&
+                '-mb-px border-b-2 !border-decode-500 text-decode-500 dark:border-decode-600'
             ]"
             @click="navigate"
           >
@@ -37,7 +40,6 @@
           </li>
         </RouterLink>
       </ul>
-      <h1 class="sm:order-1">{{ $route.meta.title }}</h1>
     </nav>
     <RouterView></RouterView>
   </section>

@@ -7,10 +7,30 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Montagu+Slab:wght@200&family=Montserrat:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <title>Image Data Hiding</title>
+    <script>
+      function changeTheme() {
+        switch (localStorage.theme) {
+          case 'light':
+            document.documentElement.classList.remove('dark')
+            break
+          case 'dark':
+            document.documentElement.classList.add('dark')
+            break
+          default:
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              document.documentElement.classList.add('dark')
+            } else {
+              document.documentElement.classList.remove('dark')
+            }
+        }
+      }
+
+      changeTheme()
+    </script>
   </head>
   <body>
     <div id="app"></div>

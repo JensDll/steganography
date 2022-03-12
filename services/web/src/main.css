@@ -3,8 +3,53 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    --border-color: theme(colors.gray.200);
+    --background-color: theme(colors.gray.50);
+    --text-color: theme(colors.gray.700);
+    --heading-color: theme(colors.gray.900);
+
+    --form-background-color: theme('colors.white');
+    --form-border-color: var(--border-color);
+    --form-error-color: theme('colors.red.500');
+    --form-focus-border-color: theme('colors.encode.500');
+    --form-focus-outline-color: theme('colors.encode.100');
+  }
+
+  html.decode {
+    --form-focus-border-color: theme('colors.decode.500');
+    --form-focus-outline-color: theme('colors.decode.100');
+  }
+
+  html.dark {
+    --border-color: theme(colors.gray.800);
+    --background-color: theme(colors.gray.900);
+    --text-color: theme(colors.gray.200);
+    --heading-color: theme(colors.gray.100);
+
+    --form-background-color: theme('colors.slate.800');
+    --form-focus-border-color: theme('colors.encode.600');
+    --form-focus-outline-color: theme('colors.encode.900');
+  }
+
+  html.dark.decode {
+    --form-focus-border-color: theme('colors.decode.600');
+    --form-focus-outline-color: theme('colors.decode.900');
+  }
+
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border-color);
+  }
+
+  body {
+    @apply font-sans;
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+
   #app {
-    @apply font-sans text-gray-700;
     height: 100vh;
     display: grid;
     grid-template-columns: 1fr;
@@ -14,48 +59,33 @@
       'main';
   }
 
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--heading-color);
+  }
+
   h1 {
-    @apply text-4xl font-extrabold text-gray-900 sm:text-5xl lg:text-6xl;
+    @apply text-4xl font-extrabold sm:text-5xl lg:text-6xl;
   }
 
   h2 {
-    @apply text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl;
+    @apply text-3xl font-bold sm:text-4xl lg:text-5xl;
   }
 
   h3 {
-    @apply text-2xl font-semibold text-gray-900 sm:text-3xl lg:text-4xl;
+    @apply text-2xl font-semibold sm:text-3xl lg:text-4xl;
   }
 
   h4 {
-    @apply text-xl font-semibold text-gray-900 sm:text-2xl lg:text-3xl;
+    @apply text-xl font-semibold  sm:text-2xl lg:text-3xl;
   }
 
-  form {
-    &.encode {
-      --form-text-color: theme('colors.encode.500');
-      --form-error-text-color: theme('colors.red.500');
-      --form-border-color: theme('colors.gray.300');
-      --form-background-color: theme('colors.white');
-      --form-focus-border-color: var(--form-text-color);
-      --form-focus-outline-color: theme('colors.encode.100');
-    }
+  /* ----------------- Form styles ----------------- */
 
-    &.decode {
-      --form-text-color: theme('colors.decode.500');
-      --form-error-text-color: theme('colors.red.500');
-      --form-border-color: theme('colors.gray.300');
-      --form-background-color: theme('colors.white');
-      --form-focus-border-color: var(--form-text-color);
-      --form-focus-outline-color: theme('colors.decode.100');
-    }
-
-    .highlight {
-      color: var(--form-text-color);
-
-      &.error {
-        color: var(--form-error-text-color);
-      }
-    }
+  .highlight {
+    color: var(--form-focus-border-color);
   }
 
   label {
@@ -131,6 +161,29 @@
     --form-border-color: theme('colors.red.300');
     --form-focus-border-color: theme('colors.red.500');
     --form-focus-outline-color: theme('colors.red.100');
+  }
+
+  .dark [type='text'].error,
+  .dark [type='email'].error,
+  .dark [type='url'].error,
+  .dark [type='password'].error,
+  .dark [type='number'].error,
+  .dark [type='date'].error,
+  .dark [type='datetime-local'].error,
+  .dark [type='month'].error,
+  .dark [type='search'].error,
+  .dark [type='tel'].error,
+  .dark [type='time'].error,
+  .dark [type='week'].error,
+  .dark [type='checkbox'].error,
+  .dark [type='radio'].error,
+  .dark [type='radio'] [multiple].error,
+  .dark textarea.error,
+  .dark select.error,
+  .dark .custom-file-input.error {
+    --form-border-color: theme('colors.red.700');
+    --form-focus-border-color: theme('colors.red.600');
+    --form-focus-outline-color: theme('colors.red.900');
   }
 
   [type='text']:focus,

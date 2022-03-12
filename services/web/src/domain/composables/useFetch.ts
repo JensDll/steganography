@@ -5,9 +5,22 @@ const toUrlParams = (obj: Record<string, unknown>) =>
 
 type RequestInitMinusMethod = Omit<RequestInit, 'method'>
 
-async function makeRequest(uri: string, init: RequestInit) {
-  let response: Response = undefined!
-  let responseType: 'json' | 'text' | 'blob' = 'text'
+type FetchResult = Promise<
+  | {
+      response: undefined
+      responseType: undefined
+      isNetworkError: true
+    }
+  | {
+      response: Response
+      responseType: 'json' | 'text' | 'blob'
+      isNetworkError: false
+    }
+>
+
+async function makeRequest(uri: string, init: RequestInit): FetchResult {
+  let response: Response | undefined = undefined
+  let responseType: 'json' | 'text' | 'blob' | undefined = undefined
   let isNetworkError = false
 
   try {
@@ -31,7 +44,7 @@ async function makeRequest(uri: string, init: RequestInit) {
     response,
     responseType,
     isNetworkError
-  }
+  } as never
 }
 
 function verbs(uri: string) {

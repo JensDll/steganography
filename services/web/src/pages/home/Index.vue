@@ -28,4 +28,13 @@ import CallToAction from './CallToAction.vue'
     ),
     linear-gradient(-20deg, theme('colors.decode.100'), rgba(0, 0, 0, 0) 50%);
 }
+
+.dark .bg-gradient {
+  background-image: linear-gradient(
+      10deg,
+      rgba(6, 78, 59, 0.6),
+      rgba(0, 0, 0, 0) 60%
+    ),
+    linear-gradient(-10deg, rgba(30, 58, 138, 0.6), rgba(0, 0, 0, 0) 60%);
+}
 </style>

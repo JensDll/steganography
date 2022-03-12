@@ -11,9 +11,16 @@ declare module 'vue' {
     AppSection: typeof import('./src/components/app/AppSection.vue')['default']
     FormErrors: typeof import('./src/components/form/FormErrors.vue')['default']
     FormFileInput: typeof import('./src/components/form/FormFileInput.vue')['default']
+    'HeroiconsOutline:desktopComputed': typeof import('~icons/heroicons-outline/desktop-computed')['default']
+    'HeroiconsOutline:desktopComputer': typeof import('~icons/heroicons-outline/desktop-computer')['default']
+    'HeroiconsOutline:moon': typeof import('~icons/heroicons-outline/moon')['default']
+    'HeroiconsOutline:sun': typeof import('~icons/heroicons-outline/sun')['default']
+    'HeroiconsSolid:desktopComputer': typeof import('~icons/heroicons-solid/desktop-computer')['default']
     'HeroiconsSolid:lockClosed': typeof import('~icons/heroicons-solid/lock-closed')['default']
     'HeroiconsSolid:lockOpen': typeof import('~icons/heroicons-solid/lock-open')['default']
+    'HeroiconsSolid:moon': typeof import('~icons/heroicons-solid/moon')['default']
     'HeroiconsSolid:paperClip': typeof import('~icons/heroicons-solid/paper-clip')['default']
+    'HeroiconsSolid:sun': typeof import('~icons/heroicons-solid/sun')['default']
     ImagePlus: typeof import('./src/components/app/icons/ImagePlus.vue')['default']
     LoadingCircle: typeof import('./src/components/app/icons/LoadingCircle.vue')['default']
     'Mdi:github': typeof import('~icons/mdi/github')['default']
@@ -22,4 +29,4 @@ declare module 'vue' {
   }
 }
 
-export {}
+export { }

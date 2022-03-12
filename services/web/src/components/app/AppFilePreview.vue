@@ -70,7 +70,7 @@ function handleLoad() {
       'group',
       { 'cursor-pointer': !isImage || loaded },
       {
-        default: 'flex flex-col items-center rounded-lg ',
+        default: 'flex flex-col items-center justify-center rounded-lg ',
         reduced: 'relative center-children'
       }[variant]
     ]"
@@ -102,17 +102,17 @@ function handleLoad() {
     </div>
     <p
       v-if="variant === 'default'"
-      class="break-all text-sm text-gray-700 group-hover:line-through"
+      class="mt-1 break-all text-sm group-hover:line-through"
     >
       {{ file?.name }}
     </p>
     <p
       :class="[
-        'whitespace-nowrap pt-1 text-xs text-gray-600',
+        'whitespace-nowrap pt-1 text-xs text-gray-600 dark:text-gray-300',
         { 'group-hover:line-through': !isImage || loaded },
         {
           default: '',
-          reduced: 'absolute top-full'
+          reduced: 'absolute top-full pt-2'
         }[variant]
       ]"
     >

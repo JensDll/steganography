@@ -87,12 +87,12 @@ onUnmounted(() => {
       <HeroiconsSolid:lockClosed
         v-for="i in numLocks"
         :key="`closed-${i}`"
-        class="lock absolute top-0 right-full h-6 w-6 origin-center text-encode-200"
+        class="lock absolute top-0 right-full h-6 w-6 origin-center text-encode-200 dark:text-encode-400"
       />
       <HeroiconsSolid:lockOpen
         v-for="i in numLocks"
         :key="`open-${i}`"
-        class="lock absolute top-0 right-full h-6 w-6 text-decode-200"
+        class="lock absolute top-0 right-full h-6 w-6 text-decode-200 dark:text-decode-400"
       />
     </TransitionGroup>
   </div>

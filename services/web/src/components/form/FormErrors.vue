@@ -12,7 +12,7 @@ defineProps({
 <template>
   <ul
     v-show="errors.length"
-    class="mt-1 text-sm text-[color:var(--form-error-text-color)]"
+    class="text-sm text-red-500 last:mt-1 dark:text-red-600"
   >
     <li v-for="error in errors" :key="error">{{ error }}</li>
   </ul>

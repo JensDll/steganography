@@ -22,7 +22,7 @@ const routes: RouteRecordRaw[] = [
         path: 'encode',
         component: EncodeForm,
         meta: {
-          title: 'Encode'
+          title: 'Encoding'
         }
       },
       {
@@ -30,7 +30,7 @@ const routes: RouteRecordRaw[] = [
         path: 'decode',
         component: DecodeForm,
         meta: {
-          title: 'Decode'
+          title: 'Decoding'
         }
       }
     ]
@@ -40,6 +40,16 @@ const routes: RouteRecordRaw[] = [
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
+})
+
+router.beforeEach(to => {
+  if (to.name === 'encode') {
+    document.documentElement.classList.add('encode')
+    document.documentElement.classList.remove('decode')
+  } else if (to.name === 'decode') {
+    document.documentElement.classList.remove('encode')
+    document.documentElement.classList.add('decode')
+  }
 })
 
 declare module 'vue-router' {

@@ -53,7 +53,7 @@ async function handleSubmit() {
 
 <template>
   <AppSection>
-    <form class="encode" @submit.prevent="handleSubmit">
+    <form @submit.prevent="handleSubmit">
       <section class="py-8 container lg:py-12">
         <div>
           <label for="message">Secret message</label>
@@ -86,7 +86,7 @@ async function handleSubmit() {
             <textarea
               id="message"
               v-model="form.textData.$value"
-              placeholder="Your secret message here"
+              placeholder="Your data will be hidden and encrypted"
               class="max-h-[24rem] min-h-[8rem] w-full"
               :class="{ error: form.textData.$hasError }"
             />
@@ -106,7 +106,7 @@ async function handleSubmit() {
           class="mt-6"
         />
       </section>
-      <section class="bg-encode-50 py-4">
+      <section class="bg-encode-50 py-4 dark:bg-encode-900">
         <div
           class="grid grid-cols-[1fr_auto] gap-x-8 container md:gap-x-12"
           :class="{ 'justify-between': loading }"

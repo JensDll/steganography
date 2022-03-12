@@ -89,7 +89,7 @@ const totalFileSize = useFileSize(files)
     >
       <input
         :id="`file-${label}`"
-        class="absolute inset-0 cursor-pointer opacity-0"
+        class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
         type="file"
         :accept="accept"
         multiple
@@ -116,9 +116,7 @@ const totalFileSize = useFileSize(files)
         </p>
       </template>
     </div>
-    <p class="mt-2">
-      {{ totalFileSize }}
-    </p>
+    <p class="mt-2">{{ totalFileSize }}</p>
     <FormErrors :errors="errors" />
   </div>
 </template>
@@ -126,7 +124,6 @@ const totalFileSize = useFileSize(files)
 <style scoped>
 .card-grid {
   display: grid;
-  align-items: center;
   gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(min(7.5rem, 100%), 1fr));
 }

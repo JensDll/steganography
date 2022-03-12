@@ -61,7 +61,9 @@ function barAnimate() {
       }, 200)
     },
     onReverseComplete() {
-      isActive.value = false
+      if (!props.active) {
+        isActive.value = false
+      }
     }
   })
 }
@@ -101,7 +103,7 @@ watch(
       barReset()
       barAnimate()
     } else if (barTween) {
-      barTween.timeScale(7).resume()
+      barTween.timeScale(6).resume()
     }
   }
 )
@@ -113,14 +115,16 @@ watch(
     class="grid grid-cols-[2.5rem_1fr_2.5rem] items-center"
   >
     <div class="text-sm">{{ progress }}</div>
-    <div class="relative h-2 overflow-hidden rounded-full bg-white shadow-sm">
+    <div
+      class="relative h-2 overflow-hidden rounded-full bg-white shadow-sm dark:bg-gray-300"
+    >
       <div
         id="bar"
         :class="[
           `absolute inset-0 rounded-full`,
           {
-            encode: 'bg-encode-500',
-            decode: 'bg-decode-500'
+            encode: 'bg-encode-500 dark:bg-encode-600',
+            decode: 'bg-decode-500 dark:bg-decode-600'
           }[variant]
         ]"
       ></div>
@@ -132,8 +136,8 @@ watch(
         :class="[
           `justify-self-end`,
           {
-            encode: 'text-encode-500',
-            decode: 'text-decode-500'
+            encode: 'text-encode-500 ',
+            decode: 'text-decode-500 '
           }[variant]
         ]"
       />

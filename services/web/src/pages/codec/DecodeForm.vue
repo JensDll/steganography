@@ -10,7 +10,7 @@ type FormData = {
 const { form, validateFields } = useValidation<FormData>({
   key: {
     $value: '',
-    $rules: [rules.required('Enter a valid key')]
+    $rules: [rules.required('Please enter a key')]
   },
   coverImage: {
     $value: [],
@@ -32,7 +32,7 @@ async function handleSubmit() {
 
 <template>
   <AppSection class="justify-self-center">
-    <form class="decode" @submit="handleSubmit">
+    <form @submit.prevent="handleSubmit">
       <section class="py-12 container">
         <div>
           <label class="label" for="key">Key phrase</label>
@@ -52,7 +52,7 @@ async function handleSubmit() {
           class="mt-6"
         />
       </section>
-      <section class="bg-decode-50 py-4">
+      <section class="bg-decode-50 py-4 dark:bg-decode-900">
         <div
           class="grid grid-cols-[1fr_auto] gap-x-8 container md:gap-x-12"
           :class="{ 'justify-between': loading }"
@@ -68,7 +68,7 @@ async function handleSubmit() {
             class="grid-area-[1/2/2/3]"
             :disabled="loading"
           >
-            Encode
+            Decode
           </AppButton>
         </div>
       </section>
