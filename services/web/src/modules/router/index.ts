@@ -22,7 +22,7 @@ const routes: RouteRecordRaw[] = [
         path: 'encode',
         component: EncodeForm,
         meta: {
-          title: 'Encoding'
+          title: 'Encode'
         }
       },
       {
@@ -30,7 +30,7 @@ const routes: RouteRecordRaw[] = [
         path: 'decode',
         component: DecodeForm,
         meta: {
-          title: 'Decoding'
+          title: 'Decode'
         }
       }
     ]

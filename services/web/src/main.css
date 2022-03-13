@@ -4,49 +4,43 @@
 
 @layer base {
   html {
-    --border-color: theme(colors.gray.200);
-    --background-color: theme(colors.gray.50);
-    --text-color: theme(colors.gray.700);
-    --heading-color: theme(colors.gray.900);
+    --color-border: theme('colors.rgb.gray.200');
+    --color-background: theme('colors.rgb.gray.50');
+    --color-text: theme('colors.rgb.gray.700');
+    --color-heading: theme('colors.rgb.gray.900');
 
-    --form-background-color: theme('colors.white');
-    --form-border-color: var(--border-color);
-    --form-error-color: theme('colors.red.500');
-    --form-focus-border-color: theme('colors.encode.500');
-    --form-focus-outline-color: theme('colors.encode.100');
+    --color-form-background: theme('colors.rgb.white');
+    --color-form-border: var(--color-border);
+    --color-form-focus-border: theme('colors.rgb.encode.500');
   }
 
   html.decode {
-    --form-focus-border-color: theme('colors.decode.500');
-    --form-focus-outline-color: theme('colors.decode.100');
+    --color-form-focus-border: theme('colors.rgb.decode.500');
   }
 
   html.dark {
-    --border-color: theme(colors.gray.800);
-    --background-color: theme(colors.gray.900);
-    --text-color: theme(colors.gray.200);
-    --heading-color: theme(colors.gray.100);
+    --color-border: theme('colors.rgb.gray.800');
+    --color-background: theme('colors.rgb.gray.900');
+    --color-text: theme('colors.rgb.gray.200');
+    --color-heading: theme('colors.rgb.gray.100');
 
-    --form-background-color: theme('colors.slate.800');
-    --form-focus-border-color: theme('colors.encode.600');
-    --form-focus-outline-color: theme('colors.encode.900');
+    --color-form-background: theme('colors.rgb.gray.800');
+    --color-form-border: var(--color-border);
+    --color-form-focus-border: theme('colors.rgb.encode.600');
   }
 
   html.dark.decode {
-    --form-focus-border-color: theme('colors.decode.600');
-    --form-focus-outline-color: theme('colors.decode.900');
+    --color-form-focus-border: theme('colors.rgb.decode.600');
   }
 
   *,
   ::before,
   ::after {
-    border-color: var(--border-color);
+    @apply border-c-border;
   }
 
   body {
-    @apply font-sans;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    @apply bg-c-bg text-c-text font-sans;
   }
 
   #app {
@@ -63,7 +57,7 @@
   h2,
   h3,
   h4 {
-    color: var(--heading-color);
+    @apply text-c-heading;
   }
 
   h1 {
@@ -79,13 +73,13 @@
   }
 
   h4 {
-    @apply text-xl font-semibold  sm:text-2xl lg:text-3xl;
+    @apply text-xl font-semibold sm:text-2xl lg:text-3xl;
   }
 
   /* ----------------- Form styles ----------------- */
 
   .highlight {
-    color: var(--form-focus-border-color);
+    @apply text-c-form-focus-border;
   }
 
   label {
@@ -107,10 +101,7 @@
   }
 
   [type='radio'] {
-    @apply shadow-sm;
-    color: var(--form-focus-border-color);
-    border-color: var(--form-border-color);
-    background-color: var(--form-background-color);
+    @apply border-c-form-border bg-c-form-bg text-c-form-focus-border;
   }
 
   [type='text'],
@@ -129,15 +120,11 @@
   [type='radio'] [multiple],
   textarea,
   select {
-    @apply rounded-md;
-    background-color: var(--form-background-color);
-    border-color: var(--form-border-color);
+    @apply border-c-form-border bg-c-form-bg rounded-md border;
   }
 
   .custom-file-input {
-    @apply rounded-md border-2 border-dashed;
-    background-color: var(--form-background-color);
-    border-color: var(--form-border-color);
+    @apply border-c-form-border bg-c-form-bg rounded-md border-2 border-dashed;
   }
 
   [type='text'].error,
@@ -158,9 +145,8 @@
   textarea.error,
   select.error,
   .custom-file-input.error {
-    --form-border-color: theme('colors.red.300');
-    --form-focus-border-color: theme('colors.red.500');
-    --form-focus-outline-color: theme('colors.red.100');
+    --color-form-border: theme('colors.rgb.red.300');
+    --color-form-focus-border: theme('colors.rgb.red.500');
   }
 
   .dark [type='text'].error,
@@ -181,9 +167,8 @@
   .dark textarea.error,
   .dark select.error,
   .dark .custom-file-input.error {
-    --form-border-color: theme('colors.red.700');
-    --form-focus-border-color: theme('colors.red.600');
-    --form-focus-outline-color: theme('colors.red.900');
+    --color-form-border: theme('colors.rgb.red.700');
+    --color-form-focus-border: theme('colors.rgb.red.600');
   }
 
   [type='text']:focus,
@@ -204,8 +189,7 @@
   textarea:focus,
   select:focus,
   .custom-file-input:focus-within {
-    @apply shadow-none outline outline-4 outline-offset-0 ring-0;
-    border-color: var(--form-focus-border-color);
-    outline-color: var(--form-focus-outline-color);
+    @apply !border-c-form-focus-border outline-c-form-focus-border/[.12] dark:outline-c-form-focus-border/[.35] outline outline-4 outline-offset-0;
+    box-shadow: initial;
   }
 }

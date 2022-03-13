@@ -1,9 +1,9 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
-const colors = require('tailwindcss/colors')
 const Forms = require('@tailwindcss/forms')
 
 const { Icons } = require('./tailwind/plugins/icons')
 const { Utils } = require('./tailwind/plugins/utils')
+const { colors } = require('./tailwind/colors')
 
 const { register } = require('esbuild-register/dist/node')
 const { unregister } = register()
@@ -17,6 +17,7 @@ module.exports = {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
+    colors,
     screen: {
       ...tailwindTheme.screen
     },
@@ -24,10 +25,8 @@ module.exports = {
       fontFamily: {
         sans: ['Montserrat', ...defaultTheme.fontFamily.sans]
       },
-      colors: {
-        gray: colors.slate,
-        encode: colors.emerald,
-        decode: colors.blue
+      boxShadow: {
+        none: 'initial'
       }
     }
   },
@@ -37,5 +36,12 @@ module.exports = {
       'heroicons-outline': ['trash']
     }),
     Utils()
-  ]
+  ],
+  corePlugins: {
+    ringColor: false,
+    ringOffsetColor: false,
+    ringOffsetWidth: false,
+    ringOpacity: false,
+    ringWidth: false
+  }
 }
