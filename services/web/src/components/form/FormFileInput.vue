@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type PropType } from 'vue'
+import type { PropType } from 'vue'
 
 import { useFileSize, useVModelFiles } from '~/domain'
 
@@ -58,7 +58,7 @@ const totalFileSize = useFileSize(files)
           </template>
           <template v-else>
             <span
-              class="highlight font-semibold"
+              class="font-semibold text-c-form-focus-border"
               :class="{ error: errors.length }"
             >
               Choose
@@ -106,7 +106,7 @@ const totalFileSize = useFileSize(files)
         <HeroiconsSolid:paperClip class="h-6 w-6" />
         <p class="text-center">
           <span
-            class="highlight font-semibold"
+            class="font-semibold text-c-form-focus-border"
             :class="{ error: errors.length }"
           >
             Choose files

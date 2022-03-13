@@ -2,7 +2,7 @@
 import { onMounted, ref, watch, type PropType } from 'vue'
 import { gsap } from 'gsap'
 
-import { type AnimationHooks } from '~/domain'
+import type { AnimationHooks } from '~/domain'
 
 const emit = defineEmits(['longLoad'])
 

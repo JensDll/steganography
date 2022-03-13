@@ -1,6 +1,6 @@
 import { computed, type ComputedRef } from 'vue'
 
-import { type EventWithTarget } from '..'
+import type { EventWithTarget } from '..'
 
 export type FileHelper = {
   file: File

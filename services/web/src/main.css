@@ -40,7 +40,7 @@
   }
 
   body {
-    @apply bg-c-bg text-c-text font-sans;
+    @apply bg-c-bg font-sans text-c-text;
   }
 
   #app {
@@ -77,10 +77,6 @@
   }
 
   /* ----------------- Form styles ----------------- */
-
-  .highlight {
-    @apply text-c-form-focus-border;
-  }
 
   label {
     @apply mb-1 block font-medium;
@@ -120,11 +116,11 @@
   [type='radio'] [multiple],
   textarea,
   select {
-    @apply border-c-form-border bg-c-form-bg rounded-md border;
+    @apply rounded-md border border-c-form-border bg-c-form-bg;
   }
 
   .custom-file-input {
-    @apply border-c-form-border bg-c-form-bg rounded-md border-2 border-dashed;
+    @apply rounded-md border-2 border-dashed border-c-form-border bg-c-form-bg;
   }
 
   [type='text'].error,
@@ -189,7 +185,7 @@
   textarea:focus,
   select:focus,
   .custom-file-input:focus-within {
-    @apply !border-c-form-focus-border outline-c-form-focus-border/[.12] dark:outline-c-form-focus-border/[.35] outline outline-4 outline-offset-0;
+    @apply !border-c-form-focus-border outline outline-4 outline-offset-0 outline-c-form-focus-border/[.12] dark:outline-c-form-focus-border/[.35];
     box-shadow: initial;
   }
 }

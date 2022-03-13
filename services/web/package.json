@@ -30,7 +30,7 @@
     "vite": "^2.8.6",
     "vue": "^3.2.31",
     "vue-router": "^4.0.14",
-    "vue-tsc": "^0.32.1"
+    "vue-tsc": "^0.33.1"
   },
   "devDependencies": {
     "@iconify-json/heroicons-outline": "^1.1.1",

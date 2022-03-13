@@ -1,6 +1,6 @@
-import { type ComputedRef, type Ref } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 
-import { type AnyFunction, type Lengthy } from './types'
+import type { AnyFunction, Lengthy } from './types'
 
 export const rules = {
   required: (msg: string) => (value: unknown) => !value && msg,
