@@ -20,15 +20,21 @@ public abstract class Endpoint<TRequest, TResponse> : EndpointBase
         return HttpContext.Response.Body.WriteAsync(text);
     }
 
+    protected ValueTask SendTextAsync(ReadOnlyMemory<byte> text)
+    {
+        HttpContext.Response.ContentType = "text/plain";
+        return HttpContext.Response.Body.WriteAsync(text);
+    }
+
     protected Task SendAsync(TResponse response)
     {
         HttpContext.Response.ContentType = "application/json";
         return HttpContext.Response.WriteAsJsonAsync(response);
     }
 
-    protected Task SendValidationErrorAsync(string message)
+    protected Task SendValidationErrorAsync(string message, int statusCode = 400)
     {
-        HttpContext.Response.StatusCode = 400;
+        HttpContext.Response.StatusCode = statusCode;
         return HttpContext.Response.WriteAsJsonAsync(new
         {
             HttpContext.Response.StatusCode,
@@ -46,7 +52,7 @@ public abstract class Endpoint<TRequest, TResponse> : EndpointBase
 
         if (HttpContext.Request.HasJsonContentType())
         {
-            request = await HttpContext.Request.ReadFromJsonAsync<TRequest>();
+            request = await HttpContext.Request.ReadFromJsonAsync<TRequest>(cancellationToken);
         }
 
         request ??= new TRequest();

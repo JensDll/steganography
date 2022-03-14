@@ -41,7 +41,15 @@ public class Request : IBindRequest
 
         section!.Body.Position = 0;
 
-        CoverImage = await Image.LoadAsync<Rgb24>(section.Body);
+        try
+        {
+            CoverImage = await Image.LoadAsync<Rgb24>(section.Body);
+        }
+        catch (UnknownImageFormatException)
+        {
+            validationErrors.Add("Unsupported image format");
+            return;
+        }
 
         section = await multipartReader.ReadNextSectionAsync();
 

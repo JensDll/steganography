@@ -2,14 +2,12 @@
 using ApiBuilder;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
-using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp;
 
 namespace WebApi.Features.Codec.EncodeBinary;
 
 public class EncodeBinary : EndpointWithoutResponse<Request>
 {
-    private static readonly PngEncoder _pngEncoder = new();
-
     private readonly IEncoder _encoder;
     private readonly IKeyGenerator _keyGenerator;
     private readonly IDataProtectionProvider _protectionProvider;
@@ -21,7 +19,7 @@ public class EncodeBinary : EndpointWithoutResponse<Request>
         _protectionProvider = protectionProvider;
     }
 
-    protected override async Task HandleAsync(Request request, CancellationToken _)
+    protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
         ushort seed = (ushort) Random.Shared.Next();
         string key = _keyGenerator.GenerateKey(128);
@@ -37,7 +35,7 @@ public class EncodeBinary : EndpointWithoutResponse<Request>
         using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
         ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
         Stream coverImageStream = coverImageEntry.Open();
-        await request.CoverImage.SaveAsync(coverImageStream, _pngEncoder);
+        await request.CoverImage.SaveAsPngAsync(coverImageStream, cancellationToken);
         request.CoverImage.Dispose();
         await coverImageStream.DisposeAsync();
 

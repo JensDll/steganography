@@ -11,6 +11,5 @@ public static class DependencyInjection
         services.AddSingleton<IKeyGenerator, KeyGenerator>();
         services.AddSingleton<IEncoder, Encoder>();
         services.AddSingleton<IDecoder, Decoder>();
-        services.AddScoped(_ => new RequestProgress());
     }
 }

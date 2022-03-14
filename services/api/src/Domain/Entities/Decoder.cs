@@ -10,43 +10,6 @@ public class Decoder : IDecoder
 {
     private const int _permutationSize = 2048;
 
-    public List<DecodedItem> ParseMessage(ReadOnlySpan<byte> message, out bool isText)
-    {
-        isText = false;
-
-        List<DecodedItem> decodedItems = new();
-
-        int messagePosition = 0;
-
-        while (messagePosition < message.Length)
-        {
-            int fileNameLength = BitConverter.ToInt32(message[messagePosition..(messagePosition += 4)]);
-            isText = fileNameLength == 0;
-
-            if (isText)
-            {
-                decodedItems.Add(new DecodedItem
-                {
-                    Name = string.Empty,
-                    Data = message[messagePosition..].ToArray()
-                });
-
-                return decodedItems;
-            }
-
-            string fileName = Encoding.ASCII.GetString(message[messagePosition..(messagePosition += fileNameLength)]);
-            int fileLength = BitConverter.ToInt32(message[messagePosition..(messagePosition += 4)]);
-
-            decodedItems.Add(new DecodedItem
-            {
-                Name = fileName,
-                Data = message[messagePosition..(messagePosition += fileLength)].ToArray()
-            });
-        }
-
-        return decodedItems;
-    }
-
     public byte[] Decode(Image<Rgb24> coverImage, ushort seed, int messageLength)
     {
         byte[] message = new byte[messageLength];
@@ -118,6 +81,44 @@ public class Decoder : IDecoder
         });
 
         return message;
+    }
+
+    public List<DecodedItem> ParseMessage(ReadOnlyMemory<byte> message, out bool isText)
+    {
+        isText = false;
+
+        List<DecodedItem> decodedItems = new();
+
+        int messagePosition = 0;
+
+        while (messagePosition < message.Length)
+        {
+            int fileNameLength = BitConverter.ToInt32(message[messagePosition..(messagePosition += 4)].Span);
+            isText = fileNameLength == 0;
+
+            if (isText)
+            {
+                decodedItems.Add(new DecodedItem
+                {
+                    Name = string.Empty,
+                    Data = message[messagePosition..].ToArray()
+                });
+
+                return decodedItems;
+            }
+
+            string fileName =
+                Encoding.ASCII.GetString(message[messagePosition..(messagePosition += fileNameLength)].Span);
+            int fileLength = BitConverter.ToInt32(message[messagePosition..(messagePosition += 4)].Span);
+
+            decodedItems.Add(new DecodedItem
+            {
+                Name = fileName,
+                Data = message[messagePosition..(messagePosition += fileLength)]
+            });
+        }
+
+        return decodedItems;
     }
 
     private static void DecodeNextBit(

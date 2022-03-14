@@ -19,7 +19,7 @@ public class Decode : EndpointWithoutResponse<Request>
         _keyGenerator = keyGenerator;
     }
 
-    protected override async Task HandleAsync(Request request, CancellationToken _)
+    protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
         if (!_keyGenerator.TryParseKey(request.Key, out ushort seed, out int messageLength, out string key))
         {
@@ -58,7 +58,7 @@ public class Decode : EndpointWithoutResponse<Request>
         {
             ZipArchiveEntry entry = archive.CreateEntry(item.Name, CompressionLevel.Fastest);
             await using Stream entryStream = entry.Open();
-            await entryStream.WriteAsync(item.Data);
+            await entryStream.WriteAsync(item.Data, cancellationToken);
         }
     }
 }
