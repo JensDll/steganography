@@ -185,7 +185,7 @@
   textarea:focus,
   select:focus,
   .custom-file-input:focus-within {
-    @apply !border-c-form-focus-border outline outline-4 outline-offset-0 outline-c-form-focus-border/[.12] dark:outline-c-form-focus-border/[.35];
+    @apply border-c-form-focus-border outline outline-4 outline-offset-0 outline-c-form-focus-border/[.12] dark:outline-c-form-focus-border/[.35];
     box-shadow: initial;
   }
 }

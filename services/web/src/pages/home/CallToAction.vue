@@ -81,9 +81,6 @@ onUnmounted(() => {
     ref="containerRef"
     class="relative grid h-28 place-items-center overflow-x-hidden"
   >
-    <AppButton class="z-10" variant="landing" @click="emit('click')">
-      Getting Started
-    </AppButton>
     <TransitionGroup appear v-on="animation">
       <HeroiconsSolid:lockClosed
         v-for="i in numLocks"
@@ -96,5 +93,8 @@ onUnmounted(() => {
         class="lock absolute top-0 right-full h-6 w-6 text-decode-200 dark:text-decode-500"
       />
     </TransitionGroup>
+    <AppButton variant="landing" @click="emit('click')">
+      Getting Started
+    </AppButton>
   </div>
 </template>

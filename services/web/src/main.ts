@@ -21,5 +21,5 @@ app.use(directives)
 app.mount('#app')
 
 declare global {
-  function changeTheme(): void
+  function changeTheme(theme: string): void
 }

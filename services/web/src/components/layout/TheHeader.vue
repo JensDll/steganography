@@ -1,25 +1,56 @@
 <script setup lang="ts">
 /* global changeTheme */
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
-type Theme = 'light' | 'dark' | 'system'
+import type { OutlineIconName } from '~/components/app/AppIcon.vue'
+
+type ThemeName = 'light' | 'dark' | 'system'
+type Theme = {
+  name: ThemeName
+  text: string
+  icon: OutlineIconName
+}
+
+const themes: Theme[] = [
+  {
+    name: 'light',
+    text: 'Light',
+    icon: 'Sun'
+  },
+  {
+    name: 'dark',
+    text: 'Dark',
+    icon: 'Moon'
+  },
+  {
+    name: 'system',
+    text: 'System',
+    icon: 'DesktopComputer'
+  }
+]
 
 const isDropdownOpen = ref(false)
-const theme = ref<Theme>(localStorage.theme)
+const isPopupOpen = ref(false)
+const theme = ref<ThemeName>(localStorage.theme)
 
 const isDark = ref(document.documentElement.classList.contains('dark'))
 const isLight = computed(() => !isDark.value)
 
-function changeThemePreference(themePreference: Theme) {
-  localStorage.setItem('theme', themePreference)
+function changeThemePreference(themePreference: ThemeName) {
+  changeTheme(themePreference)
   theme.value = themePreference
-  changeTheme()
   isDark.value = document.documentElement.classList.contains('dark')
 }
 
 function closeDropdown() {
   isDropdownOpen.value = false
 }
+
+function closePopup() {
+  isPopupOpen.value = false
+}
+
+watch(theme, changeThemePreference)
 </script>
 
 <template>
@@ -34,20 +65,22 @@ function closeDropdown() {
       >
         Steganography
       </div>
-      <nav class="relative">
+      <nav class="relative hidden md:block">
         <ul class="flex">
           <li class="font-medium hover:text-orange-500">
             <RouterLink to="#">About</RouterLink>
           </li>
           <li class="mx-6 border-l"></li>
           <li @click="isDropdownOpen = true">
-            <HeroiconsOutline:sun
+            <AppIcon
               v-if="isLight"
               class="h-6 w-6 cursor-pointer text-orange-600"
+              outline="Sun"
             />
-            <HeroiconsOutline:moon
+            <AppIcon
               v-if="isDark"
               class="h-6 w-6 cursor-pointer text-orange-600"
+              outline="Moon"
             />
             <ul
               v-if="isDropdownOpen"
@@ -55,37 +88,18 @@ function closeDropdown() {
               class="absolute top-16 right-0 w-36 rounded-lg border bg-white py-1 text-sm shadow-lg dark:bg-gray-800"
             >
               <li
+                v-for="{ name, text, icon } in themes"
+                :key="name"
                 class="flex cursor-pointer items-center py-1 px-2 font-semibold hover:bg-gray-50 dark:hover:bg-gray-600/30"
-                :class="{ 'text-orange-600': theme === 'light' }"
-                @click="changeThemePreference('light')"
+                :class="{ 'text-orange-600': theme === name }"
+                @click="changeThemePreference(name)"
               >
-                <HeroiconsOutline:sun
+                <AppIcon
                   class="mr-2 h-6 w-6 text-gray-400"
-                  :class="{ '!text-orange-600': theme === 'light' }"
+                  :class="{ '!text-orange-600': theme === name }"
+                  :outline="icon"
                 />
-                Light
-              </li>
-              <li
-                class="flex cursor-pointer items-center py-1 px-2 font-semibold hover:bg-gray-50 dark:hover:bg-gray-600/30"
-                :class="{ 'text-orange-600': theme === 'dark' }"
-                @click="changeThemePreference('dark')"
-              >
-                <HeroiconsOutline:moon
-                  class="mr-2 h-6 w-6 text-gray-400"
-                  :class="{ '!text-orange-600': theme === 'dark' }"
-                />
-                Dark
-              </li>
-              <li
-                class="flex cursor-pointer items-center py-1 px-2 font-semibold hover:bg-gray-50 dark:hover:bg-gray-600/30"
-                :class="{ 'text-orange-500': theme === 'system' }"
-                @click="changeThemePreference('system')"
-              >
-                <HeroiconsOutline:desktopComputer
-                  class="mr-2 h-6 w-6 text-gray-400"
-                  :class="{ '!text-orange-600': theme === 'system' }"
-                />
-                System
+                {{ text }}
               </li>
             </ul>
           </li>
@@ -97,6 +111,47 @@ function closeDropdown() {
             </a>
           </li>
         </ul>
+      </nav>
+      <HeroiconsOutline:dotsVertical
+        class="h-6 w-6 cursor-pointer hover:text-gray-500 md:hidden"
+        @click="isPopupOpen = true"
+      />
+      <nav
+        v-if="isPopupOpen"
+        class="fixed inset-0 bg-gray-900/20 backdrop-blur-sm dark:bg-gray-900/50 md:hidden"
+      >
+        <div
+          v-on-click-outside="closePopup"
+          class="test fixed top-4 right-4 w-full max-w-xs rounded-lg bg-c-bg p-6 shadow-lg dark:bg-gray-800"
+        >
+          <ul class="space-y-6">
+            <li>
+              <RouterLink class="font-medium hover:text-orange-500" to="#">
+                About
+              </RouterLink>
+            </li>
+            <li>
+              <a
+                class="font-medium hover:text-orange-500"
+                href="https://github.com/JensDll/image-data-hiding"
+              >
+                GitHub
+              </a>
+            </li>
+          </ul>
+          <div class="mt-5 flex items-center justify-between border-t pt-5">
+            <label class="m-0" for="theme">Switch theme</label>
+            <select id="theme" v-model="theme" class="dark:bg-gray-700">
+              <option
+                v-for="{ name, text } in themes"
+                :key="name"
+                :value="name"
+              >
+                {{ text }}
+              </option>
+            </select>
+          </div>
+        </div>
       </nav>
     </div>
   </header>

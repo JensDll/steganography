@@ -12,12 +12,14 @@
     />
     <title>Image Data Hiding</title>
     <script>
-      function changeTheme() {
-        switch (localStorage.theme) {
+      function changeTheme(theme) {
+        switch (theme) {
           case 'light':
+            localStorage.setItem('theme', 'light')
             document.documentElement.classList.remove('dark')
             break
           case 'dark':
+            localStorage.setItem('theme', 'dark')
             document.documentElement.classList.add('dark')
             break
           default:
@@ -26,10 +28,11 @@
             } else {
               document.documentElement.classList.remove('dark')
             }
+            localStorage.setItem('theme', 'system')
         }
       }
 
-      changeTheme()
+      changeTheme(localStorage.theme)
     </script>
   </head>
   <body>

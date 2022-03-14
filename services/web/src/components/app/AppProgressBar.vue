@@ -132,7 +132,7 @@ watch(
     <Transition v-on="loadingHooks">
       <AppIcon
         v-if="isLongLoad"
-        icon="LoadingCircle"
+        solid="LoadingCircle"
         :class="[
           `justify-self-end`,
           {

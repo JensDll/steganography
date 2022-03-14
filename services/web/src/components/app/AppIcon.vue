@@ -1,20 +1,32 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
-type IconName = 'ImagePlus' | 'LoadingCircle'
+export type SolidIconName = 'LoadingCircle'
 
-const icons: Record<`./icons/${IconName}.vue`, any> = import.meta.globEager(
-  './icons/*.vue'
-)
+export type OutlineIconName = 'Moon' | 'Sun' | 'DesktopComputer'
+
+const icons: Record<string, any> = import.meta.globEager('./icons/**/*.vue')
 
 defineProps({
-  icon: {
-    type: String as PropType<IconName>,
-    required: true
+  solid: {
+    type: String as PropType<SolidIconName>,
+    default: ''
+  },
+  outline: {
+    type: String as PropType<OutlineIconName>,
+    default: ''
   }
 })
 </script>
 
 <template>
-  <component :is="icons[`./icons/${icon}.vue`].default" />
+  <component
+    :is="
+      icons[
+        solid
+          ? `./icons/solid/${solid}Icon.vue`
+          : `./icons/outline/${outline}Icon.vue`
+      ].default
+    "
+  />
 </template>

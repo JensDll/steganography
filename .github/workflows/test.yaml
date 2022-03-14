@@ -31,6 +31,8 @@ jobs:
           cache-dependency-path: services/web/pnpm-lock.yaml
       - name: Installing dependencies
         run: pnpm install
+      - name: Running typecheck
+        run: pnpm run typecheck
       - name: Checking for unfixable code style issues
         run: pnpm run lint
   api:

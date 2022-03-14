@@ -110,7 +110,9 @@ function handleLoad() {
     <p
       :class="[
         'whitespace-nowrap pt-1 text-xs text-gray-600 dark:text-gray-300',
-        { 'group-hover:line-through': !isImage || loaded },
+        {
+          'group-hover:line-through ': !isImage || loaded
+        },
         {
           default: '',
           reduced: 'absolute top-full pt-2'

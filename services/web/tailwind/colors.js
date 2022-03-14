@@ -35,7 +35,7 @@ const colors = {
 delete colors.emerald
 delete colors.blue
 
-// Delete unused gray colors
+// Delete unused grays
 delete colors.slate
 delete colors.zinc
 delete colors.neutral
