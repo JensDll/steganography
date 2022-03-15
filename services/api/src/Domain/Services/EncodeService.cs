@@ -19,7 +19,7 @@ public class EncodeService : CodecBase, IEncodeService
     public void Encode(Image<Rgb24> coverImage, byte[] message, ushort seed)
     {
         _logger.Information(
-            "Encoding message. Image size: (width: {Width}, height: {Height}). Message length: {MessageLength} bytes",
+            "Encoding message with image size: (width: {Width}, height: {Height}), and message length: {MessageLength} bytes",
             coverImage.Width, coverImage.Height, message.Length);
 
         coverImage.ProcessPixelRows(accessor =>

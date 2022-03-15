@@ -20,7 +20,7 @@ public class DecodeService : CodecBase, IDecodeService
     public byte[] Decode(Image<Rgb24> coverImage, ushort seed, int messageLength)
     {
         _logger.Information(
-            "Decoding message. Image size: (width: {Width}, height: {Height}). Message length: {MessageLength} bytes",
+            "Decoding message with image size: (width: {Width}, height: {Height}), and message length: {MessageLength} bytes",
             coverImage.Width, coverImage.Height, messageLength);
 
         byte[] message = new byte[messageLength];

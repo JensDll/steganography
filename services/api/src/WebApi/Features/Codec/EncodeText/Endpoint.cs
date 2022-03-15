@@ -25,27 +25,33 @@ public class EncodeText : EndpointWithoutResponse<Request>
 
     protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
-        ushort seed = (ushort) Random.Shared.Next();
-        string key = _keyService.Generate(128);
-        IDataProtector protector = _protectionProvider.CreateProtector(key);
-        request.Message = protector.Protect(request.Message);
-        key = _keyService.AddMetaData(key, seed, request.Message.Length);
+        try
+        {
+            ushort seed = (ushort) Random.Shared.Next();
+            string key = _keyService.Generate(128);
+            IDataProtector protector = _protectionProvider.CreateProtector(key);
+            byte[] protectedMessage = protector.Protect(request.Message);
+            key = _keyService.AddMetaData(key, seed, protectedMessage.Length);
 
-        _encodeService.Encode(request.CoverImage, request.Message, seed);
+            _encodeService.Encode(request.CoverImage, protectedMessage, seed);
 
-        HttpContext.Response.ContentType = "application/zip";
-        HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
+            HttpContext.Response.ContentType = "application/zip";
+            HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
 
-        using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
-        ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
-        Stream coverImageStream = coverImageEntry.Open();
-        await request.CoverImage.SaveAsPngAsync(coverImageStream, cancellationToken);
-        request.CoverImage.Dispose();
-        await coverImageStream.DisposeAsync();
+            using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+            ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
+            Stream coverImageStream = coverImageEntry.Open();
+            await request.CoverImage.SaveAsPngAsync(coverImageStream, cancellationToken);
+            await coverImageStream.DisposeAsync();
 
-        ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);
-        await using Stream keyStream = keyEntry.Open();
-        await using StreamWriter writer = new(keyStream);
-        await writer.WriteAsync(key);
+            ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);
+            await using Stream keyStream = keyEntry.Open();
+            await using StreamWriter writer = new(keyStream);
+            await writer.WriteAsync(key);
+        }
+        finally
+        {
+            request.CoverImage.Dispose();
+        }
     }
 }

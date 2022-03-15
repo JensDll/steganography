@@ -72,7 +72,7 @@ internal class KeyServiceTests
         KeyService keyService = new();
 
         // Act
-        bool success = keyService.TryParse("abc", out ushort _, out int _, out string _);
+        bool success = keyService.TryParse("abc", out _, out _, out _);
 
         // Assert
         Assert.That(success, Is.False);

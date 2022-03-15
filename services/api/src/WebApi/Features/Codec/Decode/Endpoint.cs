@@ -25,48 +25,51 @@ public class Decode : EndpointWithoutResponse<Request>
 
     protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
-        if (!_keyService.TryParse(request.Key, out ushort seed, out int messageLength, out string key))
-        {
-            await SendValidationErrorAsync("Decoding failed");
-            return;
-        }
-
-        IDataProtector protector = _protectionProvider.CreateProtector(key);
-        byte[] message;
-
         try
         {
-            message = _decodeService.Decode(request.CoverImage, seed, messageLength);
-            message = protector.Unprotect(message);
-        }
-        catch (Exception)
-        {
-            await SendValidationErrorAsync("Decoding failed");
-            return;
+            if (!_keyService.TryParse(request.Key, out ushort seed, out int messageLength, out string key))
+            {
+                await SendValidationErrorAsync("Decoding failed");
+                return;
+            }
+
+            IDataProtector protector = _protectionProvider.CreateProtector(key);
+            byte[] message;
+
+            try
+            {
+                message = _decodeService.Decode(request.CoverImage, seed, messageLength);
+                message = protector.Unprotect(message);
+            }
+            catch
+            {
+                await SendValidationErrorAsync("Decoding failed");
+                return;
+            }
+
+            List<DecodedItem> items = _decodeService.ParseMessage(message, out bool isText);
+
+            if (isText)
+            {
+                await SendTextAsync(items[0].Data);
+                return;
+            }
+
+            HttpContext.Response.ContentType = "application/zip";
+            HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
+
+            using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+
+            foreach (DecodedItem item in items)
+            {
+                ZipArchiveEntry entry = archive.CreateEntry(item.Name, CompressionLevel.Fastest);
+                await using Stream entryStream = entry.Open();
+                await entryStream.WriteAsync(item.Data, cancellationToken);
+            }
         }
         finally
         {
             request.CoverImage.Dispose();
-        }
-
-        List<DecodedItem> items = _decodeService.ParseMessage(message, out bool isText);
-
-        if (isText)
-        {
-            await SendTextAsync(items[0].Data);
-            return;
-        }
-
-        HttpContext.Response.ContentType = "application/zip";
-        HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
-
-        using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
-
-        foreach (DecodedItem item in items)
-        {
-            ZipArchiveEntry entry = archive.CreateEntry(item.Name, CompressionLevel.Fastest);
-            await using Stream entryStream = entry.Open();
-            await entryStream.WriteAsync(item.Data, cancellationToken);
         }
     }
 }
