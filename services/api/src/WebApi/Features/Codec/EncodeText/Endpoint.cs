@@ -3,32 +3,35 @@ using ApiBuilder;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
 using SixLabors.ImageSharp;
+using ILogger = Serilog.ILogger;
 
 namespace WebApi.Features.Codec.EncodeText;
 
 public class EncodeText : EndpointWithoutResponse<Request>
 {
-    private readonly IEncoder _encoder;
-    private readonly IKeyGenerator _keyGenerator;
+    private readonly IEncodeService _encodeService;
+    private readonly IKeyService _keyService;
+    private readonly ILogger _logger;
     private readonly IDataProtectionProvider _protectionProvider;
 
-
-    public EncodeText(IEncoder encoder, IKeyGenerator keyGenerator, IDataProtectionProvider protectionProvider)
+    public EncodeText(IEncodeService encodeService, IKeyService keyService, IDataProtectionProvider protectionProvider,
+        ILogger logger)
     {
-        _encoder = encoder;
-        _keyGenerator = keyGenerator;
+        _encodeService = encodeService;
+        _keyService = keyService;
         _protectionProvider = protectionProvider;
+        _logger = logger;
     }
 
     protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
         ushort seed = (ushort) Random.Shared.Next();
-        string key = _keyGenerator.GenerateKey(128);
+        string key = _keyService.Generate(128);
         IDataProtector protector = _protectionProvider.CreateProtector(key);
         request.Message = protector.Protect(request.Message);
-        key = _keyGenerator.AddMetaData(key, seed, request.Message.Length);
+        key = _keyService.AddMetaData(key, seed, request.Message.Length);
 
-        _encoder.Encode(request.CoverImage, request.Message, seed);
+        _encodeService.Encode(request.CoverImage, request.Message, seed);
 
         HttpContext.Response.ContentType = "application/zip";
         HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");

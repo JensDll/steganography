@@ -8,26 +8,27 @@ namespace WebApi.Features.Codec.EncodeBinary;
 
 public class EncodeBinary : EndpointWithoutResponse<Request>
 {
-    private readonly IEncoder _encoder;
-    private readonly IKeyGenerator _keyGenerator;
+    private readonly IEncodeService _encodeService;
+    private readonly IKeyService _keyService;
     private readonly IDataProtectionProvider _protectionProvider;
 
-    public EncodeBinary(IEncoder encoder, IKeyGenerator keyGenerator, IDataProtectionProvider protectionProvider)
+    public EncodeBinary(IEncodeService encodeService, IKeyService keyService,
+        IDataProtectionProvider protectionProvider)
     {
-        _encoder = encoder;
-        _keyGenerator = keyGenerator;
+        _encodeService = encodeService;
+        _keyService = keyService;
         _protectionProvider = protectionProvider;
     }
 
     protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
         ushort seed = (ushort) Random.Shared.Next();
-        string key = _keyGenerator.GenerateKey(128);
+        string key = _keyService.Generate(128);
         IDataProtector protector = _protectionProvider.CreateProtector(key);
         request.Message = protector.Protect(request.Message);
-        key = _keyGenerator.AddMetaData(key, seed, request.Message.Length);
+        key = _keyService.AddMetaData(key, seed, request.Message.Length);
 
-        _encoder.Encode(request.CoverImage, request.Message, seed);
+        _encodeService.Encode(request.CoverImage, request.Message, seed);
 
         HttpContext.Response.ContentType = "application/zip";
         HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");

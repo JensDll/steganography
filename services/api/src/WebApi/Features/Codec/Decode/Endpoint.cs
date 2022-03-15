@@ -3,25 +3,29 @@ using ApiBuilder;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
+using ILogger = Serilog.ILogger;
 
 namespace WebApi.Features.Codec.Decode;
 
 public class Decode : EndpointWithoutResponse<Request>
 {
-    private readonly IDecoder _decoder;
-    private readonly IKeyGenerator _keyGenerator;
+    private readonly IDecodeService _decodeService;
+    private readonly IKeyService _keyService;
+    private readonly ILogger _logger;
     private readonly IDataProtectionProvider _protectionProvider;
 
-    public Decode(IDecoder decoder, IDataProtectionProvider protectionProvider, IKeyGenerator keyGenerator)
+    public Decode(IDecodeService decodeService, IDataProtectionProvider protectionProvider, IKeyService keyService,
+        ILogger logger)
     {
-        _decoder = decoder;
+        _decodeService = decodeService;
         _protectionProvider = protectionProvider;
-        _keyGenerator = keyGenerator;
+        _keyService = keyService;
+        _logger = logger;
     }
 
     protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
-        if (!_keyGenerator.TryParseKey(request.Key, out ushort seed, out int messageLength, out string key))
+        if (!_keyService.TryParse(request.Key, out ushort seed, out int messageLength, out string key))
         {
             await SendValidationErrorAsync("Decoding failed");
             return;
@@ -32,7 +36,7 @@ public class Decode : EndpointWithoutResponse<Request>
 
         try
         {
-            message = _decoder.Decode(request.CoverImage, seed, messageLength);
+            message = _decodeService.Decode(request.CoverImage, seed, messageLength);
             message = protector.Unprotect(message);
         }
         catch (Exception)
@@ -40,8 +44,12 @@ public class Decode : EndpointWithoutResponse<Request>
             await SendValidationErrorAsync("Decoding failed");
             return;
         }
+        finally
+        {
+            request.CoverImage.Dispose();
+        }
 
-        List<DecodedItem> items = _decoder.ParseMessage(message, out bool isText);
+        List<DecodedItem> items = _decodeService.ParseMessage(message, out bool isText);
 
         if (isText)
         {

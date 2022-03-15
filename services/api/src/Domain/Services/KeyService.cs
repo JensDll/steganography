@@ -1,11 +1,18 @@
 ﻿using System.Security.Cryptography;
 using Domain.Interfaces;
 
-namespace Domain.Entities;
+namespace Domain.Services;
 
-public class KeyGenerator : IKeyGenerator
+public class KeyService : IKeyService
 {
     private static readonly RandomNumberGenerator _rng = RandomNumberGenerator.Create();
+
+    public string Generate(int keyLength)
+    {
+        byte[] bytes = new byte[keyLength / 4 * 3];
+        _rng.GetBytes(bytes);
+        return Convert.ToBase64String(bytes);
+    }
 
     public string AddMetaData(string base64Key, ushort seed, int messageLength)
     {
@@ -17,7 +24,7 @@ public class KeyGenerator : IKeyGenerator
         return Convert.ToBase64String(bytes) + base64Key;
     }
 
-    public bool TryParseKey(string base64Key, out ushort seed, out int messageLength, out string key)
+    public bool TryParse(string base64Key, out ushort seed, out int messageLength, out string key)
     {
         seed = 0;
         messageLength = 0;
@@ -36,12 +43,5 @@ public class KeyGenerator : IKeyGenerator
         messageLength = BitConverter.ToInt32(bytes[2..]);
 
         return true;
-    }
-
-    public string GenerateKey(int keyLength)
-    {
-        byte[] bytes = new byte[keyLength / 4 * 3];
-        _rng.GetBytes(bytes);
-        return Convert.ToBase64String(bytes);
     }
 }

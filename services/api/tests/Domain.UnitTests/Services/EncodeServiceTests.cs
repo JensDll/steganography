@@ -1,19 +1,23 @@
 ﻿using System;
-using Domain.Entities;
+using Domain.Services;
+using Moq;
 using NUnit.Framework;
+using Serilog;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Domain.UnitTests.Entities;
+namespace Domain.UnitTests.Services;
 
 [TestFixture]
-internal class EncoderTests
+internal class EncodeServiceTests
 {
     [Test]
     public void Encode_ShouldNotThrow_WhenTheMessageIsTheMaximumSize()
     {
         // Arrange
-        Encoder encoder = new();
+        Mock<ILogger> loggerMock = new();
+
+        EncodeService encodeService = new(loggerMock.Object);
         byte[] message = new byte[750_000];
         Random.Shared.NextBytes(message);
         Image<Rgb24> coverImage = new(500, 500);
@@ -21,7 +25,7 @@ internal class EncoderTests
         // Act
         void Action()
         {
-            encoder.Encode(coverImage, message, 10);
+            encodeService.Encode(coverImage, message, 10);
         }
 
         // Assert
@@ -32,7 +36,9 @@ internal class EncoderTests
     public void Encode_ShouldThrowOutOfRangeException_WhenTheMessageIsTooLong()
     {
         // Arrange
-        Encoder encoder = new();
+        Mock<ILogger> loggerMock = new();
+
+        EncodeService encodeService = new(loggerMock.Object);
         byte[] message = new byte[750_001];
         Random.Shared.NextBytes(message);
         Image<Rgb24> coverImage = new(500, 500);
@@ -40,7 +46,7 @@ internal class EncoderTests
         // Act
         void Action()
         {
-            encoder.Encode(coverImage, message, 10);
+            encodeService.Encode(coverImage, message, 10);
         }
 
         // Assert

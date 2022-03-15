@@ -1,21 +1,32 @@
-﻿using Domain.Extensions;
+﻿using Domain.Entities;
+using Domain.Extensions;
 using Domain.Interfaces;
+using Serilog;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Domain.Entities;
+namespace Domain.Services;
 
-public class Encoder : IEncoder
+public class EncodeService : CodecBase, IEncodeService
 {
-    private const int _permutationSize = 2048;
+    private readonly ILogger _logger;
+
+    public EncodeService(ILogger logger)
+    {
+        _logger = logger;
+    }
 
     public void Encode(Image<Rgb24> coverImage, byte[] message, ushort seed)
     {
+        _logger.Information(
+            "Encoding message. Image size: (width: {Width}, height: {Height}). Message length: {MessageLength} bytes",
+            coverImage.Width, coverImage.Height, message.Length);
+
         coverImage.ProcessPixelRows(accessor =>
         {
             Random prng = new(seed);
             int pixelNumber = accessor.Width * accessor.Height;
-            int step = pixelNumber / _permutationSize;
+            int step = pixelNumber / PermutationSize;
             step = step == 0 ? 1 : step;
 
             int messagePosition = 0;

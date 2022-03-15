@@ -5,10 +5,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Domain\Domain.csproj" />
-        <ProjectReference Include="..\ApiBuilder\ApiBuilder.csproj" />
+        <ProjectReference Include="..\Domain\Domain.csproj"/>
+        <ProjectReference Include="..\ApiBuilder\ApiBuilder.csproj"/>
     </ItemGroup>
 </Project>

@@ -1,15 +1,24 @@
 using ApiBuilder;
 using Domain;
 using Microsoft.AspNetCore.Http.Features;
+using Serilog;
 using WebApi.Features.Codec.Decode;
 using WebApi.Features.Codec.EncodeBinary;
 using WebApi.Features.Codec.EncodeText;
 using static ApiBuilder.EndpointAuthenticationDeclaration;
+using ILogger = Serilog.ILogger;
 
 const string corsDevPolicy = "cors:dev";
 const string corsProdPolicy = "cors:prod";
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+ILogger logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
+builder.Logging.AddSerilog(logger);
+builder.Services.AddSingleton(logger);
 
 builder.WebHost.ConfigureKestrel(options =>
 {

@@ -1,24 +1,35 @@
 ﻿using System.Text;
+using Domain.Entities;
 using Domain.Extensions;
 using Domain.Interfaces;
+using Serilog;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Domain.Entities;
+namespace Domain.Services;
 
-public class Decoder : IDecoder
+public class DecodeService : CodecBase, IDecodeService
 {
-    private const int _permutationSize = 2048;
+    private readonly ILogger _logger;
+
+    public DecodeService(ILogger logger)
+    {
+        _logger = logger;
+    }
 
     public byte[] Decode(Image<Rgb24> coverImage, ushort seed, int messageLength)
     {
+        _logger.Information(
+            "Decoding message. Image size: (width: {Width}, height: {Height}). Message length: {MessageLength} bytes",
+            coverImage.Width, coverImage.Height, messageLength);
+
         byte[] message = new byte[messageLength];
 
         coverImage.ProcessPixelRows(accessor =>
         {
             Random prng = new(seed);
             int pixelNumber = accessor.Width * accessor.Height;
-            int step = pixelNumber / _permutationSize;
+            int step = pixelNumber / PermutationSize;
             step = step == 0 ? 1 : step;
 
             int messagePosition = 0;
@@ -101,7 +112,7 @@ public class Decoder : IDecoder
                 decodedItems.Add(new DecodedItem
                 {
                     Name = string.Empty,
-                    Data = message[messagePosition..].ToArray()
+                    Data = message[messagePosition..]
                 });
 
                 return decodedItems;

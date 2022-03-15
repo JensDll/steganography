@@ -4,7 +4,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Domain.Interfaces;
 
-public interface IDecoder
+public interface IDecodeService
 {
     public byte[] Decode(Image<Rgb24> coverImage, ushort seed, int messageLength);
 
