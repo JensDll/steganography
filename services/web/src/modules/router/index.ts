@@ -42,6 +42,16 @@ export const router = createRouter({
   routes
 })
 
+router.beforeEach(to => {
+  if (to.name === 'encode') {
+    document.documentElement.classList.add('encode')
+    document.documentElement.classList.remove('decode')
+  } else if (to.name === 'decode') {
+    document.documentElement.classList.remove('encode')
+    document.documentElement.classList.add('decode')
+  }
+})
+
 declare module 'vue-router' {
   interface RouteMeta {
     title?: string

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type PropType } from 'vue'
+import type { PropType } from 'vue'
 
 defineProps({
   errors: {
@@ -10,10 +10,7 @@ defineProps({
 </script>
 
 <template>
-  <ul
-    v-show="errors.length"
-    class="mt-1 text-sm text-[color:var(--form-error-text-color)]"
-  >
+  <ul v-show="errors.length" class="text-c-text-error mt-1 text-sm">
     <li v-for="error in errors" :key="error">{{ error }}</li>
   </ul>
 </template>

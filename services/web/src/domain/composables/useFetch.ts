@@ -5,15 +5,32 @@ const toUrlParams = (obj: Record<string, unknown>) =>
 
 type RequestInitMinusMethod = Omit<RequestInit, 'method'>
 
-async function makeRequest(uri: string, init: RequestInit) {
-  let response: Response = undefined!
-  let responseType: 'json' | 'text' | 'blob' = 'text'
+type FetchResult = Promise<
+  | {
+      response: undefined
+      responseType: undefined
+      isNetworkError: true
+    }
+  | {
+      response: Response
+      responseType: 'json' | 'text' | 'blob'
+      isNetworkError: false
+    }
+>
+
+async function makeRequest(uri: string, init: RequestInit): FetchResult {
+  let response: Response | undefined = undefined
+  let responseType: 'json' | 'text' | 'blob' | undefined = undefined
   let isNetworkError = false
 
   try {
     response = await fetch(uri, init)
 
-    switch (response.headers.get('Content-Type')) {
+    if (import.meta.env.DEV) {
+      console.log(`[FETCH] ${uri} ${response.status}`)
+    }
+
+    switch (response.headers.get('Content-Type')?.split(';')[0]) {
       case 'application/json':
         responseType = 'json'
         break
@@ -31,7 +48,7 @@ async function makeRequest(uri: string, init: RequestInit) {
     response,
     responseType,
     isNetworkError
-  }
+  } as never
 }
 
 function verbs(uri: string) {
@@ -73,4 +90,4 @@ function createFetch(baseUri: string) {
   }
 }
 
-export const useFetch = createFetch('https://localhost:5001/api')
+export const useFetch = createFetch(import.meta.env.VITE_API_BASE_URI)

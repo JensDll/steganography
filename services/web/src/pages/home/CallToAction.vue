@@ -8,7 +8,7 @@ const emit = defineEmits(['click'])
 
 const containerRef = ref() as Ref<HTMLDivElement>
 const lockDim = 24
-const numLocks = ref(9)
+const numLocks = ref(8)
 const animationState = {
   x: 0,
   randomY: () => 0,
@@ -22,6 +22,7 @@ const animate = (icon: SVGElement) => {
     x: 0,
     y: animationState.randomY()
   })
+
   gsap.to(icon, {
     x: animationState.x,
     duration: animationState.randomDuration(),
@@ -80,20 +81,20 @@ onUnmounted(() => {
     ref="containerRef"
     class="relative grid h-28 place-items-center overflow-x-hidden"
   >
-    <AppButton class="z-10" variant="landing" @click="emit('click')">
-      Getting Started
-    </AppButton>
     <TransitionGroup appear v-on="animation">
       <HeroiconsSolid:lockClosed
         v-for="i in numLocks"
         :key="`closed-${i}`"
-        class="lock absolute top-0 right-full h-6 w-6 origin-center text-encode-200"
+        class="lock absolute top-0 right-full h-6 w-6 origin-center text-encode-200 dark:text-encode-500"
       />
       <HeroiconsSolid:lockOpen
         v-for="i in numLocks"
         :key="`open-${i}`"
-        class="lock absolute top-0 right-full h-6 w-6 text-decode-200"
+        class="lock absolute top-0 right-full h-6 w-6 text-decode-200 dark:text-decode-500"
       />
     </TransitionGroup>
+    <AppButton variant="landing" @click="emit('click')">
+      Getting Started
+    </AppButton>
   </div>
 </template>

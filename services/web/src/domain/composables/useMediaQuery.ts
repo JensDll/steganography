@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted, ref } from 'vue'
-import { type TailwindTheme } from 'tailwind-theme'
+import type { TailwindTheme } from 'tailwind-theme'
 
 type Query =
   | '(prefers-reduced-motion: reduce)'

@@ -26,7 +26,6 @@ const isImage = computed(() => props.file?.type.startsWith('image/'))
 
 const src = computed(() => {
   if (props.file) {
-    console.log()
     if (src.value) {
       URL.revokeObjectURL(src.value)
     }
@@ -70,7 +69,7 @@ function handleLoad() {
       'group',
       { 'cursor-pointer': !isImage || loaded },
       {
-        default: 'flex flex-col items-center rounded-lg ',
+        default: 'flex flex-col items-center justify-center rounded-lg ',
         reduced: 'relative center-children'
       }[variant]
     ]"
@@ -95,24 +94,27 @@ function handleLoad() {
         :class="[
           'h-6 w-6',
           {
-            'group-hover:bg-heroicons-outline-trash-black': loaded
+            'group-hover:bg-heroicons-outline-trash-black dark:group-hover:bg-heroicons-outline-trash-white':
+              loaded
           }
         ]"
       ></div>
     </div>
     <p
       v-if="variant === 'default'"
-      class="break-all text-sm text-gray-700 group-hover:line-through"
+      class="mt-1 break-all text-sm group-hover:line-through"
     >
       {{ file?.name }}
     </p>
     <p
       :class="[
-        'whitespace-nowrap pt-1 text-xs text-gray-600',
-        { 'group-hover:line-through': !isImage || loaded },
+        'whitespace-nowrap pt-1 text-xs text-gray-600 dark:text-gray-300',
+        {
+          'group-hover:line-through ': !isImage || loaded
+        },
         {
           default: '',
-          reduced: 'absolute top-full'
+          reduced: 'absolute top-full pt-2'
         }[variant]
       ]"
     >
