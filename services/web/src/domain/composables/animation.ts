@@ -12,7 +12,6 @@ const appear: AnimationHooks = {
     })
   },
   leave(el, done) {
-    console.log(el)
     gsap.to(el, {
       y: -4,
       opacity: 0,

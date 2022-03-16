@@ -21,13 +21,15 @@ export function codec() {
       })
 
       try {
-        if (!isNetworkError) {
-          if (response.ok) {
-            const zip = await response.blob()
-            useDownload('secret.zip').file(zip)
-          } else {
-            throw await response.json()
-          }
+        if (isNetworkError) {
+          return
+        }
+
+        if (response.ok) {
+          const zip = await response.blob()
+          useDownload('secret.zip').file(zip)
+        } else {
+          throw await response.json()
         }
       } finally {
         loading.value = false
@@ -50,13 +52,15 @@ export function codec() {
       })
 
       try {
-        if (!isNetworkError) {
-          if (response.ok) {
-            const zip = await response.blob()
-            useDownload('secret.zip').file(zip)
-          } else {
-            throw await response.json()
-          }
+        if (isNetworkError) {
+          return
+        }
+
+        if (response.ok) {
+          const zip = await response.blob()
+          useDownload('secret.zip').file(zip)
+        } else {
+          throw await response.json()
         }
       } finally {
         loading.value = false
@@ -77,18 +81,20 @@ export function codec() {
       })
 
       try {
-        if (!isNetworkError) {
-          if (response.ok) {
-            if (responseType === 'text') {
-              const text = await response.text()
-              useDownload('secret.txt').text(text)
-            } else if (responseType === 'blob') {
-              const zip = await response.blob()
-              useDownload('result.zip').file(zip)
-            }
-          } else {
-            throw await response.json()
+        if (isNetworkError) {
+          return
+        }
+
+        if (response.ok) {
+          if (responseType === 'text') {
+            const text = await response.text()
+            useDownload('secret.txt').text(text)
+          } else if (responseType === 'blob') {
+            const zip = await response.blob()
+            useDownload('result.zip').file(zip)
           }
+        } else {
+          throw await response.json()
         }
       } finally {
         loading.value = false

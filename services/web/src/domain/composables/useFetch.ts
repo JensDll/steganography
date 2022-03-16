@@ -1,5 +1,5 @@
-const toUrlParams = (obj: Record<string, unknown>) =>
-  Object.entries(obj).reduce<string>((uri, [key, value]) => {
+const toUrlParams = (params: Record<string, unknown>) =>
+  Object.entries(params).reduce<string>((uri, [key, value]) => {
     return uri + `&${key}=${value}`
   }, '')
 
@@ -27,7 +27,11 @@ async function makeRequest(uri: string, init: RequestInit): FetchResult {
     response = await fetch(uri, init)
 
     if (import.meta.env.DEV) {
-      console.log(`[FETCH] ${uri} ${response.status}`)
+      console.log(
+        `[FETCH] ${uri} ${response.headers.get('Content-Type')} ${
+          response.status
+        }`
+      )
     }
 
     switch (response.headers.get('Content-Type')?.split(';')[0]) {
@@ -55,7 +59,7 @@ function verbs(uri: string) {
   let init: RequestInit
 
   return {
-    async get(options: RequestInitMinusMethod = {}) {
+    get(options: RequestInitMinusMethod = {}) {
       init = options
       init.method = 'GET'
       return makeRequest(uri, init)
