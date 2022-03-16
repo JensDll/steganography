@@ -26,7 +26,11 @@ async function makeRequest(uri: string, init: RequestInit): FetchResult {
   try {
     response = await fetch(uri, init)
 
-    switch (response.headers.get('Content-Type')) {
+    if (import.meta.env.DEV) {
+      console.log(`[FETCH] ${uri} ${response.status}`)
+    }
+
+    switch (response.headers.get('Content-Type')?.split(';')[0]) {
       case 'application/json':
         responseType = 'json'
         break
@@ -86,4 +90,4 @@ function createFetch(baseUri: string) {
   }
 }
 
-export const useFetch = createFetch('https://localhost:5001/api')
+export const useFetch = createFetch(import.meta.env.VITE_API_BASE_URI)

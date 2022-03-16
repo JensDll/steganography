@@ -45,9 +45,7 @@ async function handleSubmit() {
     } else {
       await encodeBinary(formData.coverImage[0], formData.binaryData)
     }
-  } catch (e) {
-    console.log(e)
-  }
+  } catch {}
 }
 </script>
 

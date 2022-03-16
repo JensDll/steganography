@@ -26,7 +26,6 @@ const isImage = computed(() => props.file?.type.startsWith('image/'))
 
 const src = computed(() => {
   if (props.file) {
-    console.log()
     if (src.value) {
       URL.revokeObjectURL(src.value)
     }

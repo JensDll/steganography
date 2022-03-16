@@ -7,6 +7,7 @@
     --color-border: theme('colors.rgb.gray.200');
     --color-background: theme('colors.rgb.gray.50');
     --color-text: theme('colors.rgb.gray.700');
+    --color-text-error: theme('colors.rgb.red.500');
     --color-heading: theme('colors.rgb.gray.900');
 
     --color-form-background: theme('colors.rgb.white');
@@ -22,10 +23,11 @@
     --color-border: theme('colors.rgb.gray.800');
     --color-background: theme('colors.rgb.gray.900');
     --color-text: theme('colors.rgb.gray.200');
+    --color-text-error: theme('colors.rgb.red.600');
     --color-heading: theme('colors.rgb.gray.100');
 
     --color-form-background: theme('colors.rgb.gray.800');
-    --color-form-border: var(--color-border);
+    --color-form-border: theme('colors.rgb.gray.600');
     --color-form-focus-border: theme('colors.rgb.encode.600');
   }
 
@@ -142,7 +144,7 @@
   select.error,
   .custom-file-input.error {
     --color-form-border: theme('colors.rgb.red.300');
-    --color-form-focus-border: theme('colors.rgb.red.500');
+    --color-form-focus-border: var(--color-text-error);
   }
 
   .dark [type='text'].error,
@@ -164,7 +166,7 @@
   .dark select.error,
   .dark .custom-file-input.error {
     --color-form-border: theme('colors.rgb.red.700');
-    --color-form-focus-border: theme('colors.rgb.red.600');
+    --color-form-focus-border: var(--color-text-error);
   }
 
   [type='text']:focus,

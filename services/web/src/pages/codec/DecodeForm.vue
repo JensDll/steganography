@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { useValidation, type Field } from 'validierung'
-import { rules, api } from '~/domain'
+import { useValidation, ValidationError, type Field } from 'validierung'
+import { ref } from 'vue'
+
+import { rules, api, animation } from '~/domain'
 
 type FormData = {
   key: Field<string>
@@ -19,13 +21,22 @@ const { form, validateFields } = useValidation<FormData>({
 })
 
 const { loading, decode } = api.codec()
+const errorMessage = ref('')
 
 async function handleSubmit() {
   try {
     const formData = await validateFields()
     await decode(formData.coverImage[0], formData.key)
-  } catch (e) {
-    console.log(e)
+    errorMessage.value = ''
+  } catch (error) {
+    if (!(error instanceof ValidationError)) {
+      if (errorMessage.value) {
+        animation.shake('#error-message')
+      }
+      errorMessage.value = 'Decoding failed maybe your key is not valid'
+    } else {
+      errorMessage.value = ''
+    }
   }
 }
 </script>
@@ -62,6 +73,7 @@ async function handleSubmit() {
             variant="decode"
             :active="loading"
           />
+
           <AppButton
             type="submit"
             variant="decode"
@@ -74,6 +86,13 @@ async function handleSubmit() {
       </section>
     </form>
   </AppSection>
+  <div class="mt-10 container">
+    <Transition v-on="animation.appear">
+      <p v-if="errorMessage" id="error-message" class="text-c-text-error">
+        {{ errorMessage }}
+      </p>
+    </Transition>
+  </div>
 </template>
 
 <style scoped></style>

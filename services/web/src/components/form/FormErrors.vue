@@ -10,10 +10,7 @@ defineProps({
 </script>
 
 <template>
-  <ul
-    v-show="errors.length"
-    class="test text-sm text-red-500 last:mt-1 dark:text-red-600"
-  >
+  <ul v-show="errors.length" class="text-c-text-error mt-1 text-sm">
     <li v-for="error in errors" :key="error">{{ error }}</li>
   </ul>
 </template>

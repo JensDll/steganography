@@ -25,6 +25,7 @@ const colors = {
   'c-border': withOpacityValue('--color-border'),
   'c-bg': withOpacityValue('--color-background'),
   'c-text': withOpacityValue('--color-text'),
+  'c-text-error': withOpacityValue('--color-text-error'),
   'c-heading': withOpacityValue('--color-heading'),
   'c-form-bg': withOpacityValue('--color-form-background'),
   'c-form-border': withOpacityValue('--color-form-border'),
