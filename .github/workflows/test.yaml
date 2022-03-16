@@ -2,7 +2,10 @@ name: Testing
 on:
   pull_request:
     branches:
-      - main
+      - '**'
+  push:
+    branches:
+      - 'main'
 jobs:
   should-run:
     uses: JensDll/should-run/.github/workflows/main.yaml@main
