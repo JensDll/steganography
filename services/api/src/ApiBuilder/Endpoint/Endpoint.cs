@@ -55,7 +55,7 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
     {
         IValidator? validator = (IValidator?) HttpContext.RequestServices.GetService(typeof(IValidator<TRequest>));
 
-        if (validator is null)
+        if (validator == null)
         {
             return true;
         }

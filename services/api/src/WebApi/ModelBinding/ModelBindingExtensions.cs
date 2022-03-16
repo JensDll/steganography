@@ -32,11 +32,11 @@ public static class ModelBindingExtensions
     }
 
     public static bool HasFormDataContentDisposition(this MultipartSection section, string sectionName,
-        out ContentDispositionHeaderValue contentDisposition)
+        out ContentDispositionHeaderValue? contentDisposition)
     {
         bool hasContentDispositionHeader =
             ContentDispositionHeaderValue.TryParse(section.ContentDisposition,
-                out contentDisposition!);
+                out contentDisposition);
 
         return hasContentDispositionHeader &&
                contentDisposition != null &&
@@ -47,11 +47,11 @@ public static class ModelBindingExtensions
     }
 
     public static bool HasFileContentDisposition(this MultipartSection section, string sectionName,
-        out ContentDispositionHeaderValue contentDisposition)
+        out ContentDispositionHeaderValue? contentDisposition)
     {
         bool hasContentDispositionHeader =
             ContentDispositionHeaderValue.TryParse(section.ContentDisposition,
-                out contentDisposition!);
+                out contentDisposition);
 
         return hasContentDispositionHeader &&
                contentDisposition != null &&

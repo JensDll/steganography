@@ -40,9 +40,10 @@ public class EncodeText : EndpointWithoutResponse<Request>
 
             using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
             ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
-            Stream coverImageStream = coverImageEntry.Open();
-            await request.CoverImage.SaveAsPngAsync(coverImageStream, cancellationToken);
-            await coverImageStream.DisposeAsync();
+            await using (Stream coverImageStream = coverImageEntry.Open())
+            {
+                await request.CoverImage.SaveAsPngAsync(coverImageStream, cancellationToken);
+            }
 
             ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);
             await using Stream keyStream = keyEntry.Open();

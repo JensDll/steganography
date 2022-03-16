@@ -17,7 +17,7 @@ public class DecodeService : CodecBase, IDecodeService
         _logger = logger;
     }
 
-    public byte[] Decode(Image<Rgb24> coverImage, ushort seed, int messageLength)
+    public unsafe byte[] Decode(Image<Rgb24> coverImage, ushort seed, int messageLength)
     {
         _logger.Information(
             "Decoding message with image size: (width: {Width}, height: {Height}), and message length: {MessageLength} bytes",
@@ -46,45 +46,25 @@ public class DecodeService : CodecBase, IDecodeService
                     {
                         int y = Math.DivRem(n, accessor.Width, out int x);
                         Span<Rgb24> row = accessor.GetRowSpan(y);
-                        ref Rgb24 pixel = ref row[x];
 
-                        DecodeNextBit(
-                            pixelValue: pixel.R,
-                            bitPosition: bitPosition,
-                            messagePosition: ref messagePosition,
-                            byteShift: ref byteShift,
-                            currentByte: ref message[messagePosition]
-                        );
-
-                        if (messagePosition == messageLength)
+                        fixed (Rgb24* pixel = &row[x])
                         {
-                            return;
-                        }
+                            byte* pixelValues = (byte*) pixel;
+                            for (int i = 0; i < 3; ++i)
+                            {
+                                int bit = (pixelValues[i] >> bitPosition) & 1;
+                                message[messagePosition] |= (byte) (bit << byteShift++);
 
-                        DecodeNextBit(
-                            pixelValue: pixel.G,
-                            bitPosition: bitPosition,
-                            messagePosition: ref messagePosition,
-                            byteShift: ref byteShift,
-                            currentByte: ref message[messagePosition]
-                        );
+                                if (byteShift == 8)
+                                {
+                                    if (++messagePosition == messageLength)
+                                    {
+                                        return;
+                                    }
 
-                        if (messagePosition == messageLength)
-                        {
-                            return;
-                        }
-
-                        DecodeNextBit(
-                            pixelValue: pixel.B,
-                            bitPosition: bitPosition,
-                            messagePosition: ref messagePosition,
-                            byteShift: ref byteShift,
-                            currentByte: ref message[messagePosition]
-                        );
-
-                        if (messagePosition == messageLength)
-                        {
-                            return;
+                                    byteShift = 0;
+                                }
+                            }
                         }
                     }
                 }
@@ -130,23 +110,5 @@ public class DecodeService : CodecBase, IDecodeService
         }
 
         return decodedItems;
-    }
-
-    private static void DecodeNextBit(
-        byte pixelValue,
-        byte bitPosition,
-        ref byte byteShift,
-        ref byte currentByte,
-        ref int messagePosition
-    )
-    {
-        int bit = (pixelValue >> bitPosition) & 1;
-        currentByte |= (byte) (bit << byteShift++);
-
-        if (byteShift == 8)
-        {
-            ++messagePosition;
-            byteShift = 0;
-        }
     }
 }

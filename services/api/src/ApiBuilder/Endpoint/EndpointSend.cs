@@ -23,9 +23,13 @@ public abstract partial class Endpoint<TRequest, TResponse>
         return HttpContext.Response.WriteAsJsonAsync(response);
     }
 
-    protected Task SendValidationErrorAsync(string message, int statusCode = 400)
+    protected Task SendValidationErrorAsync(string message)
     {
-        HttpContext.Response.StatusCode = statusCode;
+        if (HttpContext.Response.StatusCode is < 400 or >= 500)
+        {
+            HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+        }
+
         return HttpContext.Response.WriteAsJsonAsync(new
         {
             HttpContext.Response.StatusCode,

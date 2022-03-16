@@ -42,9 +42,7 @@ public class NextPart
             return null;
         }
 
-        long? difference = _context.Request.ContentLength - _section.Body.Length;
-
-        if (difference >= _section.Body.Length)
+        if (_context.Request.ContentLength - _section.Body.Length >= _section.Body.Length)
         {
             coverImage.Dispose();
             _validationErrors.Add("Message is too large for the cover image");
@@ -68,13 +66,13 @@ public class NextPart
 
     public async Task CopyFileToAsync(Stream stream, string sectionName)
     {
-        if (!_section.HasFileContentDisposition(sectionName, out ContentDispositionHeaderValue contentDisposition))
+        if (!_section.HasFileContentDisposition(sectionName, out ContentDispositionHeaderValue? contentDisposition))
         {
             _validationErrors.Add($"Multipart section name does not match '{sectionName}'");
             return;
         }
 
-        string fileName = WebUtility.HtmlEncode(contentDisposition.FileName.Value);
+        string fileName = WebUtility.HtmlEncode(contentDisposition!.FileName.Value);
         byte[] fileNameBytes = Encoding.UTF8.GetBytes(fileName);
 
         // Write the filename length

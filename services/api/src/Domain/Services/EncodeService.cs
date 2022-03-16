@@ -16,7 +16,7 @@ public class EncodeService : CodecBase, IEncodeService
         _logger = logger;
     }
 
-    public void Encode(Image<Rgb24> coverImage, byte[] message, ushort seed)
+    public unsafe void Encode(Image<Rgb24> coverImage, byte[] message, ushort seed)
     {
         _logger.Information(
             "Encoding message with image size: (width: {Width}, height: {Height}), and message length: {MessageLength} bytes",
@@ -45,51 +45,26 @@ public class EncodeService : CodecBase, IEncodeService
                     {
                         int y = Math.DivRem(n, accessor.Width, out int x);
                         Span<Rgb24> row = accessor.GetRowSpan(y);
-                        ref Rgb24 pixel = ref row[x];
 
-                        bool done = EncodeNextBit(
-                            message: message,
-                            bitPosition: bitPosition,
-                            pixelValueMask: pixelValueMask,
-                            messagePosition: ref messagePosition,
-                            pixelValue: ref pixel.R,
-                            currentByte: ref currentByte,
-                            byteShift: ref byteShift
-                        );
-
-                        if (done)
+                        fixed (Rgb24* pixel = &row[x])
                         {
-                            return;
-                        }
+                            byte* pixelValues = (byte*) pixel;
+                            for (int i = 0; i < 3; ++i)
+                            {
+                                int bit = (currentByte >> byteShift++) & 1;
+                                pixelValues[i] = (byte) ((pixelValues[i] & ~pixelValueMask) | (bit << bitPosition));
 
-                        done = EncodeNextBit(
-                            message: message,
-                            bitPosition: bitPosition,
-                            pixelValueMask: pixelValueMask,
-                            messagePosition: ref messagePosition,
-                            pixelValue: ref pixel.G,
-                            currentByte: ref currentByte,
-                            byteShift: ref byteShift
-                        );
+                                if (byteShift == 8)
+                                {
+                                    if (++messagePosition >= message.Length)
+                                    {
+                                        return;
+                                    }
 
-                        if (done)
-                        {
-                            return;
-                        }
-
-                        done = EncodeNextBit(
-                            message: message,
-                            bitPosition: bitPosition,
-                            pixelValueMask: pixelValueMask,
-                            messagePosition: ref messagePosition,
-                            pixelValue: ref pixel.B,
-                            currentByte: ref currentByte,
-                            byteShift: ref byteShift
-                        );
-
-                        if (done)
-                        {
-                            return;
+                                    currentByte = message[messagePosition];
+                                    byteShift = 0;
+                                }
+                            }
                         }
                     }
                 }
@@ -97,34 +72,5 @@ public class EncodeService : CodecBase, IEncodeService
 
             throw new ArgumentOutOfRangeException(nameof(message), message, "Message is too long for the image");
         });
-    }
-
-    private static bool EncodeNextBit(
-        IReadOnlyList<byte> message,
-        byte bitPosition,
-        byte pixelValueMask,
-        ref int messagePosition,
-        ref byte pixelValue,
-        ref byte currentByte,
-        ref byte byteShift
-    )
-    {
-        int bit = (currentByte >> byteShift++) & 1;
-        pixelValue = (byte) ((pixelValue & ~pixelValueMask) | (bit << bitPosition));
-
-        if (byteShift != 8)
-        {
-            return false;
-        }
-
-        if (++messagePosition >= message.Count)
-        {
-            return true;
-        }
-
-        currentByte = message[messagePosition];
-        byteShift = 0;
-
-        return false;
     }
 }
