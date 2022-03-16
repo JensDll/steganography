@@ -1,10 +1,10 @@
-﻿using Domain.Entities;
+﻿using Domain.Services;
 using NUnit.Framework;
 
-namespace Domain.UnitTests.Entities;
+namespace Domain.UnitTests.Services;
 
 [TestFixture]
-internal class KeyGeneratorTests
+internal class KeyServiceTests
 {
     [TestCase(4, 4)]
     [TestCase(8, 8)]
@@ -18,27 +18,27 @@ internal class KeyGeneratorTests
     [TestCase(6, 4)]
     [TestCase(13, 12)]
     [TestCase(21, 20)]
-    public void GenerateKey_ShouldGenerateKeyOfGivenLength(int length, int expectedLength)
+    public void Generate_ShouldGenerateKeyOfGivenLength(int length, int expectedLength)
     {
         //Arrange
-        KeyGenerator generator = new();
+        KeyService keyService = new();
 
         // Act
-        string key = generator.GenerateKey(length);
+        string key = keyService.Generate(length);
 
         // Assert
         Assert.That(key, Has.Length.EqualTo(expectedLength));
     }
 
     [Test]
-    public void GenerateKey_ShouldBeUnique()
+    public void Generate_ShouldBeUnique()
     {
         // Arrange
-        KeyGenerator generator = new();
+        KeyService keyService = new();
 
         // Act
-        string key1 = generator.GenerateKey(256);
-        string key2 = generator.GenerateKey(256);
+        string key1 = keyService.Generate(256);
+        string key2 = keyService.Generate(256);
 
         // Assert
         Assert.That(key1, Is.Not.EqualTo(key2));
@@ -50,12 +50,12 @@ internal class KeyGeneratorTests
     public void TryParseKey_ShouldParseKeyComponents(int inKeyLength, ushort inSeed, int inMessageLength)
     {
         // Arrange
-        KeyGenerator generator = new();
-        string inKey = generator.GenerateKey(inKeyLength);
-        inKey = generator.AddMetaData(inKey, inSeed, inMessageLength);
+        KeyService keyService = new();
+        string inKey = keyService.Generate(inKeyLength);
+        inKey = keyService.AddMetaData(inKey, inSeed, inMessageLength);
 
         // Act
-        bool success = generator.TryParseKey(inKey, out ushort outSeed, out int outMessageLength, out string outKey);
+        bool success = keyService.TryParse(inKey, out ushort outSeed, out int outMessageLength, out string outKey);
 
         // Assert
         Assert.That(success, Is.True);
@@ -69,10 +69,10 @@ internal class KeyGeneratorTests
     public void TryParseKey_ShouldFailForInvalidKey()
     {
         // Arrange
-        KeyGenerator generator = new();
+        KeyService keyService = new();
 
         // Act
-        bool success = generator.TryParseKey("abc", out ushort _, out int _, out string _);
+        bool success = keyService.TryParse("abc", out _, out _, out _);
 
         // Assert
         Assert.That(success, Is.False);

@@ -1,64 +1,53 @@
-﻿using System.Text;
-using ApiBuilder;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Net.Http.Headers;
+﻿using ApiBuilder;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using WebApi.Extensions;
+using WebApi.ModelBinding;
 
 namespace WebApi.Features.Codec.Decode;
 
 public class Request : IBindRequest
 {
-    public Image<Rgb24> CoverImage { get; set; } = null!;
+    public Image<Rgb24> CoverImage { get; private set; } = null!;
 
-    public string Key { get; set; } = null!;
+    public string Key { get; private set; } = null!;
 
     public async ValueTask BindAsync(HttpContext context, List<string> validationErrors)
     {
-        if (!context.IsMultipartContentType())
+        MultiPartReader reader = new(context, validationErrors);
+        NextPart? nextPart = await reader.ReadNextPartAsync();
+
+        if (nextPart == null)
         {
-            validationErrors.Add("Content-Type must be multipart/form-data");
+            validationErrors.Add("Request is empty");
             return;
         }
 
-        string boundary = context.GetBoundary();
-        MultipartReader multipartReader = new(boundary, context.Request.Body);
-        MultipartSection? section = await multipartReader.ReadNextSectionAsync();
+        Image<Rgb24>? coverImage = await nextPart.ReadCoverImageAsync("coverImage");
 
-        bool hasContentDispositionHeader =
-            ContentDispositionHeaderValue.TryParse(
-                section?.ContentDisposition,
-                out ContentDispositionHeaderValue? contentDisposition);
-
-        if (!hasContentDispositionHeader || contentDisposition == null ||
-            !contentDisposition.HasFileContentDisposition() ||
-            contentDisposition.Name != "coverImage")
+        if (coverImage == null)
         {
-            validationErrors.Add("Request must contain a cover image");
             return;
         }
 
-        section!.Body.Position = 0;
+        CoverImage = coverImage;
 
-        CoverImage = await Image.LoadAsync<Rgb24>(section.Body);
+        nextPart = await reader.ReadNextPartAsync();
 
-        section = await multipartReader.ReadNextSectionAsync();
-
-        hasContentDispositionHeader =
-            ContentDispositionHeaderValue.TryParse(section?.ContentDisposition, out contentDisposition);
-
-        if (!hasContentDispositionHeader || contentDisposition == null ||
-            !contentDisposition.HasFormDataContentDisposition() ||
-            contentDisposition.Name != "key")
+        if (nextPart == null)
         {
-            validationErrors.Add("Request must contain a key");
+            CoverImage.Dispose();
+            validationErrors.Add("Request does not contain a key");
             return;
         }
 
-        await using MemoryStream keyStream = new();
-        await section!.Body.CopyToAsync(keyStream);
+        string? key = await nextPart.ReadTextAsync("key");
 
-        Key = Encoding.ASCII.GetString(keyStream.ToArray());
+        if (key == null)
+        {
+            CoverImage.Dispose();
+            return;
+        }
+
+        Key = key;
     }
 }

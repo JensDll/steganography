@@ -4,9 +4,9 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Domain.Interfaces;
 
-public interface IDecoder
+public interface IDecodeService
 {
     public byte[] Decode(Image<Rgb24> coverImage, ushort seed, int messageLength);
 
-    public List<DecodedItem> ParseMessage(ReadOnlySpan<byte> message, out bool isText);
+    public List<DecodedItem> ParseMessage(ReadOnlyMemory<byte> message, out bool isText);
 }

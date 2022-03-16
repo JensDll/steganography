@@ -1,6 +1,8 @@
 ﻿using System;
-using Domain.Entities;
+using Domain.Services;
+using Moq;
 using NUnit.Framework;
+using Serilog;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -17,8 +19,10 @@ internal class EncodeDecodeTests
     public void EncodeDecode_MessageShouldBeTheSame(int messageLength)
     {
         // Arrange
-        Encoder encoder = new();
-        Decoder decoder = new();
+        Mock<ILogger> loggerMock = new();
+
+        EncodeService encodeService = new(loggerMock.Object);
+        DecodeService decodeService = new(loggerMock.Object);
 
         byte[] message = new byte[messageLength];
         Random.Shared.NextBytes(message);
@@ -26,8 +30,8 @@ internal class EncodeDecodeTests
         Image<Rgb24> coverImage = new(500, 500);
 
         // Act
-        encoder.Encode(coverImage, message, 10);
-        byte[] result = decoder.Decode(coverImage, 10, messageLength);
+        encodeService.Encode(coverImage, message, 10);
+        byte[] result = decodeService.Decode(coverImage, 10, messageLength);
 
         // Assert
         Assert.That(message, Is.EqualTo(result));

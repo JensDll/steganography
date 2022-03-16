@@ -4,40 +4,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace ApiBuilder;
 
-public abstract class Endpoint<TRequest, TResponse> : EndpointBase
+public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
     where TRequest : notnull, new()
     where TResponse : notnull, new()
 {
-    protected Task SendTextAsync(string text)
-    {
-        HttpContext.Response.ContentType = "text/plain";
-        return HttpContext.Response.WriteAsync(text);
-    }
-
-    protected ValueTask SendTextAsync(byte[] text)
-    {
-        HttpContext.Response.ContentType = "text/plain";
-        return HttpContext.Response.Body.WriteAsync(text);
-    }
-
-    protected Task SendAsync(TResponse response)
-    {
-        HttpContext.Response.ContentType = "application/json";
-        return HttpContext.Response.WriteAsJsonAsync(response);
-    }
-
-    protected Task SendValidationErrorAsync(string message)
-    {
-        HttpContext.Response.StatusCode = 400;
-        return HttpContext.Response.WriteAsJsonAsync(new
-        {
-            HttpContext.Response.StatusCode,
-            Message = message,
-            Errors = ValidationErrors
-        });
-    }
-
-    internal override async Task ExecuteAsync(HttpContext context, CancellationToken cancellationToken)
+    internal sealed override async Task ExecuteAsync(HttpContext context, CancellationToken cancellationToken)
     {
         HttpContext = context;
         ValidationErrors = new List<string>();
@@ -46,7 +17,7 @@ public abstract class Endpoint<TRequest, TResponse> : EndpointBase
 
         if (HttpContext.Request.HasJsonContentType())
         {
-            request = await HttpContext.Request.ReadFromJsonAsync<TRequest>();
+            request = await HttpContext.Request.ReadFromJsonAsync<TRequest>(cancellationToken);
         }
 
         request ??= new TRequest();
@@ -84,7 +55,7 @@ public abstract class Endpoint<TRequest, TResponse> : EndpointBase
     {
         IValidator? validator = (IValidator?) HttpContext.RequestServices.GetService(typeof(IValidator<TRequest>));
 
-        if (validator is null)
+        if (validator == null)
         {
             return true;
         }
@@ -111,7 +82,7 @@ public abstract class Endpoint<TRequest, TResponse> : EndpointBase
 public abstract class EndpointWithoutRequest<TResponse> : Endpoint<EmptyRequest, TResponse>
     where TResponse : notnull, new()
 {
-    protected sealed override Task HandleAsync(EmptyRequest _, CancellationToken cancellationToken)
+    protected sealed override Task HandleAsync(EmptyRequest emptyRequest, CancellationToken cancellationToken)
     {
         return HandleAsync(cancellationToken);
     }

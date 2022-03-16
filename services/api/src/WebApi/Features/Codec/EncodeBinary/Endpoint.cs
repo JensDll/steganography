@@ -2,48 +2,54 @@
 using ApiBuilder;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
-using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp;
 
 namespace WebApi.Features.Codec.EncodeBinary;
 
 public class EncodeBinary : EndpointWithoutResponse<Request>
 {
-    private static readonly PngEncoder _pngEncoder = new();
-
-    private readonly IEncoder _encoder;
-    private readonly IKeyGenerator _keyGenerator;
+    private readonly IEncodeService _encodeService;
+    private readonly IKeyService _keyService;
     private readonly IDataProtectionProvider _protectionProvider;
 
-    public EncodeBinary(IEncoder encoder, IKeyGenerator keyGenerator, IDataProtectionProvider protectionProvider)
+    public EncodeBinary(IEncodeService encodeService, IKeyService keyService,
+        IDataProtectionProvider protectionProvider)
     {
-        _encoder = encoder;
-        _keyGenerator = keyGenerator;
+        _encodeService = encodeService;
+        _keyService = keyService;
         _protectionProvider = protectionProvider;
     }
 
-    protected override async Task HandleAsync(Request request, CancellationToken _)
+    protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
-        ushort seed = (ushort) Random.Shared.Next();
-        string key = _keyGenerator.GenerateKey(128);
-        IDataProtector protector = _protectionProvider.CreateProtector(key);
-        request.Message = protector.Protect(request.Message);
-        key = _keyGenerator.AddMetaData(key, seed, request.Message.Length);
+        try
+        {
+            ushort seed = (ushort) Random.Shared.Next();
+            string key = _keyService.Generate(128);
+            IDataProtector protector = _protectionProvider.CreateProtector(key);
+            byte[] protectedMessage = protector.Protect(request.Message);
+            key = _keyService.AddMetaData(key, seed, protectedMessage.Length);
 
-        _encoder.Encode(request.CoverImage, request.Message, seed);
+            _encodeService.Encode(request.CoverImage, protectedMessage, seed);
 
-        HttpContext.Response.ContentType = "application/zip";
-        HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
+            HttpContext.Response.ContentType = "application/zip";
+            HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
 
-        using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
-        ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
-        Stream coverImageStream = coverImageEntry.Open();
-        await request.CoverImage.SaveAsync(coverImageStream, _pngEncoder);
-        request.CoverImage.Dispose();
-        await coverImageStream.DisposeAsync();
+            using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+            ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
+            await using (Stream coverImageStream = coverImageEntry.Open())
+            {
+                await request.CoverImage.SaveAsPngAsync(coverImageStream, cancellationToken);
+            }
 
-        ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);
-        await using Stream keyStream = keyEntry.Open();
-        await using StreamWriter writer = new(keyStream);
-        await writer.WriteAsync(key);
+            ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);
+            await using Stream keyStream = keyEntry.Open();
+            await using StreamWriter writer = new(keyStream);
+            await writer.WriteAsync(key);
+        }
+        finally
+        {
+            request.CoverImage.Dispose();
+        }
     }
 }
