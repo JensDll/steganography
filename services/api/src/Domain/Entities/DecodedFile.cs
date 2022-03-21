@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities;
 
-public class DecodedItem
+public class DecodedFile
 {
     public string Name { get; init; } = null!;
 

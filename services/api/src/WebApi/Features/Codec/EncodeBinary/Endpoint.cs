@@ -1,5 +1,6 @@
 ﻿using System.IO.Compression;
 using ApiBuilder;
+using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
 using SixLabors.ImageSharp;
@@ -24,18 +25,25 @@ public class EncodeBinary : EndpointWithoutResponse<Request>
     {
         try
         {
+            // Protect and encode the message
             ushort seed = (ushort) Random.Shared.Next();
-            string key = _keyService.Generate(128);
-            IDataProtector protector = _protectionProvider.CreateProtector(key);
+            string base64Key = _keyService.GenerateKey();
+
+            IDataProtector protector = _protectionProvider.CreateProtector(base64Key);
+
             byte[] protectedMessage = protector.Protect(request.Message);
-            key = _keyService.AddMetaData(key, seed, protectedMessage.Length);
+
+            base64Key = _keyService.AddMetaData(base64Key, messageType: MessageType.Binary, seed: seed,
+                messageLength: protectedMessage.Length);
 
             _encodeService.Encode(request.CoverImage, protectedMessage, seed);
 
+            // Write the response
             HttpContext.Response.ContentType = "application/zip";
             HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
 
             using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+
             ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
             await using (Stream coverImageStream = coverImageEntry.Open())
             {
@@ -44,8 +52,8 @@ public class EncodeBinary : EndpointWithoutResponse<Request>
 
             ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);
             await using Stream keyStream = keyEntry.Open();
-            await using StreamWriter writer = new(keyStream);
-            await writer.WriteAsync(key);
+            await using StreamWriter keyStreamWriter = new(keyStream);
+            await keyStreamWriter.WriteAsync(base64Key);
         }
         finally
         {

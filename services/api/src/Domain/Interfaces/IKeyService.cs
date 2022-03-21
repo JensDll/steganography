@@ -1,10 +1,14 @@
-﻿namespace Domain.Interfaces;
+﻿using Domain.Enums;
+using Microsoft.Extensions.Primitives;
+
+namespace Domain.Interfaces;
 
 public interface IKeyService
 {
-    public string Generate(int keyLength);
+    public string GenerateKey();
 
-    public string AddMetaData(string base64Key, ushort seed, int messageLength);
+    public string AddMetaData(string base64Key, MessageType messageType, ushort seed, int messageLength);
 
-    public bool TryParse(string base64Key, out ushort seed, out int messageLength, out string key);
+    public bool TryParse(StringSegment base64Key, out MessageType messageType, out ushort seed, out int messageLength,
+        out StringSegment key);
 }

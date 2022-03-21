@@ -1,9 +1,10 @@
 ﻿using System.IO.Compression;
 using ApiBuilder;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
-using ILogger = Serilog.ILogger;
+using Microsoft.Extensions.Primitives;
 
 namespace WebApi.Features.Codec.Decode;
 
@@ -11,47 +12,37 @@ public class Decode : EndpointWithoutResponse<Request>
 {
     private readonly IDecodeService _decodeService;
     private readonly IKeyService _keyService;
-    private readonly ILogger _logger;
     private readonly IDataProtectionProvider _protectionProvider;
 
-    public Decode(IDecodeService decodeService, IDataProtectionProvider protectionProvider, IKeyService keyService,
-        ILogger logger)
+    public Decode(IDecodeService decodeService, IDataProtectionProvider protectionProvider, IKeyService keyService)
     {
         _decodeService = decodeService;
         _protectionProvider = protectionProvider;
         _keyService = keyService;
-        _logger = logger;
     }
 
     protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
         try
         {
-            if (!_keyService.TryParse(request.Key, out ushort seed, out int messageLength, out string key))
+            // Decode and unprotect the message
+            if (!_keyService.TryParse(request.Key, out MessageType messageType, out ushort seed,
+                    out int messageLength,
+                    out StringSegment key))
             {
                 await SendValidationErrorAsync("Decoding failed");
                 return;
             }
 
-            IDataProtector protector = _protectionProvider.CreateProtector(key);
-            byte[] message;
+            IDataProtector protector = _protectionProvider.CreateProtector(key.Value);
 
-            try
-            {
-                message = _decodeService.Decode(request.CoverImage, seed, messageLength);
-                message = protector.Unprotect(message);
-            }
-            catch
-            {
-                await SendValidationErrorAsync("Decoding failed");
-                return;
-            }
+            byte[] message = _decodeService.Decode(request.CoverImage, seed, messageLength);
+            message = protector.Unprotect(message);
 
-            List<DecodedItem> items = _decodeService.ParseMessage(message, out bool isText);
-
-            if (isText)
+            // Write the response
+            if (messageType == MessageType.Text)
             {
-                await SendTextAsync(items[0].Data);
+                await SendTextAsync(message);
                 return;
             }
 
@@ -60,12 +51,16 @@ public class Decode : EndpointWithoutResponse<Request>
 
             using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
 
-            foreach (DecodedItem item in items)
+            foreach (DecodedFile file in _decodeService.ParseFiles(message))
             {
-                ZipArchiveEntry entry = archive.CreateEntry(item.Name, CompressionLevel.Fastest);
+                ZipArchiveEntry entry = archive.CreateEntry(file.Name, CompressionLevel.Fastest);
                 await using Stream entryStream = entry.Open();
-                await entryStream.WriteAsync(item.Data, cancellationToken);
+                await entryStream.WriteAsync(file.Data, cancellationToken);
             }
+        }
+        catch
+        {
+            await SendValidationErrorAsync("Decoding failed");
         }
         finally
         {

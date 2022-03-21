@@ -8,5 +8,5 @@ public interface IDecodeService
 {
     public byte[] Decode(Image<Rgb24> coverImage, ushort seed, int messageLength);
 
-    public List<DecodedItem> ParseMessage(ReadOnlyMemory<byte> message, out bool isText);
+    public IEnumerable<DecodedFile> ParseFiles(ReadOnlyMemory<byte> message);
 }

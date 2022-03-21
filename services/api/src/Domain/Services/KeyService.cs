@@ -1,46 +1,53 @@
 ﻿using System.Security.Cryptography;
+using Domain.Enums;
 using Domain.Interfaces;
+using Microsoft.Extensions.Primitives;
 
 namespace Domain.Services;
 
 public class KeyService : IKeyService
 {
-    private static readonly RandomNumberGenerator _rng = RandomNumberGenerator.Create();
-
-    public string Generate(int keyLength)
+    public string AddMetaData(string base64Key, MessageType messageType, ushort seed, int messageLength)
     {
-        byte[] bytes = new byte[keyLength / 4 * 3];
-        _rng.GetBytes(bytes);
-        return Convert.ToBase64String(bytes);
+        byte[] metadata = new byte[9];
+
+        metadata[2] = (byte) messageType;
+        BitConverter.GetBytes(seed).CopyTo(metadata, 3);
+        BitConverter.GetBytes(messageLength).CopyTo(metadata, 5);
+
+        return Convert.ToBase64String(metadata) + base64Key;
     }
 
-    public string AddMetaData(string base64Key, ushort seed, int messageLength)
+    public string GenerateKey()
     {
-        byte[] bytes = new byte[sizeof(ushort) + sizeof(int)];
-
-        BitConverter.GetBytes(seed).CopyTo(bytes, 0);
-        BitConverter.GetBytes(messageLength).CopyTo(bytes, sizeof(ushort));
-
-        return Convert.ToBase64String(bytes) + base64Key;
+        using RandomNumberGenerator rng = RandomNumberGenerator.Create();
+        byte[] key = new byte[48];
+        rng.GetBytes(key);
+        return Convert.ToBase64String(key);
     }
 
-    public bool TryParse(string base64Key, out ushort seed, out int messageLength, out string key)
+    public bool TryParse(StringSegment base64Key, out MessageType messageType, out ushort seed, out int messageLength,
+        out StringSegment key)
     {
+        messageType = MessageType.Text;
         seed = 0;
         messageLength = 0;
-        key = "";
+        key = string.Empty;
 
-        if (base64Key.Length <= 8)
+        // The full key has a length of 57 bytes
+        // (57 / 3) * 4 = 76 base64 characters
+        if (base64Key.Length != 76)
         {
             return false;
         }
 
-        key = base64Key[8..];
+        key = base64Key.Subsegment(12);
 
-        Span<byte> bytes = new(Convert.FromBase64String(base64Key[..8]));
+        ReadOnlySpan<byte> metadata = Convert.FromBase64String(base64Key.Substring(0, 12));
 
-        seed = BitConverter.ToUInt16(bytes[..2]);
-        messageLength = BitConverter.ToInt32(bytes[2..]);
+        messageType = (MessageType) metadata[2];
+        seed = BitConverter.ToUInt16(metadata[3..5]);
+        messageLength = BitConverter.ToInt32(metadata[5..]);
 
         return true;
     }

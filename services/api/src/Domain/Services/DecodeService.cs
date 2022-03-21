@@ -49,11 +49,11 @@ public class DecodeService : CodecBase, IDecodeService
 
                         fixed (Rgb24* pixel = &row[x])
                         {
-                            byte* pixelValues = (byte*) pixel;
+                            byte* pixelValues = (byte*)pixel;
                             for (int i = 0; i < 3; ++i)
                             {
                                 int bit = (pixelValues[i] >> bitPosition) & 1;
-                                message[messagePosition] |= (byte) (bit << byteShift++);
+                                message[messagePosition] |= (byte)(bit << byteShift++);
 
                                 if (byteShift == 8)
                                 {
@@ -74,41 +74,22 @@ public class DecodeService : CodecBase, IDecodeService
         return message;
     }
 
-    public List<DecodedItem> ParseMessage(ReadOnlyMemory<byte> message, out bool isText)
+    public IEnumerable<DecodedFile> ParseFiles(ReadOnlyMemory<byte> message)
     {
-        isText = false;
-
-        List<DecodedItem> decodedItems = new();
-
         int messagePosition = 0;
 
         while (messagePosition < message.Length)
         {
             int fileNameLength = BitConverter.ToInt32(message[messagePosition..(messagePosition += 4)].Span);
-            isText = fileNameLength == 0;
-
-            if (isText)
-            {
-                decodedItems.Add(new DecodedItem
-                {
-                    Name = string.Empty,
-                    Data = message[messagePosition..]
-                });
-
-                return decodedItems;
-            }
-
             string fileName =
                 Encoding.ASCII.GetString(message[messagePosition..(messagePosition += fileNameLength)].Span);
             int fileLength = BitConverter.ToInt32(message[messagePosition..(messagePosition += 4)].Span);
 
-            decodedItems.Add(new DecodedItem
+            yield return new DecodedFile
             {
                 Name = fileName,
                 Data = message[messagePosition..(messagePosition += fileLength)]
-            });
+            };
         }
-
-        return decodedItems;
     }
 }

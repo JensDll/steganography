@@ -35,30 +35,27 @@ public static class ModelBindingExtensions
         out ContentDispositionHeaderValue? contentDisposition)
     {
         bool hasContentDispositionHeader =
-            ContentDispositionHeaderValue.TryParse(section.ContentDisposition,
-                out contentDisposition);
+            ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out contentDisposition);
 
         return hasContentDispositionHeader &&
                contentDisposition != null &&
                contentDisposition.DispositionType.Equals("form-data") &&
                string.IsNullOrEmpty(contentDisposition.FileName.Value) &&
                string.IsNullOrEmpty(contentDisposition.FileNameStar.Value) &&
-               contentDisposition.Name == sectionName;
+               contentDisposition.Name.Equals(sectionName);
     }
 
     public static bool HasFileContentDisposition(this MultipartSection section, string sectionName,
         out ContentDispositionHeaderValue? contentDisposition)
     {
         bool hasContentDispositionHeader =
-            ContentDispositionHeaderValue.TryParse(section.ContentDisposition,
-                out contentDisposition);
+            ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out contentDisposition);
 
         return hasContentDispositionHeader &&
                contentDisposition != null &&
                contentDisposition.DispositionType.Equals("form-data") &&
-               contentDisposition.DispositionType.Equals("form-data") &&
-               (!string.IsNullOrEmpty(contentDisposition.FileName.Value)
-                || !string.IsNullOrEmpty(contentDisposition.FileNameStar.Value))
-               && contentDisposition.Name == sectionName;
+               (!string.IsNullOrEmpty(contentDisposition.FileName.Value) ||
+                !string.IsNullOrEmpty(contentDisposition.FileNameStar.Value)) &&
+               contentDisposition.Name.Equals(sectionName);
     }
 }
