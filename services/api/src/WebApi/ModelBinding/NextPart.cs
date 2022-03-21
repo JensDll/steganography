@@ -42,7 +42,9 @@ public class NextPart
             return null;
         }
 
-        if (_context.Request.ContentLength - _section.Body.Length >= _section.Body.Length)
+        long? messageLength = _context.Request.ContentLength - _section.Body.Length;
+
+        if (messageLength >= _section.Body.Length)
         {
             coverImage.Dispose();
             _validationErrors.Add("Message is too large for the cover image");
@@ -97,9 +99,6 @@ public class NextPart
             return;
         }
 
-        // Write an empty length
-        await stream.WriteAsync(_emptyLength);
-        // Write the message
         await _section.Body.CopyToAsync(stream);
     }
 }
