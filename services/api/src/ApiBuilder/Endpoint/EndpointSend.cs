@@ -27,7 +27,7 @@ public abstract partial class Endpoint<TRequest, TResponse>
     {
         if (HttpContext.Response.StatusCode is < 400 or >= 500)
         {
-            HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            HttpContext.Response.StatusCode = 400;
         }
 
         return HttpContext.Response.WriteAsJsonAsync(new

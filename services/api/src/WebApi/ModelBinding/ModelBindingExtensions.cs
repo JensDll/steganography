@@ -31,7 +31,7 @@ public static class ModelBindingExtensions
                context.Request.ContentType.StartsWith("multipart/", StringComparison.OrdinalIgnoreCase);
     }
 
-    public static bool HasFormDataContentDisposition(this MultipartSection section, string sectionName,
+    public static bool IsFormDataContentDisposition(this MultipartSection section,
         out ContentDispositionHeaderValue? contentDisposition)
     {
         bool hasContentDispositionHeader =
@@ -41,11 +41,10 @@ public static class ModelBindingExtensions
                contentDisposition != null &&
                contentDisposition.DispositionType.Equals("form-data") &&
                string.IsNullOrEmpty(contentDisposition.FileName.Value) &&
-               string.IsNullOrEmpty(contentDisposition.FileNameStar.Value) &&
-               contentDisposition.Name.Equals(sectionName);
+               string.IsNullOrEmpty(contentDisposition.FileNameStar.Value);
     }
 
-    public static bool HasFileContentDisposition(this MultipartSection section, string sectionName,
+    public static bool IsFileContentDisposition(this MultipartSection section,
         out ContentDispositionHeaderValue? contentDisposition)
     {
         bool hasContentDispositionHeader =
@@ -55,7 +54,6 @@ public static class ModelBindingExtensions
                contentDisposition != null &&
                contentDisposition.DispositionType.Equals("form-data") &&
                (!string.IsNullOrEmpty(contentDisposition.FileName.Value) ||
-                !string.IsNullOrEmpty(contentDisposition.FileNameStar.Value)) &&
-               contentDisposition.Name.Equals(sectionName);
+                !string.IsNullOrEmpty(contentDisposition.FileNameStar.Value));
     }
 }

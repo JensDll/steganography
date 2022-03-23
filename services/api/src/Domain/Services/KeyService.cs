@@ -1,53 +1,59 @@
 ﻿using System.Security.Cryptography;
 using Domain.Enums;
 using Domain.Interfaces;
-using Microsoft.Extensions.Primitives;
 
 namespace Domain.Services;
 
 public class KeyService : IKeyService
 {
+    private readonly RandomNumberGenerator _rng = RandomNumberGenerator.Create();
+
     public string AddMetaData(string base64Key, MessageType messageType, ushort seed, int messageLength)
     {
-        byte[] metadata = new byte[9];
+        Span<byte> metadata = stackalloc byte[9];
 
         metadata[2] = (byte) messageType;
-        BitConverter.GetBytes(seed).CopyTo(metadata, 3);
-        BitConverter.GetBytes(messageLength).CopyTo(metadata, 5);
+        metadata[3] = (byte) seed;
+        metadata[4] = (byte) (seed >> 8);
+        metadata[5] = (byte) messageLength;
+        metadata[6] = (byte) (messageLength >> 8);
+        metadata[7] = (byte) (messageLength >> 16);
+        metadata[8] = (byte) (messageLength >> 24);
 
         return Convert.ToBase64String(metadata) + base64Key;
     }
 
-    public string GenerateKey()
+    public (string base64Key, byte[] key, byte[] iV) GenerateKey()
     {
-        using RandomNumberGenerator rng = RandomNumberGenerator.Create();
-        byte[] key = new byte[48];
-        rng.GetBytes(key);
-        return Convert.ToBase64String(key);
+        Span<byte> keyAndIv = stackalloc byte[48];
+        _rng.GetBytes(keyAndIv);
+        return (Convert.ToBase64String(keyAndIv), keyAndIv[..32].ToArray(), keyAndIv[32..].ToArray());
     }
 
-    public bool TryParse(StringSegment base64Key, out MessageType messageType, out ushort seed, out int messageLength,
-        out StringSegment key)
+    public bool TryParse(string base64Key, out MessageType messageType, out ushort seed, out int messageLength,
+        out byte[] key, out byte[] iV)
     {
+        key = Array.Empty<byte>();
+        iV = Array.Empty<byte>();
         messageType = MessageType.Text;
         seed = 0;
         messageLength = 0;
-        key = string.Empty;
 
-        // The full key has a length of 57 bytes
-        // (57 / 3) * 4 = 76 base64 characters
+        // The full key has a length of 57 bytes.
+        // The first 9 bytes are metadata and the last 48 bytes are the key.
+        // 3 bytes result in 4 base64 characters: (57 / 3) * 4 = 19 * 4 = 76
         if (base64Key.Length != 76)
         {
             return false;
         }
 
-        key = base64Key.Subsegment(12);
+        ReadOnlySpan<byte> fullKey = Convert.FromBase64String(base64Key);
 
-        ReadOnlySpan<byte> metadata = Convert.FromBase64String(base64Key.Substring(0, 12));
-
-        messageType = (MessageType) metadata[2];
-        seed = BitConverter.ToUInt16(metadata[3..5]);
-        messageLength = BitConverter.ToInt32(metadata[5..]);
+        messageType = (MessageType) fullKey[2];
+        seed = BitConverter.ToUInt16(fullKey[3..5]);
+        messageLength = BitConverter.ToInt32(fullKey[5..9]);
+        key = fullKey[9..41].ToArray();
+        iV = fullKey[41..].ToArray();
 
         return true;
     }

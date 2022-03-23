@@ -27,7 +27,7 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
             try
             {
                 await (ValueTask) RequestTypeCache<TRequest>.BindAsync.Invoke(request,
-                    new object[] {HttpContext, ValidationErrors})!;
+                    new object[] {HttpContext, ValidationErrors, cancellationToken})!;
             }
             catch (ModelBindingException e)
             {

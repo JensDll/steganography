@@ -8,13 +8,13 @@ namespace WebApi.Features.Codec.Decode;
 public class Request : IBindRequest
 {
     public Image<Rgb24> CoverImage { get; private set; } = null!;
-
     public string Key { get; private set; } = null!;
 
-    public async ValueTask BindAsync(HttpContext context, List<string> validationErrors)
+    public async ValueTask BindAsync(HttpContext context, List<string> validationErrors,
+        CancellationToken cancellationToken)
     {
-        MultiPartReader reader = new(context, validationErrors);
-        NextPart? nextPart = await reader.ReadNextPartAsync();
+        MyMultiPartReader reader = new(context, validationErrors);
+        NextPart? nextPart = await reader.ReadNextPartAsync(cancellationToken);
 
         if (nextPart == null)
         {
@@ -22,7 +22,7 @@ public class Request : IBindRequest
             return;
         }
 
-        Image<Rgb24>? coverImage = await nextPart.ReadCoverImageAsync("coverImage");
+        Image<Rgb24>? coverImage = await nextPart.ReadCoverImageAsync("coverImage", cancellationToken);
 
         if (coverImage == null)
         {
@@ -31,7 +31,7 @@ public class Request : IBindRequest
 
         CoverImage = coverImage;
 
-        nextPart = await reader.ReadNextPartAsync();
+        nextPart = await reader.ReadNextPartAsync(cancellationToken);
 
         if (nextPart == null)
         {

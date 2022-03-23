@@ -1,4 +1,6 @@
-﻿using ApiBuilder;
+﻿using System.IO.Pipelines;
+using System.Security.Cryptography;
+using ApiBuilder;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using WebApi.ModelBinding;
@@ -7,14 +9,21 @@ namespace WebApi.Features.Codec.EncodeText;
 
 public class Request : IBindRequest
 {
+    private MyMultiPartReader _multiPartReader = null!;
+    private PipeWriter _pipeWriter = null!;
+    private List<string> _validationErrors = null!;
+
     public Image<Rgb24> CoverImage { get; private set; } = null!;
+    public PipeReader PipeReader { get; private set; } = null!;
+    public CancellationTokenSource CancelSource { get; } = new();
 
-    public byte[] Message { get; private set; } = null!;
-
-    public async ValueTask BindAsync(HttpContext context, List<string> validationErrors)
+    public async ValueTask BindAsync(HttpContext context, List<string> validationErrors,
+        CancellationToken cancellationToken)
     {
-        MultiPartReader reader = new(context, validationErrors);
-        NextPart? nextPart = await reader.ReadNextPartAsync();
+        _validationErrors = validationErrors;
+        _multiPartReader = new MyMultiPartReader(context, validationErrors);
+
+        NextPart? nextPart = await _multiPartReader.ReadNextPartAsync(cancellationToken);
 
         if (nextPart == null)
         {
@@ -22,7 +31,7 @@ public class Request : IBindRequest
             return;
         }
 
-        Image<Rgb24>? coverImage = await nextPart.ReadCoverImageAsync("coverImage");
+        Image<Rgb24>? coverImage = await nextPart.ReadCoverImageAsync("coverImage", cancellationToken);
 
         if (coverImage == null)
         {
@@ -31,24 +40,49 @@ public class Request : IBindRequest
 
         CoverImage = coverImage;
 
-        await using MemoryStream messageStream = new();
-        nextPart = await reader.ReadNextPartAsync();
+        Pipe pipe = new();
+        PipeReader = pipe.Reader;
+        _pipeWriter = pipe.Writer;
+    }
+
+    public async Task<bool> FillPipeAsync(ICryptoTransform encryptor)
+    {
+        NextPart? nextPart = await _multiPartReader.ReadNextPartAsync(CancelSource.Token);
 
         if (nextPart == null)
         {
-            CoverImage.Dispose();
-            validationErrors.Add("Request does not contain a message");
-            return;
+            CancelSource.Cancel();
+            _validationErrors.Add("Request does not contain a message");
+            return false;
         }
 
-        await nextPart.CopyFormDataToAsync(messageStream, "message");
-
-        if (reader.HasError)
+        if (!nextPart.IsFormDataContentDisposition("message", out _))
         {
-            CoverImage.Dispose();
-            return;
+            CancelSource.Cancel();
+            return false;
         }
 
-        Message = messageStream.ToArray();
+        while (true)
+        {
+            Memory<byte> buffer = _pipeWriter.GetMemory(512);
+            int bytesRead = await nextPart.Body.ReadAsync(buffer, CancelSource.Token);
+
+            if (bytesRead == 0)
+            {
+                break;
+            }
+
+            _pipeWriter.Advance(bytesRead);
+
+            FlushResult result = await _pipeWriter.FlushAsync(CancelSource.Token);
+
+            if (result.IsCompleted)
+            {
+                break;
+            }
+        }
+
+        await _pipeWriter.CompleteAsync();
+        return true;
     }
 }
