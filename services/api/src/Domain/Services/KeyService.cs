@@ -1,59 +1,52 @@
-﻿using System.Security.Cryptography;
-using Domain.Enums;
+﻿using Domain.Enums;
 using Domain.Interfaces;
 
 namespace Domain.Services;
 
 public class KeyService : IKeyService
 {
-    private readonly RandomNumberGenerator _rng = RandomNumberGenerator.Create();
-
-    public string AddMetaData(string base64Key, MessageType messageType, ushort seed, int messageLength)
+    public string ToBase64(MessageType messageType, ushort seed, int messageLength, ReadOnlySpan<byte> key,
+        ReadOnlySpan<byte> iV)
     {
-        Span<byte> metadata = stackalloc byte[9];
+        Span<byte> base64Key = stackalloc byte[51];
 
-        metadata[2] = (byte) messageType;
-        metadata[3] = (byte) seed;
-        metadata[4] = (byte) (seed >> 8);
-        metadata[5] = (byte) messageLength;
-        metadata[6] = (byte) (messageLength >> 8);
-        metadata[7] = (byte) (messageLength >> 16);
-        metadata[8] = (byte) (messageLength >> 24);
+        base64Key[0] = (byte) messageType;
+        base64Key[1] = (byte) seed;
+        base64Key[2] = (byte) (seed >> 8);
+        base64Key[3] = (byte) messageLength;
+        base64Key[4] = (byte) (messageLength >> 8);
+        base64Key[5] = (byte) (messageLength >> 16);
+        base64Key[6] = (byte) (messageLength >> 24);
+        key.CopyTo(base64Key[7..]);
+        iV.CopyTo(base64Key[39..]);
 
-        return Convert.ToBase64String(metadata) + base64Key;
-    }
-
-    public (string base64Key, byte[] key, byte[] iV) GenerateKey()
-    {
-        Span<byte> keyAndIv = stackalloc byte[48];
-        _rng.GetBytes(keyAndIv);
-        return (Convert.ToBase64String(keyAndIv), keyAndIv[..32].ToArray(), keyAndIv[32..].ToArray());
+        return Convert.ToBase64String(base64Key);
     }
 
     public bool TryParse(string base64Key, out MessageType messageType, out ushort seed, out int messageLength,
         out byte[] key, out byte[] iV)
     {
-        key = Array.Empty<byte>();
-        iV = Array.Empty<byte>();
         messageType = MessageType.Text;
         seed = 0;
         messageLength = 0;
+        key = Array.Empty<byte>();
+        iV = Array.Empty<byte>();
 
-        // The full key has a length of 57 bytes.
-        // The first 9 bytes are metadata and the last 48 bytes are the key.
-        // 3 bytes result in 4 base64 characters: (57 / 3) * 4 = 19 * 4 = 76
-        if (base64Key.Length != 76)
+        // The full key has a length of 51 bytes.
+        // The first 7 bytes are metadata and the last 44 bytes are the key + initialization value.
+        // 3 bytes result in 4 base64 characters: (51 / 3) * 4 = 17 * 4 = 68
+        if (base64Key.Length != 68)
         {
             return false;
         }
 
         ReadOnlySpan<byte> fullKey = Convert.FromBase64String(base64Key);
 
-        messageType = (MessageType) fullKey[2];
-        seed = BitConverter.ToUInt16(fullKey[3..5]);
-        messageLength = BitConverter.ToInt32(fullKey[5..9]);
-        key = fullKey[9..41].ToArray();
-        iV = fullKey[41..].ToArray();
+        messageType = (MessageType) fullKey[0];
+        seed = BitConverter.ToUInt16(fullKey[1..3]);
+        messageLength = BitConverter.ToInt32(fullKey[3..7]);
+        key = fullKey[7..39].ToArray();
+        iV = fullKey[39..].ToArray();
 
         return true;
     }

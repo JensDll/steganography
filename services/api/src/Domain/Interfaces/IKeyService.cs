@@ -4,9 +4,8 @@ namespace Domain.Interfaces;
 
 public interface IKeyService
 {
-    public (string base64Key, byte[] key, byte[] iV) GenerateKey();
-
-    public string AddMetaData(string base64Key, MessageType messageType, ushort seed, int messageLength);
+    public string ToBase64(MessageType messageType, ushort seed, int messageLength, ReadOnlySpan<byte> key,
+        ReadOnlySpan<byte> iV);
 
     public bool TryParse(string base64Key, out MessageType messageType, out ushort seed, out int messageLength,
         out byte[] key, out byte[] iV);

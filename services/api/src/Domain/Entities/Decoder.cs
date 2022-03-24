@@ -1,5 +1,4 @@
 ﻿using System.IO.Pipelines;
-using System.Security.Cryptography;
 using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
@@ -10,14 +9,14 @@ namespace Domain.Entities;
 public class Decoder : CodecBase
 {
     private readonly int _messageLength;
-    private readonly ICryptoTransform _decryptor;
+    private readonly AesCounterMode _aes;
     private int _bytesRead;
 
-    public Decoder(Image<Rgb24> coverImage, ushort seed, int messageLength, ICryptoTransform decryptor) :
+    public Decoder(Image<Rgb24> coverImage, ushort seed, int messageLength, AesCounterMode aes) :
         base(coverImage, seed)
     {
         _messageLength = messageLength;
-        _decryptor = decryptor;
+        _aes = aes;
     }
 
     public async Task DecodeAsync(PipeWriter writer)
@@ -96,6 +95,7 @@ public class Decoder : CodecBase
 
                                 if (++bytesRead == buffer.Length)
                                 {
+                                    _aes.Transform(buffer, buffer);
                                     return;
                                 }
                             }
@@ -160,6 +160,7 @@ public class Decoder : CodecBase
 
                                         if (++bytesRead == buffer.Length || done)
                                         {
+                                            _aes.Transform(buffer[..bytesRead], buffer);
                                             pipeWriter.Advance(bytesRead);
                                             return;
                                         }

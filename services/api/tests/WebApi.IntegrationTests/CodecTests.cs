@@ -21,10 +21,12 @@ public class CodecTests : TestingBase
         #region AAA Encode
 
         // Arrange
-        Image<Rgb24> coverImage = new(200, 200);
+        Image<Rgb24> coverImage = new(500, 500);
         await using MemoryStream coverImageStream = new();
         await coverImage.SaveAsPngAsync(coverImageStream);
-        const string message = "Secret message";
+        byte[] temp = new byte[100_000];
+        Random.Shared.NextBytes(temp);
+        string message = Encoding.UTF8.GetString(temp);
 
         MultipartFormDataContent encodeFormData = new();
         encodeFormData.Add(new StreamContent(coverImageStream), "coverImage", "foo.png");
@@ -55,7 +57,7 @@ public class CodecTests : TestingBase
         using StreamReader reader = new(archive.Entries[1].Open(), Encoding.UTF8);
         string key = await reader.ReadToEndAsync();
 
-        Assert.That(key, Has.Length.EqualTo(76));
+        Assert.That(key, Has.Length.EqualTo(68));
 
         #endregion
 
@@ -139,7 +141,7 @@ public class CodecTests : TestingBase
         using StreamReader reader = new(encodeArchive.Entries[1].Open(), Encoding.UTF8);
         string key = await reader.ReadToEndAsync();
 
-        Assert.That(key, Has.Length.EqualTo(76));
+        Assert.That(key, Has.Length.EqualTo(68));
 
         #endregion
 

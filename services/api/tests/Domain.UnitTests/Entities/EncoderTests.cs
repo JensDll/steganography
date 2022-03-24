@@ -17,10 +17,9 @@ internal class EncoderTests
     [TestCase(64, 64)]
     [TestCase(128, 128)]
     [TestCase(256, 256)]
-    [TestCase(500, 500)]
+    [TestCase(512, 512)]
     [TestCase(1000, 1000)]
-    [TestCase(1500, 1500)]
-    public void Should_not_throw_for_message_with_maximum_length(int width, int height)
+    public void EncodeAsync_ShouldNotThrowForMessageWithMaximumLength(int width, int height)
     {
         // Arrange
         Image<Rgb24> coverImage = new(width, height);
@@ -47,10 +46,8 @@ internal class EncoderTests
     [TestCase(64, 64)]
     [TestCase(128, 128)]
     [TestCase(256, 256)]
-    [TestCase(500, 500)]
-    [TestCase(1000, 1000)]
-    [TestCase(1500, 1500)]
-    public void Should_throw_for_too_long_messages(int width, int height)
+    [TestCase(512, 512)]
+    public void EncodeAsync_ShouldThrowWhenTheMessageIsTooLong(int width, int height)
     {
         // Arrange
         Image<Rgb24> coverImage = new(width, height);
@@ -80,7 +77,7 @@ internal class EncoderTests
 
         while (true)
         {
-            Memory<byte> buffer = writer.GetMemory(512);
+            Memory<byte> buffer = writer.GetMemory();
             Random.Shared.NextBytes(buffer.Span);
             bytesWritten += buffer.Length;
 
@@ -93,6 +90,7 @@ internal class EncoderTests
             else
             {
                 writer.Advance(leftToWrite);
+                await writer.FlushAsync();
                 break;
             }
         }

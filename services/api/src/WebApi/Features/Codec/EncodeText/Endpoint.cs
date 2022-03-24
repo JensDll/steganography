@@ -1,5 +1,4 @@
 ﻿using System.IO.Compression;
-using System.Security.Cryptography;
 using ApiBuilder;
 using Domain.Entities;
 using Domain.Enums;
@@ -28,17 +27,15 @@ public class EncodeText : EndpointWithoutResponse<Request>
             _logger.Information("Encoding text message ... cover image (width: {Width}, height: {Height})",
                 request.CoverImage.Width, request.CoverImage.Height);
 
-            (string base64Key, byte[] key, byte[] iV) = _keyService.GenerateKey();
             ushort seed = (ushort) Random.Shared.Next();
 
-            using Aes aes = Aes.Create();
-            ICryptoTransform encryptor = aes.CreateEncryptor(key, iV);
-
+            using AesCounterMode aes = new();
             Encoder encoder = new(request.CoverImage, seed, request.CancelSource);
+            string base64Key;
 
             try
             {
-                Task<bool> writing = request.FillPipeAsync(encryptor);
+                Task<bool> writing = request.FillPipeAsync(aes);
                 Task<int> reading = encoder.EncodeAsync(request.PipeReader);
 
                 await Task.WhenAll(writing, reading);
@@ -49,7 +46,7 @@ public class EncodeText : EndpointWithoutResponse<Request>
                     return;
                 }
 
-                base64Key = _keyService.AddMetaData(base64Key, MessageType.Text, seed, reading.Result);
+                base64Key = _keyService.ToBase64(MessageType.Text, seed, reading.Result, aes.Key, aes.IV);
             }
             catch (MessageTooLongException e)
             {

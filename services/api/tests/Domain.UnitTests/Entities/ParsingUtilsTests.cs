@@ -6,10 +6,10 @@ using NUnit.Framework;
 namespace Domain.UnitTests.Entities;
 
 [TestFixture]
-public class ParsingUtilsTests
+internal class ParsingUtilsTests
 {
     [Test]
-    public void CopyAsInt32([Random(0, int.MaxValue, 42)] int actual)
+    public void CopyAsInt32([Random(0, int.MaxValue, 10)] int actual)
     {
         // Arrange
         ReadOnlySpan<byte> number = Encoding.ASCII.GetBytes(actual.ToString());

@@ -1,6 +1,6 @@
 ﻿using System.IO.Pipelines;
-using System.Security.Cryptography;
 using ApiBuilder;
+using Domain.Entities;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using WebApi.ModelBinding;
@@ -45,7 +45,7 @@ public class Request : IBindRequest
         _pipeWriter = pipe.Writer;
     }
 
-    public async Task<bool> FillPipeAsync(ICryptoTransform encryptor)
+    public async Task<bool> FillPipeAsync(AesCounterMode aes)
     {
         NextPart? nextPart = await _multiPartReader.ReadNextPartAsync(CancelSource.Token);
 
@@ -64,7 +64,8 @@ public class Request : IBindRequest
 
         while (true)
         {
-            Memory<byte> buffer = _pipeWriter.GetMemory(512);
+            Memory<byte> buffer = _pipeWriter.GetMemory();
+
             int bytesRead = await nextPart.Body.ReadAsync(buffer, CancelSource.Token);
 
             if (bytesRead == 0)
@@ -72,6 +73,7 @@ public class Request : IBindRequest
                 break;
             }
 
+            aes.Transform(buffer[..bytesRead].Span, buffer.Span);
             _pipeWriter.Advance(bytesRead);
 
             FlushResult result = await _pipeWriter.FlushAsync(CancelSource.Token);

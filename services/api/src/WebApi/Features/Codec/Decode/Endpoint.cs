@@ -1,6 +1,5 @@
 ﻿using System.IO.Compression;
 using System.IO.Pipelines;
-using System.Security.Cryptography;
 using ApiBuilder;
 using Domain.Entities;
 using Domain.Enums;
@@ -28,10 +27,8 @@ public class Decode : EndpointWithoutResponse<Request>
                 return;
             }
 
-            using Aes aes = Aes.Create();
-            ICryptoTransform decryptor = aes.CreateDecryptor(key, iV);
-
-            Decoder decoder = new(request.CoverImage, seed, messageLength, decryptor);
+            using AesCounterMode aes = new(key, iV);
+            Decoder decoder = new(request.CoverImage, seed, messageLength, aes);
 
             if (messageType == MessageType.Text)
             {

@@ -1,5 +1,4 @@
 ﻿using System.IO.Pipelines;
-using System.Security.Cryptography;
 using System.Text;
 using ApiBuilder;
 using Domain.Entities;
@@ -48,7 +47,13 @@ public class Request : IBindRequest
         _pipeWriter = pipe.Writer;
     }
 
-    public async Task<bool> FillPipeAsync(ICryptoTransform encryptor)
+    /// <summary>
+    /// Reads the multipart request body, encrypts it, and writes it to the pipe.
+    /// The written data has the form: <c>{file length}{file name length}{file name}{file data}</c>.
+    /// </summary>
+    /// <param name="aes">The aes instance used for encryption</param>
+    /// <returns>True the whole message was written successfully; false otherwise.</returns>
+    public async Task<bool> FillPipeAsync(AesCounterMode aes)
     {
         NextPart? nextPart = await _multiPartReader.ReadNextPartAsync(CancelSource.Token);
 
@@ -80,15 +85,19 @@ public class Request : IBindRequest
                     return false;
                 }
 
-                byte[] fileName = Encoding.UTF8.GetBytes(fileContentDisposition!.FileName.Value);
-
-                await _pipeWriter.WriteAsync(BitConverter.GetBytes(fileName.Length), CancelSource.Token);
-                await _pipeWriter.WriteAsync(fileName, CancelSource.Token);
+                int size = Encoding.UTF8.GetByteCount(fileContentDisposition!.FileName) + sizeof(int);
+                Memory<byte> buffer = _pipeWriter.GetMemory(size);
+                // Write the file name length to the first 4 bytes
+                BitConverter.TryWriteBytes(buffer.Span, fileContentDisposition.FileName.Length);
+                // Write the file name after that
+                Encoding.UTF8.GetBytes(fileContentDisposition.FileName, buffer[sizeof(int)..].Span);
+                aes.Transform(buffer[..size].Span, buffer.Span);
+                _pipeWriter.Advance(size);
             }
 
             while (true)
             {
-                Memory<byte> buffer = _pipeWriter.GetMemory(512);
+                Memory<byte> buffer = _pipeWriter.GetMemory();
                 int bytesRead = await nextPart.Body.ReadAsync(buffer, CancelSource.Token);
 
                 if (bytesRead == 0)
@@ -99,10 +108,12 @@ public class Request : IBindRequest
                 if (isFileLength)
                 {
                     ParsingUtils.CopyAsInt32(buffer[..bytesRead].Span, buffer.Span);
-                    _pipeWriter.Advance(4);
+                    aes.Transform(buffer[..sizeof(int)].Span, buffer.Span);
+                    _pipeWriter.Advance(sizeof(int));
                 }
                 else
                 {
+                    aes.Transform(buffer[..bytesRead].Span, buffer.Span);
                     _pipeWriter.Advance(bytesRead);
                 }
 
