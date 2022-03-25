@@ -42,6 +42,7 @@ export function codec() {
       const formData = new FormData()
       formData.append('coverImage', coverImage)
       for (let i = 0; i < files.length; ++i) {
+        formData.append(i.toString(), files[i].size.toString())
         formData.append(i.toString(), files[i])
       }
 

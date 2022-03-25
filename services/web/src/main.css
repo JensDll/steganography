@@ -27,7 +27,7 @@
     --color-heading: theme('colors.rgb.gray.100');
 
     --color-form-background: theme('colors.rgb.gray.800');
-    --color-form-border: theme('colors.rgb.gray.600');
+    --color-form-border: theme('colors.rgb.gray.700');
     --color-form-focus-border: theme('colors.rgb.encode.600');
   }
 

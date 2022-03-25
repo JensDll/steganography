@@ -139,9 +139,15 @@ watch(theme, changeThemePreference)
               </a>
             </li>
           </ul>
-          <div class="mt-5 flex items-center justify-between border-t pt-5">
+          <div
+            class="mt-5 flex items-center justify-between border-t border-c-form-border pt-5"
+          >
             <label class="m-0" for="theme">Switch theme</label>
-            <select id="theme" v-model="theme" class="dark:bg-gray-700">
+            <select
+              id="theme"
+              v-model="theme"
+              class="dark:border-gray-600 dark:bg-gray-700"
+            >
               <option
                 v-for="{ name, text } in themes"
                 :key="name"
