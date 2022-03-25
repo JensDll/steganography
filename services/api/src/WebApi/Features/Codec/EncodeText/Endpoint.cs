@@ -2,7 +2,6 @@
 using ApiBuilder;
 using Domain.Entities;
 using Domain.Enums;
-using Domain.Exceptions;
 using Domain.Interfaces;
 using SixLabors.ImageSharp;
 using ILogger = Serilog.ILogger;
@@ -28,9 +27,8 @@ public class EncodeText : EndpointWithoutResponse<Request>
                 request.CoverImage.Width, request.CoverImage.Height);
 
             ushort seed = (ushort) Random.Shared.Next();
-
             using AesCounterMode aes = new();
-            Encoder encoder = new(request.CoverImage, seed, request.CancelSource);
+            using Encoder encoder = new(request.CoverImage, seed, request.CancelSource);
             string base64Key;
 
             try
@@ -48,7 +46,7 @@ public class EncodeText : EndpointWithoutResponse<Request>
 
                 base64Key = _keyService.ToBase64(MessageType.Text, seed, reading.Result, aes.Key, aes.IV);
             }
-            catch (MessageTooLongException e)
+            catch (InvalidOperationException e)
             {
                 ValidationErrors.Add(e.Message);
                 await SendValidationErrorAsync("Encoding failed");
@@ -73,6 +71,7 @@ public class EncodeText : EndpointWithoutResponse<Request>
         }
         finally
         {
+            request.CancelSource.Dispose();
             request.CoverImage.Dispose();
         }
     }

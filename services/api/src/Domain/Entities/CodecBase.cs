@@ -5,7 +5,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Domain.Entities;
 
-public abstract class CodecBase
+public abstract class CodecBase : IDisposable
 {
     private readonly Random _prng;
     private readonly int _coverImageSize;
@@ -58,8 +58,9 @@ public abstract class CodecBase
         }
     }
 
-    protected void ReturnPermutations()
+    public void Dispose()
     {
+        GC.SuppressFinalize(this);
         ArrayPool<int>.Shared.Return(_startPermutation);
         ArrayPool<int>.Shared.Return(Permutation);
     }

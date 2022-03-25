@@ -58,22 +58,22 @@ public class AesCounterMode : IDisposable
         }
     }
 
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        _aes.Dispose();
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private unsafe void GenerateNewKeyStream()
     {
-        fixed (byte* bytePtr = &_iVAndCounter[12])
+        fixed (byte* bytePointer = &_iVAndCounter[12])
         {
-            uint* counter = (uint*) bytePtr;
+            uint* counter = (uint*) bytePointer;
             ++*counter;
         }
 
         _keyStreamIdx = 0;
         _aes.EncryptEcb(_iVAndCounter, _keyStream, PaddingMode.None);
-    }
-
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-        _aes.Dispose();
     }
 }

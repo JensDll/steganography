@@ -1,6 +1,5 @@
 ﻿using System.Buffers;
 using System.IO.Pipelines;
-using Domain.Exceptions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
@@ -34,8 +33,8 @@ public class Encoder : CodecBase
             }
         }
 
-        ReturnPermutations();
         await pipeReader.CompleteAsync();
+
         return (int) consumed;
     }
 
@@ -46,9 +45,8 @@ public class Encoder : CodecBase
 
         if (reader.Length > CoverImageCapacity)
         {
-            ReturnPermutations();
             _cancelSource.Cancel();
-            throw new MessageTooLongException("Message is too long for the cover image");
+            throw new InvalidOperationException("Message is too long for the cover image");
         }
 
         reader.TryRead(out byte currentByte);

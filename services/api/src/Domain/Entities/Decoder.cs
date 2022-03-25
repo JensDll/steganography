@@ -22,20 +22,21 @@ public class Decoder : CodecBase
     public async Task DecodeAsync(PipeWriter writer)
     {
         await WriteMessageAsync(writer, _messageLength);
-        ReturnPermutations();
     }
 
     public async Task DecodeAsync(PipeWriter writer, int messageLength)
     {
-        _bytesRead += messageLength;
-        await WriteMessageAsync(writer, messageLength);
-        if (_bytesRead >= _messageLength)
+        if (messageLength > CoverImageCapacity)
         {
-            ReturnPermutations();
+            throw new InvalidOperationException("Message length is invalid");
         }
+
+        _bytesRead += messageLength;
+
+        await WriteMessageAsync(writer, messageLength);
     }
 
-    public bool TryReadNextFileInfo(out string fileName, out int fileLength)
+    public bool TryDecodeNextFileInfo(out string fileName, out int fileLength)
     {
         fileName = string.Empty;
         fileLength = 0;
@@ -51,11 +52,16 @@ public class Decoder : CodecBase
         fileLength = BitConverter.ToInt32(buffer[..4]);
         int fileNameLength = BitConverter.ToInt32(buffer[4..]);
 
+        if (fileLength < 0 || fileNameLength < 0 || fileLength > CoverImageCapacity || fileNameLength > 256)
+        {
+            throw new InvalidOperationException("File name or file length is invalid");
+        }
+
         Span<byte> fileNameBytes = stackalloc byte[fileNameLength];
         ReadNextBytes(fileNameBytes);
 
         fileName = Encoding.UTF8.GetString(fileNameBytes);
-        _bytesRead += fileNameLength + 8;
+        _bytesRead += fileNameLength + buffer.Length;
 
         return true;
     }
@@ -125,7 +131,7 @@ public class Decoder : CodecBase
             CoverImage.ProcessPixelRows(accessor =>
             {
                 int bytesRead = 0;
-                Span<byte> buffer = pipeWriter.GetSpan(512);
+                Span<byte> buffer = pipeWriter.GetSpan();
                 buffer[bytesRead] = 0;
 
                 while (BitPosition < 8)

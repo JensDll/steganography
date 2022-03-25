@@ -3,7 +3,6 @@ using System.IO.Pipelines;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain.Entities;
-using Domain.Exceptions;
 using NUnit.Framework;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -67,7 +66,7 @@ internal class EncoderTests
         }
 
         // Assert
-        Assert.That(Action, Throws.TypeOf<MessageTooLongException>());
+        Assert.That(Action, Throws.InvalidOperationException);
     }
 
     private static async Task WriteAsync(PipeWriter writer, int messageLength)

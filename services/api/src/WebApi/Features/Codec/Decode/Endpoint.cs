@@ -23,31 +23,48 @@ public class Decode : EndpointWithoutResponse<Request>
             if (!_keyService.TryParse(request.Key, out MessageType messageType, out ushort seed,
                     out int messageLength, out byte[] key, out byte[] iV))
             {
+                ValidationErrors.Add("Invalid key");
                 await SendValidationErrorAsync("Decoding failed");
                 return;
             }
 
             using AesCounterMode aes = new(key, iV);
-            Decoder decoder = new(request.CoverImage, seed, messageLength, aes);
+            using Decoder decoder = new(request.CoverImage, seed, messageLength, aes);
 
-            if (messageType == MessageType.Text)
+            try
             {
-                HttpContext.Response.ContentType = "text/plain";
-                await decoder.DecodeAsync(HttpContext.Response.BodyWriter);
-                return;
+                if (messageType == MessageType.Text)
+                {
+                    HttpContext.Response.ContentType = "text/plain";
+                    await decoder.DecodeAsync(HttpContext.Response.BodyWriter);
+                    return;
+                }
+
+                HttpContext.Response.ContentType = "application/zip";
+                HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
+
+                bool hasNextFile = decoder.TryDecodeNextFileInfo(out string fileName, out int fileLength);
+
+                if (hasNextFile)
+                {
+                    using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+
+                    do
+                    {
+                        ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+                        await using Stream entryStream = entry.Open();
+                        PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
+                        await decoder.DecodeAsync(entryStreamWriter, fileLength);
+                    } while (decoder.TryDecodeNextFileInfo(out fileName, out fileLength));
+                }
             }
-
-            HttpContext.Response.ContentType = "application/zip";
-            HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
-
-            using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
-
-            while (decoder.TryReadNextFileInfo(out string fileName, out int fileLength))
+            catch (InvalidOperationException e)
             {
-                ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
-                await using Stream entryStream = entry.Open();
-                PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
-                await decoder.DecodeAsync(entryStreamWriter, fileLength);
+                if (!HttpContext.Response.HasStarted)
+                {
+                    ValidationErrors.Add(e.Message);
+                    await SendValidationErrorAsync("Decoding failed");
+                }
             }
         }
         finally
