@@ -1,4 +1,7 @@
-﻿using Domain.Services;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Domain.Enums;
+using Domain.Services;
 using NUnit.Framework;
 
 namespace Domain.UnitTests.Services;
@@ -6,75 +9,52 @@ namespace Domain.UnitTests.Services;
 [TestFixture]
 internal class KeyServiceTests
 {
-    [TestCase(4, 4)]
-    [TestCase(8, 8)]
-    [TestCase(16, 16)]
-    [TestCase(32, 32)]
-    [TestCase(64, 64)]
-    [TestCase(128, 128)]
-    [TestCase(256, 256)]
-    [TestCase(512, 512)]
-    // Should round to multiple of four
-    [TestCase(6, 4)]
-    [TestCase(13, 12)]
-    [TestCase(21, 20)]
-    public void Generate_ShouldGenerateKeyOfGivenLength(int length, int expectedLength)
-    {
-        //Arrange
-        KeyService keyService = new();
-
-        // Act
-        string key = keyService.Generate(length);
-
-        // Assert
-        Assert.That(key, Has.Length.EqualTo(expectedLength));
-    }
-
-    [Test]
-    public void Generate_ShouldBeUnique()
+    [TestCaseSource(nameof(TestData))]
+    public void ToBase64_TryParse_AllKeyPartsShouldMatch(MessageType inMessageType, int inSeed,
+        int inMessageLength, byte[] inKey, byte[] inIv)
     {
         // Arrange
         KeyService keyService = new();
 
         // Act
-        string key1 = keyService.Generate(256);
-        string key2 = keyService.Generate(256);
-
-        // Assert
-        Assert.That(key1, Is.Not.EqualTo(key2));
-    }
-
-    [TestCase(128, (ushort) 10, 42)]
-    [TestCase(256, (ushort) 20, 100)]
-    [TestCase(512, (ushort) 30, 100_000)]
-    public void TryParseKey_ShouldParseKeyComponents(int inKeyLength, ushort inSeed, int inMessageLength)
-    {
-        // Arrange
-        KeyService keyService = new();
-        string inKey = keyService.Generate(inKeyLength);
-        inKey = keyService.AddMetaData(inKey, inSeed, inMessageLength);
-
-        // Act
-        bool success = keyService.TryParse(inKey, out ushort outSeed, out int outMessageLength, out string outKey);
+        string base64Key = keyService.ToBase64(inMessageType, inSeed, inMessageLength, inKey, inIv);
+        bool success = keyService.TryParse(base64Key, out MessageType outMessageType, out int outSeed,
+            out int outMessageLength, out byte[] outKey, out byte[] outIv);
 
         // Assert
         Assert.That(success, Is.True);
-        Assert.That(inSeed, Is.EqualTo(outSeed));
-        Assert.That(inMessageLength, Is.EqualTo(outMessageLength));
-        Assert.That(inKeyLength, Is.EqualTo(outKey.Length));
-        Assert.That(outKey, Is.EqualTo(inKey[8..]));
+        Assert.That(outMessageType, Is.EqualTo(inMessageType));
+        Assert.That(outSeed, Is.EqualTo(inSeed));
+        Assert.That(outMessageLength, Is.EqualTo(inMessageLength));
+        Assert.That(outKey, Is.EqualTo(inKey));
+        Assert.That(outIv, Is.EqualTo(inIv));
     }
 
     [Test]
-    public void TryParseKey_ShouldFailForInvalidKey()
+    public void TryParse_ShouldFailForInvalidKey()
     {
         // Arrange
         KeyService keyService = new();
 
         // Act
-        bool success = keyService.TryParse("abc", out _, out _, out _);
+        bool success = keyService.TryParse("invalid", out _, out _, out _, out _, out _);
 
         // Assert
         Assert.That(success, Is.False);
+    }
+
+    private static IEnumerable<object[]> TestData()
+    {
+        foreach (int _ in Enumerable.Range(1, 5))
+        {
+            MessageType messageType = (MessageType) TestContext.CurrentContext.Random.Next(0, 2);
+            int seed = TestContext.CurrentContext.Random.Next();
+            int messageLength = TestContext.CurrentContext.Random.Next();
+            byte[] key = new byte[32];
+            byte[] iv = new byte[12];
+            TestContext.CurrentContext.Random.NextBytes(key);
+            TestContext.CurrentContext.Random.NextBytes(iv);
+            yield return new object[] {messageType, seed, messageLength, key, iv};
+        }
     }
 }

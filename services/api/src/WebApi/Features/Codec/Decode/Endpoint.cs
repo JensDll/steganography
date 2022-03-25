@@ -1,75 +1,68 @@
 ﻿using System.IO.Compression;
+using System.IO.Pipelines;
 using ApiBuilder;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
-using Microsoft.AspNetCore.DataProtection;
-using ILogger = Serilog.ILogger;
 
 namespace WebApi.Features.Codec.Decode;
 
 public class Decode : EndpointWithoutResponse<Request>
 {
-    private readonly IDecodeService _decodeService;
     private readonly IKeyService _keyService;
-    private readonly ILogger _logger;
-    private readonly IDataProtectionProvider _protectionProvider;
 
-    public Decode(IDecodeService decodeService, IDataProtectionProvider protectionProvider, IKeyService keyService,
-        ILogger logger)
+    public Decode(IKeyService keyService)
     {
-        _decodeService = decodeService;
-        _protectionProvider = protectionProvider;
         _keyService = keyService;
-        _logger = logger;
     }
 
     protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
+        if (!_keyService.TryParse(request.Key, out MessageType messageType, out int seed,
+                out int messageLength, out byte[] key, out byte[] iV))
+        {
+            ValidationErrors.Add("Invalid key");
+            await SendValidationErrorAsync("Decoding failed");
+            return;
+        }
+
+        using AesCounterMode aes = new(key, iV);
+        using Decoder decoder = new(request.CoverImage, seed, messageLength, aes);
+
         try
         {
-            if (!_keyService.TryParse(request.Key, out ushort seed, out int messageLength, out string key))
+            if (messageType == MessageType.Text)
             {
-                await SendValidationErrorAsync("Decoding failed");
-                return;
-            }
-
-            IDataProtector protector = _protectionProvider.CreateProtector(key);
-            byte[] message;
-
-            try
-            {
-                message = _decodeService.Decode(request.CoverImage, seed, messageLength);
-                message = protector.Unprotect(message);
-            }
-            catch
-            {
-                await SendValidationErrorAsync("Decoding failed");
-                return;
-            }
-
-            List<DecodedItem> items = _decodeService.ParseMessage(message, out bool isText);
-
-            if (isText)
-            {
-                await SendTextAsync(items[0].Data);
+                HttpContext.Response.ContentType = "text/plain";
+                await decoder.DecodeAsync(HttpContext.Response.BodyWriter);
                 return;
             }
 
             HttpContext.Response.ContentType = "application/zip";
             HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
 
-            using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+            bool hasNextFile = decoder.TryDecodeNextFileInfo(out string fileName, out int fileLength);
 
-            foreach (DecodedItem item in items)
+            if (hasNextFile)
             {
-                ZipArchiveEntry entry = archive.CreateEntry(item.Name, CompressionLevel.Fastest);
-                await using Stream entryStream = entry.Open();
-                await entryStream.WriteAsync(item.Data, cancellationToken);
+                using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+
+                do
+                {
+                    ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+                    await using Stream entryStream = entry.Open();
+                    PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
+                    await decoder.DecodeAsync(entryStreamWriter, fileLength);
+                } while (decoder.TryDecodeNextFileInfo(out fileName, out fileLength));
             }
         }
-        finally
+        catch (InvalidOperationException e)
         {
-            request.CoverImage.Dispose();
+            if (!HttpContext.Response.HasStarted)
+            {
+                ValidationErrors.Add(e.Message);
+                await SendValidationErrorAsync("Decoding failed");
+            }
         }
     }
 }

@@ -25,40 +25,35 @@ public static class ModelBindingExtensions
         return boundary;
     }
 
-    public static bool IsMultipartContentType(this HttpContext context)
+    public static bool IsMultipart(this HttpContext context)
     {
         return !string.IsNullOrEmpty(context.Request.ContentType) &&
                context.Request.ContentType.StartsWith("multipart/", StringComparison.OrdinalIgnoreCase);
     }
 
-    public static bool HasFormDataContentDisposition(this MultipartSection section, string sectionName,
+    public static bool IsFormData(this MultipartSection section,
         out ContentDispositionHeaderValue? contentDisposition)
     {
         bool hasContentDispositionHeader =
-            ContentDispositionHeaderValue.TryParse(section.ContentDisposition,
-                out contentDisposition);
+            ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out contentDisposition);
 
         return hasContentDispositionHeader &&
                contentDisposition != null &&
                contentDisposition.DispositionType.Equals("form-data") &&
                string.IsNullOrEmpty(contentDisposition.FileName.Value) &&
-               string.IsNullOrEmpty(contentDisposition.FileNameStar.Value) &&
-               contentDisposition.Name == sectionName;
+               string.IsNullOrEmpty(contentDisposition.FileNameStar.Value);
     }
 
-    public static bool HasFileContentDisposition(this MultipartSection section, string sectionName,
+    public static bool IsFile(this MultipartSection section,
         out ContentDispositionHeaderValue? contentDisposition)
     {
         bool hasContentDispositionHeader =
-            ContentDispositionHeaderValue.TryParse(section.ContentDisposition,
-                out contentDisposition);
+            ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out contentDisposition);
 
         return hasContentDispositionHeader &&
                contentDisposition != null &&
                contentDisposition.DispositionType.Equals("form-data") &&
-               contentDisposition.DispositionType.Equals("form-data") &&
-               (!string.IsNullOrEmpty(contentDisposition.FileName.Value)
-                || !string.IsNullOrEmpty(contentDisposition.FileNameStar.Value))
-               && contentDisposition.Name == sectionName;
+               (!string.IsNullOrEmpty(contentDisposition.FileName.Value) ||
+                !string.IsNullOrEmpty(contentDisposition.FileNameStar.Value));
     }
 }

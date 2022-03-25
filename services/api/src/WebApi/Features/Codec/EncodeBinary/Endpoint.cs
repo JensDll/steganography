@@ -1,55 +1,71 @@
 ﻿using System.IO.Compression;
+using System.Security.Cryptography;
 using ApiBuilder;
+using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
-using Microsoft.AspNetCore.DataProtection;
 using SixLabors.ImageSharp;
+using ILogger = Serilog.ILogger;
 
 namespace WebApi.Features.Codec.EncodeBinary;
 
 public class EncodeBinary : EndpointWithoutResponse<Request>
 {
-    private readonly IEncodeService _encodeService;
     private readonly IKeyService _keyService;
-    private readonly IDataProtectionProvider _protectionProvider;
+    private readonly ILogger _logger;
 
-    public EncodeBinary(IEncodeService encodeService, IKeyService keyService,
-        IDataProtectionProvider protectionProvider)
+    public EncodeBinary(IKeyService keyService, ILogger logger)
     {
-        _encodeService = encodeService;
         _keyService = keyService;
-        _protectionProvider = protectionProvider;
+        _logger = logger;
     }
 
     protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
+        _logger.Information("Encoding binary message ... cover image (width: {Width}, height: {Height})",
+            request.CoverImage.Width, request.CoverImage.Height);
+
+        int seed = RandomNumberGenerator.GetInt32(int.MaxValue);
+        using AesCounterMode aes = new();
+        using Encoder encoder = new(request.CoverImage, seed, request.CancelSource);
+        string base64Key;
+
         try
         {
-            ushort seed = (ushort) Random.Shared.Next();
-            string key = _keyService.Generate(128);
-            IDataProtector protector = _protectionProvider.CreateProtector(key);
-            byte[] protectedMessage = protector.Protect(request.Message);
-            key = _keyService.AddMetaData(key, seed, protectedMessage.Length);
+            Task<bool> writing = request.FillPipeAsync(aes);
+            Task<int> reading = encoder.EncodeAsync(request.PipeReader);
 
-            _encodeService.Encode(request.CoverImage, protectedMessage, seed);
+            await Task.WhenAll(writing, reading);
 
-            HttpContext.Response.ContentType = "application/zip";
-            HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
-
-            using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
-            ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
-            await using (Stream coverImageStream = coverImageEntry.Open())
+            if (!writing.Result)
             {
-                await request.CoverImage.SaveAsPngAsync(coverImageStream, cancellationToken);
+                await SendValidationErrorAsync("Encoding failed");
+                return;
             }
 
-            ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);
-            await using Stream keyStream = keyEntry.Open();
-            await using StreamWriter writer = new(keyStream);
-            await writer.WriteAsync(key);
+            base64Key = _keyService.ToBase64(MessageType.Binary, seed, reading.Result, aes.Key, aes.IV);
         }
-        finally
+        catch (InvalidOperationException e)
         {
-            request.CoverImage.Dispose();
+            ValidationErrors.Add(e.Message);
+            await SendValidationErrorAsync("Encoding failed");
+            return;
         }
+
+        HttpContext.Response.ContentType = "application/zip";
+        HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
+
+        using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+
+        ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
+        await using (Stream coverImageStream = coverImageEntry.Open())
+        {
+            await request.CoverImage.SaveAsPngAsync(coverImageStream, cancellationToken);
+        }
+
+        ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);
+        await using Stream keyStream = keyEntry.Open();
+        await using StreamWriter keyStreamWriter = new(keyStream);
+        await keyStreamWriter.WriteAsync(base64Key);
     }
 }

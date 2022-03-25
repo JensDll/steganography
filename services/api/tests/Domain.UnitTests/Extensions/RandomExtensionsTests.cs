@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using Domain.Extensions;
 using NUnit.Framework;
 
@@ -16,28 +17,24 @@ internal class RandomExtensionsTests
     [TestCase(5, 18, 7, new[] {5, 12})]
     [TestCase(6, 18, 7, new[] {6, 13})]
     [TestCase(7, 18, 7, new[] {7, 14})]
-    public void Permutation_ShouldGeneratePermutation(int start, int end, int step, int[] expectedValues)
+    public void RentPermutation_ShouldGenerateRentedPermutation(int start, int end, int step, int[] expectedValues)
     {
-        // Arrange
-        Random prng = new();
-
         // Act
-        int[] permutation = prng.Permutation(start, end, step);
+        (int[] permutation, int count) = Random.Shared.RentPermutation(start, end, step);
 
         // Assert
-        Assert.That(permutation, Is.EquivalentTo(expectedValues));
+        Assert.That(count, Is.EqualTo(expectedValues.Length));
+        Assert.That(permutation[..count], Is.EquivalentTo(expectedValues));
+        ArrayPool<int>.Shared.Return(permutation);
     }
 
     [Test]
-    public void Permutation_ShouldThrowArgumentException_WhenStartIsGreaterThanEnd()
+    public void RentPermutation_ShouldThrowArgumentExceptionWhenStartIsGreaterThanEnd()
     {
-        // Arrange
-        Random prng = new();
-
         // Act
         void Action()
         {
-            prng.Permutation(10, 5, 1);
+            Random.Shared.RentPermutation(10, 5, 1);
         }
 
         // Assert

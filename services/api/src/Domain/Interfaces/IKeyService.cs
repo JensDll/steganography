@@ -1,10 +1,12 @@
-﻿namespace Domain.Interfaces;
+﻿using Domain.Enums;
+
+namespace Domain.Interfaces;
 
 public interface IKeyService
 {
-    public string Generate(int keyLength);
+    public string ToBase64(MessageType messageType, int seed, int messageLength, ReadOnlySpan<byte> key,
+        ReadOnlySpan<byte> iV);
 
-    public string AddMetaData(string base64Key, ushort seed, int messageLength);
-
-    public bool TryParse(string base64Key, out ushort seed, out int messageLength, out string key);
+    public bool TryParse(string base64Key, out MessageType messageType, out int seed, out int messageLength,
+        out byte[] key, out byte[] iV);
 }

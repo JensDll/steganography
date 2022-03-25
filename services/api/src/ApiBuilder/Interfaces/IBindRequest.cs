@@ -4,5 +4,5 @@ namespace ApiBuilder;
 
 public interface IBindRequest
 {
-    ValueTask BindAsync(HttpContext context, List<string> validationErrors);
+    ValueTask BindAsync(HttpContext context, List<string> validationErrors, CancellationToken cancellationToken);
 }

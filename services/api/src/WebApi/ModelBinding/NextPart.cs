@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Text;
+﻿using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
 using SixLabors.ImageSharp;
@@ -9,24 +8,25 @@ namespace WebApi.ModelBinding;
 
 public class NextPart
 {
-    private static readonly byte[] _emptyLength = new byte[4];
-    private readonly HttpContext _context;
     private readonly MultipartSection _section;
     private readonly List<string> _validationErrors;
 
-    public NextPart(MultipartSection section, HttpContext context, List<string> validationErrors)
+    public NextPart(MultipartSection section, List<string> validationErrors)
     {
-        _context = context;
+        Body = section.Body;
+        Body.Position = 0;
+
         _validationErrors = validationErrors;
         _section = section;
-        _section.Body.Position = 0;
     }
 
-    public async Task<Image<Rgb24>?> ReadCoverImageAsync(string sectionName)
+    public Stream Body { get; }
+
+    public async Task<Image<Rgb24>?> ReadCoverImageAsync(string sectionName,
+        CancellationToken cancellationToken = default)
     {
-        if (!_section.HasFileContentDisposition(sectionName, out _))
+        if (!IsFile(sectionName, out _))
         {
-            _validationErrors.Add($"Multipart section name does not match '{sectionName}'");
             return null;
         }
 
@@ -34,18 +34,11 @@ public class NextPart
 
         try
         {
-            coverImage = await Image.LoadAsync<Rgb24>(_section.Body);
+            coverImage = await Image.LoadAsync<Rgb24>(Body, cancellationToken);
         }
         catch (UnknownImageFormatException)
         {
             _validationErrors.Add("Unsupported image format");
-            return null;
-        }
-
-        if (_context.Request.ContentLength - _section.Body.Length >= _section.Body.Length)
-        {
-            coverImage.Dispose();
-            _validationErrors.Add("Message is too large for the cover image");
             return null;
         }
 
@@ -54,52 +47,67 @@ public class NextPart
 
     public async Task<string?> ReadTextAsync(string sectionName)
     {
-        if (!_section.HasFormDataContentDisposition(sectionName, out _))
+        if (!IsFormData(sectionName, out _))
         {
-            _validationErrors.Add($"Multipart section name does not match '{sectionName}'");
             return null;
         }
 
-        using StreamReader reader = new(_section.Body, Encoding.UTF8);
+        using StreamReader reader = new(Body, Encoding.UTF8);
         return await reader.ReadToEndAsync();
     }
 
-    public async Task CopyFileToAsync(Stream stream, string sectionName)
+
+    public bool IsFile(string sectionName, out ContentDispositionHeaderValue? contentDisposition)
     {
-        if (!_section.HasFileContentDisposition(sectionName, out ContentDispositionHeaderValue? contentDisposition))
+        if (!IsFile(out contentDisposition))
         {
-            _validationErrors.Add($"Multipart section name does not match '{sectionName}'");
-            return;
+            return false;
         }
 
-        string fileName = WebUtility.HtmlEncode(contentDisposition!.FileName.Value);
-        byte[] fileNameBytes = Encoding.UTF8.GetBytes(fileName);
+        if (contentDisposition!.Name.Equals(sectionName))
+        {
+            return true;
+        }
 
-        // Write the filename length
-        await stream.WriteAsync(BitConverter.GetBytes(fileNameBytes.Length));
-        // Write the filename
-        await stream.WriteAsync(fileNameBytes);
-        // Write the message length (zero first until the real length is available)
-        await stream.WriteAsync(_emptyLength);
-        // Write the message
-        await _section.Body.CopyToAsync(stream);
-        // Write the now available message length
-        stream.Seek(-_section.Body.Length - 4, SeekOrigin.Current);
-        await stream.WriteAsync(BitConverter.GetBytes((int) _section.Body.Length));
-        stream.Seek(0, SeekOrigin.End);
+        _validationErrors.Add($"Multipart section '{contentDisposition.Name}' does not match '{sectionName}'");
+        return false;
     }
 
-    public async Task CopyFormDataToAsync(Stream stream, string sectionName)
+    public bool IsFile(out ContentDispositionHeaderValue? contentDisposition)
     {
-        if (!_section.HasFormDataContentDisposition(sectionName, out _))
+        if (_section.IsFile(out contentDisposition))
         {
-            _validationErrors.Add($"Multipart section name does not match '{sectionName}'");
-            return;
+            return true;
         }
 
-        // Write an empty length
-        await stream.WriteAsync(_emptyLength);
-        // Write the message
-        await _section.Body.CopyToAsync(stream);
+        _validationErrors.Add($"Multipart section '{contentDisposition?.Name}' is not a file");
+        return false;
+    }
+
+    public bool IsFormData(string sectionName, out ContentDispositionHeaderValue? contentDisposition)
+    {
+        if (!IsFormData(out contentDisposition))
+        {
+            return false;
+        }
+
+        if (contentDisposition!.Name.Equals(sectionName))
+        {
+            return true;
+        }
+
+        _validationErrors.Add($"Multipart section '{contentDisposition.Name}' does not match '{sectionName}'");
+        return false;
+    }
+
+    public bool IsFormData(out ContentDispositionHeaderValue? contentDisposition)
+    {
+        if (_section.IsFormData(out contentDisposition))
+        {
+            return true;
+        }
+
+        _validationErrors.Add($"Multipart section '{contentDisposition?.Name}' is not form data");
+        return false;
     }
 }
