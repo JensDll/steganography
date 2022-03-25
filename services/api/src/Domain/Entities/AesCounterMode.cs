@@ -71,6 +71,9 @@ public class AesCounterMode : IDisposable
         {
             uint* counter = (uint*) bytePointer;
             ++*counter;
+            if (*counter == 255)
+            {
+            }
         }
 
         _keyStreamIdx = 0;

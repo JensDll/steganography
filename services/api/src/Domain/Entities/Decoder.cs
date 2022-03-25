@@ -1,4 +1,5 @@
-﻿using System.IO.Pipelines;
+﻿using System.Diagnostics;
+using System.IO.Pipelines;
 using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
@@ -70,55 +71,50 @@ public class Decoder : CodecBase
     {
         int bytesRead = 0;
 
-        while (BitPosition < 8)
+        Debug.Assert(ByteShift == 0);
+
+        while (StartPermutationIdx <= StartPermutationCount)
         {
-            while (StartPermutationIdx < StartPermutationCount)
+            while (PermutationIdx < PermutationCount)
             {
-                while (PermutationIdx < PermutationCount)
+                int y = Math.DivRem(Permutation[PermutationIdx], CoverImage.Width, out int x);
+                Span<Rgb24> row = CoverImage.DangerousGetPixelRowMemory(y).Span;
+
+                unsafe
                 {
-                    int y = Math.DivRem(Permutation[PermutationIdx], CoverImage.Width, out int x);
-                    Span<Rgb24> row = CoverImage.DangerousGetPixelRowMemory(y).Span;
-
-                    unsafe
+                    fixed (Rgb24* pixel = &row[x])
                     {
-                        fixed (Rgb24* pixel = &row[x])
+                        byte* pixelValues = (byte*) pixel;
+
+                        while (PixelIdx < 3)
                         {
-                            byte* pixelValues = (byte*) pixel;
+                            int bit = (pixelValues[PixelIdx] >> BitPosition) & 1;
+                            buffer[bytesRead] |= (byte) (bit << ByteShift++);
 
-                            while (PixelIdx < 3)
+                            ++PixelIdx;
+
+                            if (ByteShift != 8)
                             {
-                                int bit = (pixelValues[PixelIdx] >> BitPosition) & 1;
-                                buffer[bytesRead] |= (byte) (bit << ByteShift++);
-
-                                ++PixelIdx;
-
-                                if (ByteShift != 8)
-                                {
-                                    continue;
-                                }
-
-                                ByteShift = 0;
-
-                                if (++bytesRead == buffer.Length)
-                                {
-                                    _aes.Transform(buffer, buffer);
-                                    return;
-                                }
+                                continue;
                             }
 
-                            PixelIdx = 0;
-                        }
-                    }
+                            ByteShift = 0;
 
-                    ++PermutationIdx;
+                            if (++bytesRead == buffer.Length)
+                            {
+                                _aes.Transform(buffer, buffer);
+                                return;
+                            }
+                        }
+
+                        PixelIdx = 0;
+                    }
                 }
 
-                NextPermutation();
+                ++PermutationIdx;
             }
 
-            StartPermutationIdx = 0;
-            ++BitPosition;
-            PixelValueMask <<= 1;
+            NextPermutation();
         }
     }
 
@@ -130,63 +126,58 @@ public class Decoder : CodecBase
         {
             CoverImage.ProcessPixelRows(accessor =>
             {
+                Debug.Assert(ByteShift == 0);
+
                 int bytesRead = 0;
                 Span<byte> buffer = pipeWriter.GetSpan();
                 buffer[bytesRead] = 0;
 
-                while (BitPosition < 8)
+                while (StartPermutationIdx <= StartPermutationCount)
                 {
-                    while (StartPermutationIdx < StartPermutationCount)
+                    while (PermutationIdx < PermutationCount)
                     {
-                        while (PermutationIdx < PermutationCount)
+                        int y = Math.DivRem(Permutation[PermutationIdx], accessor.Width, out int x);
+                        Span<Rgb24> row = accessor.GetRowSpan(y);
+
+                        unsafe
                         {
-                            int y = Math.DivRem(Permutation[PermutationIdx], accessor.Width, out int x);
-                            Span<Rgb24> row = accessor.GetRowSpan(y);
-
-                            unsafe
+                            fixed (Rgb24* pixel = &row[x])
                             {
-                                fixed (Rgb24* pixel = &row[x])
+                                byte* pixelValues = (byte*) pixel;
+
+                                while (PixelIdx < 3)
                                 {
-                                    byte* pixelValues = (byte*) pixel;
+                                    int bit = (pixelValues[PixelIdx] >> BitPosition) & 1;
+                                    buffer[bytesRead] |= (byte) (bit << ByteShift++);
 
-                                    while (PixelIdx < 3)
+                                    ++PixelIdx;
+
+                                    if (ByteShift != 8)
                                     {
-                                        int bit = (pixelValues[PixelIdx] >> BitPosition) & 1;
-                                        buffer[bytesRead] |= (byte) (bit << ByteShift++);
-
-                                        ++PixelIdx;
-
-                                        if (ByteShift != 8)
-                                        {
-                                            continue;
-                                        }
-
-                                        ByteShift = 0;
-                                        done = --messageLength == 0;
-
-                                        if (++bytesRead == buffer.Length || done)
-                                        {
-                                            _aes.Transform(buffer[..bytesRead], buffer);
-                                            pipeWriter.Advance(bytesRead);
-                                            return;
-                                        }
-
-                                        buffer[bytesRead] = 0;
+                                        continue;
                                     }
 
-                                    PixelIdx = 0;
-                                }
-                            }
+                                    ByteShift = 0;
+                                    done = --messageLength == 0;
 
-                            ++PermutationIdx;
+                                    if (++bytesRead == buffer.Length || done)
+                                    {
+                                        _aes.Transform(buffer[..bytesRead], buffer);
+                                        pipeWriter.Advance(bytesRead);
+                                        return;
+                                    }
+
+                                    buffer[bytesRead] = 0;
+                                }
+
+                                PixelIdx = 0;
+                            }
                         }
 
-                        NextPermutation();
+                        ++PermutationIdx;
                     }
 
-                    StartPermutationIdx = 0;
-                    ++BitPosition;
-                    PixelValueMask <<= 1;
+                    NextPermutation();
                 }
             });
 

@@ -8,7 +8,9 @@ internal static class RequestTypeCache<TRequest>
     {
         Type tRequest = typeof(TRequest);
         BindAsync = tRequest.GetMethod("BindAsync");
+        Dispose = tRequest.GetMethod("Dispose");
     }
 
     internal static MethodInfo? BindAsync { get; }
+    internal static MethodInfo? Dispose { get; }
 }

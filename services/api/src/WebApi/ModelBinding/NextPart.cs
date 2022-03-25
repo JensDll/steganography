@@ -25,7 +25,7 @@ public class NextPart
     public async Task<Image<Rgb24>?> ReadCoverImageAsync(string sectionName,
         CancellationToken cancellationToken = default)
     {
-        if (!IsFileContentDisposition(sectionName, out _))
+        if (!IsFile(sectionName, out _))
         {
             return null;
         }
@@ -47,7 +47,7 @@ public class NextPart
 
     public async Task<string?> ReadTextAsync(string sectionName)
     {
-        if (!IsFormDataContentDisposition(sectionName, out _))
+        if (!IsFormData(sectionName, out _))
         {
             return null;
         }
@@ -57,9 +57,9 @@ public class NextPart
     }
 
 
-    public bool IsFileContentDisposition(string sectionName, out ContentDispositionHeaderValue? contentDisposition)
+    public bool IsFile(string sectionName, out ContentDispositionHeaderValue? contentDisposition)
     {
-        if (!IsFileContentDisposition(out contentDisposition))
+        if (!IsFile(out contentDisposition))
         {
             return false;
         }
@@ -73,9 +73,9 @@ public class NextPart
         return false;
     }
 
-    public bool IsFileContentDisposition(out ContentDispositionHeaderValue? contentDisposition)
+    public bool IsFile(out ContentDispositionHeaderValue? contentDisposition)
     {
-        if (_section.IsFileContentDisposition(out contentDisposition))
+        if (_section.IsFile(out contentDisposition))
         {
             return true;
         }
@@ -84,9 +84,9 @@ public class NextPart
         return false;
     }
 
-    public bool IsFormDataContentDisposition(string sectionName, out ContentDispositionHeaderValue? contentDisposition)
+    public bool IsFormData(string sectionName, out ContentDispositionHeaderValue? contentDisposition)
     {
-        if (!IsFormDataContentDisposition(out contentDisposition))
+        if (!IsFormData(out contentDisposition))
         {
             return false;
         }
@@ -100,9 +100,9 @@ public class NextPart
         return false;
     }
 
-    public bool IsFormDataContentDisposition(out ContentDispositionHeaderValue? contentDisposition)
+    public bool IsFormData(out ContentDispositionHeaderValue? contentDisposition)
     {
-        if (_section.IsFormDataContentDisposition(out contentDisposition))
+        if (_section.IsFormData(out contentDisposition))
         {
             return true;
         }

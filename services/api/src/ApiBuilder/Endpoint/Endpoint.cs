@@ -12,46 +12,55 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
     {
         HttpContext = context;
         ValidationErrors = new List<string>();
-
         TRequest? request = default;
 
-        if (HttpContext.Request.HasJsonContentType())
+        try
         {
-            request = await HttpContext.Request.ReadFromJsonAsync<TRequest>(cancellationToken);
-        }
-
-        request ??= new TRequest();
-
-        if (RequestTypeCache<TRequest>.BindAsync != null)
-        {
-            try
+            if (HttpContext.Request.HasJsonContentType())
             {
-                await (ValueTask) RequestTypeCache<TRequest>.BindAsync.Invoke(request,
-                    new object[] {HttpContext, ValidationErrors, cancellationToken})!;
+                request = await HttpContext.Request.ReadFromJsonAsync<TRequest>(cancellationToken);
             }
-            catch (ModelBindingException e)
+
+            request ??= new TRequest();
+
+            if (RequestTypeCache<TRequest>.BindAsync != null)
             {
-                ValidationErrors.Add(e.Message);
+                try
+                {
+                    await (ValueTask) RequestTypeCache<TRequest>.BindAsync.Invoke(request,
+                        new object[] {HttpContext, ValidationErrors, cancellationToken})!;
+                }
+                catch (ModelBindingException e)
+                {
+                    ValidationErrors.Add(e.Message);
+                }
+            }
+
+            if (ValidationErrors.Any())
+            {
+                await SendValidationErrorAsync("Model binding failed");
+                return;
+            }
+
+            bool isValid = await ValidateAsync(request, cancellationToken);
+
+            if (isValid)
+            {
+                await HandleAsync(request, cancellationToken);
             }
         }
-
-        if (ValidationErrors.Any())
+        finally
         {
-            await SendValidationErrorAsync("Model binding failed");
-            return;
-        }
-
-        bool isValid = await ValidateAsync(request);
-
-        if (isValid)
-        {
-            await HandleAsync(request, cancellationToken);
+            if (RequestTypeCache<TRequest>.Dispose != null)
+            {
+                RequestTypeCache<TRequest>.Dispose.Invoke(request, null);
+            }
         }
     }
 
     protected abstract Task HandleAsync(TRequest request, CancellationToken cancellationToken);
 
-    private async Task<bool> ValidateAsync(TRequest request)
+    private async Task<bool> ValidateAsync(TRequest request, CancellationToken cancellationToken)
     {
         IValidator? validator = (IValidator?) HttpContext.RequestServices.GetService(typeof(IValidator<TRequest>));
 
@@ -60,8 +69,8 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
             return true;
         }
 
-        ValidationContext<object> validationContext = new(request);
-        ValidationResult validationResult = await validator.ValidateAsync(validationContext);
+        ValidationContext<TRequest> validationContext = new(request);
+        ValidationResult validationResult = await validator.ValidateAsync(validationContext, cancellationToken);
 
         if (validationResult.IsValid)
         {

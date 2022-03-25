@@ -5,7 +5,7 @@ using WebApi.ModelBinding;
 
 namespace WebApi.Features.Codec.Decode;
 
-public class Request : IBindRequest
+public class Request : IBindRequest, IDisposable
 {
     public Image<Rgb24> CoverImage { get; private set; } = null!;
     public string Key { get; private set; } = null!;
@@ -35,7 +35,6 @@ public class Request : IBindRequest
 
         if (nextPart == null)
         {
-            CoverImage.Dispose();
             validationErrors.Add("Request does not contain a key");
             return;
         }
@@ -44,10 +43,16 @@ public class Request : IBindRequest
 
         if (key == null)
         {
-            CoverImage.Dispose();
             return;
         }
 
         Key = key;
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        // ReSharper disable once ConstantConditionalAccessQualifier
+        CoverImage?.Dispose();
     }
 }

@@ -18,58 +18,51 @@ public class Decode : EndpointWithoutResponse<Request>
 
     protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
+        if (!_keyService.TryParse(request.Key, out MessageType messageType, out ushort seed,
+                out int messageLength, out byte[] key, out byte[] iV))
+        {
+            ValidationErrors.Add("Invalid key");
+            await SendValidationErrorAsync("Decoding failed");
+            return;
+        }
+
+        using AesCounterMode aes = new(key, iV);
+        using Decoder decoder = new(request.CoverImage, seed, messageLength, aes);
+
         try
         {
-            if (!_keyService.TryParse(request.Key, out MessageType messageType, out ushort seed,
-                    out int messageLength, out byte[] key, out byte[] iV))
+            if (messageType == MessageType.Text)
             {
-                ValidationErrors.Add("Invalid key");
-                await SendValidationErrorAsync("Decoding failed");
+                HttpContext.Response.ContentType = "text/plain";
+                await decoder.DecodeAsync(HttpContext.Response.BodyWriter);
                 return;
             }
 
-            using AesCounterMode aes = new(key, iV);
-            using Decoder decoder = new(request.CoverImage, seed, messageLength, aes);
+            HttpContext.Response.ContentType = "application/zip";
+            HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
 
-            try
+            bool hasNextFile = decoder.TryDecodeNextFileInfo(out string fileName, out int fileLength);
+
+            if (hasNextFile)
             {
-                if (messageType == MessageType.Text)
+                using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+
+                do
                 {
-                    HttpContext.Response.ContentType = "text/plain";
-                    await decoder.DecodeAsync(HttpContext.Response.BodyWriter);
-                    return;
-                }
-
-                HttpContext.Response.ContentType = "application/zip";
-                HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
-
-                bool hasNextFile = decoder.TryDecodeNextFileInfo(out string fileName, out int fileLength);
-
-                if (hasNextFile)
-                {
-                    using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
-
-                    do
-                    {
-                        ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
-                        await using Stream entryStream = entry.Open();
-                        PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
-                        await decoder.DecodeAsync(entryStreamWriter, fileLength);
-                    } while (decoder.TryDecodeNextFileInfo(out fileName, out fileLength));
-                }
-            }
-            catch (InvalidOperationException e)
-            {
-                if (!HttpContext.Response.HasStarted)
-                {
-                    ValidationErrors.Add(e.Message);
-                    await SendValidationErrorAsync("Decoding failed");
-                }
+                    ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+                    await using Stream entryStream = entry.Open();
+                    PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
+                    await decoder.DecodeAsync(entryStreamWriter, fileLength);
+                } while (decoder.TryDecodeNextFileInfo(out fileName, out fileLength));
             }
         }
-        finally
+        catch (InvalidOperationException e)
         {
-            request.CoverImage.Dispose();
+            if (!HttpContext.Response.HasStarted)
+            {
+                ValidationErrors.Add(e.Message);
+                await SendValidationErrorAsync("Decoding failed");
+            }
         }
     }
 }

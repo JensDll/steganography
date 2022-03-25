@@ -25,13 +25,13 @@ public static class ModelBindingExtensions
         return boundary;
     }
 
-    public static bool IsMultipartContentType(this HttpContext context)
+    public static bool IsMultipart(this HttpContext context)
     {
         return !string.IsNullOrEmpty(context.Request.ContentType) &&
                context.Request.ContentType.StartsWith("multipart/", StringComparison.OrdinalIgnoreCase);
     }
 
-    public static bool IsFormDataContentDisposition(this MultipartSection section,
+    public static bool IsFormData(this MultipartSection section,
         out ContentDispositionHeaderValue? contentDisposition)
     {
         bool hasContentDispositionHeader =
@@ -44,7 +44,7 @@ public static class ModelBindingExtensions
                string.IsNullOrEmpty(contentDisposition.FileNameStar.Value);
     }
 
-    public static bool IsFileContentDisposition(this MultipartSection section,
+    public static bool IsFile(this MultipartSection section,
         out ContentDispositionHeaderValue? contentDisposition)
     {
         bool hasContentDispositionHeader =

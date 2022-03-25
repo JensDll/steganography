@@ -17,7 +17,7 @@ public abstract class CodecBase : IDisposable
 
     protected byte BitPosition;
     protected byte ByteShift;
-    protected byte PixelValueMask;
+    protected byte PixelValueMask = 1;
     protected byte PixelIdx;
 
     protected int[] Permutation;
@@ -25,7 +25,7 @@ public abstract class CodecBase : IDisposable
     protected int PermutationIdx;
 
     protected readonly int StartPermutationCount;
-    protected int StartPermutationIdx;
+    protected int StartPermutationIdx = 1;
 
     protected CodecBase(Image<Rgb24> coverImage, ushort seed)
     {
@@ -40,22 +40,22 @@ public abstract class CodecBase : IDisposable
 
         CoverImage = coverImage;
         CoverImageCapacity = _coverImageSize * 3;
-        BitPosition = 0;
-        ByteShift = 0;
-        PixelValueMask = 1;
-        PixelIdx = 0;
     }
 
     protected void NextPermutation()
     {
+        if (StartPermutationIdx == StartPermutationCount)
+        {
+            StartPermutationIdx = 0;
+            ++BitPosition;
+            PixelValueMask <<= 1;
+        }
+
         PermutationIdx = 0;
         ArrayPool<int>.Shared.Return(Permutation);
-        if (++StartPermutationIdx < StartPermutationCount)
-        {
-            (Permutation, PermutationCount) =
-                _prng.RentPermutation(_startPermutation[StartPermutationIdx], _coverImageSize - 1,
-                    _permutationStep);
-        }
+        (Permutation, PermutationCount) =
+            _prng.RentPermutation(_startPermutation[StartPermutationIdx++], _coverImageSize - 1,
+                _permutationStep);
     }
 
     public void Dispose()

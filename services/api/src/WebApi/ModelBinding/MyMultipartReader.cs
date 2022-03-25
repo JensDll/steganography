@@ -10,9 +10,7 @@ public class MyMultiPartReader
 
     public MyMultiPartReader(HttpContext context, List<string> validationErrors)
     {
-        _validationErrors = validationErrors;
-
-        if (!context.IsMultipartContentType())
+        if (!context.IsMultipart())
         {
             throw new ModelBindingException("Content-Type must be multipart/form-data");
         }
@@ -20,6 +18,7 @@ public class MyMultiPartReader
         string boundary = context.GetBoundary();
 
         _multipartReader = new MultipartReader(boundary, context.Request.Body);
+        _validationErrors = validationErrors;
     }
 
     public async Task<NextPart?> ReadNextPartAsync(CancellationToken cancellationToken = default)

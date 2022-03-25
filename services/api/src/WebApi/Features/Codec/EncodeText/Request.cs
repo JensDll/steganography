@@ -7,7 +7,7 @@ using WebApi.ModelBinding;
 
 namespace WebApi.Features.Codec.EncodeText;
 
-public class Request : IBindRequest
+public class Request : IBindRequest, IDisposable
 {
     private MyMultiPartReader _multiPartReader = null!;
     private PipeWriter _pipeWriter = null!;
@@ -56,7 +56,7 @@ public class Request : IBindRequest
             return false;
         }
 
-        if (!nextPart.IsFormDataContentDisposition("message", out _))
+        if (!nextPart.IsFormData("message", out _))
         {
             CancelSource.Cancel();
             return false;
@@ -86,5 +86,13 @@ public class Request : IBindRequest
 
         await _pipeWriter.CompleteAsync();
         return true;
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        // ReSharper disable once ConstantConditionalAccessQualifier
+        CoverImage?.Dispose();
+        CancelSource.Dispose();
     }
 }

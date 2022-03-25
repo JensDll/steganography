@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using System.Diagnostics;
 using System.IO.Pipelines;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
@@ -24,7 +25,7 @@ public class Encoder : CodecBase
             ReadResult result = await pipeReader.ReadAsync(_cancelSource.Token);
             ReadOnlySequence<byte> buffer = result.Buffer;
 
-            consumed = ProcessMessage(ref buffer, consumed);
+            ProcessMessage(ref buffer, ref consumed);
             pipeReader.AdvanceTo(buffer.Start, buffer.End);
 
             if (result.IsCompleted)
@@ -38,7 +39,7 @@ public class Encoder : CodecBase
         return (int) consumed;
     }
 
-    private long ProcessMessage(ref ReadOnlySequence<byte> message, long consumed)
+    private void ProcessMessage(ref ReadOnlySequence<byte> message, ref long consumed)
     {
         SequenceReader<byte> reader = new(message);
         reader.Advance(consumed);
@@ -51,57 +52,51 @@ public class Encoder : CodecBase
 
         reader.TryRead(out byte currentByte);
 
-        while (BitPosition < 8)
+        while (StartPermutationIdx <= StartPermutationCount)
         {
-            while (StartPermutationIdx < StartPermutationCount)
+            while (PermutationIdx < PermutationCount)
             {
-                while (PermutationIdx < PermutationCount)
+                int y = Math.DivRem(Permutation[PermutationIdx], CoverImage.Width, out int x);
+                Span<Rgb24> row = CoverImage.DangerousGetPixelRowMemory(y).Span;
+
+                unsafe
                 {
-                    int y = Math.DivRem(Permutation[PermutationIdx], CoverImage.Width, out int x);
-                    Span<Rgb24> row = CoverImage.DangerousGetPixelRowMemory(y).Span;
-
-                    unsafe
+                    fixed (Rgb24* pixel = &row[x])
                     {
-                        fixed (Rgb24* pixel = &row[x])
+                        byte* pixelValues = (byte*) pixel;
+
+                        while (PixelIdx < 3)
                         {
-                            byte* pixelValues = (byte*) pixel;
+                            int bit = (currentByte >> ByteShift++) & 1;
+                            pixelValues[PixelIdx] =
+                                (byte) ((pixelValues[PixelIdx] & ~PixelValueMask) | (bit << BitPosition));
 
-                            while (PixelIdx < 3)
+                            ++PixelIdx;
+
+                            if (ByteShift != 8)
                             {
-                                int bit = (currentByte >> ByteShift++) & 1;
-                                pixelValues[PixelIdx] =
-                                    (byte) ((pixelValues[PixelIdx] & ~PixelValueMask) | (bit << BitPosition));
-
-                                ++PixelIdx;
-
-                                if (ByteShift != 8)
-                                {
-                                    continue;
-                                }
-
-                                ByteShift = 0;
-
-                                if (!reader.TryRead(out currentByte))
-                                {
-                                    return reader.Consumed;
-                                }
+                                continue;
                             }
 
-                            PixelIdx = 0;
-                        }
-                    }
+                            ByteShift = 0;
 
-                    ++PermutationIdx;
+                            if (!reader.TryRead(out currentByte))
+                            {
+                                consumed = reader.Consumed;
+                                return;
+                            }
+                        }
+
+                        PixelIdx = 0;
+                    }
                 }
 
-                NextPermutation();
+                ++PermutationIdx;
             }
 
-            StartPermutationIdx = 0;
-            ++BitPosition;
-            PixelValueMask <<= 1;
+            NextPermutation();
         }
 
-        return reader.Consumed;
+        Debug.Fail("Should not be reached");
     }
 }
