@@ -1,4 +1,5 @@
 ﻿using System.IO.Compression;
+using System.Security.Cryptography;
 using ApiBuilder;
 using Domain.Entities;
 using Domain.Enums;
@@ -24,8 +25,7 @@ public class EncodeBinary : EndpointWithoutResponse<Request>
         _logger.Information("Encoding binary message ... cover image (width: {Width}, height: {Height})",
             request.CoverImage.Width, request.CoverImage.Height);
 
-        ushort seed = (ushort) Random.Shared.Next();
-
+        int seed = RandomNumberGenerator.GetInt32(int.MaxValue);
         using AesCounterMode aes = new();
         using Encoder encoder = new(request.CoverImage, seed, request.CancelSource);
         string base64Key;

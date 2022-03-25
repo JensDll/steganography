@@ -138,6 +138,9 @@ public class CodecTests : TestingBase
                 Content = content
             };
         }).ToArray();
+        int messageLength = files.Sum(file =>
+            // File length + file name length + file name + file
+            4 + 2 + Encoding.UTF8.GetByteCount(file.Name) + file.Content.Length);
 
         foreach (var file in files)
         {
@@ -170,7 +173,13 @@ public class CodecTests : TestingBase
         using StreamReader reader = new(encodeArchive.Entries[1].Open(), Encoding.UTF8);
         string key = await reader.ReadToEndAsync();
 
-        Assert.That(key, Has.Length.EqualTo(68));
+        KeyService keyService = new();
+        bool success = keyService.TryParse(key, out MessageType outMessageType, out _,
+            out int outMessageLength, out _, out _);
+
+        Assert.That(success, Is.True);
+        Assert.That(outMessageType, Is.EqualTo(MessageType.Binary));
+        Assert.That(outMessageLength, Is.EqualTo(messageLength));
 
         #endregion
 

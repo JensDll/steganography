@@ -18,7 +18,7 @@ public class Decode : EndpointWithoutResponse<Request>
 
     protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
-        if (!_keyService.TryParse(request.Key, out MessageType messageType, out ushort seed,
+        if (!_keyService.TryParse(request.Key, out MessageType messageType, out int seed,
                 out int messageLength, out byte[] key, out byte[] iV))
         {
             ValidationErrors.Add("Invalid key");

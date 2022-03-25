@@ -13,7 +13,7 @@ public class Decoder : CodecBase
     private readonly AesCounterMode _aes;
     private int _bytesRead;
 
-    public Decoder(Image<Rgb24> coverImage, ushort seed, int messageLength, AesCounterMode aes) :
+    public Decoder(Image<Rgb24> coverImage, int seed, int messageLength, AesCounterMode aes) :
         base(coverImage, seed)
     {
         _messageLength = messageLength;
@@ -27,11 +27,6 @@ public class Decoder : CodecBase
 
     public async Task DecodeAsync(PipeWriter writer, int messageLength)
     {
-        if (messageLength > CoverImageCapacity)
-        {
-            throw new InvalidOperationException("Message length is invalid");
-        }
-
         _bytesRead += messageLength;
 
         await WriteMessageAsync(writer, messageLength);
@@ -47,13 +42,13 @@ public class Decoder : CodecBase
             return false;
         }
 
-        Span<byte> buffer = stackalloc byte[8];
+        Span<byte> buffer = stackalloc byte[6];
         ReadNextBytes(buffer);
 
         fileLength = BitConverter.ToInt32(buffer[..4]);
-        int fileNameLength = BitConverter.ToInt32(buffer[4..]);
+        short fileNameLength = BitConverter.ToInt16(buffer[4..]);
 
-        if (fileLength < 0 || fileNameLength < 0 || fileLength > CoverImageCapacity || fileNameLength > 256)
+        if (fileLength < 0 || fileNameLength < 0 || fileLength > CoverImageCapacity || fileNameLength > 1024)
         {
             throw new InvalidOperationException("File name or file length is invalid");
         }
@@ -120,7 +115,12 @@ public class Decoder : CodecBase
 
     private async Task WriteMessageAsync(PipeWriter pipeWriter, int messageLength)
     {
-        bool done = messageLength == 0;
+        if (messageLength < 1 || messageLength > CoverImageCapacity)
+        {
+            throw new InvalidOperationException("Message length is invalid");
+        }
+
+        bool done = false;
 
         while (true)
         {

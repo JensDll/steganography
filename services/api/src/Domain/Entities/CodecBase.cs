@@ -27,7 +27,7 @@ public abstract class CodecBase : IDisposable
     protected readonly int StartPermutationCount;
     protected int StartPermutationIdx = 1;
 
-    protected CodecBase(Image<Rgb24> coverImage, ushort seed)
+    protected CodecBase(Image<Rgb24> coverImage, int seed)
     {
         Random prng = new(seed);
         _prng = prng;

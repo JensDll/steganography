@@ -11,7 +11,7 @@ public class Encoder : CodecBase
 {
     private readonly CancellationTokenSource _cancelSource;
 
-    public Encoder(Image<Rgb24> coverImage, ushort seed, CancellationTokenSource cancelSource) : base(coverImage, seed)
+    public Encoder(Image<Rgb24> coverImage, int seed, CancellationTokenSource cancelSource) : base(coverImage, seed)
     {
         _cancelSource = cancelSource;
     }

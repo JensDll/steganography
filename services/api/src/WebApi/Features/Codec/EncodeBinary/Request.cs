@@ -49,7 +49,7 @@ public class Request : IBindRequest, IDisposable
 
     /// <summary>
     /// Reads the multipart request body, encrypts it, and writes it to the pipe.
-    /// The written data has the form: <c>{file length}{file name length}{file name}{file data}</c>.
+    /// The written data has the form: <c>{file length (4 bytes)}{file name length (2 bytes)}{file name}{file}</c>.
     /// </summary>
     /// <param name="aes">The aes instance used for encryption.</param>
     /// <returns><c>True</c> if the whole message was written successfully, otherwise <c>false</c>.</returns>
@@ -79,18 +79,19 @@ public class Request : IBindRequest, IDisposable
             }
             else
             {
-                if (!nextPart.IsFile(out ContentDispositionHeaderValue? fileContentDisposition))
+                if (!nextPart.IsFile(out ContentDispositionHeaderValue? fileContentDisposition) ||
+                    fileContentDisposition!.FileName.Length > 1024)
                 {
                     CancelSource.Cancel();
                     return false;
                 }
 
-                int size = Encoding.UTF8.GetByteCount(fileContentDisposition!.FileName) + sizeof(int);
+                int size = sizeof(short) + Encoding.UTF8.GetByteCount(fileContentDisposition.FileName);
                 Memory<byte> buffer = _pipeWriter.GetMemory(size);
-                // Write the file name length to the first 4 bytes
-                BitConverter.TryWriteBytes(buffer.Span, fileContentDisposition.FileName.Length);
+                // Write the file name length to the first 2 bytes
+                BitConverter.TryWriteBytes(buffer.Span, (short) fileContentDisposition.FileName.Length);
                 // Write the file name after that
-                Encoding.UTF8.GetBytes(fileContentDisposition.FileName, buffer[sizeof(int)..].Span);
+                Encoding.UTF8.GetBytes(fileContentDisposition.FileName, buffer[sizeof(short)..].Span);
                 aes.Transform(buffer[..size].Span, buffer.Span);
                 _pipeWriter.Advance(size);
             }
