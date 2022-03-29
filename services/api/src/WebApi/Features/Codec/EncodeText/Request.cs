@@ -14,7 +14,9 @@ public class Request : IBindRequest, IDisposable
     private List<string> _validationErrors = null!;
 
     public Image<Rgb24> CoverImage { get; private set; } = null!;
+
     public PipeReader PipeReader { get; private set; } = null!;
+
     public CancellationTokenSource CancelSource { get; } = new();
 
     public async ValueTask BindAsync(HttpContext context, List<string> validationErrors,
@@ -23,17 +25,24 @@ public class Request : IBindRequest, IDisposable
         _validationErrors = validationErrors;
         _multiPartReader = new MyMultiPartReader(context, validationErrors);
 
-        NextPart? nextPart = await _multiPartReader.ReadNextPartAsync(cancellationToken);
+        NextSection? nextSection = await _multiPartReader.ReadNextSectionAsync(cancellationToken);
 
-        if (nextPart == null)
+        if (nextSection is null)
         {
-            validationErrors.Add("Request is empty");
+            validationErrors.Add("Request does not contain a cover image");
             return;
         }
 
-        Image<Rgb24>? coverImage = await nextPart.ReadCoverImageAsync("coverImage", cancellationToken);
+        MyFileMultipartSection? fileSection = nextSection.AsFileSection("coverImage");
 
-        if (coverImage == null)
+        if (fileSection is null)
+        {
+            return;
+        }
+
+        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync(cancellationToken);
+
+        if (coverImage is null)
         {
             return;
         }
@@ -45,28 +54,33 @@ public class Request : IBindRequest, IDisposable
         _pipeWriter = pipe.Writer;
     }
 
-    public async Task<bool> FillPipeAsync(AesCounterMode aes)
+    public async Task<int?> FillPipeAsync(AesCounterMode aes)
     {
-        NextPart? nextPart = await _multiPartReader.ReadNextPartAsync(CancelSource.Token);
+        NextSection? nextSection = await _multiPartReader.ReadNextSectionAsync(CancelSource.Token);
 
-        if (nextPart == null)
+        if (nextSection is null)
         {
-            CancelSource.Cancel();
             _validationErrors.Add("Request does not contain a message");
-            return false;
+            CancelSource.Cancel();
+            return null;
         }
 
-        if (!nextPart.IsFormData("message", out _))
+        MyFormMultipartSection? formSection = nextSection.AsFormSection("message");
+
+        if (formSection is null)
         {
             CancelSource.Cancel();
-            return false;
+            return null;
         }
+
+        int messageLength = 0;
 
         while (true)
         {
             Memory<byte> buffer = _pipeWriter.GetMemory();
 
-            int bytesRead = await nextPart.Body.ReadAsync(buffer, CancelSource.Token);
+            int bytesRead = await formSection.Body.ReadAsync(buffer, CancelSource.Token);
+            messageLength += bytesRead;
 
             if (bytesRead == 0)
             {
@@ -85,7 +99,8 @@ public class Request : IBindRequest, IDisposable
         }
 
         await _pipeWriter.CompleteAsync();
-        return true;
+
+        return messageLength;
     }
 
     public void Dispose()

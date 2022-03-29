@@ -16,7 +16,7 @@ public class Encoder : CodecBase
         _cancelSource = cancelSource;
     }
 
-    public async Task<int> EncodeAsync(PipeReader pipeReader)
+    public async Task EncodeAsync(PipeReader pipeReader)
     {
         long consumed = 0;
 
@@ -35,8 +35,6 @@ public class Encoder : CodecBase
         }
 
         await pipeReader.CompleteAsync();
-
-        return (int) consumed;
     }
 
     private void ProcessMessage(ref ReadOnlySequence<byte> message, ref long consumed)
@@ -67,11 +65,8 @@ public class Encoder : CodecBase
 
                         while (PixelIdx < 3)
                         {
-                            int bit = (currentByte >> ByteShift++) & 1;
-                            pixelValues[PixelIdx] =
-                                (byte) ((pixelValues[PixelIdx] & ~PixelValueMask) | (bit << BitPosition));
-
-                            ++PixelIdx;
+                            pixelValues[PixelIdx] = (byte) ((pixelValues[PixelIdx++] & PixelValueMask) |
+                                                            (((currentByte >> ByteShift++) & 1) << BitPosition));
 
                             if (ByteShift != 8)
                             {

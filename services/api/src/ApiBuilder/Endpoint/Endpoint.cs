@@ -23,7 +23,7 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
 
             request ??= new TRequest();
 
-            if (RequestTypeCache<TRequest>.BindAsync != null)
+            if (RequestTypeCache<TRequest>.BindAsync is not null)
             {
                 try
                 {
@@ -51,7 +51,7 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
         }
         finally
         {
-            if (RequestTypeCache<TRequest>.Dispose != null)
+            if (RequestTypeCache<TRequest>.Dispose is not null)
             {
                 RequestTypeCache<TRequest>.Dispose.Invoke(request, null);
             }
@@ -64,7 +64,7 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
     {
         IValidator? validator = (IValidator?) HttpContext.RequestServices.GetService(typeof(IValidator<TRequest>));
 
-        if (validator == null)
+        if (validator is null)
         {
             return true;
         }

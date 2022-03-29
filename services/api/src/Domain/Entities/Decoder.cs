@@ -11,7 +11,6 @@ public class Decoder : CodecBase
 {
     private readonly int _messageLength;
     private readonly AesCounterMode _aes;
-    private int _bytesRead;
 
     public Decoder(Image<Rgb24> coverImage, int seed, int messageLength, AesCounterMode aes) :
         base(coverImage, seed)
@@ -27,44 +26,54 @@ public class Decoder : CodecBase
 
     public async Task DecodeAsync(PipeWriter writer, int messageLength)
     {
-        _bytesRead += messageLength;
-
         await WriteMessageAsync(writer, messageLength);
     }
 
-    public bool TryDecodeNextFileInfo(out string fileName, out int fileLength)
+    public IEnumerable<(string fileName, int fileLength)> DecodeFileInformation()
     {
-        fileName = string.Empty;
-        fileLength = 0;
-
-        if (_bytesRead >= _messageLength)
-        {
-            return false;
-        }
+        List<(string fileName, int fileLength)> fileInformation = new();
+        int messageLength = _messageLength;
 
         Span<byte> buffer = stackalloc byte[6];
-        ReadNextBytes(buffer);
+        Span<byte> fileNameBytes = stackalloc byte[256];
 
-        fileLength = BitConverter.ToInt32(buffer[..4]);
-        short fileNameLength = BitConverter.ToInt16(buffer[4..]);
-
-        if (fileLength < 0 || fileNameLength < 0 || fileLength > CoverImageCapacity || fileNameLength > 1024)
+        while (true)
         {
-            throw new InvalidOperationException("File name or file length is invalid");
+            ReadNextBytes(buffer);
+            int fileLength = BitConverter.ToInt32(buffer[..4]);
+            short fileNameLength = BitConverter.ToInt16(buffer[4..]);
+
+            if (fileLength < 0 || fileNameLength is <= 0 or > 256)
+            {
+                throw new InvalidOperationException("File name or file length is invalid");
+            }
+
+            messageLength -= 6 + fileLength + fileNameLength;
+
+            if (messageLength < 0)
+            {
+                throw new InvalidOperationException("File name or file length is invalid");
+            }
+
+            Span<byte> fileNameBuffer = fileNameBytes[..fileNameLength];
+            ReadNextBytes(fileNameBuffer);
+            string fileName = Encoding.UTF8.GetString(fileNameBuffer);
+
+            fileInformation.Add((fileName, fileLength));
+
+            if (messageLength == 0)
+            {
+                break;
+            }
         }
 
-        Span<byte> fileNameBytes = stackalloc byte[fileNameLength];
-        ReadNextBytes(fileNameBytes);
-
-        fileName = Encoding.UTF8.GetString(fileNameBytes);
-        _bytesRead += fileNameLength + buffer.Length;
-
-        return true;
+        return fileInformation;
     }
 
     private void ReadNextBytes(Span<byte> buffer)
     {
         int bytesRead = 0;
+        buffer[0] = 0;
 
         Debug.Assert(ByteShift == 0);
 
@@ -83,10 +92,9 @@ public class Decoder : CodecBase
 
                         while (PixelIdx < 3)
                         {
-                            int bit = (pixelValues[PixelIdx] >> BitPosition) & 1;
-                            buffer[bytesRead] |= (byte) (bit << ByteShift++);
-
-                            ++PixelIdx;
+                            // int bit = (pixelValues[PixelIdx++] >> BitPosition) & 1;
+                            // buffer[bytesRead] |= (byte) (bit << ByteShift++);
+                            buffer[bytesRead] |= (byte) (((pixelValues[PixelIdx++] >> BitPosition) & 1) << ByteShift++);
 
                             if (ByteShift != 8)
                             {
@@ -100,6 +108,8 @@ public class Decoder : CodecBase
                                 _aes.Transform(buffer, buffer);
                                 return;
                             }
+
+                            buffer[bytesRead] = 0;
                         }
 
                         PixelIdx = 0;
@@ -115,11 +125,6 @@ public class Decoder : CodecBase
 
     private async Task WriteMessageAsync(PipeWriter pipeWriter, int messageLength)
     {
-        if (messageLength < 1 || messageLength > CoverImageCapacity)
-        {
-            throw new InvalidOperationException("Message length is invalid");
-        }
-
         bool done = false;
 
         while (true)
@@ -130,7 +135,7 @@ public class Decoder : CodecBase
 
                 int bytesRead = 0;
                 Span<byte> buffer = pipeWriter.GetSpan();
-                buffer[bytesRead] = 0;
+                buffer[0] = 0;
 
                 while (StartPermutationIdx <= StartPermutationCount)
                 {
@@ -147,10 +152,8 @@ public class Decoder : CodecBase
 
                                 while (PixelIdx < 3)
                                 {
-                                    int bit = (pixelValues[PixelIdx] >> BitPosition) & 1;
-                                    buffer[bytesRead] |= (byte) (bit << ByteShift++);
-
-                                    ++PixelIdx;
+                                    buffer[bytesRead] |=
+                                        (byte) (((pixelValues[PixelIdx++] >> BitPosition) & 1) << ByteShift++);
 
                                     if (ByteShift != 8)
                                     {

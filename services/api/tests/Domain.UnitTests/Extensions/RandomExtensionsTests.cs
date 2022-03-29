@@ -34,7 +34,7 @@ internal class RandomExtensionsTests
         // Act
         void Action()
         {
-            Random.Shared.RentPermutation(10, 5, 1);
+            Random.Shared.RentPermutation(10, 5);
         }
 
         // Assert

@@ -2,7 +2,6 @@
 using System.Text;
 using ApiBuilder;
 using Domain.Entities;
-using Microsoft.Net.Http.Headers;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using WebApi.ModelBinding;
@@ -11,12 +10,14 @@ namespace WebApi.Features.Codec.EncodeBinary;
 
 public class Request : IBindRequest, IDisposable
 {
+    private List<string> _validationErrors = null!;
     private MyMultiPartReader _multiPartReader = null!;
     private PipeWriter _pipeWriter = null!;
-    private List<string> _validationErrors = null!;
 
     public Image<Rgb24> CoverImage { get; private set; } = null!;
+
     public PipeReader PipeReader { get; private set; } = null!;
+
     public CancellationTokenSource CancelSource { get; } = new();
 
     public async ValueTask BindAsync(HttpContext context, List<string> validationErrors,
@@ -24,18 +25,24 @@ public class Request : IBindRequest, IDisposable
     {
         _validationErrors = validationErrors;
         _multiPartReader = new MyMultiPartReader(context, validationErrors);
+        NextSection? nextSection = await _multiPartReader.ReadNextSectionAsync(cancellationToken);
 
-        NextPart? nextPart = await _multiPartReader.ReadNextPartAsync(cancellationToken);
-
-        if (nextPart == null)
+        if (nextSection is null)
         {
-            validationErrors.Add("Request is empty");
+            validationErrors.Add("Request does not contain a cover image");
             return;
         }
 
-        Image<Rgb24>? coverImage = await nextPart.ReadCoverImageAsync("coverImage", cancellationToken);
+        MyFileMultipartSection? fileSection = nextSection.AsFileSection("coverImage");
 
-        if (coverImage == null)
+        if (fileSection is null)
+        {
+            return;
+        }
+
+        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync(cancellationToken);
+
+        if (coverImage is null)
         {
             return;
         }
@@ -49,74 +56,66 @@ public class Request : IBindRequest, IDisposable
 
     /// <summary>
     /// Reads the multipart request body, encrypts it, and writes it to the pipe.
-    /// The written data has the form: <c>{file length (4 bytes)}{file name length (2 bytes)}{file name}{file}</c>.
+    /// The written data has the form: <c>file length (4-byte) || file name length (2-byte) || file name || file</c>.
     /// </summary>
     /// <param name="aes">The aes instance used for encryption.</param>
-    /// <returns><c>True</c> if the whole message was written successfully, otherwise <c>false</c>.</returns>
-    public async Task<bool> FillPipeAsync(AesCounterMode aes)
+    /// <returns><c>True</c> if the whole message was written successfully; <c>false</c> otherwise.</returns>
+    public async Task<int?> FillPipeAsync(AesCounterMode aes)
     {
-        NextPart? nextPart = await _multiPartReader.ReadNextPartAsync(CancelSource.Token);
+        IReadOnlyList<MyFormFile>? files = await _multiPartReader.ReadFilesBufferedAsync(CancelSource.Token);
 
-        if (nextPart == null)
+        if (files is null)
         {
             CancelSource.Cancel();
-            _validationErrors.Add("Request does not contain a message");
-            return false;
+            return null;
         }
 
-        int sectionCount = 0;
-        while (nextPart != null)
+        int messageLength = 0;
+
+        foreach (MyFormFile file in files)
         {
-            bool isFileLength = sectionCount++ % 2 == 0;
+            int fileNameSize = Encoding.UTF8.GetByteCount(file.FileName);
+            int sizeHint = 6 + fileNameSize;
 
-            if (isFileLength)
+            if (fileNameSize > 256)
             {
-                if (!nextPart.IsFormData(out _))
-                {
-                    CancelSource.Cancel();
-                    return false;
-                }
-            }
-            else
-            {
-                if (!nextPart.IsFile(out ContentDispositionHeaderValue? fileContentDisposition) ||
-                    fileContentDisposition!.FileName.Length > 1024)
-                {
-                    CancelSource.Cancel();
-                    return false;
-                }
-
-                int size = sizeof(short) + Encoding.UTF8.GetByteCount(fileContentDisposition.FileName);
-                Memory<byte> buffer = _pipeWriter.GetMemory(size);
-                // Write the file name length to the first 2 bytes
-                BitConverter.TryWriteBytes(buffer.Span, (short) fileContentDisposition.FileName.Length);
-                // Write the file name after that
-                Encoding.UTF8.GetBytes(fileContentDisposition.FileName, buffer[sizeof(short)..].Span);
-                aes.Transform(buffer[..size].Span, buffer.Span);
-                _pipeWriter.Advance(size);
+                throw new ModelBindingException("File name can not be longer than 256 bytes");
             }
 
+            messageLength += sizeHint + file.Length;
+
+            Memory<byte> buffer = _pipeWriter.GetMemory(sizeHint);
+            // Write the file length (4-byte)
+            BitConverter.TryWriteBytes(buffer.Span, file.Length);
+            // Write the file name length (2-byte)
+            BitConverter.TryWriteBytes(buffer[4..].Span, (short) fileNameSize);
+            // Write the file name (max 256-byte)
+            Encoding.UTF8.GetBytes(file.FileName, buffer[6..].Span);
+            aes.Transform(buffer[..sizeHint].Span, buffer.Span);
+            _pipeWriter.Advance(sizeHint);
+        }
+
+        if (messageLength > CoverImage.Width * CoverImage.Height * 3)
+        {
+            _validationErrors.Add("Message is too large for the cover image");
+            CancelSource.Cancel();
+            return null;
+        }
+
+        foreach (MyFormFile file in files)
+        {
             while (true)
             {
                 Memory<byte> buffer = _pipeWriter.GetMemory();
-                int bytesRead = await nextPart.Body.ReadAsync(buffer, CancelSource.Token);
+                int bytesRead = await file.ReadAsync(buffer, CancelSource.Token);
 
                 if (bytesRead == 0)
                 {
                     break;
                 }
 
-                if (isFileLength)
-                {
-                    ParsingUtils.CopyAsInt32(buffer[..bytesRead].Span, buffer.Span);
-                    aes.Transform(buffer[..sizeof(int)].Span, buffer.Span);
-                    _pipeWriter.Advance(sizeof(int));
-                }
-                else
-                {
-                    aes.Transform(buffer[..bytesRead].Span, buffer.Span);
-                    _pipeWriter.Advance(bytesRead);
-                }
+                aes.Transform(buffer[..bytesRead].Span, buffer.Span);
+                _pipeWriter.Advance(bytesRead);
 
                 FlushResult result = await _pipeWriter.FlushAsync(CancelSource.Token);
 
@@ -125,12 +124,11 @@ public class Request : IBindRequest, IDisposable
                     break;
                 }
             }
-
-            nextPart = await _multiPartReader.ReadNextPartAsync(CancelSource.Token);
         }
 
         await _pipeWriter.CompleteAsync();
-        return true;
+
+        return messageLength;
     }
 
     public void Dispose()

@@ -1,25 +1,36 @@
-﻿using System.IO.Compression;
+﻿using System.Diagnostics;
+using System.IO.Compression;
 using System.IO.Pipelines;
 using ApiBuilder;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
+using ILogger = Serilog.ILogger;
 
 namespace WebApi.Features.Codec.Decode;
 
 public class Decode : EndpointWithoutResponse<Request>
 {
     private readonly IKeyService _keyService;
+    private readonly ILogger _logger;
 
-    public Decode(IKeyService keyService)
+    public Decode(IKeyService keyService, ILogger logger)
     {
         _keyService = keyService;
+        _logger = logger;
     }
 
     protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
-        if (!_keyService.TryParse(request.Key, out MessageType messageType, out int seed,
-                out int messageLength, out byte[] key, out byte[] iV))
+        bool isValidKey = _keyService.TryParse(request.Key, out MessageType messageType, out int seed,
+            out int messageLength, out byte[] key, out byte[] iV);
+
+        _logger.Information(
+            "Decoding {MessageType} message with valid key {IsValidKey} and length {MessageLength}",
+            messageType, isValidKey, messageLength);
+
+        if (!isValidKey || messageLength < 1 ||
+            messageLength > request.CoverImage.Width * request.CoverImage.Height * 3)
         {
             ValidationErrors.Add("Invalid key");
             await SendValidationErrorAsync("Decoding failed");
@@ -41,28 +52,24 @@ public class Decode : EndpointWithoutResponse<Request>
             HttpContext.Response.ContentType = "application/zip";
             HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");
 
-            bool hasNextFile = decoder.TryDecodeNextFileInfo(out string fileName, out int fileLength);
+            IEnumerable<(string fileName, int fileLength)> fileInformation = decoder.DecodeFileInformation();
 
-            if (hasNextFile)
+            using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+
+            foreach ((string fileName, int fileLength) in fileInformation)
             {
-                using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
-
-                do
-                {
-                    ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
-                    await using Stream entryStream = entry.Open();
-                    PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
-                    await decoder.DecodeAsync(entryStreamWriter, fileLength);
-                } while (decoder.TryDecodeNextFileInfo(out fileName, out fileLength));
+                ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+                await using Stream entryStream = entry.Open();
+                PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
+                await decoder.DecodeAsync(entryStreamWriter, fileLength);
             }
         }
         catch (InvalidOperationException e)
         {
-            if (!HttpContext.Response.HasStarted)
-            {
-                ValidationErrors.Add(e.Message);
-                await SendValidationErrorAsync("Decoding failed");
-            }
+            _logger.Information("Decoding failed: {Message}", e.Message);
+            Debug.Assert(!HttpContext.Response.HasStarted);
+            ValidationErrors.Add(e.Message);
+            await SendValidationErrorAsync("Decoding failed");
         }
     }
 }

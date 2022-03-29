@@ -8,45 +8,53 @@ namespace WebApi.Features.Codec.Decode;
 public class Request : IBindRequest, IDisposable
 {
     public Image<Rgb24> CoverImage { get; private set; } = null!;
+
     public string Key { get; private set; } = null!;
 
     public async ValueTask BindAsync(HttpContext context, List<string> validationErrors,
         CancellationToken cancellationToken)
     {
         MyMultiPartReader reader = new(context, validationErrors);
-        NextPart? nextPart = await reader.ReadNextPartAsync(cancellationToken);
+        NextSection? nextSection = await reader.ReadNextSectionAsync(cancellationToken);
 
-        if (nextPart == null)
+        if (nextSection is null)
         {
-            validationErrors.Add("Request is empty");
+            validationErrors.Add("Request does not contain a cover image");
             return;
         }
 
-        Image<Rgb24>? coverImage = await nextPart.ReadCoverImageAsync("coverImage", cancellationToken);
+        MyFileMultipartSection? fileSection = nextSection.AsFileSection("coverImage");
 
-        if (coverImage == null)
+        if (fileSection is null)
+        {
+            return;
+        }
+
+        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync(cancellationToken);
+
+        if (coverImage is null)
         {
             return;
         }
 
         CoverImage = coverImage;
 
-        nextPart = await reader.ReadNextPartAsync(cancellationToken);
+        nextSection = await reader.ReadNextSectionAsync(cancellationToken);
 
-        if (nextPart == null)
+        if (nextSection is null)
         {
             validationErrors.Add("Request does not contain a key");
             return;
         }
 
-        string? key = await nextPart.ReadTextAsync("key");
+        MyFormMultipartSection? formSection = nextSection.AsFormSection("key");
 
-        if (key == null)
+        if (formSection is null)
         {
             return;
         }
 
-        Key = key;
+        Key = await formSection.GetValueAsync();
     }
 
     public void Dispose()

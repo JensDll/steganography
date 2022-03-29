@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace WebApi.IntegrationTests;
 public class CodecTests : TestingBase
 {
     [Test]
-    public async Task EncodeDecode_ShouldResultInSameText()
+    public async Task EncodeText_Decode()
     {
         #region AAA Encode
 
@@ -26,10 +27,11 @@ public class CodecTests : TestingBase
         Image<Rgb24> coverImage = new(500, 500);
         await using MemoryStream coverImageStream = new();
         await coverImage.SaveAsPngAsync(coverImageStream);
-        string message = new('a', 750_000);
 
         MultipartFormDataContent encodeFormData = new();
-        encodeFormData.Add(new StreamContent(coverImageStream), "coverImage", "foo.png");
+        encodeFormData.Add(new StreamContent(coverImageStream), "coverImage", "coverImage.png");
+
+        string message = new('a', 750_000);
         encodeFormData.Add(new StringContent(message), "message");
 
         // Act
@@ -74,7 +76,7 @@ public class CodecTests : TestingBase
         await resultImage.SaveAsPngAsync(resultImageStream);
 
         MultipartFormDataContent decodeFormData = new();
-        decodeFormData.Add(new StreamContent(resultImageStream), "coverImage", "test.png");
+        decodeFormData.Add(new StreamContent(resultImageStream), "coverImage", "coverImage.png");
         decodeFormData.Add(new StringContent(key), "key");
 
         // Act
@@ -93,30 +95,7 @@ public class CodecTests : TestingBase
     }
 
     [Test]
-    public async Task Encode_ShouldBeBadRequestWhenTheMessageIsTooLong()
-    {
-        // Arrange
-        Image<Rgb24> coverImage = new(500, 500);
-        await using MemoryStream coverImageStream = new();
-        await coverImage.SaveAsPngAsync(coverImageStream);
-        string message = new('a', 750_001);
-
-        MultipartFormDataContent encodeFormData = new();
-        encodeFormData.Add(new StreamContent(coverImageStream), "coverImage", "foo.png");
-        encodeFormData.Add(new StringContent(message), "message");
-
-        // Act
-        HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/api/codec/encode/text", encodeFormData);
-
-        // Assert
-        Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-        Assert.That(encodeResponse.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/json"));
-    }
-
-
-    [Test]
-    public async Task EncodeDecodeBinary()
+    public async Task EncodeBinary_Decode()
     {
         #region AAA Encode
 
@@ -126,26 +105,14 @@ public class CodecTests : TestingBase
         await coverImage.SaveAsPngAsync(coverImageStream);
 
         MultipartFormDataContent encodeFormData = new();
-        encodeFormData.Add(new StreamContent(coverImageStream), "coverImage", "test.png");
+        encodeFormData.Add(new StreamContent(coverImageStream), "coverImage", "coverImage.png");
 
-        var files = new[] {10, 10_000, 120_000}.Select((size, i) =>
-        {
-            byte[] content = new byte[size];
-            Random.Shared.NextBytes(content);
-            return new
-            {
-                Name = $"file{i + 1}.txt",
-                Content = content
-            };
-        }).ToArray();
-        int messageLength = files.Sum(file =>
-            // File length + file name length + file name + file
-            4 + 2 + Encoding.UTF8.GetByteCount(file.Name) + file.Content.Length);
+        File[] files = GetFiles(10, 10_000, 120_000);
+        int inMessageLength = GetMessageLength(files);
 
-        foreach (var file in files)
+        foreach (File file in files)
         {
-            encodeFormData.Add(new StringContent(file.Content.Length.ToString()));
-            encodeFormData.Add(new ByteArrayContent(file.Content), "foo", file.Name);
+            encodeFormData.Add(new ByteArrayContent(file.Content), "name", file.Name);
         }
 
         // Act
@@ -174,12 +141,12 @@ public class CodecTests : TestingBase
         string key = await reader.ReadToEndAsync();
 
         KeyService keyService = new();
-        bool success = keyService.TryParse(key, out MessageType outMessageType, out _,
+        bool isValidKey = keyService.TryParse(key, out MessageType outMessageType, out _,
             out int outMessageLength, out _, out _);
 
-        Assert.That(success, Is.True);
+        Assert.That(isValidKey, Is.True);
         Assert.That(outMessageType, Is.EqualTo(MessageType.Binary));
-        Assert.That(outMessageLength, Is.EqualTo(messageLength));
+        Assert.That(outMessageLength, Is.EqualTo(inMessageLength));
 
         #endregion
 
@@ -190,7 +157,7 @@ public class CodecTests : TestingBase
         await resultImage.SaveAsPngAsync(resultImageStream);
 
         MultipartFormDataContent decodeFormData = new();
-        decodeFormData.Add(new StreamContent(resultImageStream), "coverImage", "test.png");
+        decodeFormData.Add(new StreamContent(resultImageStream), "coverImage", "coverImage.png");
         decodeFormData.Add(new StringContent(key), "key");
 
         // Act
@@ -218,5 +185,121 @@ public class CodecTests : TestingBase
         }
 
         #endregion
+    }
+
+    [Test]
+    public async Task EncodeText_BadRequestWhenTheMessageIsTooLong()
+    {
+        // Arrange
+        Image<Rgb24> coverImage = new(500, 500);
+        await using MemoryStream coverImageStream = new();
+        await coverImage.SaveAsPngAsync(coverImageStream);
+
+        MultipartFormDataContent formData = new();
+        formData.Add(new StreamContent(coverImageStream), "coverImage", "coverImage.png");
+        formData.Add(new StringContent(new string('a', 750_001)), "message");
+
+        // Act
+        HttpResponseMessage encodeResponse =
+            await Client.PostAsync("/api/codec/encode/text", formData);
+
+        // Assert
+        Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(encodeResponse.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/json"));
+    }
+
+    [Test]
+    public async Task EncodeText_BadRequestForInvalidFormData()
+    {
+        // Arrange
+        Image<Rgb24> coverImage = new(500, 500);
+        await using MemoryStream coverImageStream = new();
+        await coverImage.SaveAsPngAsync(coverImageStream);
+
+        MultipartFormDataContent formData = new();
+        formData.Add(new StreamContent(coverImageStream), "coverImage", "coverImage.png");
+        formData.Add(new StringContent(new string('a', 10)), "invalid");
+
+        // Act
+        HttpResponseMessage encodeResponse =
+            await Client.PostAsync("/api/codec/encode/text", formData);
+
+        // Assert
+        Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(encodeResponse.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/json"));
+    }
+
+    [Test]
+    public async Task EncodeBinary_BadRequestWhenTheMessageIsTooLong()
+    {
+        // Arrange
+        Image<Rgb24> coverImage = new(500, 500);
+        await using MemoryStream coverImageStream = new();
+        await coverImage.SaveAsPngAsync(coverImageStream);
+
+        MultipartFormDataContent formData = new();
+        formData.Add(new StreamContent(coverImageStream), "coverImage", "coverImage.png");
+        formData.Add(new ByteArrayContent(new byte[750_000]), "name", "file.png");
+
+        // Act
+        HttpResponseMessage encodeResponse =
+            await Client.PostAsync("/api/codec/encode/binary", formData);
+
+        // Assert
+        Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(encodeResponse.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/json"));
+    }
+
+    [Test]
+    public async Task EncodeBinary_BadRequestForInvalidFormData()
+    {
+        // Arrange
+        Image<Rgb24> coverImage = new(500, 500);
+        await using MemoryStream coverImageStream = new();
+        await coverImage.SaveAsPngAsync(coverImageStream);
+
+        MultipartFormDataContent formData = new();
+        formData.Add(new StreamContent(coverImageStream), "coverImage", "coverImage.png");
+        formData.Add(new ByteArrayContent(new byte[3]), "name", "file.png");
+        formData.Add(new StringContent("invalid"), "name");
+
+        // Act
+        HttpResponseMessage encodeResponse =
+            await Client.PostAsync("/api/codec/encode/binary", formData);
+
+        // Assert
+        Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(encodeResponse.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/json"));
+    }
+
+    private static File[] GetFiles(params int[] sizes)
+    {
+        return sizes.Select((size, i) =>
+        {
+            byte[] content = new byte[size];
+            Random.Shared.NextBytes(content);
+            File file = new($"file@{i + 1}.txt", content);
+            return file;
+        }).ToArray();
+    }
+
+    private static int GetMessageLength(IEnumerable<File> files)
+    {
+        return files.Sum(file =>
+            // File length + file name length + file name + file
+            4 + 2 + Encoding.UTF8.GetByteCount(file.Name) + file.Content.Length);
+    }
+
+    private class File
+    {
+        public File(string name, byte[] content)
+        {
+            Name = name;
+            Content = content;
+        }
+
+        public string Name { get; }
+
+        public byte[] Content { get; }
     }
 }

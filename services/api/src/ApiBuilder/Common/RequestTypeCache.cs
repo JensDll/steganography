@@ -12,5 +12,6 @@ internal static class RequestTypeCache<TRequest>
     }
 
     internal static MethodInfo? BindAsync { get; }
+
     internal static MethodInfo? Dispose { get; }
 }

@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace Domain.Entities;
 
@@ -64,7 +63,6 @@ public class AesCounterMode : IDisposable
         _aes.Dispose();
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private unsafe void GenerateNewKeyStream()
     {
         fixed (byte* bytePointer = &_iVAndCounter[12])

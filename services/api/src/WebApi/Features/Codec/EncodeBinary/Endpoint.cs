@@ -22,7 +22,7 @@ public class EncodeBinary : EndpointWithoutResponse<Request>
 
     protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
     {
-        _logger.Information("Encoding binary message ... cover image (width: {Width}, height: {Height})",
+        _logger.Information("Encoding binary message with cover image (width: {Width}, height: {Height})",
             request.CoverImage.Width, request.CoverImage.Height);
 
         int seed = RandomNumberGenerator.GetInt32(int.MaxValue);
@@ -32,22 +32,28 @@ public class EncodeBinary : EndpointWithoutResponse<Request>
 
         try
         {
-            Task<bool> writing = request.FillPipeAsync(aes);
-            Task<int> reading = encoder.EncodeAsync(request.PipeReader);
+            Task<int?> writing = request.FillPipeAsync(aes);
+            Task reading = encoder.EncodeAsync(request.PipeReader);
 
             await Task.WhenAll(writing, reading);
+            int? messageLength = writing.Result;
 
-            if (!writing.Result)
+            if (!messageLength.HasValue)
             {
                 await SendValidationErrorAsync("Encoding failed");
                 return;
             }
 
-            base64Key = _keyService.ToBase64(MessageType.Binary, seed, reading.Result, aes.Key, aes.IV);
+            base64Key = _keyService.ToBase64(MessageType.Binary, seed, messageLength.Value, aes.Key, aes.IV);
         }
         catch (InvalidOperationException e)
         {
             ValidationErrors.Add(e.Message);
+            await SendValidationErrorAsync("Encoding failed");
+            return;
+        }
+        catch (OperationCanceledException)
+        {
             await SendValidationErrorAsync("Encoding failed");
             return;
         }

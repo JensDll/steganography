@@ -38,7 +38,7 @@ public static class ModelBindingExtensions
             ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out contentDisposition);
 
         return hasContentDispositionHeader &&
-               contentDisposition != null &&
+               contentDisposition is not null &&
                contentDisposition.DispositionType.Equals("form-data") &&
                string.IsNullOrEmpty(contentDisposition.FileName.Value) &&
                string.IsNullOrEmpty(contentDisposition.FileNameStar.Value);
@@ -51,7 +51,7 @@ public static class ModelBindingExtensions
             ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out contentDisposition);
 
         return hasContentDispositionHeader &&
-               contentDisposition != null &&
+               contentDisposition is not null &&
                contentDisposition.DispositionType.Equals("form-data") &&
                (!string.IsNullOrEmpty(contentDisposition.FileName.Value) ||
                 !string.IsNullOrEmpty(contentDisposition.FileNameStar.Value));
