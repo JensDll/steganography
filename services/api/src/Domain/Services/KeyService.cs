@@ -5,7 +5,7 @@ namespace Domain.Services;
 
 public class KeyService : IKeyService
 {
-    public string ToBase64(MessageType messageType, int seed, int messageLength, ReadOnlySpan<byte> key,
+    public string ToBase64String(MessageType messageType, int seed, int messageLength, ReadOnlySpan<byte> key,
         ReadOnlySpan<byte> iV)
     {
         Span<byte> base64KeyBytes = stackalloc byte[54];

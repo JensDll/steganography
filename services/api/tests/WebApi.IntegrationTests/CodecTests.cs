@@ -18,8 +18,9 @@ namespace WebApi.IntegrationTests;
 [TestFixture]
 public class CodecTests : TestingBase
 {
-    [Test]
-    public async Task EncodeText_Decode()
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task EncodeText_Decode(bool isSameKey)
     {
         #region AAA Encode
 
@@ -59,6 +60,13 @@ public class CodecTests : TestingBase
         using StreamReader reader = new(archive.Entries[1].Open(), Encoding.UTF8);
         string key = await reader.ReadToEndAsync();
 
+        if (!isSameKey)
+        {
+            StringBuilder keyBuilder = new(key);
+            keyBuilder[^1] = (char) (key[^1] + 1);
+            key = keyBuilder.ToString();
+        }
+
         KeyService keyService = new();
         bool success = keyService.TryParse(key, out MessageType outMessageType, out _,
             out int outMessageLength, out _, out _);
@@ -89,13 +97,14 @@ public class CodecTests : TestingBase
 
         string resultMessage = await decodeResponse.Content.ReadAsStringAsync();
 
-        Assert.That(resultMessage, Is.EqualTo(message));
+        Assert.That(resultMessage, isSameKey ? Is.EqualTo(message) : Is.Not.EqualTo(message));
 
         #endregion
     }
 
-    [Test]
-    public async Task EncodeBinary_Decode()
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task EncodeBinary_Decode(bool isSameKey)
     {
         #region AAA Encode
 
@@ -140,6 +149,13 @@ public class CodecTests : TestingBase
         using StreamReader reader = new(encodeArchive.Entries[1].Open(), Encoding.UTF8);
         string key = await reader.ReadToEndAsync();
 
+        if (!isSameKey)
+        {
+            StringBuilder keyBuilder = new(key);
+            keyBuilder[^1] = (char) (key[^1] + 1);
+            key = keyBuilder.ToString();
+        }
+
         KeyService keyService = new();
         bool isValidKey = keyService.TryParse(key, out MessageType outMessageType, out _,
             out int outMessageLength, out _, out _);
@@ -165,8 +181,17 @@ public class CodecTests : TestingBase
             await Client.PostAsync("/api/codec/decode", decodeFormData);
 
         // Assert
-        Assert.That(decodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        Assert.That(decodeResponse.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/zip"));
+        if (isSameKey)
+        {
+            Assert.That(decodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(decodeResponse.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/zip"));
+        }
+        else
+        {
+            Assert.That(decodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+            Assert.That(decodeResponse.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/json"));
+            return;
+        }
 
         await using Stream decodeResponseStream = await decodeResponse.Content.ReadAsStreamAsync();
         using ZipArchive decodeArchive = new(decodeResponseStream, ZipArchiveMode.Read);

@@ -10,14 +10,14 @@ namespace Domain.UnitTests.Services;
 internal class KeyServiceTests
 {
     [TestCaseSource(nameof(TestData))]
-    public void ToBase64_TryParse_AllKeyPartsShouldMatch(MessageType inMessageType, int inSeed,
+    public void ToBase64String_TryParse_AllKeyPartsShouldMatch(MessageType inMessageType, int inSeed,
         int inMessageLength, byte[] inKey, byte[] inIv)
     {
         // Arrange
         KeyService keyService = new();
 
         // Act
-        string base64Key = keyService.ToBase64(inMessageType, inSeed, inMessageLength, inKey, inIv);
+        string base64Key = keyService.ToBase64String(inMessageType, inSeed, inMessageLength, inKey, inIv);
         bool success = keyService.TryParse(base64Key, out MessageType outMessageType, out int outSeed,
             out int outMessageLength, out byte[] outKey, out byte[] outIv);
 

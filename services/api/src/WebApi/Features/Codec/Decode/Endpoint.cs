@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.IO.Pipelines;
 using ApiBuilder;
 using Domain.Entities;
@@ -66,7 +65,6 @@ public class Decode : EndpointWithoutResponse<Request>
         catch (InvalidOperationException e)
         {
             _logger.Information("Decoding failed with message {Message}", e.Message);
-            Debug.Assert(!HttpContext.Response.HasStarted);
             ValidationErrors.Add(e.Message);
             await SendValidationErrorAsync("Decoding failed");
         }

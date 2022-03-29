@@ -56,7 +56,6 @@ public class Request : IBindRequest, IDisposable
 
     /// <summary>
     /// Reads the multipart request body, encrypts it, and writes it to the pipe.
-    /// The written data has the form: <c>file length (4-byte) || file name length (2-byte) || file name || file</c>.
     /// </summary>
     /// <param name="aes">The aes instance used for encryption.</param>
     /// <returns><c>True</c> if the whole message was written successfully; <c>false</c> otherwise.</returns>
@@ -75,13 +74,13 @@ public class Request : IBindRequest, IDisposable
         foreach (MyFormFile file in files)
         {
             int fileNameSize = Encoding.UTF8.GetByteCount(file.FileName);
-            int sizeHint = 6 + fileNameSize;
 
             if (fileNameSize > 256)
             {
                 throw new ModelBindingException("File name can not be longer than 256 bytes");
             }
 
+            int sizeHint = 6 + fileNameSize;
             messageLength += sizeHint + file.Length;
 
             Memory<byte> buffer = _pipeWriter.GetMemory(sizeHint);

@@ -56,7 +56,7 @@ public class EncodeText : EndpointWithoutResponse<Request>
             return;
         }
 
-        string base64Key = _keyService.ToBase64(MessageType.Text, seed, messageLength.Value, aes.Key, aes.IV);
+        string base64Key = _keyService.ToBase64String(MessageType.Text, seed, messageLength.Value, aes.Key, aes.IV);
 
         HttpContext.Response.ContentType = "application/zip";
         HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");

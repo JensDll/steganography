@@ -56,7 +56,7 @@ public class EncodeBinary : EndpointWithoutResponse<Request>
             return;
         }
 
-        string base64Key = _keyService.ToBase64(MessageType.Binary, seed, messageLength.Value, aes.Key, aes.IV);
+        string base64Key = _keyService.ToBase64String(MessageType.Binary, seed, messageLength.Value, aes.Key, aes.IV);
 
         HttpContext.Response.ContentType = "application/zip";
         HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");

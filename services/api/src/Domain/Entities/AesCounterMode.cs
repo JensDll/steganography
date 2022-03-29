@@ -25,7 +25,7 @@ public class AesCounterMode : IDisposable
         IV = RandomNumberGenerator.GetBytes(12);
         _aes.Mode = CipherMode.ECB;
         _aes.Padding = PaddingMode.None;
-        _encryptor = _aes.CreateDecryptor();
+        _encryptor = _aes.CreateEncryptor();
         IV.CopyTo(_iVAndCounter, 4);
         _encryptor.TransformBlock(_iVAndCounter, 0, 16, _keyStream, 0);
     }
@@ -47,7 +47,7 @@ public class AesCounterMode : IDisposable
         IV = iV;
         _aes.Mode = CipherMode.ECB;
         _aes.Padding = PaddingMode.None;
-        _encryptor = _aes.CreateDecryptor();
+        _encryptor = _aes.CreateEncryptor();
         IV.CopyTo(_iVAndCounter, 4);
         _encryptor.TransformBlock(_iVAndCounter, 0, 16, _keyStream, 0);
     }
