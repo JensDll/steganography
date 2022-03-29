@@ -58,7 +58,7 @@ public class Request : IBindRequest, IDisposable
     /// Reads the multipart request body, encrypts it, and writes it to the pipe.
     /// </summary>
     /// <param name="aes">The aes instance used for encryption.</param>
-    /// <returns><c>True</c> if the whole message was written successfully; <c>false</c> otherwise.</returns>
+    /// <returns>The message length if the whole message was written successfully; <c>null</c> otherwise.</returns>
     public async Task<int?> FillPipeAsync(AesCounterMode aes)
     {
         IReadOnlyList<MyFormFile>? files = await _multiPartReader.ReadFilesBufferedAsync(CancelSource.Token);
