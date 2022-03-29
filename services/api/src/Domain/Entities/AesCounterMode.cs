@@ -5,6 +5,7 @@ namespace Domain.Entities;
 public class AesCounterMode : IDisposable
 {
     private readonly Aes _aes;
+    private readonly ICryptoTransform _encryptor;
     private readonly byte[] _iVAndCounter = new byte[16];
     private readonly byte[] _keyStream = new byte[16];
     private int _keyStreamIdx;
@@ -22,8 +23,11 @@ public class AesCounterMode : IDisposable
         _aes = Aes.Create();
         Key = RandomNumberGenerator.GetBytes(32);
         IV = RandomNumberGenerator.GetBytes(12);
-        IV.CopyTo(_iVAndCounter, 0);
-        _aes.EncryptEcb(_iVAndCounter, _keyStream, PaddingMode.None);
+        _aes.Mode = CipherMode.ECB;
+        _aes.Padding = PaddingMode.None;
+        _encryptor = _aes.CreateDecryptor();
+        IV.CopyTo(_iVAndCounter, 4);
+        _encryptor.TransformBlock(_iVAndCounter, 0, 16, _keyStream, 0);
     }
 
     public AesCounterMode(byte[] key, byte[] iV)
@@ -41,8 +45,11 @@ public class AesCounterMode : IDisposable
         _aes = Aes.Create();
         Key = key;
         IV = iV;
-        iV.CopyTo(_iVAndCounter, 0);
-        _aes.EncryptEcb(_iVAndCounter, _keyStream, PaddingMode.None);
+        _aes.Mode = CipherMode.ECB;
+        _aes.Padding = PaddingMode.None;
+        _encryptor = _aes.CreateDecryptor();
+        IV.CopyTo(_iVAndCounter, 4);
+        _encryptor.TransformBlock(_iVAndCounter, 0, 16, _keyStream, 0);
     }
 
     public void Transform(ReadOnlySpan<byte> source, Span<byte> destination)
@@ -65,13 +72,13 @@ public class AesCounterMode : IDisposable
 
     private unsafe void GenerateNewKeyStream()
     {
-        fixed (byte* bytePointer = &_iVAndCounter[12])
+        fixed (byte* bytePointer = _iVAndCounter)
         {
             uint* counter = (uint*) bytePointer;
             ++*counter;
         }
 
         _keyStreamIdx = 0;
-        _aes.EncryptEcb(_iVAndCounter, _keyStream, PaddingMode.None);
+        _encryptor.TransformBlock(_iVAndCounter, 0, 16, _keyStream, 0);
     }
 }

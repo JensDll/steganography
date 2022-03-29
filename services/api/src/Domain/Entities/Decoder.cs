@@ -92,9 +92,8 @@ public class Decoder : CodecBase
 
                         while (PixelIdx < 3)
                         {
-                            // int bit = (pixelValues[PixelIdx++] >> BitPosition) & 1;
-                            // buffer[bytesRead] |= (byte) (bit << ByteShift++);
-                            buffer[bytesRead] |= (byte) (((pixelValues[PixelIdx++] >> BitPosition) & 1) << ByteShift++);
+                            buffer[bytesRead] |=
+                                (byte) (((pixelValues[PixelIdx++] >> BitPosition) & 1) << ByteShift++);
 
                             if (ByteShift != 8)
                             {

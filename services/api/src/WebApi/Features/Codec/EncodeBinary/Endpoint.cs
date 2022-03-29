@@ -28,23 +28,15 @@ public class EncodeBinary : EndpointWithoutResponse<Request>
         int seed = RandomNumberGenerator.GetInt32(int.MaxValue);
         using AesCounterMode aes = new();
         using Encoder encoder = new(request.CoverImage, seed, request.CancelSource);
-        string base64Key;
+
+        int? messageLength;
 
         try
         {
             Task<int?> writing = request.FillPipeAsync(aes);
             Task reading = encoder.EncodeAsync(request.PipeReader);
-
             await Task.WhenAll(writing, reading);
-            int? messageLength = writing.Result;
-
-            if (!messageLength.HasValue)
-            {
-                await SendValidationErrorAsync("Encoding failed");
-                return;
-            }
-
-            base64Key = _keyService.ToBase64(MessageType.Binary, seed, messageLength.Value, aes.Key, aes.IV);
+            messageLength = writing.Result;
         }
         catch (InvalidOperationException e)
         {
@@ -57,6 +49,14 @@ public class EncodeBinary : EndpointWithoutResponse<Request>
             await SendValidationErrorAsync("Encoding failed");
             return;
         }
+
+        if (!messageLength.HasValue)
+        {
+            await SendValidationErrorAsync("Encoding failed");
+            return;
+        }
+
+        string base64Key = _keyService.ToBase64(MessageType.Binary, seed, messageLength.Value, aes.Key, aes.IV);
 
         HttpContext.Response.ContentType = "application/zip";
         HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=secret.zip");

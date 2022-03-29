@@ -80,14 +80,14 @@ public class Request : IBindRequest, IDisposable
             Memory<byte> buffer = _pipeWriter.GetMemory();
 
             int bytesRead = await formSection.Body.ReadAsync(buffer, CancelSource.Token);
-            messageLength += bytesRead;
 
             if (bytesRead == 0)
             {
                 break;
             }
 
-            aes.Transform(buffer[..bytesRead].Span, buffer.Span);
+            messageLength += bytesRead;
+            aes.Transform(buffer.Span[..bytesRead], buffer.Span);
             _pipeWriter.Advance(bytesRead);
 
             FlushResult result = await _pipeWriter.FlushAsync(CancelSource.Token);

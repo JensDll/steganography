@@ -32,7 +32,6 @@ public class Decode : EndpointWithoutResponse<Request>
         if (!isValidKey || messageLength < 1 ||
             messageLength > request.CoverImage.Width * request.CoverImage.Height * 3)
         {
-            ValidationErrors.Add("Invalid key");
             await SendValidationErrorAsync("Decoding failed");
             return;
         }
@@ -66,7 +65,7 @@ public class Decode : EndpointWithoutResponse<Request>
         }
         catch (InvalidOperationException e)
         {
-            _logger.Information("Decoding failed: {Message}", e.Message);
+            _logger.Information("Decoding failed with message {Message}", e.Message);
             Debug.Assert(!HttpContext.Response.HasStarted);
             ValidationErrors.Add(e.Message);
             await SendValidationErrorAsync("Decoding failed");

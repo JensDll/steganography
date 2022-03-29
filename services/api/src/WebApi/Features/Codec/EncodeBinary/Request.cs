@@ -88,10 +88,10 @@ public class Request : IBindRequest, IDisposable
             // Write the file length (4-byte)
             BitConverter.TryWriteBytes(buffer.Span, file.Length);
             // Write the file name length (2-byte)
-            BitConverter.TryWriteBytes(buffer[4..].Span, (short) fileNameSize);
+            BitConverter.TryWriteBytes(buffer.Span[4..], (short) fileNameSize);
             // Write the file name (max 256-byte)
-            Encoding.UTF8.GetBytes(file.FileName, buffer[6..].Span);
-            aes.Transform(buffer[..sizeHint].Span, buffer.Span);
+            Encoding.UTF8.GetBytes(file.FileName, buffer.Span[6..]);
+            aes.Transform(buffer.Span[..sizeHint], buffer.Span);
             _pipeWriter.Advance(sizeHint);
         }
 
@@ -114,7 +114,7 @@ public class Request : IBindRequest, IDisposable
                     break;
                 }
 
-                aes.Transform(buffer[..bytesRead].Span, buffer.Span);
+                aes.Transform(buffer.Span[..bytesRead], buffer.Span);
                 _pipeWriter.Advance(bytesRead);
 
                 FlushResult result = await _pipeWriter.FlushAsync(CancelSource.Token);

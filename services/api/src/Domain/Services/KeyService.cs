@@ -8,21 +8,16 @@ public class KeyService : IKeyService
     public string ToBase64(MessageType messageType, int seed, int messageLength, ReadOnlySpan<byte> key,
         ReadOnlySpan<byte> iV)
     {
-        Span<byte> base64Key = stackalloc byte[54];
+        Span<byte> base64KeyBytes = stackalloc byte[54];
 
-        base64Key[0] = (byte) messageType;
-        base64Key[2] = (byte) seed;
-        base64Key[3] = (byte) (seed >> 8);
-        base64Key[4] = (byte) (seed >> 16);
-        base64Key[5] = (byte) (seed >> 24);
-        base64Key[6] = (byte) messageLength;
-        base64Key[7] = (byte) (messageLength >> 8);
-        base64Key[8] = (byte) (messageLength >> 16);
-        base64Key[9] = (byte) (messageLength >> 24);
-        key.CopyTo(base64Key[10..]);
-        iV.CopyTo(base64Key[42..]);
+        // The first 2 bytes are used for the message type to get to a multiple of 3
+        base64KeyBytes[0] = (byte) messageType;
+        BitConverter.TryWriteBytes(base64KeyBytes[2..6], seed);
+        BitConverter.TryWriteBytes(base64KeyBytes[6..10], messageLength);
+        key.CopyTo(base64KeyBytes[10..]);
+        iV.CopyTo(base64KeyBytes[42..]);
 
-        return Convert.ToBase64String(base64Key);
+        return Convert.ToBase64String(base64KeyBytes);
     }
 
     public bool TryParse(string base64Key, out MessageType messageType, out int seed, out int messageLength,
@@ -44,12 +39,13 @@ public class KeyService : IKeyService
 
         ReadOnlySpan<byte> fullKey = Convert.FromBase64String(base64Key);
 
-        if (fullKey[0] > 1)
+        messageType = (MessageType) fullKey[0];
+
+        if (!Enum.IsDefined(messageType))
         {
             return false;
         }
 
-        messageType = (MessageType) fullKey[0];
         seed = BitConverter.ToInt32(fullKey[2..6]);
         messageLength = BitConverter.ToInt32(fullKey[6..10]);
         key = fullKey[10..42].ToArray();

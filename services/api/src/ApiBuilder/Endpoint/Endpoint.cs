@@ -99,11 +99,11 @@ public abstract class EndpointWithoutRequest<TResponse> : Endpoint<EmptyRequest,
     protected abstract Task HandleAsync(CancellationToken cancellationToken);
 }
 
-public abstract class EndpointWithoutResponse<TRequest> : Endpoint<TRequest, object>
+public abstract class EndpointWithoutResponse<TRequest> : Endpoint<TRequest, EmptyResponse>
     where TRequest : notnull, new()
 {
 }
 
-public abstract class EmptyEndpoint : EndpointWithoutRequest<object>
+public abstract class EndpointWithoutAny : EndpointWithoutRequest<EmptyResponse>
 {
 }
