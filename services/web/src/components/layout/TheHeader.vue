@@ -55,7 +55,7 @@ watch(theme, changeThemePreference)
 
 <template>
   <header
-    class="z-10 border-b grid-area-[header]"
+    class="sticky top-0 z-10 border-b bg-c-bg grid-area-[header]"
     :class="{ 'border-b-0': $route.name === 'home' }"
   >
     <div class="flex items-end justify-between py-6 container">
@@ -68,7 +68,7 @@ watch(theme, changeThemePreference)
       <nav class="relative hidden md:block">
         <ul class="flex">
           <li class="font-medium hover:text-orange-500">
-            <RouterLink to="#">About</RouterLink>
+            <RouterLink :to="{ name: 'about' }">About</RouterLink>
           </li>
           <li class="mx-6 border-l"></li>
           <li @click="isDropdownOpen = true">
@@ -122,11 +122,14 @@ watch(theme, changeThemePreference)
       >
         <div
           v-on-click-outside="closePopup"
-          class="test fixed top-4 right-4 w-full max-w-xs rounded-lg bg-c-bg p-6 shadow-lg dark:bg-gray-800"
+          class="test fixed top-6 right-6 w-full max-w-xs rounded-lg bg-c-bg p-6 shadow-lg dark:bg-gray-800"
         >
           <ul class="space-y-6">
             <li>
-              <RouterLink class="font-medium hover:text-orange-500" to="#">
+              <RouterLink
+                class="font-medium hover:text-orange-500"
+                :to="{ name: 'about' }"
+              >
                 About
               </RouterLink>
             </li>

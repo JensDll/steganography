@@ -42,6 +42,13 @@ public abstract class CodecBase : IDisposable
         CoverImageCapacity = coverImageSize * 3;
     }
 
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        ArrayPool<int>.Shared.Return(_startPermutation);
+        ArrayPool<int>.Shared.Return(Permutation);
+    }
+
     protected void NextPermutation()
     {
         if (StartPermutationIdx == StartPermutationCount)
@@ -55,12 +62,5 @@ public abstract class CodecBase : IDisposable
         ArrayPool<int>.Shared.Return(Permutation);
         (Permutation, PermutationCount) =
             _prng.RentPermutation(_startPermutation[StartPermutationIdx++], _permutationEnd, _permutationStep);
-    }
-
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-        ArrayPool<int>.Shared.Return(_startPermutation);
-        ArrayPool<int>.Shared.Return(Permutation);
     }
 }

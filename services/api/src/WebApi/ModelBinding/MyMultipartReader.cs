@@ -48,7 +48,7 @@ public class MyMultiPartReader : MultipartReader
         }
 
         FileBufferingReadStream fileStream = new(section.Body, _formOptions.MemoryBufferThreshold,
-            _formOptions.MultipartBodyLengthLimit, TempDirectory.Temp);
+            _formOptions.MultipartBodyLengthLimit, TempDirectory.Path);
         section.Body = fileStream;
         _context.Response.RegisterForDisposeAsync(fileStream);
 

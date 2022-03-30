@@ -1,5 +1,6 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 const Forms = require('@tailwindcss/forms')
+const Typography = require('@tailwindcss/typography')
 
 const { Icons } = require('./tailwind/plugins/icons')
 const { Utils } = require('./tailwind/plugins/utils')
@@ -27,11 +28,24 @@ module.exports = {
       },
       boxShadow: {
         none: 'initial'
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            'code::before': {
+              content: '""'
+            },
+            'code::after': {
+              content: '""'
+            }
+          }
+        }
       }
     }
   },
   plugins: [
     Forms,
+    Typography,
     Icons({
       'heroicons-outline': ['trash']
     }),

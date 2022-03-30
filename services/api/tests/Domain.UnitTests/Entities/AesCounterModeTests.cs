@@ -8,7 +8,7 @@ namespace Domain.UnitTests.Entities;
 internal class AesCounterModeTests
 {
     [Test]
-    public void Transform_ShouldEqualAfterTransformation([Random(500, 100_100, 5)] int length)
+    public void PlainTextAreEqualAfterTransformation([Random(500, 100_100, 5)] int length)
     {
         // Arrange
         AesCounterMode encryptor = new();
@@ -30,7 +30,7 @@ internal class AesCounterModeTests
     }
 
     [Test]
-    public void Transform_InBlocks_ShouldEqualAfterTransformation()
+    public void PlainTextAreEqualAfterBlockwiseTransformation()
     {
         // Arrange
         AesCounterMode encryptor = new();
@@ -43,10 +43,10 @@ internal class AesCounterModeTests
         Span<byte> plaintextOut = new byte[length];
 
         // Act
-        encryptor.Transform(plaintextIn[..500], ciphertext);
-        encryptor.Transform(plaintextIn[500..1000], ciphertext[500..]);
-        encryptor.Transform(plaintextIn[1000..], ciphertext[1000..]);
-        decryptor.Transform(ciphertext, plaintextOut);
+        encryptor.Transform(plaintextIn[..500], ciphertext); // Transform the first 500 bytes
+        encryptor.Transform(plaintextIn[500..1000], ciphertext[500..]); // the next 500
+        encryptor.Transform(plaintextIn[1000..], ciphertext[1000..]); // and the rest
+        decryptor.Transform(ciphertext, plaintextOut); // Decrypt all
 
         // Assert
         Assert.That(ciphertext.ToArray(), Is.Not.EqualTo(plaintextIn.ToArray()));
@@ -54,16 +54,17 @@ internal class AesCounterModeTests
         Assert.That(plaintextIn.ToArray(), Is.EqualTo(plaintextOut.ToArray()));
     }
 
-    [Test]
-    public void Transform_DifferentWhenKeyChanges()
+    [TestCase(4)]
+    [TestCase(8)]
+    [TestCase(32)]
+    public void PlainTextAreDifferentWhenTheKeyChanges(int length)
     {
         // Arrange
         AesCounterMode encryptor = new();
-        byte[] key = encryptor.Key;
-        key[0]++;
-        AesCounterMode decryptor = new(key, encryptor.IV);
+        byte[] alteredKey = encryptor.Key;
+        alteredKey[0]++;
+        AesCounterMode decryptor = new(alteredKey, encryptor.IV);
 
-        const int length = 4;
         byte[] plaintextIn = new byte[length];
         TestContext.CurrentContext.Random.NextBytes(plaintextIn);
         byte[] ciphertext = new byte[length];
@@ -77,5 +78,22 @@ internal class AesCounterModeTests
         Assert.That(ciphertext, Is.Not.EqualTo(plaintextIn));
         Assert.That(ciphertext, Is.Not.EqualTo(plaintextOut));
         Assert.That(plaintextIn, Is.Not.EqualTo(plaintextOut));
+    }
+
+    [Test]
+    public void InputShouldNotBeUsedTwice()
+    {
+        // Arrange
+        AesCounterMode encryptor = new();
+
+        byte[] plaintextIn = new byte[32];
+        byte[] ciphertext = new byte[32];
+
+        // Act
+        encryptor.Transform(plaintextIn, ciphertext);
+
+        // Assert
+        // If the same input is used for both blocks (i.e. by not changing the counter), this would fail.
+        Assert.That(ciphertext[..16], Is.Not.EqualTo(ciphertext[16..]));
     }
 }

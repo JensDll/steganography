@@ -21,8 +21,8 @@ module.exports.Utils = function () {
           marginLeft: 'auto',
           marginRight: 'auto',
           maxWidth: theme('maxWidth.6xl'),
-          paddingLeft: theme('padding.4'),
-          paddingRight: theme('padding.4'),
+          paddingLeft: theme('padding.5'),
+          paddingRight: theme('padding.5'),
           [`@media (min-width: ${theme('screens.md')})`]: {
             paddingLeft: theme('padding.8'),
             paddingRight: theme('padding.8')

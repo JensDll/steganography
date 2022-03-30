@@ -39,7 +39,7 @@ const totalFileSize = useFileSize(files)
     <label v-if="label" for="file-input">{{ label }}</label>
     <div class="flex items-center">
       <div
-        class="custom-file-input relative flex cursor-pointer items-center py-4 px-8"
+        class="custom-file-input relative flex cursor-pointer items-center py-6 px-8"
         :class="{
           error: errors.length,
           'mr-4': files[0]
@@ -51,7 +51,7 @@ const totalFileSize = useFileSize(files)
           class="absolute inset-0 h-full w-full opacity-0"
           v-on="fileListeners"
         />
-        <HeroiconsSolid:paperClip class="mr-2 h-6 w-6" />
+        <HeroiconsSolid:paperClip v-if="!files.length" class="mr-2 h-6 w-6" />
         <div class="text-center">
           <template v-if="files.length">
             {{ files[0].name }}
@@ -83,7 +83,7 @@ const totalFileSize = useFileSize(files)
       :class="[
         { error: errors.length },
         files.length
-          ? 'card-grid p-4'
+          ? 'card-grid p-6'
           : 'flex flex-col items-center justify-center px-6'
       ]"
     >
