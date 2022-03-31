@@ -16,9 +16,9 @@ public class Request : IBindRequest, IDisposable
 
     public Image<Rgb24> CoverImage { get; private set; } = null!;
 
-    public PipeReader PipeReader { get; private set; } = null!;
-
     public int CoverImageCapacity { get; private set; }
+
+    public PipeReader PipeReader { get; private set; } = null!;
 
     public async ValueTask BindAsync(HttpContext context, List<string> validationErrors,
         CancellationToken cancellationToken)
