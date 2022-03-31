@@ -10,6 +10,8 @@ public class Request : IBindRequest, IDisposable
 {
     public Image<Rgb24> CoverImage { get; private set; } = null!;
 
+    public int CoverImageCapacity { get; private set; }
+
     public string Key { get; private set; } = null!;
 
     public async ValueTask BindAsync(HttpContext context, List<string> validationErrors,
@@ -39,6 +41,7 @@ public class Request : IBindRequest, IDisposable
         }
 
         CoverImage = coverImage;
+        CoverImageCapacity = CoverImage.Width * CoverImage.Height * 3;
 
         nextSection = await reader.ReadNextSectionAsync(cancellationToken);
 

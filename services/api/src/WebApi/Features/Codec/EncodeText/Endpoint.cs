@@ -27,7 +27,7 @@ public class EncodeText : EndpointWithoutResponse<Request>
 
         int seed = RandomNumberGenerator.GetInt32(int.MaxValue);
         using AesCounterMode aes = new();
-        using Encoder encoder = new(request.CoverImage, seed, request.CancelSource);
+        using Encoder encoder = new(request.CoverImage, seed);
 
         int? messageLength;
 
@@ -41,11 +41,6 @@ public class EncodeText : EndpointWithoutResponse<Request>
         catch (InvalidOperationException e)
         {
             ValidationErrors.Add(e.Message);
-            await SendValidationErrorAsync("Encoding failed");
-            return;
-        }
-        catch (OperationCanceledException)
-        {
             await SendValidationErrorAsync("Encoding failed");
             return;
         }

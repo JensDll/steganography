@@ -1,5 +1,4 @@
 ﻿using System.Buffers;
-using System.Diagnostics;
 using System.IO.Pipelines;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
@@ -9,24 +8,25 @@ namespace Domain.Entities;
 
 public class Encoder : CodecBase
 {
-    private readonly CancellationTokenSource _cancelSource;
-
-    public Encoder(Image<Rgb24> coverImage, int seed, CancellationTokenSource cancelSource) : base(coverImage, seed)
+    public Encoder(Image<Rgb24> coverImage, int seed) : base(coverImage, seed)
     {
-        _cancelSource = cancelSource;
     }
 
     public async Task EncodeAsync(PipeReader pipeReader)
     {
-        long consumed = 0;
-
         while (true)
         {
-            ReadResult result = await pipeReader.ReadAsync(_cancelSource.Token);
+            ReadResult result = await pipeReader.ReadAsync();
             ReadOnlySequence<byte> buffer = result.Buffer;
 
-            ProcessMessage(ref buffer, ref consumed);
-            pipeReader.AdvanceTo(buffer.Start, buffer.End);
+            if (buffer.IsEmpty || result.IsCanceled)
+            {
+                break;
+            }
+
+            ProcessMessage(ref buffer);
+
+            pipeReader.AdvanceTo(buffer.End, buffer.End);
 
             if (result.IsCompleted)
             {
@@ -37,16 +37,9 @@ public class Encoder : CodecBase
         await pipeReader.CompleteAsync();
     }
 
-    private void ProcessMessage(ref ReadOnlySequence<byte> message, ref long consumed)
+    private void ProcessMessage(ref ReadOnlySequence<byte> message)
     {
         SequenceReader<byte> reader = new(message);
-        reader.Advance(consumed);
-
-        if (reader.Length > CoverImageCapacity)
-        {
-            _cancelSource.Cancel();
-            throw new InvalidOperationException("Message is too long for the cover image");
-        }
 
         reader.TryRead(out byte currentByte);
 
@@ -77,7 +70,6 @@ public class Encoder : CodecBase
 
                             if (!reader.TryRead(out currentByte))
                             {
-                                consumed = reader.Consumed;
                                 return;
                             }
                         }
@@ -91,7 +83,5 @@ public class Encoder : CodecBase
 
             NextPermutation();
         }
-
-        Debug.Fail("Should not be reached");
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO.Pipelines;
-using System.Threading;
 using System.Threading.Tasks;
 using Domain.Entities;
 using NUnit.Framework;
@@ -26,8 +25,7 @@ internal class EncoderTests
         // Act
         async Task Action()
         {
-            CancellationTokenSource cancelSource = new();
-            Encoder encoder = new(coverImage, 42, cancelSource);
+            Encoder encoder = new(coverImage, 42);
             int messageLength = coverImage.Width * coverImage.Height * 3;
 
             Pipe pipe = new();
@@ -54,8 +52,7 @@ internal class EncoderTests
         // Act
         async Task Action()
         {
-            CancellationTokenSource cancelSource = new();
-            Encoder encoder = new(coverImage, 42, cancelSource);
+            Encoder encoder = new(coverImage, 42);
             int messageLength = coverImage.Width * coverImage.Height * 3 + 1;
 
             Pipe pipe = new();
