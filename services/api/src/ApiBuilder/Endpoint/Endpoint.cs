@@ -36,7 +36,7 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
                 }
             }
 
-            if (ValidationErrors.Any())
+            if (ValidationErrors.Count > 0)
             {
                 await SendValidationErrorAsync("Model binding failed");
                 return;

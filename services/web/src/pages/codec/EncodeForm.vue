@@ -31,7 +31,7 @@ const { form, validateFields } = useValidation<FormData>({
   },
   coverImage: {
     $value: [],
-    $rules: [rules.minMax(1, 1)('Attach a cover image for your message')]
+    $rules: [rules.minMax(1, 1)('Attach a cover image')]
   }
 })
 
@@ -101,10 +101,11 @@ async function handleSubmit() {
           v-model="form.coverImage.$value"
           :errors="form.coverImage.$errors"
           label="Attach a cover image"
+          accept="image/*"
           class="mt-6"
         />
       </section>
-      <section class="bg-encode-50 py-4 dark:bg-encode-900">
+      <section class="bg-encode-100 py-4 dark:bg-encode-900">
         <div
           class="grid grid-cols-[1fr_auto] gap-x-8 container md:gap-x-12"
           :class="{ 'justify-between': loading }"

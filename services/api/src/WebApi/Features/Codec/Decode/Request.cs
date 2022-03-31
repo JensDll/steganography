@@ -1,5 +1,6 @@
 ﻿using ApiBuilder;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using WebApi.ModelBinding;
 
@@ -30,7 +31,7 @@ public class Request : IBindRequest, IDisposable
             return;
         }
 
-        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync(cancellationToken);
+        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync<PngFormat>(cancellationToken);
 
         if (coverImage is null)
         {

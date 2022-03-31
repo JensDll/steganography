@@ -3,16 +3,16 @@ import CallToAction from './CallToAction.vue'
 </script>
 
 <template>
-  <section class="bg-gradient grid h-screen">
+  <section class="bg-gradient grid h-full min-h-[600px]">
     <div
-      class="grid grid-rows-[auto_auto_1fr] justify-items-center self-center md:-translate-y-8"
+      class="grid grid-rows-[auto_auto_1fr] justify-items-center self-center pt-6 md:p-0"
     >
-      <div class="container">
+      <AppMarkdown>
         <h1 class="text-center">Image Data Hiding</h1>
-        <p class="mt-6 text-center text-lg">Embed secret messages in images</p>
-      </div>
+        <p class="text-center text-lg">Embed secret messages in images</p>
+      </AppMarkdown>
       <CallToAction
-        class="mt-6 w-full max-w-4xl"
+        class="mt-6 w-full max-w-4xl lg:mt-8"
         @click="$router.push({ name: 'encode' })"
       />
     </div>
@@ -22,23 +22,27 @@ import CallToAction from './CallToAction.vue'
 <style scoped>
 .bg-gradient {
   background-image: linear-gradient(
-      20deg,
+      12deg,
       theme('colors.encode.50'),
-      rgba(0, 0, 0, 0) 60%
+      rgb(theme('colors.rgb.encode.50') / 0) 60%
     ),
-    linear-gradient(-20deg, theme('colors.decode.100'), rgba(0, 0, 0, 0) 60%);
+    linear-gradient(
+      -12deg,
+      theme('colors.decode.200'),
+      rgb(theme('colors.rgb.decode.200') / 0) 60%
+    );
 }
 
 .dark .bg-gradient {
   background-image: linear-gradient(
-      10deg,
-      rgb(theme('colors.rgb.encode.900') / 0.6),
-      rgba(0, 0, 0, 0) 60%
+      12deg,
+      rgb(theme('colors.rgb.encode.900') / 0.9),
+      rgb(theme('colors.rgb.encode.900') / 0) 60%
     ),
     linear-gradient(
-      -10deg,
-      rgb(theme('colors.rgb.decode.900') / 0.6),
-      rgba(0, 0, 0, 0) 60%
+      -12deg,
+      theme('colors.decode.900'),
+      rgb(theme('colors.rgb.decode.900') / 0) 60%
     );
 }
 </style>

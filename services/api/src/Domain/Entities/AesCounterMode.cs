@@ -1,23 +1,21 @@
-﻿using System.Runtime.CompilerServices;
+﻿#region
+
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+
+#endregion
 
 namespace Domain.Entities;
 
 public class AesCounterMode : IDisposable
 {
     private readonly Aes _aes;
+
+    // The first 32 bits represent the and counter the last 96 bits are the IV.
+    private readonly byte[] _counterAndIv = new byte[16];
     private readonly ICryptoTransform _encryptor;
-    private readonly byte[] _iVAndCounter = new byte[16];
     private readonly byte[] _keyStream = new byte[16];
     private int _keyStreamIdx;
-
-    public byte[] Key
-    {
-        get => _aes.Key;
-        private init => _aes.Key = value;
-    }
-
-    public byte[] IV { get; }
 
     public AesCounterMode()
     {
@@ -27,8 +25,8 @@ public class AesCounterMode : IDisposable
         _aes.Mode = CipherMode.ECB;
         _aes.Padding = PaddingMode.None;
         _encryptor = _aes.CreateEncryptor();
-        IV.CopyTo(_iVAndCounter, 4);
-        _encryptor.TransformBlock(_iVAndCounter, 0, 16, _keyStream, 0);
+        IV.CopyTo(_counterAndIv, 4);
+        _encryptor.TransformBlock(_counterAndIv, 0, 16, _keyStream, 0);
     }
 
     public AesCounterMode(byte[] key, byte[] iV)
@@ -49,8 +47,22 @@ public class AesCounterMode : IDisposable
         _aes.Mode = CipherMode.ECB;
         _aes.Padding = PaddingMode.None;
         _encryptor = _aes.CreateEncryptor();
-        IV.CopyTo(_iVAndCounter, 4);
-        _encryptor.TransformBlock(_iVAndCounter, 0, 16, _keyStream, 0);
+        IV.CopyTo(_counterAndIv, 4);
+        _encryptor.TransformBlock(_counterAndIv, 0, 16, _keyStream, 0);
+    }
+
+    public byte[] Key
+    {
+        get => _aes.Key;
+        private init => _aes.Key = value;
+    }
+
+    public byte[] IV { get; }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        _aes.Dispose();
     }
 
     public void Transform(ReadOnlySpan<byte> source, Span<byte> destination)
@@ -65,25 +77,19 @@ public class AesCounterMode : IDisposable
         }
     }
 
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-        _aes.Dispose();
-    }
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void GenerateNewKeyStream()
     {
         unsafe
         {
-            fixed (byte* bytePointer = _iVAndCounter)
+            fixed (byte* block = _counterAndIv)
             {
-                uint* counter = (uint*) bytePointer;
+                uint* counter = (uint*) block;
                 ++*counter;
             }
         }
 
         _keyStreamIdx = 0;
-        _encryptor.TransformBlock(_iVAndCounter, 0, 16, _keyStream, 0);
+        _encryptor.TransformBlock(_counterAndIv, 0, 16, _keyStream, 0);
     }
 }

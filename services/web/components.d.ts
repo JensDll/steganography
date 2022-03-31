@@ -7,6 +7,7 @@ declare module 'vue' {
     AppButton: typeof import('./src/components/app/AppButton.vue')['default']
     AppFilePreview: typeof import('./src/components/app/AppFilePreview.vue')['default']
     AppIcon: typeof import('./src/components/app/AppIcon.vue')['default']
+    AppMarkdown: typeof import('./src/components/app/AppMarkdown.vue')['default']
     AppProgressBar: typeof import('./src/components/app/AppProgressBar.vue')['default']
     AppSection: typeof import('./src/components/app/AppSection.vue')['default']
     DesktopComputerIcon: typeof import('./src/components/app/icons/outline/DesktopComputerIcon.vue')['default']

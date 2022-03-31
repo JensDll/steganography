@@ -6,34 +6,18 @@ interface DirectiveElement extends Element {
 
 export const onClickOutside: Directive<DirectiveElement> = {
   mounted(el, binding) {
-    let hasDownUpTriggeredOnTarget = false
-
-    const clickCaptureListener = () => {
-      if (hasDownUpTriggeredOnTarget) {
-        hasDownUpTriggeredOnTarget = false
+    const windowListener = (e: PointerEvent) => {
+      if (el.contains(e.target as Node)) {
         return
       }
 
       binding.value()
     }
 
-    const downUpListener = () => {
-      hasDownUpTriggeredOnTarget = true
-    }
-
-    el.addEventListener('pointerdown', downUpListener)
-    el.addEventListener('pointerup', downUpListener)
-
-    window.addEventListener('click', clickCaptureListener, {
-      capture: true
-    })
+    window.addEventListener('pointerup', windowListener)
 
     el.__directive_onUnmount = function () {
-      this.removeEventListener('pointerdown', downUpListener)
-      this.removeEventListener('pointerup', downUpListener)
-      window.removeEventListener('click', clickCaptureListener, {
-        capture: true
-      })
+      window.removeEventListener('pointerup', windowListener)
     }
   },
   unmounted(el) {

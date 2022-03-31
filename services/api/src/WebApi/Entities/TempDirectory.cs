@@ -2,27 +2,17 @@
 
 public static class TempDirectory
 {
-    private static string? _tempDirectory;
-
-    public static string Temp
+    static TempDirectory()
     {
-        get
+        string tempDirectory = Environment.GetEnvironmentVariable("ASPNETCORE_TEMP") ?? System.IO.Path.GetTempPath();
+
+        if (!Directory.Exists(tempDirectory))
         {
-            if (_tempDirectory is not null)
-            {
-                return _tempDirectory;
-            }
-
-            string tempDirectory = Environment.GetEnvironmentVariable("ASPNETCORE_TEMP") ?? Path.GetTempPath();
-
-            if (!Directory.Exists(tempDirectory))
-            {
-                throw new DirectoryNotFoundException(tempDirectory);
-            }
-
-            _tempDirectory = tempDirectory;
-
-            return _tempDirectory;
+            throw new DirectoryNotFoundException(tempDirectory);
         }
+
+        Path = tempDirectory;
     }
+
+    public static string Path { get; }
 }

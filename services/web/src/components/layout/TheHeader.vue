@@ -55,7 +55,7 @@ watch(theme, changeThemePreference)
 
 <template>
   <header
-    class="z-10 border-b grid-area-[header]"
+    class="sticky top-0 z-10 border-b bg-bg-base backdrop-blur grid-area-[header] supports-backdrop-blur:bg-bg-base/95"
     :class="{ 'border-b-0': $route.name === 'home' }"
   >
     <div class="flex items-end justify-between py-6 container">
@@ -67,8 +67,23 @@ watch(theme, changeThemePreference)
       </div>
       <nav class="relative hidden md:block">
         <ul class="flex">
-          <li class="font-medium hover:text-orange-500">
-            <RouterLink to="#">About</RouterLink>
+          <li>
+            <RouterLink
+              class="mr-6 font-medium hover:text-orange-600"
+              active-class="text-orange-600"
+              :to="{ name: 'codec' }"
+            >
+              Codec
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink
+              class="font-medium hover:text-orange-600"
+              exact-active-class="text-orange-600"
+              :to="{ name: 'about' }"
+            >
+              About
+            </RouterLink>
           </li>
           <li class="mx-6 border-l"></li>
           <li @click="isDropdownOpen = true">
@@ -113,52 +128,61 @@ watch(theme, changeThemePreference)
         </ul>
       </nav>
       <HeroiconsOutline:dotsVertical
-        class="h-6 w-6 cursor-pointer hover:text-gray-500 md:hidden"
+        class="h-6 w-6 cursor-pointer md:hidden"
         @click="isPopupOpen = true"
       />
-      <nav
-        v-if="isPopupOpen"
-        class="fixed inset-0 bg-gray-900/20 backdrop-blur-sm dark:bg-gray-900/50 md:hidden"
-      >
-        <div
-          v-on-click-outside="closePopup"
-          class="test fixed top-4 right-4 w-full max-w-xs rounded-lg bg-c-bg p-6 shadow-lg dark:bg-gray-800"
-        >
-          <ul class="space-y-6">
-            <li>
-              <RouterLink class="font-medium hover:text-orange-500" to="#">
-                About
-              </RouterLink>
-            </li>
-            <li>
-              <a
-                class="font-medium hover:text-orange-500"
-                href="https://github.com/JensDll/image-data-hiding"
-              >
-                GitHub
-              </a>
-            </li>
-          </ul>
-          <div
-            class="mt-5 flex items-center justify-between border-t border-c-form-border pt-5"
-          >
-            <label class="m-0" for="theme">Switch theme</label>
-            <select
-              id="theme"
-              v-model="theme"
-              class="dark:border-gray-600 dark:bg-gray-700"
-            >
-              <option
-                v-for="{ name, text } in themes"
-                :key="name"
-                :value="name"
-              >
-                {{ text }}
-              </option>
-            </select>
-          </div>
-        </div>
-      </nav>
     </div>
   </header>
+  <nav
+    v-if="isPopupOpen"
+    class="fixed inset-0 z-50 bg-gray-900/20 backdrop-blur-sm dark:bg-gray-900/50 md:hidden"
+    @click.self="closePopup"
+  >
+    <div
+      class="fixed top-6 right-6 w-full max-w-xs rounded-lg bg-bg-base p-6 shadow-lg dark:bg-gray-800"
+    >
+      <ul class="space-y-6">
+        <li>
+          <RouterLink
+            class="font-medium hover:text-orange-600"
+            active-class="text-orange-600"
+            :to="{ name: 'codec' }"
+          >
+            Codec
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink
+            class="font-medium hover:text-orange-600"
+            exact-active-class="text-orange-600"
+            :to="{ name: 'about' }"
+          >
+            About
+          </RouterLink>
+        </li>
+        <li>
+          <a
+            class="font-medium hover:text-orange-600"
+            href="https://github.com/JensDll/image-data-hiding"
+          >
+            GitHub
+          </a>
+        </li>
+      </ul>
+      <div
+        class="mt-5 flex items-center justify-between border-t border-border-form-base pt-5"
+      >
+        <label class="m-0" for="theme">Switch theme</label>
+        <select
+          id="theme"
+          v-model="theme"
+          class="dark:border-gray-600 dark:bg-gray-700"
+        >
+          <option v-for="{ name, text } in themes" :key="name" :value="name">
+            {{ text }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </nav>
 </template>

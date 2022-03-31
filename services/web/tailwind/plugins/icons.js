@@ -1,7 +1,7 @@
 const plugin = require('tailwindcss/plugin')
 
 const customIcons = require('./icons.json')
-const { flattenColors } = require('../../utils/flattenColors')
+const { flattenColors } = require('../flattenColors')
 
 function toBase64Url(body, dimension, color) {
   const colorReplacedBody = body.replace(/currentColor/g, color)

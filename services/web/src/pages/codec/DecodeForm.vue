@@ -60,10 +60,11 @@ async function handleSubmit() {
           v-model="form.coverImage.$value"
           :errors="form.coverImage.$errors"
           label="Attach a cover image"
+          accept=".png"
           class="mt-6"
         />
       </section>
-      <section class="bg-decode-50 py-4 dark:bg-decode-900">
+      <section class="bg-decode-100 py-4 dark:bg-decode-900">
         <div
           class="grid grid-cols-[1fr_auto] gap-x-8 container md:gap-x-12"
           :class="{ 'justify-between': loading }"

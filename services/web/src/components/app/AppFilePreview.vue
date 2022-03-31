@@ -69,7 +69,7 @@ function handleLoad() {
       'group',
       { 'cursor-pointer': !isImage || loaded },
       {
-        default: 'flex flex-col items-center justify-center rounded-lg ',
+        default: 'flex flex-col items-center justify-center rounded-lg',
         reduced: 'relative center-children'
       }[variant]
     ]"
@@ -79,7 +79,7 @@ function handleLoad() {
       v-if="isImage"
       v-show="loaded || loading"
       :class="[
-        'h-12 w-12 overflow-clip rounded-full shadow center-children',
+        'h-12 w-12 overflow-hidden rounded-full shadow center-children',
         { 'group-hover:opacity-30': loaded }
       ]"
     >
