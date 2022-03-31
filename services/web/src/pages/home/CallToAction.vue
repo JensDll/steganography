@@ -58,11 +58,11 @@ const animation: AnimationHooks<SVGElement> = {
 }
 
 const observer = new ResizeObserver(([entry]) => {
-  animationState.x = entry.borderBoxSize[0].inlineSize
+  animationState.x = entry.contentRect.width
   !isReducedMotion.value && (animationState.x += lockDim)
   animationState.randomY = gsap.utils.random(
     0,
-    entry.borderBoxSize[0].blockSize - lockDim,
+    entry.contentRect.height - lockDim,
     true
   )
 })

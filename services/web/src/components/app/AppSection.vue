@@ -10,21 +10,21 @@
 .section {
   overflow: hidden;
   width: 100%;
-  box-shadow: 0 6px 30px 0 rgba(theme('colors.rgb.gray.900') / 0.12);
+  box-shadow: 0 2px 20px 0 rgb(theme('colors.rgb.gray.900') / 0.12);
 }
 
 .dark .section {
-  box-shadow: 0 6px 30px 0 rgba(theme('colors.rgb.gray.50') / 0.12);
+  box-shadow: 0 2px 20px 0 rgb(theme('colors.rgb.gray.700') / 0.8);
 }
 
-@media (min-width: 1430px) {
+@screen section {
   .section {
     @apply mx-auto max-w-7xl rounded-2xl;
-    box-shadow: 0px 4px 40px 0 rgba(theme('colors.rgb.gray.900') / 0.12);
+    box-shadow: 4px 4px 40px 0 rgb(theme('colors.rgb.gray.900') / 0.12);
   }
 
   .dark .section {
-    box-shadow: 0 4px 40px 0 rgba(theme('colors.rgb.gray.50') / 0.12);
+    box-shadow: 4px 4px 40px 0 rgb(theme('colors.rgb.gray.700') / 0.4);
   }
 }
 </style>

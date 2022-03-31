@@ -1,16 +1,21 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const vh = `${window.innerHeight * 0.01}px`
+</script>
 
 <template>
   <main
     :class="[
-      'pb-64',
       $route.name === 'home'
-        ? 'grid-area-[header/header/main/main]'
-        : 'pt-12 grid-area-[main] sm:pt-16 lg:pt-20 xl:pt-24'
+        ? 'h-screen-save grid-area-[header/header/main/main]'
+        : 'pt-12 pb-48 grid-area-[main] sm:pt-16 lg:pt-20 xl:pt-24'
     ]"
   >
     <RouterView></RouterView>
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.h-screen-save {
+  height: calc(v-bind(vh) * 100);
+}
+</style>

@@ -1,10 +1,10 @@
 <script setup lang="ts"></script>
 
 <template>
-  <section class="prose prose-slate container dark:prose-invert lg:prose-lg">
+  <AppMarkdown>
     <div class="max-w-prose">
       <h1>About</h1>
-      <p>Some notes about how this works and the implementation.</p>
+      <p>Some notes about how this works and implementation details.</p>
       <h2>How is the message hidden in the image?</h2>
       <p>
         The current algorithm implements a Least Significant Bit Substitution
@@ -15,8 +15,8 @@
       </p>
       <h2>What method is used for encryption?</h2>
       <p>
-        Before writing the message, the AES encrypts it in Counter (CTR) mode.
-        The implementation can be found in the
+        Before writing the message, the AES cipher encrypts it in Counter (CTR)
+        mode. The implementation can be found in the
         <a
           href="https://github.com/JensDll/image-data-hiding/blob/main/services/api/src/Domain/Entities/AesCounterMode.cs"
           >source code</a
@@ -29,7 +29,7 @@
           The first two bytes indicate the type of hidden message (text or
           binary)
         </li>
-        <li>The next four bytes are the seed for the PRNG</li>
+        <li>The next four bytes store the seed for the PRNG</li>
         <li>Then another four bytes for the message length</li>
         <li>
           The remaining 44 bytes are used for the AES key (32 bytes) and
@@ -40,12 +40,12 @@
       <code>(54 / 3) * 4 = 72</code> Base64 characters (<a
         href="https://github.com/JensDll/image-data-hiding/blob/main/services/api/src/Domain/Services/KeyService.cs"
         >source code</a
-      >). Make sure that only trusted parties know the key; otherwise, you risk
-      losing your data. A generated key can not be revoked. The best you can do
-      is to re-encrypt the message, but this will only work if any adversaries
-      do not also possess the cover image.
+      >). You have to make sure that only trusted parties know the key;
+      otherwise, you risk losing your data. A generated key can not be revoked.
+      The best you can do is to re-encrypt the message, but this will only work
+      if any adversaries do not also possess the cover image.
     </div>
-  </section>
+  </AppMarkdown>
 </template>
 
 <style scoped></style>

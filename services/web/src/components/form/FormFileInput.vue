@@ -49,6 +49,7 @@ const totalFileSize = useFileSize(files)
           id="file-input"
           type="file"
           class="absolute inset-0 h-full w-full opacity-0"
+          :accept="accept"
           v-on="fileListeners"
         />
         <HeroiconsSolid:paperClip v-if="!files.length" class="mr-2 h-6 w-6" />
@@ -58,7 +59,7 @@ const totalFileSize = useFileSize(files)
           </template>
           <template v-else>
             <span
-              class="font-semibold text-c-form-focus-border"
+              class="font-semibold text-border-form-highlight"
               :class="{ error: errors.length }"
             >
               Choose
@@ -69,7 +70,6 @@ const totalFileSize = useFileSize(files)
       </div>
       <AppFilePreview
         :file="files[0]"
-        title="Remove attachment"
         variant="reduced"
         @remove="removeFile(0)"
       />
@@ -106,7 +106,7 @@ const totalFileSize = useFileSize(files)
         <HeroiconsSolid:paperClip class="h-6 w-6" />
         <p class="text-center">
           <span
-            class="font-semibold text-c-form-focus-border"
+            class="font-semibold text-border-form-highlight"
             :class="{ error: errors.length }"
           >
             Choose files

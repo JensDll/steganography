@@ -5,13 +5,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
     <ItemGroup>
-        <InternalsVisibleTo Include="WebApi.IntegrationTests"/>
+        <InternalsVisibleTo Include="WebApi.IntegrationTests" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Domain\Domain.csproj"/>
-        <ProjectReference Include="..\ApiBuilder\ApiBuilder.csproj"/>
+        <ProjectReference Include="..\Domain\Domain.csproj" />
+        <ProjectReference Include="..\ApiBuilder\ApiBuilder.csproj" />
     </ItemGroup>
 </Project>

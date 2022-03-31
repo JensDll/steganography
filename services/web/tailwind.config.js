@@ -4,10 +4,11 @@ const Typography = require('@tailwindcss/typography')
 
 const { Icons } = require('./tailwind/plugins/icons')
 const { Utils } = require('./tailwind/plugins/utils')
-const { colors } = require('./tailwind/colors')
+const { Variants } = require('./tailwind/plugins/variants')
 
 const { register } = require('esbuild-register/dist/node')
 const { unregister } = register()
+const { colors } = require('./tailwind/colors.ts')
 const { tailwindTheme } = require('./tailwind/theme.ts')
 unregister()
 
@@ -19,9 +20,7 @@ module.exports = {
   darkMode: 'class',
   theme: {
     colors,
-    screen: {
-      ...tailwindTheme.screen
-    },
+    screens: tailwindTheme.screens,
     extend: {
       fontFamily: {
         sans: ['Montserrat', ...defaultTheme.fontFamily.sans]
@@ -49,7 +48,8 @@ module.exports = {
     Icons({
       'heroicons-outline': ['trash']
     }),
-    Utils()
+    Utils(),
+    Variants()
   ],
   corePlugins: {
     ringColor: false,

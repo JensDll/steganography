@@ -101,6 +101,7 @@ async function handleSubmit() {
           v-model="form.coverImage.$value"
           :errors="form.coverImage.$errors"
           label="Attach a cover image"
+          accept="image/*"
           class="mt-6"
         />
       </section>

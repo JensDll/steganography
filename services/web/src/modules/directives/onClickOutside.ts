@@ -6,7 +6,7 @@ interface DirectiveElement extends Element {
 
 export const onClickOutside: Directive<DirectiveElement> = {
   mounted(el, binding) {
-    const clickCaptureListener = (e: PointerEvent) => {
+    const windowListener = (e: PointerEvent) => {
       if (el.contains(e.target as Node)) {
         return
       }
@@ -14,10 +14,10 @@ export const onClickOutside: Directive<DirectiveElement> = {
       binding.value()
     }
 
-    window.addEventListener('pointerup', clickCaptureListener)
+    window.addEventListener('pointerup', windowListener)
 
     el.__directive_onUnmount = function () {
-      window.removeEventListener('pointerup', clickCaptureListener)
+      window.removeEventListener('pointerup', windowListener)
     }
   },
   unmounted(el) {

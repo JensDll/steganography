@@ -1,3 +1,4 @@
+import { h } from 'vue'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 import HomeIndex from '~/pages/home/Index.vue'
@@ -22,11 +23,13 @@ const routes: RouteRecordRaw[] = [
   {
     name: 'codec',
     path: '/codec',
+    redirect: { name: 'encode' },
     component: CodecIndex,
     children: [
       {
         name: 'encode',
         path: 'encode',
+        alias: '',
         component: EncodeForm,
         meta: {
           title: 'Encode'
