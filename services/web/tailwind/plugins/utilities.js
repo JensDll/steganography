@@ -1,6 +1,6 @@
 const plugin = require('tailwindcss/plugin')
 
-module.exports.Utils = function () {
+module.exports.Utilities = function () {
   return plugin(
     ({ addUtilities, matchUtilities, theme }) => {
       addUtilities({

@@ -3,7 +3,7 @@ const Forms = require('@tailwindcss/forms')
 const Typography = require('@tailwindcss/typography')
 
 const { Icons } = require('./tailwind/plugins/icons')
-const { Utils } = require('./tailwind/plugins/utils')
+const { Utilities } = require('./tailwind/plugins/utilities')
 const { Variants } = require('./tailwind/plugins/variants')
 
 const { register } = require('esbuild-register/dist/node')
@@ -25,9 +25,6 @@ module.exports = {
       fontFamily: {
         sans: ['Montserrat', ...defaultTheme.fontFamily.sans]
       },
-      boxShadow: {
-        none: 'initial'
-      },
       typography: {
         DEFAULT: {
           css: {
@@ -48,7 +45,7 @@ module.exports = {
     Icons({
       'heroicons-outline': ['trash']
     }),
-    Utils(),
+    Utilities(),
     Variants()
   ],
   corePlugins: {

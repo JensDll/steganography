@@ -1,5 +1,12 @@
 <script setup lang="ts">
-const vh = `${window.innerHeight * 0.01}px`
+import { ref } from 'vue'
+import { useMediaQuery } from '~/domain'
+
+const vh = ref(`${window.innerHeight * 0.01}px`)
+
+useMediaQuery('(orientation: landscape)', () => {
+  vh.value = `${window.innerHeight * 0.01}px`
+})
 </script>
 
 <template>

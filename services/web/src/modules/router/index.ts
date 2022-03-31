@@ -1,4 +1,3 @@
-import { h } from 'vue'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 import HomeIndex from '~/pages/home/Index.vue'

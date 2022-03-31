@@ -4,6 +4,8 @@ import type { TailwindTheme } from 'tailwind-theme'
 type Query =
   | '(prefers-reduced-motion: reduce)'
   | `(max-width: ${TailwindTheme['screens'][keyof TailwindTheme['screens']]})`
+  | '(orientation: landscape)'
+  | '(orientation: portrait)'
 
 export function useMediaQuery(
   query: Query,
