@@ -67,36 +67,53 @@ public class Request : IBindRequest, IDisposable
         }
 
         int messageLength = 0;
+        int[] sizeHints = new int[files.Count];
 
-        foreach (MyFormFile file in files)
+        for (int i = 0; i < files.Count; ++i)
         {
+            MyFormFile file = files[i];
+
             int fileNameSize = Encoding.UTF8.GetByteCount(file.FileName);
 
             if (fileNameSize > 256)
             {
-                throw new ModelBindingException("File name can not be longer than 256 bytes");
+                _validationErrors.Add("File name can not be longer than 256 bytes");
+                PipeReader.CancelPendingRead();
+                await _pipeWriter.CompleteAsync();
+                return null;
             }
 
             int sizeHint = 6 + fileNameSize;
             messageLength += sizeHint + file.Length;
 
+            if (messageLength > CoverImageCapacity)
+            {
+                _validationErrors.Add("Message is too large for the cover image");
+                PipeReader.CancelPendingRead();
+                await _pipeWriter.CompleteAsync();
+                return null;
+            }
+
+            sizeHints[i] = sizeHint;
+        }
+
+        for (int i = 0; i < files.Count; ++i)
+        {
+            MyFormFile file = files[i];
+            int sizeHint = sizeHints[i];
+
             Memory<byte> buffer = _pipeWriter.GetMemory(sizeHint);
             // Write the file length (4-byte)
             BitConverter.TryWriteBytes(buffer.Span, file.Length);
-            // Write the file name length (2-byte)
-            BitConverter.TryWriteBytes(buffer.Span[4..], (short) fileNameSize);
+            // Write the file name size (2-byte)
+            BitConverter.TryWriteBytes(buffer.Span[4..], (short) sizeHint - 6);
             // Write the file name (max 256-byte)
             Encoding.UTF8.GetBytes(file.FileName, buffer.Span[6..]);
+
             aes.Transform(buffer.Span[..sizeHint], buffer.Span);
             _pipeWriter.Advance(sizeHint);
-        }
 
-        if (messageLength > CoverImageCapacity)
-        {
-            _validationErrors.Add("Message is too large for the cover image");
-            PipeReader.CancelPendingRead();
-            await _pipeWriter.CompleteAsync();
-            return null;
+            await _pipeWriter.FlushAsync();
         }
 
         foreach (MyFormFile file in files)
