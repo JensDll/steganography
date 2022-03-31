@@ -18,7 +18,7 @@ public class Request : IBindRequest, IDisposable
 
     public PipeReader PipeReader { get; private set; } = null!;
 
-    public CancellationTokenSource CancelSource { get; } = new();
+    public int CoverImageCapacity { get; private set; }
 
     public async ValueTask BindAsync(HttpContext context, List<string> validationErrors,
         CancellationToken cancellationToken)
@@ -48,24 +48,21 @@ public class Request : IBindRequest, IDisposable
         }
 
         CoverImage = coverImage;
+        CoverImageCapacity = coverImage.Width * coverImage.Height * 3;
 
         Pipe pipe = new();
         PipeReader = pipe.Reader;
         _pipeWriter = pipe.Writer;
     }
 
-    /// <summary>
-    /// Reads the multipart request body, encrypts it, and writes it to the pipe.
-    /// </summary>
-    /// <param name="aes">The aes instance used for encryption.</param>
-    /// <returns>The message length if the whole message was written successfully; <c>null</c> otherwise.</returns>
     public async Task<int?> FillPipeAsync(AesCounterMode aes)
     {
-        IReadOnlyList<MyFormFile>? files = await _multiPartReader.ReadFilesBufferedAsync(CancelSource.Token);
+        IReadOnlyList<MyFormFile>? files = await _multiPartReader.ReadFilesBufferedAsync();
 
         if (files is null)
         {
-            CancelSource.Cancel();
+            PipeReader.CancelPendingRead();
+            await _pipeWriter.CompleteAsync();
             return null;
         }
 
@@ -94,10 +91,11 @@ public class Request : IBindRequest, IDisposable
             _pipeWriter.Advance(sizeHint);
         }
 
-        if (messageLength > CoverImage.Width * CoverImage.Height * 3)
+        if (messageLength > CoverImageCapacity)
         {
             _validationErrors.Add("Message is too large for the cover image");
-            CancelSource.Cancel();
+            PipeReader.CancelPendingRead();
+            await _pipeWriter.CompleteAsync();
             return null;
         }
 
@@ -106,7 +104,7 @@ public class Request : IBindRequest, IDisposable
             while (true)
             {
                 Memory<byte> buffer = _pipeWriter.GetMemory();
-                int bytesRead = await file.ReadAsync(buffer, CancelSource.Token);
+                int bytesRead = await file.ReadAsync(buffer);
 
                 if (bytesRead == 0)
                 {
@@ -116,7 +114,7 @@ public class Request : IBindRequest, IDisposable
                 aes.Transform(buffer.Span[..bytesRead], buffer.Span);
                 _pipeWriter.Advance(bytesRead);
 
-                FlushResult result = await _pipeWriter.FlushAsync(CancelSource.Token);
+                FlushResult result = await _pipeWriter.FlushAsync();
 
                 if (result.IsCompleted)
                 {
@@ -135,6 +133,5 @@ public class Request : IBindRequest, IDisposable
         GC.SuppressFinalize(this);
         // ReSharper disable once ConstantConditionalAccessQualifier
         CoverImage?.Dispose();
-        CancelSource.Dispose();
     }
 }

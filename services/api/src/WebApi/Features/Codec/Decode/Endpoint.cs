@@ -28,8 +28,7 @@ public class Decode : EndpointWithoutResponse<Request>
             "Decoding {MessageType} message with valid key {IsValidKey} and length {MessageLength}",
             messageType, isValidKey, messageLength);
 
-        if (!isValidKey || messageLength < 1 ||
-            messageLength > request.CoverImage.Width * request.CoverImage.Height * 3)
+        if (!isValidKey || messageLength < 1 || messageLength > request.CoverImageCapacity)
         {
             await SendValidationErrorAsync("Decoding failed");
             return;

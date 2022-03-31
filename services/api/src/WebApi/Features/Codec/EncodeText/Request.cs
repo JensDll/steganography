@@ -17,7 +17,7 @@ public class Request : IBindRequest, IDisposable
 
     public PipeReader PipeReader { get; private set; } = null!;
 
-    public CancellationTokenSource CancelSource { get; } = new();
+    public int CoverImageCapacity { get; private set; }
 
     public async ValueTask BindAsync(HttpContext context, List<string> validationErrors,
         CancellationToken cancellationToken)
@@ -48,6 +48,7 @@ public class Request : IBindRequest, IDisposable
         }
 
         CoverImage = coverImage;
+        CoverImageCapacity = coverImage.Width * coverImage.Height * 3;
 
         Pipe pipe = new();
         PipeReader = pipe.Reader;
@@ -56,12 +57,13 @@ public class Request : IBindRequest, IDisposable
 
     public async Task<int?> FillPipeAsync(AesCounterMode aes)
     {
-        NextSection? nextSection = await _multiPartReader.ReadNextSectionAsync(CancelSource.Token);
+        NextSection? nextSection = await _multiPartReader.ReadNextSectionAsync();
 
         if (nextSection is null)
         {
             _validationErrors.Add("Request does not contain a message");
-            CancelSource.Cancel();
+            PipeReader.CancelPendingRead();
+            await _pipeWriter.CompleteAsync();
             return null;
         }
 
@@ -69,7 +71,8 @@ public class Request : IBindRequest, IDisposable
 
         if (formSection is null)
         {
-            CancelSource.Cancel();
+            PipeReader.CancelPendingRead();
+            await _pipeWriter.CompleteAsync();
             return null;
         }
 
@@ -79,7 +82,7 @@ public class Request : IBindRequest, IDisposable
         {
             Memory<byte> buffer = _pipeWriter.GetMemory();
 
-            int bytesRead = await formSection.Body.ReadAsync(buffer, CancelSource.Token);
+            int bytesRead = await formSection.Body.ReadAsync(buffer);
 
             if (bytesRead == 0)
             {
@@ -87,10 +90,23 @@ public class Request : IBindRequest, IDisposable
             }
 
             messageLength += bytesRead;
+
+            if (messageLength > CoverImageCapacity)
+            {
+                PipeReader.CancelPendingRead();
+                _pipeWriter.CancelPendingFlush();
+            }
+
             aes.Transform(buffer.Span[..bytesRead], buffer.Span);
             _pipeWriter.Advance(bytesRead);
 
-            FlushResult result = await _pipeWriter.FlushAsync(CancelSource.Token);
+            FlushResult result = await _pipeWriter.FlushAsync();
+
+            if (result.IsCanceled)
+            {
+                await _pipeWriter.CompleteAsync();
+                return null;
+            }
 
             if (result.IsCompleted)
             {
@@ -108,6 +124,5 @@ public class Request : IBindRequest, IDisposable
         GC.SuppressFinalize(this);
         // ReSharper disable once ConstantConditionalAccessQualifier
         CoverImage?.Dispose();
-        CancelSource.Dispose();
     }
 }

@@ -54,7 +54,12 @@ public abstract class CodecBase : IDisposable
         if (StartPermutationIdx == StartPermutationCount)
         {
             StartPermutationIdx = 0;
-            ++BitPosition;
+
+            if (++BitPosition == 8)
+            {
+                throw new InvalidOperationException("Message is too long for the cover image");
+            }
+
             PixelValueMask = (byte) ~(~PixelValueMask << 1);
         }
 
