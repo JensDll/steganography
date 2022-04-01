@@ -27,8 +27,8 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
             {
                 try
                 {
-                    await (ValueTask) RequestTypeCache<TRequest>.BindAsync.Invoke(request,
-                        new object[] {HttpContext, ValidationErrors, cancellationToken})!;
+                    await RequestTypeCache<TRequest>.BindAsync(request, HttpContext,
+                        ValidationErrors, cancellationToken);
                 }
                 catch (ModelBindingException e)
                 {
@@ -51,9 +51,9 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
         }
         finally
         {
-            if (RequestTypeCache<TRequest>.Dispose is not null)
+            if (RequestTypeCache<TRequest>.Dispose is not null && request is not null)
             {
-                RequestTypeCache<TRequest>.Dispose.Invoke(request, null);
+                RequestTypeCache<TRequest>.Dispose(request);
             }
         }
     }

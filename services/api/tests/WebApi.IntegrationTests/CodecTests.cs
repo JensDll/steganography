@@ -62,9 +62,7 @@ public class CodecTests : TestingBase
 
         if (!isSameKey)
         {
-            StringBuilder keyBuilder = new(key);
-            keyBuilder[^1] = (char) (key[^1] + 1);
-            key = keyBuilder.ToString();
+            key = AlterBase64Key(key);
         }
 
         KeyService keyService = new();
@@ -151,9 +149,7 @@ public class CodecTests : TestingBase
 
         if (!isSameKey)
         {
-            StringBuilder keyBuilder = new(key);
-            keyBuilder[^1] = (char) (key[^1] + 1);
-            key = keyBuilder.ToString();
+            key = AlterBase64Key(key);
         }
 
         KeyService keyService = new();
@@ -297,6 +293,24 @@ public class CodecTests : TestingBase
         Assert.That(encodeResponse.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/json"));
     }
 
+    private static string AlterBase64Key(string key)
+    {
+        StringBuilder keyBuilder = new(key);
+
+        int i = _base64Chars.FindIndex(c => c == keyBuilder[^1]);
+
+        if (i == _base64Chars.Count)
+        {
+            keyBuilder[^1] = _base64Chars[0];
+        }
+        else
+        {
+            keyBuilder[^1] = _base64Chars[i + 1];
+        }
+
+        return keyBuilder.ToString();
+    }
+
     private static File[] GetFiles(params int[] sizes)
     {
         return sizes.Select((size, i) =>
@@ -327,4 +341,7 @@ public class CodecTests : TestingBase
 
         public byte[] Content { get; }
     }
+
+    private static readonly List<char> _base64Chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".ToCharArray().ToList();
 }

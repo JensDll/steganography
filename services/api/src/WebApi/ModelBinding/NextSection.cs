@@ -20,7 +20,7 @@ public class NextSection
     {
         if (_section.IsFormData(out ContentDispositionHeaderValue? contentDisposition))
         {
-            return new MyFormMultipartSection(_section, contentDisposition!, _validationErrors);
+            return new MyFormMultipartSection(_section, contentDisposition, _validationErrors);
         }
 
         _validationErrors.Add($"Multipart section '{contentDisposition?.Name}' is not form data");
@@ -49,7 +49,7 @@ public class NextSection
     {
         if (_section.IsFile(out ContentDispositionHeaderValue? contentDisposition))
         {
-            return new MyFileMultipartSection(_section, contentDisposition!, _validationErrors);
+            return new MyFileMultipartSection(_section, contentDisposition, _validationErrors);
         }
 
         _validationErrors.Add($"Multipart section '{contentDisposition?.Name}' is not a file");

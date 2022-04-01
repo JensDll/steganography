@@ -95,18 +95,15 @@ public class Request : IBindRequest, IDisposable
             {
                 PipeReader.CancelPendingRead();
                 _pipeWriter.CancelPendingFlush();
+                await _pipeWriter.FlushAsync();
+                await _pipeWriter.CompleteAsync();
+                return null;
             }
 
             aes.Transform(buffer.Span[..bytesRead], buffer.Span);
             _pipeWriter.Advance(bytesRead);
 
             FlushResult result = await _pipeWriter.FlushAsync();
-
-            if (result.IsCanceled)
-            {
-                await _pipeWriter.CompleteAsync();
-                return null;
-            }
 
             if (result.IsCompleted)
             {

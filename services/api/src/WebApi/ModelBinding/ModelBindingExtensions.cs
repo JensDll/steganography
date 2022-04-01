@@ -1,4 +1,5 @@
-﻿using ApiBuilder;
+﻿using System.Diagnostics.CodeAnalysis;
+using ApiBuilder;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
 
@@ -32,7 +33,7 @@ public static class ModelBindingExtensions
     }
 
     public static bool IsFormData(this MultipartSection section,
-        out ContentDispositionHeaderValue? contentDisposition)
+        [NotNullWhen(true)] out ContentDispositionHeaderValue? contentDisposition)
     {
         bool hasContentDispositionHeader =
             ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out contentDisposition);
@@ -45,7 +46,7 @@ public static class ModelBindingExtensions
     }
 
     public static bool IsFile(this MultipartSection section,
-        out ContentDispositionHeaderValue? contentDisposition)
+        [NotNullWhen(true)] out ContentDispositionHeaderValue? contentDisposition)
     {
         bool hasContentDispositionHeader =
             ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out contentDisposition);
