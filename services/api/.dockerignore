@@ -1,8 +1,8 @@
-# directories
+# Directories
 **/bin/
 **/obj/
 **/out/
 
-# files
+# Files
 Dockerfile*
 **/*.md
