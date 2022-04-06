@@ -17,7 +17,7 @@ variable "REPOSITORY" {
 group "default" {
   targets = [
     "web",
-    "web_api"
+    "api"
   ]
 }
 
@@ -32,11 +32,11 @@ target "web" {
   ]
 }
 
-target "web_api" {
+target "api" {
   context = "services/api"
   tags = [
-    "${REPOSITORY}:web_api.latest",
-    notequal("", TAG) ? "${REPOSITORY}:web_api.${TAG}" : ""
+    "${REPOSITORY}:api.latest",
+    notequal("", TAG) ? "${REPOSITORY}:api.${TAG}" : ""
   ]
   platforms = [
     "linux/amd64"

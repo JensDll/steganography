@@ -7,13 +7,17 @@
       "path": "services/web"
     },
     {
+      "path": "deploy"
+    },
+    {
       "name": "root",
       "path": "."
     }
   ],
   "settings": {
     "files.exclude": {
-      "services": true
+      "services": true,
+      "deploy": true
     }
   }
 }
