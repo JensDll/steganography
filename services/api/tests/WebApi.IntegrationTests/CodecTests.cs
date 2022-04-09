@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Enums;
 using Domain.Services;
-using NUnit.Framework;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 

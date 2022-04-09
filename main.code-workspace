@@ -7,6 +7,9 @@
       "path": "services/web"
     },
     {
+      "path": "services/serviceDiscovery"
+    },
+    {
       "path": "deploy"
     },
     {

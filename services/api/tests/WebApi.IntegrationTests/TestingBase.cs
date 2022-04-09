@@ -1,6 +1,5 @@
 ﻿using System.Net.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
-using NUnit.Framework;
 
 namespace WebApi.IntegrationTests;
 
