@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Buffers;
 using Domain.Extensions;
-using NUnit.Framework;
 
 namespace Domain.UnitTests.Extensions;
 
