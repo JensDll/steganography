@@ -1,5 +1,5 @@
 services:
-  api:
+  api.app.com:
     build: services/api
     environment:
       ASPNETCORE_ENVIRONMENT: Production
@@ -7,8 +7,10 @@ services:
       - 5000:80
     networks:
       - appnet
-  web:
+  web.app.com:
     build: services/web
+    volumes:
+      - ./services/web/nginx:/etc/nginx/conf.d
     ports: 
       - 5001:80
     networks:

@@ -1,1 +1,2 @@
-export { MainStack } from './mainStack'
+export { AppStack } from './appStack'
+export { IdentityPoolStack } from './identityPoolStack'
