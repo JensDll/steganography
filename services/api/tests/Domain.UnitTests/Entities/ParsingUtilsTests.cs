@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using Domain.Entities;
-using NUnit.Framework;
 
 namespace Domain.UnitTests.Entities;
 

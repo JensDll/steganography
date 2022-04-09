@@ -2,7 +2,6 @@
 using System.Linq;
 using Domain.Enums;
 using Domain.Services;
-using NUnit.Framework;
 
 namespace Domain.UnitTests.Services;
 
