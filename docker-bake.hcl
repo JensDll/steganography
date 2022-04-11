@@ -17,7 +17,8 @@ variable "REPOSITORY" {
 group "default" {
   targets = [
     "web",
-    "api"
+    "api",
+    "serviceDiscovery"
   ]
 }
 
@@ -28,7 +29,7 @@ target "web" {
     notequal("", TAG) ? "${REPOSITORY}:web.${TAG}" : ""
   ]
   platforms = [
-    "linux/amd64"
+    "linux/arm64"
   ]
 }
 
@@ -39,6 +40,17 @@ target "api" {
     notequal("", TAG) ? "${REPOSITORY}:api.${TAG}" : ""
   ]
   platforms = [
-    "linux/amd64"
+    "linux/arm64"
+  ]
+}
+
+target "serviceDiscovery" {
+  context = "services/serviceDiscovery"
+  tags = [
+    "${REPOSITORY}:serviceDiscovery.latest",
+    notequal("", TAG) ? "${REPOSITORY}:serviceDiscovery.${TAG}" : ""
+  ]
+  platforms = [
+    "linux/arm64"
   ]
 }

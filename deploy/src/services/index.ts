@@ -1,1 +1,5 @@
-export { AppNet } from './appNet'
+export { AppVpc } from './appVpc'
+export {
+  LoadBalancedService,
+  type LoadBalancedServiceProps
+} from './loadBalancedService'

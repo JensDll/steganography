@@ -5,7 +5,7 @@ export class IdentityPoolStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props)
 
-    const identityPool = new aws_cognito.CfnIdentityPool(this, 'identityPool', {
+    const identityPool = new aws_cognito.CfnIdentityPool(this, 'IdentityPool', {
       identityPoolName: 'app',
       allowUnauthenticatedIdentities: true
     })
@@ -16,7 +16,7 @@ export class IdentityPoolStack extends cdk.Stack {
 
     const cognitoAuthenticatedRole = new aws_iam.Role(
       this,
-      'cognitoAuthenticatedRole',
+      'CognitoAuthenticatedRole',
       {
         assumedBy,
         inlinePolicies: {
@@ -35,7 +35,7 @@ export class IdentityPoolStack extends cdk.Stack {
 
     const cognitoUnauthenticatedRole = new aws_iam.Role(
       this,
-      'cognitoUnauthenticatedRole',
+      'CognitoUnauthenticatedRole',
       {
         assumedBy,
         inlinePolicies: {
@@ -59,7 +59,7 @@ export class IdentityPoolStack extends cdk.Stack {
 
     new aws_cognito.CfnIdentityPoolRoleAttachment(
       this,
-      'identityPoolRoleAttachment',
+      'IdentityPoolRoleAttachment',
       {
         identityPoolId: identityPool.ref,
         roles: {
