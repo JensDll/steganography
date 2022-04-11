@@ -18,7 +18,6 @@ group "default" {
   targets = [
     "web",
     "api",
-    "serviceDiscovery"
   ]
 }
 
@@ -38,17 +37,6 @@ target "api" {
   tags = [
     "${REPOSITORY}:api.latest",
     notequal("", TAG) ? "${REPOSITORY}:api.${TAG}" : ""
-  ]
-  platforms = [
-    "linux/arm64"
-  ]
-}
-
-target "serviceDiscovery" {
-  context = "services/serviceDiscovery"
-  tags = [
-    "${REPOSITORY}:serviceDiscovery.latest",
-    notequal("", TAG) ? "${REPOSITORY}:serviceDiscovery.${TAG}" : ""
   ]
   platforms = [
     "linux/arm64"

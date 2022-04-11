@@ -197,6 +197,18 @@ export class AppVpc extends aws_ec2.Vpc {
       'Allow HTTPS from the load balancer'
     )
 
+    props.loadBalancer.loadBalancerSecurityGroup.addEgressRule(
+      aws_ec2.Peer.securityGroupId(securityGroup.securityGroupId),
+      aws_ec2.Port.tcp(80),
+      `Allow HTTP to the target (${id})`
+    )
+
+    props.loadBalancer.loadBalancerSecurityGroup.addEgressRule(
+      aws_ec2.Peer.securityGroupId(securityGroup.securityGroupId),
+      aws_ec2.Port.tcp(443),
+      `Allow HTTPS to the target (${id})`
+    )
+
     const targetGroup = new aws_elasticloadbalancingv2.ApplicationTargetGroup(
       scope,
       id + 'TargetGroup',
@@ -223,7 +235,7 @@ export class AppVpc extends aws_ec2.Vpc {
       throw new Error('Load balancer must have a HTTP or HTTPS listener')
     }
 
-    const conditions = [...props.conditions!]
+    const conditions = [...props.conditions]
 
     if (props.protectedAccess) {
       if (!props.loadBalancer.loadBalancerARecord) {
@@ -265,15 +277,19 @@ export class AppVpc extends aws_ec2.Vpc {
       loadBalancers: [
         {
           containerName: props.serviceName,
-          containerPort: 80,
-          targetGroupArn: targetGroup!.targetGroupArn
+          containerPort:
+            props.protocol ===
+            aws_elasticloadbalancingv2.ApplicationProtocol.HTTP
+              ? 80
+              : 443,
+          targetGroupArn: targetGroup.targetGroupArn
         }
       ]
     })
 
     service.addDependsOn(props.loadBalancer)
-    service.addDependsOn(targetGroup!.node.defaultChild as cdk.CfnResource)
-    service.addDependsOn(listenerRule!.node.defaultChild as cdk.CfnResource)
+    service.addDependsOn(targetGroup.node.defaultChild as cdk.CfnResource)
+    service.addDependsOn(listenerRule.node.defaultChild as cdk.CfnResource)
     this.endpoints.forEach(endpoint =>
       service.addDependsOn(endpoint.node.defaultChild as cdk.CfnResource)
     )

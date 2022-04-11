@@ -70,6 +70,11 @@ export class TaskDefinitionStack extends cdk.Stack {
           containerPort: 80,
           hostPort: 80,
           protocol: aws_ecs.Protocol.TCP
+        },
+        {
+          containerPort: 443,
+          hostPort: 443,
+          protocol: aws_ecs.Protocol.TCP
         }
       ]
     })
