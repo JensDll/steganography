@@ -47,5 +47,31 @@ export class TaskDefinitionStack extends cdk.Stack {
         streamPrefix: 'ecs'
       })
     })
+
+    const apiTaskDefinition = new aws_ecs.TaskDefinition(this, 'api', {
+      family: 'api',
+      cpu: '1024',
+      memoryMiB: '3072',
+      networkMode: aws_ecs.NetworkMode.AWS_VPC,
+      compatibility: aws_ecs.Compatibility.FARGATE,
+      executionRole,
+      taskRole: executionRole,
+      runtimePlatform: {
+        cpuArchitecture: aws_ecs.CpuArchitecture.ARM64,
+        operatingSystemFamily: aws_ecs.OperatingSystemFamily.LINUX
+      }
+    })
+
+    apiTaskDefinition.addContainer('api', {
+      essential: true,
+      image: aws_ecs.ContainerImage.fromEcrRepository(repository, 'api.latest'),
+      portMappings: [
+        {
+          containerPort: 80,
+          hostPort: 80,
+          protocol: aws_ecs.Protocol.TCP
+        }
+      ]
+    })
   }
 }
