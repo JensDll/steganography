@@ -192,13 +192,13 @@ function createSecurityGroupPair(
   loadBalancerSecurityGroup.addEgressRule(
     aws_ec2.Peer.securityGroupId(securityGroup.securityGroupId),
     aws_ec2.Port.tcp(80),
-    'Allow HTTP to the target'
+    `Allow HTTP to the target (${id})`
   )
 
   loadBalancerSecurityGroup.addEgressRule(
     aws_ec2.Peer.securityGroupId(securityGroup.securityGroupId),
     aws_ec2.Port.tcp(443),
-    'Allow HTTPS to the target'
+    `Allow HTTPs to the target (${id})`
   )
 
   return {

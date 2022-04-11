@@ -2,7 +2,7 @@
 // We suggest you to commit this file into source control
 // Read more: https://github.com/vuejs/vue-next/pull/3399
 
-declare module 'vue' {
+declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AppButton: typeof import('./src/components/app/AppButton.vue')['default']
     AppFilePreview: typeof import('./src/components/app/AppFilePreview.vue')['default']
@@ -23,6 +23,8 @@ declare module 'vue' {
     LoadingCircleIcon: typeof import('./src/components/app/icons/solid/LoadingCircleIcon.vue')['default']
     'Mdi:github': typeof import('~icons/mdi/github')['default']
     MoonIcon: typeof import('./src/components/app/icons/outline/MoonIcon.vue')['default']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
     SunIcon: typeof import('./src/components/app/icons/outline/SunIcon.vue')['default']
     TheHeader: typeof import('./src/components/layout/TheHeader.vue')['default']
     TheMain: typeof import('./src/components/layout/TheMain.vue')['default']
