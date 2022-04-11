@@ -17,18 +17,25 @@ interface LoadBalancerProps
 export interface LoadBalancedServiceProps
   extends Omit<
     aws_ecs.CfnServiceProps,
-    'desiredCount' | 'launchType' | 'networkConfiguration' | 'loadBalancers'
+    'launchType' | 'networkConfiguration' | 'loadBalancers'
   > {
   loadBalancer: LoadBalancerProps
+  protocol?: aws_elasticloadbalancingv2.ApplicationProtocol
+  protocolVersion?: aws_elasticloadbalancingv2.ApplicationProtocolVersion
 }
 
 export class LoadBalancedService extends aws_ecs.CfnService {
   securityGroup: aws_ec2.SecurityGroup
+  loadBalancerSecurityGroup: aws_ec2.SecurityGroup
   loadBalancer: aws_elasticloadbalancingv2.ApplicationLoadBalancer
   loadBalancerARecord?: aws_route53.ARecord
 
   constructor(scope: Construct, id: string, props: LoadBalancedServiceProps) {
-    const { targetSecurityGroup, loadBalancerSecurityGroup } =
+    props.protocol ??= aws_elasticloadbalancingv2.ApplicationProtocol.HTTPS
+    props.protocolVersion ??=
+      aws_elasticloadbalancingv2.ApplicationProtocolVersion.HTTP2
+
+    const { securityGroup, loadBalancerSecurityGroup } =
       createSecurityGroupPair(scope, id, props.loadBalancer.vpc)
 
     const loadBalancer = new aws_elasticloadbalancingv2.ApplicationLoadBalancer(
@@ -39,7 +46,8 @@ export class LoadBalancedService extends aws_ecs.CfnService {
         internetFacing: true,
         vpcSubnets: { subnetType: aws_ec2.SubnetType.PUBLIC },
         deletionProtection: false,
-        securityGroup: loadBalancerSecurityGroup
+        securityGroup: loadBalancerSecurityGroup,
+        http2Enabled: true
       }
     )
 
@@ -49,7 +57,8 @@ export class LoadBalancedService extends aws_ecs.CfnService {
       {
         vpc: props.loadBalancer.vpc,
         targetType: aws_elasticloadbalancingv2.TargetType.IP,
-        protocol: aws_elasticloadbalancingv2.ApplicationProtocol.HTTPS
+        protocol: props.protocol,
+        protocolVersion: props.protocolVersion
       }
     )
 
@@ -98,11 +107,10 @@ export class LoadBalancedService extends aws_ecs.CfnService {
 
     super(scope, id, {
       ...props,
-      desiredCount: 1,
       launchType: 'FARGATE',
       networkConfiguration: {
         awsvpcConfiguration: {
-          securityGroups: [targetSecurityGroup.securityGroupId],
+          securityGroups: [securityGroup.securityGroupId],
           subnets: props.loadBalancer.vpc.isolatedSubnets.map(
             subnet => subnet.subnetId
           ),
@@ -112,19 +120,24 @@ export class LoadBalancedService extends aws_ecs.CfnService {
       loadBalancers: [
         {
           containerName: props.serviceName,
-          containerPort: 443,
+          containerPort:
+            props.protocol ===
+            aws_elasticloadbalancingv2.ApplicationProtocol.HTTP
+              ? 80
+              : 443,
           targetGroupArn: targetGroup.targetGroupArn
         }
       ]
     })
 
     this.addDependsOn(targetGroup.node.defaultChild as cdk.CfnResource)
-    this.addDependsOn(targetSecurityGroup.node.defaultChild as cdk.CfnResource)
+    this.addDependsOn(securityGroup.node.defaultChild as cdk.CfnResource)
     loadBalancer.listeners.forEach(listener =>
       this.addDependsOn(listener.node.defaultChild as cdk.CfnResource)
     )
 
-    this.securityGroup = targetSecurityGroup
+    this.securityGroup = securityGroup
+    this.loadBalancerSecurityGroup = loadBalancerSecurityGroup
     this.loadBalancer = loadBalancer
     this.loadBalancerARecord = aRecord
   }
@@ -135,13 +148,9 @@ function createSecurityGroupPair(
   id: string,
   vpc: aws_ec2.IVpc
 ) {
-  const targetSecurityGroup = new aws_ec2.SecurityGroup(
-    scope,
-    id + 'TargetSecurityGroup',
-    {
-      vpc
-    }
-  )
+  const securityGroup = new aws_ec2.SecurityGroup(scope, id + 'SecurityGroup', {
+    vpc
+  })
 
   const loadBalancerSecurityGroup = new aws_ec2.SecurityGroup(
     scope,
@@ -156,13 +165,13 @@ function createSecurityGroupPair(
     }
   )
 
-  targetSecurityGroup.addIngressRule(
+  securityGroup.addIngressRule(
     aws_ec2.Peer.securityGroupId(loadBalancerSecurityGroup.securityGroupId),
     aws_ec2.Port.tcp(80),
     'Allow HTTP from the load balancer'
   )
 
-  targetSecurityGroup.addIngressRule(
+  securityGroup.addIngressRule(
     aws_ec2.Peer.securityGroupId(loadBalancerSecurityGroup.securityGroupId),
     aws_ec2.Port.tcp(443),
     'Allow HTTPS from the load balancer'
@@ -181,19 +190,19 @@ function createSecurityGroupPair(
   )
 
   loadBalancerSecurityGroup.addEgressRule(
-    aws_ec2.Peer.securityGroupId(targetSecurityGroup.securityGroupId),
+    aws_ec2.Peer.securityGroupId(securityGroup.securityGroupId),
     aws_ec2.Port.tcp(80),
     'Allow HTTP to the target'
   )
 
   loadBalancerSecurityGroup.addEgressRule(
-    aws_ec2.Peer.securityGroupId(targetSecurityGroup.securityGroupId),
+    aws_ec2.Peer.securityGroupId(securityGroup.securityGroupId),
     aws_ec2.Port.tcp(443),
     'Allow HTTPS to the target'
   )
 
   return {
-    targetSecurityGroup,
+    securityGroup,
     loadBalancerSecurityGroup
   }
 }

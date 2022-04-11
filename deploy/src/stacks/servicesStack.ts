@@ -1,9 +1,5 @@
 import * as cdk from 'aws-cdk-lib'
-import {
-  aws_ecs,
-  aws_elasticloadbalancingv2,
-  aws_servicediscovery
-} from 'aws-cdk-lib'
+import { aws_ecs, aws_elasticloadbalancingv2 } from 'aws-cdk-lib'
 import { AppVpc } from '../services'
 
 export interface ServicesStackProps extends cdk.StackProps {
@@ -16,7 +12,7 @@ export class ServicesStack extends cdk.Stack {
 
     const cluster = new aws_ecs.Cluster(this, 'Cluster', {
       vpc: props.vpc,
-      clusterName: 'App'
+      clusterName: 'app-cluster'
     })
 
     const loadBalancedWebService = props.vpc.addLoadBalancedService(
@@ -24,6 +20,7 @@ export class ServicesStack extends cdk.Stack {
       'LoadBalancedWebService',
       {
         cluster: cluster.clusterName,
+        desiredCount: 1,
         serviceName: 'web',
         taskDefinition: 'web:7',
         loadBalancer: {
@@ -35,48 +32,18 @@ export class ServicesStack extends cdk.Stack {
       }
     )
 
-    // props.vpc.addService(this, 'ServiceDiscoveryService', {
-    //   cluster: cluster.clusterName,
-    //   serviceName: 'serviceDiscovery',
-    //   taskDefinition: 'serviceDiscovery:4',
-    //   loadBalancedService: loadBalancedWebService,
-    //   conditions: [
-    //     aws_elasticloadbalancingv2.ListenerCondition.pathPatterns([
-    //       '/discover/*'
-    //     ])
-    //   ]
-    // })
-
-    // const appHttpNamespace = new aws_servicediscovery.HttpNamespace(
-    //   this,
-    //   'AppHttpNamespace',
-    //   {
-    //     name: 'app.com',
-    //     description: 'The app service discovery namespace'
-    //   }
-    // )
-
-    // const apiDiscoverService = appHttpNamespace.createService(
-    //   'ApiDiscoverService',
-    //   {
-    //     name: 'api',
-    //     description: 'Discovery service for the api'
-    //   }
-    // )
-
-    // const apiService = props.vpc.addService(this, 'ApiService', {
-    //   cluster: cluster.clusterName,
-    //   serviceName: 'api',
-    //   taskDefinition: 'api:5',
-    //   serviceRegistries: [
-    //     {
-    //       registryArn: apiDiscoverService.serviceArn
-    //     }
-    //   ]
-    // })
-
-    // apiService.addDependsOn(
-    //   apiDiscoverService.node.defaultChild as cdk.CfnResource
-    // )
+    props.vpc.addServiceBehindLoadBalancer(this, 'ApiService', {
+      cluster: cluster.clusterName,
+      desiredCount: 1,
+      serviceName: 'api',
+      taskDefinition: 'api:6',
+      protocol: aws_elasticloadbalancingv2.ApplicationProtocol.HTTP,
+      protocolVersion:
+        aws_elasticloadbalancingv2.ApplicationProtocolVersion.HTTP1,
+      loadBalancer: loadBalancedWebService,
+      conditions: [
+        aws_elasticloadbalancingv2.ListenerCondition.pathPatterns(['/api/*'])
+      ]
+    })
   }
 }

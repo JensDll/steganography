@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 using Amazon.CloudWatchLogs;
 using ApiBuilder;
 using Domain;
@@ -16,7 +15,6 @@ const string corsDevPolicy = "cors:dev";
 const string corsProdPolicy = "cors:prod";
 
 WebApplicationBuilder webBuilder = WebApplication.CreateBuilder(args);
-
 
 ILogger logger = CreateLogger(webBuilder);
 
@@ -39,15 +37,6 @@ webBuilder.Services.AddEndpoints<Program>();
 webBuilder.WebHost.ConfigureKestrel(options =>
 {
     options.Limits.MaxRequestBodySize = 60 * 1024 * 1024; // 60 MB
-    if (webBuilder.Environment.IsProduction())
-    {
-        options.ConfigureHttpsDefaults(httpsOptions =>
-        {
-            string certPath = Path.Combine(webBuilder.Environment.ContentRootPath, "cert.pem");
-            string keyPath = Path.Combine(webBuilder.Environment.ContentRootPath, "key.pem");
-            httpsOptions.ServerCertificate = X509Certificate2.CreateFromPemFile(certPath, keyPath);
-        });
-    }
 });
 
 WebApplication app = webBuilder.Build();
@@ -77,7 +66,7 @@ static ILogger CreateLogger(WebApplicationBuilder webBuilder)
 
     LoggerConfiguration loggerConfiguration = new();
 
-    if (!webBuilder.Environment.IsDevelopment())
+    if (webBuilder.Environment.IsDevelopment())
     {
         loggerConfiguration.WriteTo.Console();
         loggerConfiguration.WriteTo.File(textFormatter,

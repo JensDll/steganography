@@ -32,19 +32,18 @@ export interface AppVpcProps
   endpoints?: EndpointService[]
 }
 
-type AddServicePropsSimple = Omit<
+type AddServiceProps = Omit<
   aws_ecs.CfnServiceProps,
-  'desiredCount' | 'launchType' | 'networkConfiguration' | 'loadBalancers'
+  'launchType' | 'networkConfiguration' | 'loadBalancers'
 >
 
-interface AddServicePropsLoadBalanced extends AddServicePropsSimple {
-  loadBalancedService: LoadBalancedService
+interface AddServiceBehindLoadBalancerProps extends AddServiceProps {
+  loadBalancer: LoadBalancedService
   conditions: aws_elasticloadbalancingv2.ListenerCondition[]
   protectedAccess?: boolean
+  protocol?: aws_elasticloadbalancingv2.ApplicationProtocol
+  protocolVersion?: aws_elasticloadbalancingv2.ApplicationProtocolVersion
 }
-
-type AddServiceProps = AddServicePropsSimple &
-  Partial<AddServicePropsLoadBalanced>
 
 export class AppVpc extends aws_ec2.Vpc {
   private endpoints: aws_ec2.IVpcEndpoint[]
@@ -123,105 +122,138 @@ export class AppVpc extends aws_ec2.Vpc {
   addService(
     scope: Construct,
     id: string,
-    props: AddServicePropsSimple
-  ): aws_ecs.CfnService
-  addService(
-    scope: Construct,
-    id: string,
-    props: AddServicePropsLoadBalanced
-  ): aws_ecs.CfnService
-  addService(
-    scope: Construct,
-    id: string,
     props: AddServiceProps
   ): aws_ecs.CfnService {
-    let securityGroup: aws_ec2.SecurityGroup
-    let targetGroup:
-      | aws_elasticloadbalancingv2.ApplicationTargetGroup
-      | undefined
-    let listenerRule:
-      | cdk.aws_elasticloadbalancingv2.ApplicationListenerRule
-      | undefined
-
-    if (props.loadBalancedService) {
-      props.protectedAccess ??= true
-
-      securityGroup = props.loadBalancedService.securityGroup
-
-      targetGroup = new aws_elasticloadbalancingv2.ApplicationTargetGroup(
-        scope,
-        id + 'TargetGroup',
-        {
-          vpc: this,
-          targetType: aws_elasticloadbalancingv2.TargetType.IP,
-          port: 80
-        }
-      )
-
-      let listener: aws_elasticloadbalancingv2.ApplicationListener | undefined
-
-      for (const _listener of props.loadBalancedService.loadBalancer
-        .listeners) {
-        if ((_listener as any).protocol === 'HTTPS') {
-          listener = _listener
-          break
-        } else if ((_listener as any).protocol === 'HTTP') {
-          listener = _listener
-        }
-      }
-
-      if (!listener) {
-        throw new Error('Load balancer must have a HTTP or HTTPS listener')
-      }
-
-      const conditions = [...props.conditions!]
-
-      if (props.protectedAccess) {
-        if (!props.loadBalancedService.loadBalancerARecord) {
-          throw new Error(
-            'For protected access the load balancer must have an associated A record'
-          )
-        }
-        conditions.push(
-          aws_elasticloadbalancingv2.ListenerCondition.hostHeaders([
-            props.loadBalancedService.loadBalancerARecord.domainName,
-            '*.' + props.loadBalancedService.loadBalancerARecord.domainName
-          ])
-        )
-      }
-
-      listenerRule = new aws_elasticloadbalancingv2.ApplicationListenerRule(
-        scope,
-        id + 'ListenerRule',
-        {
-          conditions,
-          action: aws_elasticloadbalancingv2.ListenerAction.forward([
-            targetGroup
-          ]),
-          listener,
-          priority: 1
-        }
-      )
-    } else {
-      securityGroup = new aws_ec2.SecurityGroup(scope, id + 'SecurityGroup', {
+    const securityGroup = new aws_ec2.SecurityGroup(
+      scope,
+      id + 'SecurityGroup',
+      {
         vpc: this,
         description: 'Allow traffic from within the vpc'
-      })
+      }
+    )
 
-      securityGroup.addIngressRule(
-        aws_ec2.Peer.ipv4(this.vpcCidrBlock),
-        aws_ec2.Port.tcp(80)
-      )
+    securityGroup.addIngressRule(
+      aws_ec2.Peer.ipv4(this.vpcCidrBlock),
+      aws_ec2.Port.tcp(80)
+    )
 
-      securityGroup.addIngressRule(
-        aws_ec2.Peer.ipv4(this.vpcCidrBlock),
-        aws_ec2.Port.tcp(443)
-      )
-    }
+    securityGroup.addIngressRule(
+      aws_ec2.Peer.ipv4(this.vpcCidrBlock),
+      aws_ec2.Port.tcp(443)
+    )
 
     const service = new aws_ecs.CfnService(scope, id, {
       ...props,
-      desiredCount: 1,
+      launchType: 'FARGATE',
+      networkConfiguration: {
+        awsvpcConfiguration: {
+          securityGroups: [securityGroup.securityGroupId],
+          subnets: this.isolatedSubnets.map(subnet => subnet.subnetId),
+          assignPublicIp: 'DISABLED'
+        }
+      }
+    })
+
+    service.addDependsOn(securityGroup.node.defaultChild as cdk.CfnResource)
+    this.endpoints.forEach(endpoint =>
+      service.addDependsOn(endpoint.node.defaultChild as cdk.CfnResource)
+    )
+
+    return service
+  }
+
+  addServiceBehindLoadBalancer(
+    scope: Construct,
+    id: string,
+    props: AddServiceBehindLoadBalancerProps
+  ) {
+    props.protectedAccess ??= true
+    props.protocol ??= aws_elasticloadbalancingv2.ApplicationProtocol.HTTPS
+    props.protocolVersion ??=
+      aws_elasticloadbalancingv2.ApplicationProtocolVersion.HTTP2
+
+    const securityGroup = new aws_ec2.SecurityGroup(
+      scope,
+      id + 'SecurityGroup',
+      {
+        vpc: this
+      }
+    )
+
+    securityGroup.addIngressRule(
+      aws_ec2.Peer.securityGroupId(
+        props.loadBalancer.loadBalancerSecurityGroup.securityGroupId
+      ),
+      aws_ec2.Port.tcp(80),
+      'Allow HTTP from the load balancer'
+    )
+
+    securityGroup.addIngressRule(
+      aws_ec2.Peer.securityGroupId(
+        props.loadBalancer.loadBalancerSecurityGroup.securityGroupId
+      ),
+      aws_ec2.Port.tcp(443),
+      'Allow HTTPS from the load balancer'
+    )
+
+    const targetGroup = new aws_elasticloadbalancingv2.ApplicationTargetGroup(
+      scope,
+      id + 'TargetGroup',
+      {
+        vpc: this,
+        targetType: aws_elasticloadbalancingv2.TargetType.IP,
+        protocol: props.protocol,
+        protocolVersion: props.protocolVersion
+      }
+    )
+
+    let listener: aws_elasticloadbalancingv2.ApplicationListener | undefined
+
+    for (const _listener of props.loadBalancer.loadBalancer.listeners) {
+      if ((_listener as any).protocol === 'HTTPS') {
+        listener = _listener
+        break
+      } else if ((_listener as any).protocol === 'HTTP') {
+        listener = _listener
+      }
+    }
+
+    if (!listener) {
+      throw new Error('Load balancer must have a HTTP or HTTPS listener')
+    }
+
+    const conditions = [...props.conditions!]
+
+    if (props.protectedAccess) {
+      if (!props.loadBalancer.loadBalancerARecord) {
+        throw new Error(
+          'For protected access the load balancer must have an associated A record'
+        )
+      }
+      conditions.push(
+        aws_elasticloadbalancingv2.ListenerCondition.hostHeaders([
+          props.loadBalancer.loadBalancerARecord.domainName,
+          '*.' + props.loadBalancer.loadBalancerARecord.domainName
+        ])
+      )
+    }
+
+    const listenerRule = new aws_elasticloadbalancingv2.ApplicationListenerRule(
+      scope,
+      id + 'ListenerRule',
+      {
+        conditions,
+        action: aws_elasticloadbalancingv2.ListenerAction.forward([
+          targetGroup
+        ]),
+        listener,
+        priority: 1
+      }
+    )
+
+    const service = new aws_ecs.CfnService(scope, id, {
+      ...props,
       launchType: 'FARGATE',
       networkConfiguration: {
         awsvpcConfiguration: {
@@ -230,27 +262,18 @@ export class AppVpc extends aws_ec2.Vpc {
           assignPublicIp: 'DISABLED'
         }
       },
-      ...(props.loadBalancedService
-        ? {
-            loadBalancers: [
-              {
-                containerName: props.serviceName,
-                containerPort: 80,
-                targetGroupArn: targetGroup!.targetGroupArn
-              }
-            ]
-          }
-        : {})
+      loadBalancers: [
+        {
+          containerName: props.serviceName,
+          containerPort: 80,
+          targetGroupArn: targetGroup!.targetGroupArn
+        }
+      ]
     })
 
-    if (props.loadBalancedService) {
-      service.addDependsOn(props.loadBalancedService)
-      service.addDependsOn(targetGroup!.node.defaultChild as cdk.CfnResource)
-      service.addDependsOn(listenerRule!.node.defaultChild as cdk.CfnResource)
-    } else {
-      service.addDependsOn(securityGroup.node.defaultChild as cdk.CfnResource)
-    }
-
+    service.addDependsOn(props.loadBalancer)
+    service.addDependsOn(targetGroup!.node.defaultChild as cdk.CfnResource)
+    service.addDependsOn(listenerRule!.node.defaultChild as cdk.CfnResource)
     this.endpoints.forEach(endpoint =>
       service.addDependsOn(endpoint.node.defaultChild as cdk.CfnResource)
     )
