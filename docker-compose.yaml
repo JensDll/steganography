@@ -16,14 +16,6 @@ services:
       - 5001:443
     networks:
       - appnet
-  service_discovery:
-    build: services/serviceDiscovery
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-    ports: 
-      - 5002:443
-    networks:
-      - appnet
 networks:
   appnet:
     driver: bridge
