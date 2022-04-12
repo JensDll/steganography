@@ -139,34 +139,41 @@ watch(theme, changeThemePreference)
     @click.self="closePopup"
   >
     <div
-      class="fixed top-6 right-6 w-full max-w-xs rounded-lg bg-bg-base p-6 shadow-lg dark:bg-gray-800"
+      class="fixed top-5 right-5 left-5 rounded-lg bg-bg-base p-6 shadow-lg dark:bg-gray-800 sm:left-auto sm:w-full sm:max-w-xs"
     >
+      <HeroiconsOutline:x
+        class="absolute top-5 right-5 h-6 w-6 cursor-pointer text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
+        @click="closePopup"
+      />
       <ul class="space-y-6">
-        <li>
-          <RouterLink
-            class="font-medium hover:text-orange-600"
-            active-class="text-orange-600"
-            :to="{ name: 'codec' }"
+        <RouterLink
+          v-slot="{ navigate, isActive }"
+          :to="{ name: 'codec' }"
+          custom
+        >
+          <li
+            class="mr-12 cursor-pointer font-medium hover:text-orange-600"
+            :class="{ 'text-orange-600': isActive }"
+            @click="navigate"
           >
             Codec
-          </RouterLink>
-        </li>
-        <li>
-          <RouterLink
-            class="font-medium hover:text-orange-600"
-            exact-active-class="text-orange-600"
-            :to="{ name: 'about' }"
+          </li>
+        </RouterLink>
+        <RouterLink
+          v-slot="{ navigate, isActive }"
+          :to="{ name: 'about' }"
+          custom
+        >
+          <li
+            class="cursor-pointer font-medium hover:text-orange-600"
+            :class="{ 'text-orange-600': isActive }"
+            @click="navigate"
           >
             About
-          </RouterLink>
-        </li>
-        <li>
-          <a
-            class="font-medium hover:text-orange-600"
-            href="https://github.com/JensDll/image-data-hiding"
-          >
-            GitHub
-          </a>
+          </li>
+        </RouterLink>
+        <li class="cursor-pointer font-medium hover:text-orange-600">
+          <a href="https://github.com/JensDll/image-data-hiding">GitHub</a>
         </li>
       </ul>
       <div

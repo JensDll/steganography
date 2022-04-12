@@ -89,7 +89,7 @@ async function handleSubmit() {
   </AppSection>
   <div class="mt-10 container">
     <Transition v-on="animation.appear">
-      <p v-if="errorMessage" id="error-message" class="text-c-text-error">
+      <p v-if="errorMessage" id="error-message" class="text-text-error">
         {{ errorMessage }}
       </p>
     </Transition>

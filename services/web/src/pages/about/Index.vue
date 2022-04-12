@@ -4,7 +4,9 @@
   <AppMarkdown>
     <div class="max-w-prose">
       <h1>About</h1>
-      <p>Some notes about how this works and implementation details.</p>
+      <p>
+        Here you find some notes about how this works and the implementation.
+      </p>
       <h2>How is the message hidden in the image?</h2>
       <p>
         The current algorithm implements a Least Significant Bit Substitution
@@ -15,8 +17,8 @@
       </p>
       <h2>What method is used for encryption?</h2>
       <p>
-        Before writing the message, the AES cipher encrypts it in Counter (CTR)
-        mode. The implementation can be found in the
+        Before writing the message to the image, the AES cipher encrypts it in
+        Counter (CTR) mode. The implementation can be found in the
         <a
           href="https://github.com/JensDll/image-data-hiding/blob/main/services/api/src/Domain/Entities/AesCounterMode.cs"
           >source code</a
@@ -36,14 +38,8 @@
           initialization value (12 bytes)
         </li>
       </ul>
-      That makes for a key length of 54 bytes or
-      <code>(54 / 3) * 4 = 72</code> Base64 characters (<a
-        href="https://github.com/JensDll/image-data-hiding/blob/main/services/api/src/Domain/Services/KeyService.cs"
-        >source code</a
-      >). You have to make sure that only trusted parties know the key;
-      otherwise, you risk losing your data. A generated key can not be revoked.
-      The best you can do is to re-encrypt the message, but this will only work
-      if any adversaries do not also possess the cover image.
+      You have to make sure that only trusted parties know the key. Otherwise,
+      you risk losing your data.
     </div>
   </AppMarkdown>
 </template>
