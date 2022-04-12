@@ -52,15 +52,10 @@ jobs:
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v2
-      - name: Debug
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: |
-          env
       - name: Setting up dotnet
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 6.x.x
       - name: Installing dependencies
         run: dotnet restore
       - name: Building the project

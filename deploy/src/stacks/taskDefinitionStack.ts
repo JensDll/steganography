@@ -30,7 +30,7 @@ export class TaskDefinitionStack extends cdk.Stack {
       }
     })
 
-    webTaskDefinition.addContainer('web', {
+    const webContainerDefinition = webTaskDefinition.addContainer('web', {
       essential: true,
       image: aws_ecs.ContainerImage.fromEcrRepository(repository, 'web.latest'),
       portMappings: [
@@ -47,11 +47,13 @@ export class TaskDefinitionStack extends cdk.Stack {
         streamPrefix: 'ecs'
       })
     })
+    webContainerDefinition.logDriverConfig!.options!['awslogs-create-group'] =
+      'true'
 
     const apiTaskDefinition = new aws_ecs.TaskDefinition(this, 'api', {
       family: 'api',
-      cpu: '1024',
-      memoryMiB: '3072',
+      cpu: '2048',
+      memoryMiB: '4096',
       networkMode: aws_ecs.NetworkMode.AWS_VPC,
       compatibility: aws_ecs.Compatibility.FARGATE,
       executionRole,
