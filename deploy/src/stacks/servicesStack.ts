@@ -19,12 +19,17 @@ export class ServicesStack extends cdk.Stack {
       cluster: cluster.clusterName,
       desiredCount: 1,
       serviceName: 'web',
-      taskDefinition: 'web:7',
+      taskDefinition: 'web:10',
       loadBalancer: {
         vpc: props.vpc,
         aRecordDomainName: 'imagedatahiding.com',
         listenerCertificateArn:
-          'arn:aws:acm:eu-central-1:378859530546:certificate/25d0d1fa-75c0-486f-afa8-8fcc65967d49'
+          'arn:aws:acm:eu-central-1:378859530546:certificate/25d0d1fa-75c0-486f-afa8-8fcc65967d49',
+        targetGroupOptions: {
+          protocol: aws_elasticloadbalancingv2.ApplicationProtocol.HTTPS,
+          protocolVersion:
+            aws_elasticloadbalancingv2.ApplicationProtocolVersion.HTTP2
+        }
       }
     })
 
@@ -32,11 +37,19 @@ export class ServicesStack extends cdk.Stack {
       cluster: cluster.clusterName,
       desiredCount: 1,
       serviceName: 'api',
-      taskDefinition: 'api:7',
+      taskDefinition: 'api:10',
       loadBalancer: webService,
-      conditions: [
-        aws_elasticloadbalancingv2.ListenerCondition.pathPatterns(['/api/*'])
-      ]
+      listenerOptions: {
+        conditions: [
+          aws_elasticloadbalancingv2.ListenerCondition.pathPatterns(['/api/*'])
+        ]
+      },
+      targetGroupOptions: {
+        protocol: aws_elasticloadbalancingv2.ApplicationProtocol.HTTPS,
+        protocolVersion:
+          aws_elasticloadbalancingv2.ApplicationProtocolVersion.HTTP2,
+        healthCheckPath: '/api/health'
+      }
     })
   }
 }

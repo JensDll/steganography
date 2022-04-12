@@ -1,4 +1,5 @@
-﻿using Amazon.CloudWatchLogs;
+﻿using Amazon;
+using Amazon.CloudWatchLogs;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
@@ -18,7 +19,7 @@ public static class StartupExtensions
 
         LoggerConfiguration loggerConfiguration = new();
 
-        if (EnvironmentHelper.IsDocker())
+        if (webBuilder.Environment.IsProduction())
         {
             CloudWatchSinkOptions options = new()
             {
@@ -32,7 +33,7 @@ public static class StartupExtensions
                         false, false),
                 LogGroupRetentionPolicy = LogGroupRetentionPolicy.OneWeek
             };
-            AmazonCloudWatchLogsClient client = new();
+            AmazonCloudWatchLogsClient client = new(RegionEndpoint.EUCentral1);
             loggerConfiguration.WriteTo.AmazonCloudWatch(options, client);
         }
         else

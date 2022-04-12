@@ -7,7 +7,6 @@ using WebApi.Features.Codec.EncodeBinary;
 using WebApi.Features.Codec.EncodeText;
 
 const string corsDevPolicy = "cors:dev";
-const string corsProdPolicy = "cors:prod";
 
 WebApplicationBuilder webBuilder = WebApplication.CreateBuilder(args);
 
@@ -24,18 +23,13 @@ webBuilder.Services.AddCors(options =>
 });
 webBuilder.Services.AddDomain();
 webBuilder.Services.AddEndpoints<Program>();
-webBuilder.Services.Configure<ApiBuilderOptions>(options =>
-{
-    options.BaseUri = "api";
-});
 
-webBuilder.WebHost.ConfigureKestrel(options =>
+webBuilder.WebHost.ConfigureKestrel(kestrelOptions =>
 {
-    options.Limits.MaxRequestBodySize = 60 * 1024 * 1024; // 60 MB
-
-    if (EnvironmentHelper.IsDocker())
+    kestrelOptions.Limits.MaxRequestBodySize = 60 * 1024 * 1024; // 60 MB
+    if (webBuilder.Environment.IsProduction())
     {
-        options.ConfigureHttpsDefaults(httpsOptions =>
+        kestrelOptions.ConfigureHttpsDefaults(httpsOptions =>
         {
             string certPath = Path.Combine(webBuilder.Environment.ContentRootPath, "cert.pem");
             string keyPath = Path.Combine(webBuilder.Environment.ContentRootPath, "key.pem");
@@ -55,9 +49,10 @@ if (app.Environment.IsDevelopment())
 }
 
 EndpointAuthenticationDeclaration.Anonymous(
-    app.MapPost<EncodeText>("/codec/encode/text"),
-    app.MapPost<EncodeBinary>("/codec/encode/binary"),
-    app.MapPost<Decode>("/codec/decode")
+    app.MapPost<EncodeText>("/api/codec/encode/text"),
+    app.MapPost<EncodeBinary>("/api/codec/encode/binary"),
+    app.MapPost<Decode>("/api/codec/decode"),
+    app.MapGet("/api/health", () => Results.Ok())
 );
 
 app.Run();
