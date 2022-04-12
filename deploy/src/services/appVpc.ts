@@ -1,5 +1,10 @@
 import * as cdk from 'aws-cdk-lib'
-import { aws_ec2, aws_ecs, aws_elasticloadbalancingv2 } from 'aws-cdk-lib'
+import {
+  aws_ec2,
+  aws_ecs,
+  aws_elasticloadbalancingv2,
+  Duration
+} from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 import {
   LoadBalancedService,
@@ -39,10 +44,15 @@ type AddServiceProps = Omit<
 
 interface AddServiceBehindLoadBalancerProps extends AddServiceProps {
   loadBalancer: LoadBalancedService
-  conditions: aws_elasticloadbalancingv2.ListenerCondition[]
-  protectedAccess?: boolean
-  protocol?: aws_elasticloadbalancingv2.ApplicationProtocol
-  protocolVersion?: aws_elasticloadbalancingv2.ApplicationProtocolVersion
+  listenerOptions: {
+    conditions: aws_elasticloadbalancingv2.ListenerCondition[]
+    privateAccess?: boolean
+  }
+  targetGroupOptions?: {
+    protocol?: aws_elasticloadbalancingv2.ApplicationProtocol
+    protocolVersion?: aws_elasticloadbalancingv2.ApplicationProtocolVersion
+    healthCheckPath?: string
+  }
 }
 
 export class AppVpc extends aws_ec2.Vpc {
@@ -155,7 +165,6 @@ export class AppVpc extends aws_ec2.Vpc {
       }
     })
 
-    service.addDependsOn(securityGroup.node.defaultChild as cdk.CfnResource)
     this.endpoints.forEach(endpoint =>
       service.addDependsOn(endpoint.node.defaultChild as cdk.CfnResource)
     )
@@ -168,10 +177,12 @@ export class AppVpc extends aws_ec2.Vpc {
     id: string,
     props: AddServiceBehindLoadBalancerProps
   ) {
-    props.protectedAccess ??= true
-    props.protocol ??= aws_elasticloadbalancingv2.ApplicationProtocol.HTTPS
-    props.protocolVersion ??=
-      aws_elasticloadbalancingv2.ApplicationProtocolVersion.HTTP2
+    props.listenerOptions.privateAccess ??= true
+    props.targetGroupOptions ??= {}
+    props.targetGroupOptions.protocol ??=
+      aws_elasticloadbalancingv2.ApplicationProtocol.HTTP
+    props.targetGroupOptions.protocolVersion ??=
+      aws_elasticloadbalancingv2.ApplicationProtocolVersion.HTTP1
 
     const securityGroup = new aws_ec2.SecurityGroup(
       scope,
@@ -215,8 +226,12 @@ export class AppVpc extends aws_ec2.Vpc {
       {
         vpc: this,
         targetType: aws_elasticloadbalancingv2.TargetType.IP,
-        protocol: props.protocol,
-        protocolVersion: props.protocolVersion
+        protocol: props.targetGroupOptions.protocol,
+        protocolVersion: props.targetGroupOptions.protocolVersion,
+        healthCheck: {
+          path: props.targetGroupOptions.healthCheckPath,
+          timeout: Duration.seconds(10)
+        }
       }
     )
 
@@ -235,9 +250,9 @@ export class AppVpc extends aws_ec2.Vpc {
       throw new Error('Load balancer must have a HTTP or HTTPS listener')
     }
 
-    const conditions = [...props.conditions]
+    const conditions = [...props.listenerOptions.conditions]
 
-    if (props.protectedAccess) {
+    if (props.listenerOptions.privateAccess) {
       if (!props.loadBalancer.loadBalancerARecord) {
         throw new Error(
           'For protected access the load balancer must have an associated A record'
@@ -278,7 +293,7 @@ export class AppVpc extends aws_ec2.Vpc {
         {
           containerName: props.serviceName,
           containerPort:
-            props.protocol ===
+            props.targetGroupOptions.protocol ===
             aws_elasticloadbalancingv2.ApplicationProtocol.HTTP
               ? 80
               : 443,

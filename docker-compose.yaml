@@ -10,10 +10,9 @@ services:
   api:
     build: services/api
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Production,
     ports:
-      - 5002:80
-      - 5001:443
+      - 5001:80
     networks:
       - appnet
 networks:

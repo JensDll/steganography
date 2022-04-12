@@ -30,7 +30,6 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 FROM mcr.microsoft.com/dotnet/aspnet:6.0.3-alpine3.15
 WORKDIR /app
 COPY --from=publish /app ./
-EXPOSE 80 443
 ENV ASPNETCORE_URLS="http://+:80;https://+:443"
-ENV ASPNETCORE_DOCKER="true"
+EXPOSE 80 443
 ENTRYPOINT ["dotnet", "WebApi.dll"]

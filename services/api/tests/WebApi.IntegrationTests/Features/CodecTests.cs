@@ -21,8 +21,6 @@ public class CodecTests : TestingBase
     [TestCase(false)]
     public async Task EncodeText_Decode(bool isSameKey)
     {
-        #region AAA Encode
-
         // Arrange
         Image<Rgb24> coverImage = new(500, 500);
         await using MemoryStream coverImageStream = new();
@@ -72,10 +70,6 @@ public class CodecTests : TestingBase
         Assert.That(outMessageType, Is.EqualTo(MessageType.Text));
         Assert.That(outMessageLength, Is.EqualTo(message.Length));
 
-        #endregion
-
-        #region AAA Decode
-
         // Arrange
         await using MemoryStream resultImageStream = new();
         await resultImage.SaveAsPngAsync(resultImageStream);
@@ -95,16 +89,12 @@ public class CodecTests : TestingBase
         string resultMessage = await decodeResponse.Content.ReadAsStringAsync();
 
         Assert.That(resultMessage, isSameKey ? Is.EqualTo(message) : Is.Not.EqualTo(message));
-
-        #endregion
     }
 
     [TestCase(true)]
     [TestCase(false)]
     public async Task EncodeBinary_Decode(bool isSameKey)
     {
-        #region AAA Encode
-
         // Arrange
         Image<Rgb24> coverImage = new(500, 500);
         await using MemoryStream coverImageStream = new();
@@ -159,10 +149,6 @@ public class CodecTests : TestingBase
         Assert.That(outMessageType, Is.EqualTo(MessageType.Binary));
         Assert.That(outMessageLength, Is.EqualTo(inMessageLength));
 
-        #endregion
-
-        #region AAA Decode
-
         // Arrange
         await using MemoryStream resultImageStream = new();
         await resultImage.SaveAsPngAsync(resultImageStream);
@@ -203,8 +189,6 @@ public class CodecTests : TestingBase
             Assert.That(entry.Name, Is.EqualTo(files[i].Name));
             Assert.That(fileStream.ToArray(), Is.EqualTo(files[i].Content));
         }
-
-        #endregion
     }
 
     [Test]

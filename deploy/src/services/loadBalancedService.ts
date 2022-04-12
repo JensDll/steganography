@@ -12,6 +12,10 @@ interface LoadBalancerProps
   extends aws_elasticloadbalancingv2.ApplicationLoadBalancerProps {
   listenerCertificateArn?: string
   aRecordDomainName?: string
+  targetGroupOptions?: {
+    protocol?: aws_elasticloadbalancingv2.ApplicationProtocol
+    protocolVersion?: aws_elasticloadbalancingv2.ApplicationProtocolVersion
+  }
 }
 
 export interface LoadBalancedServiceProps
@@ -20,8 +24,6 @@ export interface LoadBalancedServiceProps
     'launchType' | 'networkConfiguration' | 'loadBalancers'
   > {
   loadBalancer: LoadBalancerProps
-  protocol?: aws_elasticloadbalancingv2.ApplicationProtocol
-  protocolVersion?: aws_elasticloadbalancingv2.ApplicationProtocolVersion
 }
 
 export class LoadBalancedService extends aws_ecs.CfnService {
@@ -31,9 +33,11 @@ export class LoadBalancedService extends aws_ecs.CfnService {
   loadBalancerARecord?: aws_route53.ARecord
 
   constructor(scope: Construct, id: string, props: LoadBalancedServiceProps) {
-    props.protocol ??= aws_elasticloadbalancingv2.ApplicationProtocol.HTTPS
-    props.protocolVersion ??=
-      aws_elasticloadbalancingv2.ApplicationProtocolVersion.HTTP2
+    props.loadBalancer.targetGroupOptions ??= {}
+    props.loadBalancer.targetGroupOptions.protocol ??=
+      aws_elasticloadbalancingv2.ApplicationProtocol.HTTP
+    props.loadBalancer.targetGroupOptions.protocolVersion ??=
+      aws_elasticloadbalancingv2.ApplicationProtocolVersion.HTTP1
 
     const { securityGroup, loadBalancerSecurityGroup } =
       createSecurityGroupPair(scope, id, props.loadBalancer.vpc)
@@ -57,8 +61,8 @@ export class LoadBalancedService extends aws_ecs.CfnService {
       {
         vpc: props.loadBalancer.vpc,
         targetType: aws_elasticloadbalancingv2.TargetType.IP,
-        protocol: props.protocol,
-        protocolVersion: props.protocolVersion
+        protocol: props.loadBalancer.targetGroupOptions.protocol,
+        protocolVersion: props.loadBalancer.targetGroupOptions.protocolVersion
       }
     )
 
@@ -121,7 +125,7 @@ export class LoadBalancedService extends aws_ecs.CfnService {
         {
           containerName: props.serviceName,
           containerPort:
-            props.protocol ===
+            props.loadBalancer.targetGroupOptions.protocol ===
             aws_elasticloadbalancingv2.ApplicationProtocol.HTTP
               ? 80
               : 443,
@@ -131,7 +135,6 @@ export class LoadBalancedService extends aws_ecs.CfnService {
     })
 
     this.addDependsOn(targetGroup.node.defaultChild as cdk.CfnResource)
-    this.addDependsOn(securityGroup.node.defaultChild as cdk.CfnResource)
     loadBalancer.listeners.forEach(listener =>
       this.addDependsOn(listener.node.defaultChild as cdk.CfnResource)
     )
