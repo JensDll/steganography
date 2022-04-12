@@ -17,6 +17,7 @@ declare module '@vue/runtime-core' {
     'HeroiconsOutline:dotsVertical': typeof import('~icons/heroicons-outline/dots-vertical')['default']
     'HeroiconsOutline:moon': typeof import('~icons/heroicons-outline/moon')['default']
     'HeroiconsOutline:sun': typeof import('~icons/heroicons-outline/sun')['default']
+    'HeroiconsOutline:x': typeof import('~icons/heroicons-outline/x')['default']
     'HeroiconsSolid:lockClosed': typeof import('~icons/heroicons-solid/lock-closed')['default']
     'HeroiconsSolid:lockOpen': typeof import('~icons/heroicons-solid/lock-open')['default']
     'HeroiconsSolid:paperClip': typeof import('~icons/heroicons-solid/paper-clip')['default']
