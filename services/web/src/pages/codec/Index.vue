@@ -5,7 +5,7 @@
     <nav
       class="mb-8 flex flex-col container sm:mb-16 sm:flex-row sm:items-end sm:justify-between"
     >
-      <h1 class="mb-6 sm:order-1 sm:mb-0">{{ $route.meta.title }}</h1>
+      <h2 class="mb-6 sm:order-1 sm:mb-0">{{ $route.meta.title }}</h2>
       <ul class="mb-6 flex space-x-4 border-b sm:order-2 sm:m-0">
         <RouterLink
           v-slot="{ navigate, isExactActive }"

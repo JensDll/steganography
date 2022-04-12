@@ -7,10 +7,13 @@ import CallToAction from './CallToAction.vue'
     <div
       class="grid grid-rows-[auto_auto_1fr] justify-items-center self-center pt-6 md:p-0"
     >
-      <AppMarkdown>
-        <h1 class="text-center">Image Data Hiding</h1>
-        <p class="text-center text-lg">Embed secret messages in images</p>
-      </AppMarkdown>
+      <section>
+        <h1 class="px-5 text-center">Image Data Hiding</h1>
+        <p class="mx-auto mt-8 max-w-2xl px-5 text-center text-lg">
+          Free online Steganography service. Securely embed secret messages in
+          images directly from the browser.
+        </p>
+      </section>
       <CallToAction
         class="mt-6 w-full max-w-4xl lg:mt-8"
         @click="$router.push({ name: 'encode' })"

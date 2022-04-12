@@ -27,6 +27,7 @@ webBuilder.Services.AddEndpoints<Program>();
 webBuilder.WebHost.ConfigureKestrel(kestrelOptions =>
 {
     kestrelOptions.Limits.MaxRequestBodySize = 60 * 1024 * 1024; // 60 MB
+
     if (webBuilder.Environment.IsProduction())
     {
         kestrelOptions.ConfigureHttpsDefaults(httpsOptions =>
