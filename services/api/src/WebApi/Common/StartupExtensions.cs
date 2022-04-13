@@ -11,6 +11,8 @@ namespace WebApi.Common;
 
 public static class StartupExtensions
 {
+    private const string _deployment = "Deployment";
+
     public static ILogger AddSerilogLogger(this WebApplicationBuilder webBuilder)
     {
         webBuilder.Logging.ClearProviders();
@@ -19,7 +21,7 @@ public static class StartupExtensions
 
         LoggerConfiguration loggerConfiguration = new();
 
-        if (webBuilder.Environment.IsProduction())
+        if (webBuilder.Environment.IsDeployment())
         {
             CloudWatchSinkOptions options = new()
             {
@@ -50,5 +52,10 @@ public static class StartupExtensions
         webBuilder.Services.AddSingleton(logger);
 
         return logger;
+    }
+
+    public static bool IsDeployment(this IWebHostEnvironment environment)
+    {
+        return environment.IsEnvironment(_deployment);
     }
 }
