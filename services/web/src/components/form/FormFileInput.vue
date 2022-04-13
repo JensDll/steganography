@@ -99,7 +99,7 @@ const totalFileSize = useFileSize(files)
         v-for="(file, i) in files"
         :key="file.name"
         :file="file"
-        class="z-10"
+        class="relative"
         @remove="removeFile(i)"
       />
       <template v-if="!files.length">

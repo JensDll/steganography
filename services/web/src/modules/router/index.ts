@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
+import NotFoundIndex from '~/pages/not_found/Index.vue'
+
 import HomeIndex from '~/pages/home/Index.vue'
 
 import AboutIndex from '~/pages/about/Index.vue'
@@ -43,7 +45,8 @@ const routes: RouteRecordRaw[] = [
         }
       }
     ]
-  }
+  },
+  { path: '/:pathMatch(.*)*', name: 'notFound', component: NotFoundIndex }
 ]
 
 export const router = createRouter({

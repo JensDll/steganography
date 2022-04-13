@@ -2,6 +2,7 @@
 using Amazon.CloudWatchLogs;
 using Serilog;
 using Serilog.Events;
+using Serilog.Filters;
 using Serilog.Formatting.Json;
 using Serilog.Sinks.AwsCloudWatch;
 using Serilog.Sinks.AwsCloudWatch.LogStreamNameProvider;
@@ -18,11 +19,14 @@ public static class StartupExtensions
         webBuilder.Logging.ClearProviders();
 
         JsonFormatter textFormatter = new(Environment.NewLine);
-
         LoggerConfiguration loggerConfiguration = new();
 
         if (webBuilder.Environment.IsDeployment())
         {
+            // Exclude logs from the health check endpoint
+            loggerConfiguration.Filter.ByExcluding(Matching.WithProperty<string>("RequestPath",
+                path => path == "/api/health"));
+
             CloudWatchSinkOptions options = new()
             {
                 LogGroupName = "app/api",
@@ -36,6 +40,7 @@ public static class StartupExtensions
                 LogGroupRetentionPolicy = LogGroupRetentionPolicy.OneWeek
             };
             AmazonCloudWatchLogsClient client = new(RegionEndpoint.EUCentral1);
+
             loggerConfiguration.WriteTo.AmazonCloudWatch(options, client);
         }
         else

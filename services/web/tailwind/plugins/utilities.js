@@ -18,6 +18,7 @@ module.exports.Utilities = function () {
 
       addUtilities({
         '.container': {
+          width: '100%',
           marginLeft: 'auto',
           marginRight: 'auto',
           maxWidth: theme('maxWidth.6xl'),
