@@ -16,4 +16,7 @@
         <ProjectReference Include="..\Domain\Domain.csproj" />
         <ProjectReference Include="..\ApiBuilder\ApiBuilder.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Logs" />
+    </ItemGroup>
 </Project>
