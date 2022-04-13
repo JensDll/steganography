@@ -5,6 +5,7 @@ using WebApi.Common;
 using WebApi.Features.Codec.Decode;
 using WebApi.Features.Codec.EncodeBinary;
 using WebApi.Features.Codec.EncodeText;
+using static ApiBuilder.EndpointAuthenticationDeclaration;
 
 const string corsDevPolicy = "cors:dev";
 
@@ -12,8 +13,12 @@ WebApplicationBuilder webBuilder = WebApplication.CreateBuilder(args);
 
 webBuilder.AddSerilogLogger();
 
-webBuilder.Services.AddEndpointsApiExplorer();
-webBuilder.Services.AddSwaggerGen();
+if (webBuilder.Environment.IsDevelopment())
+{
+    webBuilder.Services.AddEndpointsApiExplorer();
+    webBuilder.Services.AddSwaggerGen();
+}
+
 webBuilder.Services.AddCors(options =>
 {
     options.AddPolicy(corsDevPolicy, corsBuilder =>
@@ -28,7 +33,7 @@ webBuilder.WebHost.ConfigureKestrel(kestrelOptions =>
 {
     kestrelOptions.Limits.MaxRequestBodySize = 60 * 1024 * 1024; // 60 MB
 
-    if (webBuilder.Environment.IsProduction())
+    if (!webBuilder.Environment.IsDevelopment())
     {
         kestrelOptions.ConfigureHttpsDefaults(httpsOptions =>
         {
@@ -49,7 +54,7 @@ if (app.Environment.IsDevelopment())
     app.UseCors(corsDevPolicy);
 }
 
-EndpointAuthenticationDeclaration.Anonymous(
+Anonymous(
     app.MapPost<EncodeText>("/api/codec/encode/text"),
     app.MapPost<EncodeBinary>("/api/codec/encode/binary"),
     app.MapPost<Decode>("/api/codec/decode"),

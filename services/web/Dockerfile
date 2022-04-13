@@ -7,7 +7,7 @@ WORKDIR /out
 RUN apt update && apt upgrade -y && apt install openssl
 
 # Install pnpm
-RUN curl https://get.pnpm.io/v6.16.js | node - add --global pnpm
+RUN npm install -g pnpm@6.32.6
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml ./
@@ -21,16 +21,15 @@ RUN pnpm run build -- --mode ${mode}
 
 # Generate self signed certificate
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -out /out/cert.pem -keyout /out/key.pem  \
+    -out ./cert.pem -keyout ./key.pem  \
     -subj "/CN=0.0.0.0"
 
 # Final image
 FROM nginx:1.21.6-alpine
 
-WORKDIR /data/www
-
-COPY --from=build /out/dist ./
-COPY --from=build /out/cert.pem /out/key.pem /etc/nginx/
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+# Copy main content
+COPY --from=build /out/dist/ /data/www/
+# Copy self signed certificate, private key, and configuration files
+COPY --from=build /out/cert.pem /out/key.pem /out/nginx/ /etc/nginx/
 
 EXPOSE 443
