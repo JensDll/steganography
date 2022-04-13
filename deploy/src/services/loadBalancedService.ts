@@ -15,6 +15,7 @@ interface LoadBalancerProps
   targetGroupOptions?: {
     protocol?: aws_elasticloadbalancingv2.ApplicationProtocol
     protocolVersion?: aws_elasticloadbalancingv2.ApplicationProtocolVersion
+    healthCheckPath?: string
   }
 }
 
@@ -38,6 +39,7 @@ export class LoadBalancedService extends aws_ecs.CfnService {
       aws_elasticloadbalancingv2.ApplicationProtocol.HTTP
     props.loadBalancer.targetGroupOptions.protocolVersion ??=
       aws_elasticloadbalancingv2.ApplicationProtocolVersion.HTTP1
+    props.loadBalancer.targetGroupOptions.healthCheckPath ??= '/'
 
     const { securityGroup, loadBalancerSecurityGroup } =
       createSecurityGroupPair(scope, id, props.loadBalancer.vpc)
@@ -62,7 +64,10 @@ export class LoadBalancedService extends aws_ecs.CfnService {
         vpc: props.loadBalancer.vpc,
         targetType: aws_elasticloadbalancingv2.TargetType.IP,
         protocol: props.loadBalancer.targetGroupOptions.protocol,
-        protocolVersion: props.loadBalancer.targetGroupOptions.protocolVersion
+        protocolVersion: props.loadBalancer.targetGroupOptions.protocolVersion,
+        healthCheck: {
+          path: props.loadBalancer.targetGroupOptions.healthCheckPath
+        }
       }
     )
 
