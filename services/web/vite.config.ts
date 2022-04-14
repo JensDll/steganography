@@ -25,7 +25,8 @@ export default defineConfig({
         IconsResolver({
           componentPrefix: ''
         })
-      ]
+      ],
+      dts: './dts/components.d.ts'
     }),
     Icons({
       autoInstall: true
