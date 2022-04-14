@@ -14,7 +14,7 @@
 }
 
 .dark .section {
-  box-shadow: 0 2px 20px 0 rgb(theme('colors.rgb.gray.700') / 0.8);
+  box-shadow: 0 2px 20px 0 rgb(theme('colors.rgb.black') / 0.55);
 }
 
 @screen section {
@@ -24,7 +24,7 @@
   }
 
   .dark .section {
-    box-shadow: 4px 4px 40px 0 rgb(theme('colors.rgb.gray.700') / 0.4);
+    box-shadow: 4px 4px 40px 0 rgb(theme('colors.rgb.black') / 0.55);
   }
 }
 </style>
