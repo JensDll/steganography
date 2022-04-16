@@ -64,16 +64,16 @@ export class AppVpc extends aws_ec2.Vpc {
       cidr: '10.0.0.0/24',
       enableDnsHostnames: true,
       enableDnsSupport: true,
-      maxAzs: 3,
+      maxAzs: 2,
       subnetConfiguration: [
         {
           name: 'Public',
-          cidrMask: 27,
+          cidrMask: 26,
           subnetType: aws_ec2.SubnetType.PUBLIC
         },
         {
           name: 'Private',
-          cidrMask: 27,
+          cidrMask: 26,
           subnetType: aws_ec2.SubnetType.PRIVATE_ISOLATED
         }
       ]

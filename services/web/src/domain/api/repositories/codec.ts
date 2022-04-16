@@ -88,7 +88,7 @@ export function codec() {
         if (response.ok) {
           if (responseType === 'text') {
             const text = await response.text()
-            useDownload('secret.txt').text(text)
+            useDownload('result.txt').text(text)
           } else if (responseType === 'blob') {
             const zip = await response.blob()
             useDownload('result.zip').file(zip)

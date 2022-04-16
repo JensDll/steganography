@@ -42,9 +42,24 @@ module.exports = {
   plugins: [
     Forms,
     Typography,
-    Icons({
-      'heroicons-outline': ['trash']
-    }),
+    Icons(
+      {
+        'heroicons-outline': [
+          'trash',
+          'dots-vertical',
+          'x',
+          'moon',
+          'sun',
+          'desktop-computer'
+        ],
+        'heroicons-solid': ['lock-open', 'lock-closed', 'paper-clip'],
+        mdi: ['github'],
+        custom: ['loading']
+      },
+      {
+        'heroicons-outline': ['trash']
+      }
+    ),
     Utilities(),
     Variants()
   ],

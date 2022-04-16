@@ -82,16 +82,16 @@ onUnmounted(() => {
     class="relative grid h-28 place-items-center overflow-x-hidden"
   >
     <TransitionGroup appear v-on="animation">
-      <HeroiconsSolid:lockClosed
+      <div
         v-for="i in numLocks"
         :key="`closed-${i}`"
-        class="lock absolute top-0 right-full h-6 w-6 origin-center text-encode-200 dark:text-encode-500"
-      />
-      <HeroiconsSolid:lockOpen
+        class="absolute top-0 right-full h-6 w-6 origin-center text-encode-200 i-heroicons-solid-lock-open dark:text-encode-500"
+      ></div>
+      <div
         v-for="i in numLocks"
-        :key="`open-${i}`"
-        class="lock absolute top-0 right-full h-6 w-6 text-decode-200 dark:text-decode-500"
-      />
+        :key="`closed-${i}`"
+        class="absolute top-0 right-full h-6 w-6 text-decode-200 i-heroicons-solid-lock-closed dark:text-decode-500"
+      ></div>
     </TransitionGroup>
     <AppButton variant="landing" @click="emit('click')">
       Getting Started

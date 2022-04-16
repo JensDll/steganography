@@ -14,7 +14,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["vite/client", "unplugin-icons/types/vue3", "vitest"],
+    "types": ["vite/client", "vitest"],
     "paths": {
       "tailwind-theme": ["./tailwind/theme"],
       "~/*": ["src/*"]

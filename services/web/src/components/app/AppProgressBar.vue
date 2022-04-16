@@ -130,17 +130,16 @@ watch(
       ></div>
     </div>
     <Transition v-on="loadingHooks">
-      <AppIcon
+      <div
         v-if="isLongLoad"
-        solid="LoadingCircle"
         :class="[
-          `justify-self-end`,
+          'h-6 w-6 justify-self-end i-custom-loading',
           {
-            encode: 'text-encode-500 ',
-            decode: 'text-decode-500 '
+            encode: 'text-encode-500',
+            decode: 'text-decode-500'
           }[variant]
         ]"
-      />
+      ></div>
     </Transition>
   </div>
 </template>

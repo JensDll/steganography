@@ -52,7 +52,10 @@ const totalFileSize = useFileSize(files)
           :accept="accept"
           v-on="fileListeners"
         />
-        <HeroiconsSolid:paperClip v-if="!files.length" class="mr-2 h-6 w-6" />
+        <div
+          v-if="!files.length"
+          class="mr-2 h-5 w-5 i-heroicons-solid-paper-clip"
+        ></div>
         <div class="text-center">
           <template v-if="files.length">
             {{ files[0].name }}
@@ -103,7 +106,7 @@ const totalFileSize = useFileSize(files)
         @remove="removeFile(i)"
       />
       <template v-if="!files.length">
-        <HeroiconsSolid:paperClip class="h-6 w-6" />
+        <div class="h-5 w-5 i-heroicons-solid-paper-clip"></div>
         <p class="text-center">
           <span
             class="font-semibold text-border-form-highlight"

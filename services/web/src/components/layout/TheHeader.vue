@@ -2,30 +2,28 @@
 /* global changeTheme */
 import { computed, ref, watch } from 'vue'
 
-import type { OutlineIconName } from '~/components/app/AppIcon.vue'
-
 type ThemeName = 'light' | 'dark' | 'system'
 type Theme = {
   name: ThemeName
   text: string
-  icon: OutlineIconName
+  icon: string
 }
 
 const themes: Theme[] = [
   {
     name: 'light',
     text: 'Light',
-    icon: 'Sun'
+    icon: 'i-heroicons-outline-sun'
   },
   {
     name: 'dark',
     text: 'Dark',
-    icon: 'Moon'
+    icon: 'i-heroicons-outline-moon'
   },
   {
     name: 'system',
     text: 'System',
-    icon: 'DesktopComputer'
+    icon: 'i-heroicons-outline-desktop-computer'
   }
 ]
 
@@ -87,16 +85,13 @@ watch(theme, changeThemePreference)
           </li>
           <li class="mx-6 border-l"></li>
           <li @click="isDropdownOpen = true">
-            <AppIcon
-              v-if="isLight"
-              class="h-6 w-6 cursor-pointer text-orange-600"
+            <div
+              :class="[
+                'h-6 w-6 cursor-pointer text-orange-600',
+                isLight ? 'i-heroicons-outline-sun' : 'i-heroicons-outline-moon'
+              ]"
               outline="Sun"
-            />
-            <AppIcon
-              v-if="isDark"
-              class="h-6 w-6 cursor-pointer text-orange-600"
-              outline="Moon"
-            />
+            ></div>
             <ul
               v-if="isDropdownOpen"
               v-on-click-outside="closeDropdown"
@@ -109,28 +104,30 @@ watch(theme, changeThemePreference)
                 :class="{ 'text-orange-600': theme === name }"
                 @click="changeThemePreference(name)"
               >
-                <AppIcon
-                  class="mr-2 h-6 w-6 text-gray-400"
-                  :class="{ '!text-orange-600': theme === name }"
-                  :outline="icon"
-                />
+                <span
+                  :class="[
+                    'mr-2 h-6 w-6 text-gray-400',
+                    icon,
+                    { '!text-orange-600': theme === name }
+                  ]"
+                ></span>
                 {{ text }}
               </li>
             </ul>
           </li>
           <li class="pl-4">
             <a href="https://github.com/JensDll/image-data-hiding">
-              <Mdi:github
-                class="h-6 w-6 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
-              />
+              <div
+                class="h-6 w-6 text-gray-400 i-mdi-github hover:text-gray-500 dark:hover:text-gray-300"
+              ></div>
             </a>
           </li>
         </ul>
       </nav>
-      <HeroiconsOutline:dotsVertical
-        class="h-6 w-6 cursor-pointer md:hidden"
+      <div
+        class="h-6 w-6 cursor-pointer i-heroicons-outline-dots-vertical md:hidden"
         @click="isPopupOpen = true"
-      />
+      ></div>
     </div>
   </header>
   <nav
@@ -141,10 +138,10 @@ watch(theme, changeThemePreference)
     <div
       class="fixed top-5 right-5 left-5 rounded-lg bg-bg-base p-6 shadow-lg dark:bg-gray-800 sm:left-auto sm:w-full sm:max-w-xs"
     >
-      <HeroiconsOutline:x
-        class="absolute top-5 right-5 h-6 w-6 cursor-pointer text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
+      <div
+        class="absolute top-5 right-5 h-6 w-6 cursor-pointer text-gray-500 i-heroicons-outline-x hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
         @click="closePopup"
-      />
+      ></div>
       <ul class="space-y-6">
         <RouterLink
           v-slot="{ navigate, isActive }"

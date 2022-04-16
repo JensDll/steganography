@@ -1,6 +1,6 @@
-using System.Security.Cryptography.X509Certificates;
 using ApiBuilder;
 using Domain;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using WebApi.Common;
 using WebApi.Features.Codec.Decode;
 using WebApi.Features.Codec.EncodeBinary;
@@ -35,12 +35,9 @@ webBuilder.WebHost.ConfigureKestrel(kestrelOptions =>
 
     if (!webBuilder.Environment.IsDevelopment())
     {
-        kestrelOptions.ConfigureHttpsDefaults(httpsOptions =>
+        kestrelOptions.ConfigureEndpointDefaults(configureOptions =>
         {
-            string certPath = Path.Combine(webBuilder.Environment.ContentRootPath, "cert.pem");
-            string keyPath = Path.Combine(webBuilder.Environment.ContentRootPath, "key.pem");
-
-            httpsOptions.ServerCertificate = X509Certificate2.CreateFromPemFile(certPath, keyPath);
+            configureOptions.Protocols = HttpProtocols.Http2;
         });
     }
 });

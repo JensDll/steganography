@@ -9,7 +9,14 @@ import {
 
 const app = new cdk.App()
 
-const vpcStack = new VpcStack(app, 'Vpc', {
+const vpcStack = new VpcStack(app, 'Net', {
+  env: {
+    region: process.env.CDK_DEFAULT_REGION,
+    account: process.env.CDK_DEFAULT_ACCOUNT
+  }
+})
+
+const taskDefinitionStack = new TaskDefinitionStack(app, 'TaskDefinitions', {
   env: {
     region: process.env.CDK_DEFAULT_REGION,
     account: process.env.CDK_DEFAULT_ACCOUNT
@@ -21,17 +28,14 @@ new ServicesStack(app, 'Services', {
     region: process.env.CDK_DEFAULT_REGION,
     account: process.env.CDK_DEFAULT_ACCOUNT
   },
-  vpc: vpcStack.vpc
-})
-
-new IdentityPoolStack(app, 'IdentityPool', {
-  env: {
-    region: process.env.CDK_DEFAULT_REGION,
-    account: process.env.CDK_DEFAULT_ACCOUNT
+  vpc: vpcStack.vpc,
+  taskDefinitions: {
+    web: taskDefinitionStack.web,
+    api: taskDefinitionStack.api
   }
 })
 
-new TaskDefinitionStack(app, 'TaskDefinitions', {
+new IdentityPoolStack(app, 'IdentityPool', {
   env: {
     region: process.env.CDK_DEFAULT_REGION,
     account: process.env.CDK_DEFAULT_ACCOUNT

@@ -1,45 +1,92 @@
 const plugin = require('tailwindcss/plugin')
 
-const customIcons = require('./icons.json')
 const { flattenColors } = require('../flattenColors')
 
-function toBase64Url(body, dimension, color) {
-  const colorReplacedBody = body.replace(/currentColor/g, color)
-  const icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${dimension} ${dimension}">${colorReplacedBody}</svg>`
-  const base64Icon = Buffer.from(icon).toString('base64')
-
-  return `url('data:image/svg+xml;base64,${base64Icon}')`
+function encodeSvg(svg) {
+  return svg
+    .replace(
+      '<svg',
+      ~svg.indexOf('xmlns') ? '<svg' : '<svg xmlns="http://www.w3.org/2000/svg"'
+    )
+    .replace(/"/g, "'")
+    .replace(/%/g, '%25')
+    .replace(/#/g, '%23')
+    .replace(/{/g, '%7B')
+    .replace(/}/g, '%7D')
+    .replace(/</g, '%3C')
+    .replace(/>/g, '%3E')
 }
 
-module.exports.Icons = function (options) {
-  const iconUtilities = {}
+function getIconUtility(svgBody, width, height) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 ${width} ${height}">${svgBody}</svg>`
+  const mode = svg.includes('currentColor') ? 'mask' : 'background'
+  const uri = `url("data:image/svg+xml;utf8,${encodeSvg(svg)}")`
 
-  for (const [iconSetName, iconNames] of Object.entries(options)) {
-    const iconSet = require(`@iconify-json/${iconSetName}/icons.json`)
+  if (mode === 'mask') {
+    return {
+      mask: `${uri} no-repeat center center`,
+      maskSize: '100% 100%',
+      backgroundColor: 'currentColor'
+    }
+  } else {
+    return {
+      background: `${uri} no-repeat`,
+      backgroundSize: '100% 100%',
+      backgroundColor: 'transparent'
+    }
+  }
+}
+
+const getBackgroundImageIconUtility = (svgBody, width, height) => color => {
+  const colorReplacedBody = svgBody.replace(/currentColor/g, color)
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 ${width} ${height}">${colorReplacedBody}</svg>`
+  const uri = `url("data:image/svg+xml;utf8,${encodeSvg(svg)}")`
+
+  return {
+    background: `${uri} no-repeat`,
+    backgroundSize: '100% 100%'
+  }
+}
+
+module.exports.Icons = function (iconSets, backgroundImageIconSets) {
+  const iconUtilities = {}
+  const backgroundImageIconUtilities = {}
+
+  for (const [iconSetName, iconNames] of Object.entries(iconSets)) {
+    const iconSet = require(iconSetName === 'custom'
+      ? './icons.json'
+      : `@iconify-json/${iconSetName}/icons.json`)
 
     for (const iconName of iconNames) {
-      iconUtilities[`bg-${iconSetName}-${iconName}`] = color => {
-        return {
-          backgroundImage: toBase64Url(
-            iconSet.icons[iconName].body,
-            iconSet.width,
-            color
-          )
-        }
-      }
+      iconUtilities[`.i-${iconSetName}-${iconName}`] = getIconUtility(
+        iconSet.icons[iconName].body,
+        iconSet.width,
+        iconSet.height
+      )
     }
   }
 
-  for (const [iconName, { body, dimension }] of Object.entries(customIcons)) {
-    iconUtilities[`bg-custom-${iconName}`] = color => {
-      return {
-        backgroundImage: toBase64Url(body, dimension, color)
-      }
+  for (const [iconSetName, iconNames] of Object.entries(
+    backgroundImageIconSets
+  )) {
+    const iconSet = require(iconSetName === 'custom'
+      ? './icons.json'
+      : `@iconify-json/${iconSetName}/icons.json`)
+
+    for (const iconName of iconNames) {
+      backgroundImageIconUtilities[`bg-${iconSetName}-${iconName}`] =
+        getBackgroundImageIconUtility(
+          iconSet.icons[iconName].body,
+          iconSet.width,
+          iconSet.height
+        )
     }
   }
 
-  return plugin(({ matchUtilities, theme }) => {
-    matchUtilities(iconUtilities, {
+  return plugin(({ addUtilities, matchUtilities, theme }) => {
+    addUtilities(iconUtilities)
+
+    matchUtilities(backgroundImageIconUtilities, {
       values: flattenColors(theme('colors')),
       type: ['color', 'any']
     })

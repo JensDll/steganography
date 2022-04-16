@@ -5,18 +5,18 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
     <ItemGroup>
-        <InternalsVisibleTo Include="WebApi.IntegrationTests" />
+        <InternalsVisibleTo Include="WebApi.IntegrationTests"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Serilog.Sinks.AwsCloudWatch" Version="4.0.171" />
-        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
+        <PackageReference Include="Serilog.Sinks.AwsCloudWatch" Version="4.0.171"/>
+        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Domain\Domain.csproj" />
-        <ProjectReference Include="..\ApiBuilder\ApiBuilder.csproj" />
+        <ProjectReference Include="..\Domain\Domain.csproj"/>
+        <ProjectReference Include="..\ApiBuilder\ApiBuilder.csproj"/>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Logs" />
+        <Folder Include="Logs"/>
     </ItemGroup>
 </Project>

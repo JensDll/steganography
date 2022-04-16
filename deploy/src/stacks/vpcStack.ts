@@ -4,6 +4,7 @@ import { AppVpc } from '../services'
 
 export class VpcStack extends cdk.Stack {
   vpc: AppVpc
+
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props)
 
