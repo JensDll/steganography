@@ -24,7 +24,7 @@ function getIconUtility(svgBody, width, height) {
 
   if (mode === 'mask') {
     return {
-      mask: `${uri} no-repeat center center`,
+      mask: `${uri} no-repeat`,
       maskSize: '100% 100%',
       backgroundColor: 'currentColor'
     }
@@ -40,7 +40,7 @@ function getIconUtility(svgBody, width, height) {
 const getBackgroundImageIconUtility = (svgBody, width, height) => color => {
   const colorReplacedBody = svgBody.replace(/currentColor/g, color)
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 ${width} ${height}">${colorReplacedBody}</svg>`
-  const uri = `url("data:image/svg+xml;utf8,${encodeSvg(svg)}")`
+  const uri = `url("data:image/svg+xml,${encodeSvg(svg)}")`
 
   return {
     background: `${uri} no-repeat`,

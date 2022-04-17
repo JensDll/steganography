@@ -2,11 +2,12 @@ export function useDownload(fileName: string) {
   const createAndDownload = (file: Blob) => {
     const a = document.createElement('a')
 
-    a.href = URL.createObjectURL(file)
+    const url = URL.createObjectURL(file)
+    a.href = url
     a.download = fileName
     a.click()
 
-    URL.revokeObjectURL(a.href)
+    URL.revokeObjectURL(url)
   }
 
   return {

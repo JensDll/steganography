@@ -18,7 +18,9 @@ const { form, validateFields } = useValidation<FormData>({
   textData: {
     $value: '',
     $rules: [
-      rules.withPrecondition(isTextMode)(rules.required('Enter a message'))
+      rules.withPrecondition(isTextMode)(
+        rules.required('Please enter a message')
+      )
     ]
   },
   binaryData: {

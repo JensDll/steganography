@@ -35,7 +35,50 @@ const totalFileSize = useFileSize(files)
 </script>
 
 <template>
-  <div v-if="!multiple">
+  <div v-if="multiple">
+    <label v-if="label" :for="`file-${label}`">{{ label }}</label>
+    <div
+      class="custom-file-input relative min-h-[8rem]"
+      :class="[
+        { error: errors.length },
+        files.length
+          ? 'card-grid p-6'
+          : 'flex flex-col items-center justify-center px-6'
+      ]"
+    >
+      <input
+        :id="`file-${label}`"
+        class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+        type="file"
+        :accept="accept"
+        multiple
+        v-on="fileListeners"
+      />
+      <AppFilePreview
+        v-for="(file, i) in files"
+        :key="file.name"
+        :file="file"
+        class="relative"
+        @remove="removeFile(i)"
+      />
+      <template v-if="!files.length">
+        <div class="h-5 w-5 i-heroicons-solid-paper-clip"></div>
+        <p class="text-center">
+          <span
+            class="font-semibold text-border-form-highlight"
+            :class="{ error: errors.length }"
+          >
+            Choose files
+          </span>
+          <span class="hidden md:inline-block">or drag and drop</span>
+          here
+        </p>
+      </template>
+    </div>
+    <p class="mt-2">{{ totalFileSize }}</p>
+    <FormErrors :errors="errors" />
+  </div>
+  <div v-else>
     <label v-if="label" for="file-input">{{ label }}</label>
     <div class="flex items-center">
       <div
@@ -77,49 +120,6 @@ const totalFileSize = useFileSize(files)
         @remove="removeFile(0)"
       />
     </div>
-    <FormErrors :errors="errors" />
-  </div>
-  <div v-else>
-    <label v-if="label" :for="`file-${label}`">{{ label }}</label>
-    <div
-      class="custom-file-input relative min-h-[8rem]"
-      :class="[
-        { error: errors.length },
-        files.length
-          ? 'card-grid p-6'
-          : 'flex flex-col items-center justify-center px-6'
-      ]"
-    >
-      <input
-        :id="`file-${label}`"
-        class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-        type="file"
-        :accept="accept"
-        multiple
-        v-on="fileListeners"
-      />
-      <AppFilePreview
-        v-for="(file, i) in files"
-        :key="file.name"
-        :file="file"
-        class="relative"
-        @remove="removeFile(i)"
-      />
-      <template v-if="!files.length">
-        <div class="h-5 w-5 i-heroicons-solid-paper-clip"></div>
-        <p class="text-center">
-          <span
-            class="font-semibold text-border-form-highlight"
-            :class="{ error: errors.length }"
-          >
-            Choose files
-          </span>
-          <span class="hidden md:inline-block">or drag and drop</span>
-          here
-        </p>
-      </template>
-    </div>
-    <p class="mt-2">{{ totalFileSize }}</p>
     <FormErrors :errors="errors" />
   </div>
 </template>

@@ -1,11 +1,12 @@
-import { onMounted, onUnmounted, ref } from 'vue'
+import { ref } from 'vue'
+import { tryOnBeforeMount, tryOnScopeDispose } from '@vueuse/core'
 import type { TailwindTheme } from 'tailwind-theme'
 
 type Query =
   | '(prefers-reduced-motion: reduce)'
   | `(max-width: ${TailwindTheme['screens'][keyof TailwindTheme['screens']]})`
-  | '(orientation: landscape)'
-  | '(orientation: portrait)'
+  | `(orientation: ${'landscape' | 'portrait'})`
+  | `(prefers-color-scheme: ${'dark' | 'light'})`
 
 export function useMediaQuery(
   query: Query,
@@ -19,7 +20,7 @@ export function useMediaQuery(
     onUpdate?.(matches.value)
   }
 
-  onMounted(() => {
+  tryOnBeforeMount(() => {
     update()
 
     if ('addEventListener' in mediaQuery) {
@@ -29,7 +30,7 @@ export function useMediaQuery(
     }
   })
 
-  onUnmounted(() => {
+  tryOnScopeDispose(() => {
     if ('removeEventListener' in update) {
       mediaQuery.removeEventListener('change', update)
     } else {
