@@ -18,11 +18,16 @@ app.mount('#app')
 const favicon = document.querySelector(
   'head > link[rel="icon"]'
 ) as HTMLLinkElement
+const faviconAlternate = document.querySelector(
+  'head > link[rel="alternate icon"]'
+) as HTMLLinkElement
 
 useMediaQuery('(prefers-color-scheme: dark)', matches => {
   if (matches) {
     favicon.setAttribute('href', '/favicon-dark.svg')
+    faviconAlternate.setAttribute('href', '/favicon-dark.ico')
   } else {
     favicon.setAttribute('href', '/favicon.svg')
+    faviconAlternate.setAttribute('href', '/favicon.ico')
   }
 })
