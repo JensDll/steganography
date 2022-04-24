@@ -6,7 +6,7 @@ ARG BUILD_MODE=production
 WORKDIR /out
 
 # Install pnpm
-RUN npm install -g pnpm@6.32.8
+RUN npm install -g pnpm@6.32.9
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml ./
