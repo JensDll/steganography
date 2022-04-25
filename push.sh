@@ -49,5 +49,5 @@ then
 elif [[ $provider == "scaleway" ]]
 then
   docker buildx bake --file docker-bake-scaleway.hcl --push
-  kubectl rollout restart -f k8s/services.yaml 
+  kubectl rollout restart -f k8s/app.yaml 
 fi

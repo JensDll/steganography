@@ -2,16 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: app-ingress
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  # annotations:
+  #   traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
-  tls:
-    - hosts:
-        - imagehiding.com
-      secretName: web-cert
-    - hosts:
-        - api.imagehiding.com
-      secretName: api-cert
+  # tls:
+  #   - hosts:
+  #       - imagehiding.com
+  #     secretName: web-cert
+  #   - hosts:
+  #       - api.imagehiding.com
+  #     secretName: api-cert
+  ingressClassName: traefik
   rules:
     - host: imagehiding.com
       http:
