@@ -21,7 +21,7 @@ public static class StartupExtensions
         JsonFormatter textFormatter = new(Environment.NewLine);
         LoggerConfiguration loggerConfiguration = new();
 
-        if (webBuilder.Environment.IsDeployment())
+        if (false)
         {
             // Exclude logs from the health check endpoint
             loggerConfiguration.Filter.ByExcluding(Matching.WithProperty<string>("RequestPath",
