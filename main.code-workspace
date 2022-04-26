@@ -10,9 +10,6 @@
       "path": "deploy"
     },
     {
-      "path": "k8s"
-    },
-    {
       "name": "root",
       "path": "."
     }
@@ -20,8 +17,7 @@
   "settings": {
     "files.exclude": {
       "services": true,
-      "deploy": true,
-      "k8s": true
+      "deploy": true
     }
   }
 }

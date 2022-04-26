@@ -19,10 +19,10 @@ create_ip()
 }
 
 case $1 in
-  get)
-    get_ips
-    ;;
-  create)
-    create_ip
-    ;;
+get)
+  get_ips
+  ;;
+create)
+  create_ip
+  ;;
 esac

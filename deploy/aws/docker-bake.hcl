@@ -22,7 +22,7 @@ group "default" {
 }
 
 target "web" {
-  context = "services/web"
+  context = "../services/web"
   tags = [
     "${REPOSITORY}:web.latest",
     notequal("", TAG) ? "${REPOSITORY}:web.${TAG}" : ""
@@ -33,7 +33,7 @@ target "web" {
 }
 
 target "api" {
-  context = "services/api"
+  context = "../services/api"
   tags = [
     "${REPOSITORY}:api.latest",
     notequal("", TAG) ? "${REPOSITORY}:api.${TAG}" : ""

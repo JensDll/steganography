@@ -1,31 +1,8 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: cors-middleware
-spec:
-  headers:
-    accessControlAllowMethods:
-      - 'PUT'
-      - 'GET'
-      - 'POST'
-      - 'OPTIONS'
-      - 'DELETE'
-      - 'HEAD'
-      - 'TRACE'
-      - 'PATCH'
-    accessControlAllowHeaders:
-      - '*'
-    accessControlAllowOriginList:
-      - 'https://imagehiding.com'
-    accessControlMaxAge: 100
-    addVaryHeader: true
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: app-ingress
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: default-cors-middleware@kubernetescrd
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   tls:

@@ -33,12 +33,17 @@ spec:
   selector:
     matchLabels:
       app: web
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
         app: web
     spec:
-      terminationGracePeriodSeconds: 1
       containers:
         - name: web
           image: rg.fr-par.scw.cloud/image-data-hiding/web:latest
@@ -55,19 +60,28 @@ kind: Deployment
 metadata:
   name: api-deploy
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: api
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
         app: api
     spec:
-      terminationGracePeriodSeconds: 1
       containers:
         - name: api
           image: rg.fr-par.scw.cloud/image-data-hiding/api:latest
           imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: '1000m'
+              memory: '2048Mi'
           ports:
             - containerPort: 80
