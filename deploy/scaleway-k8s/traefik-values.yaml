@@ -1,5 +1,0 @@
-additionalArguments:
-  - '--entrypoints.websecure.http.tls'
-service:
-  spec:
-    loadBalancerIP: 51.159.11.63
