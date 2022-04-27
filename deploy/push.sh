@@ -6,14 +6,17 @@ YELLOW="\033[0;33m"
 
 __usage()
 {
-  echo "Usage: $(basename "${BASH_SOURCE[0]}") [Options] [[--] <Arguments>...]
+  echo "Usage: $(basename "${BASH_SOURCE[0]}") --provider name [Options]
 
-Arguments:
-    <Arguments>...        Arguments passed to the command. Variable number of arguments allowed.
+Required:
+    --provider | -p       The container registry provider.
+                          Supported providers:
+                            - aws
+                            - scaleway | scw
 
 Options:
-    --provider | -p       The container registry provider (required).
     --tag      | -t       The container image tag.
+    --update   | -u       Update the services to run the new container image.
 "
 
   exit 2
@@ -29,7 +32,8 @@ __warn() {
 
 while [[ $# -gt 0 ]]
 do
-  opt="$(echo "${1/#--/-}" | awk '{print tolower($0)}')"
+  # Replace leading "--" and convert to lowercase
+  declare -l opt="${1/#--/-}"
 
   case "$opt" in
   -\?|-help|-h)
@@ -37,12 +41,17 @@ do
     ;;
   -provider|-p)
     shift
-    provider="$1"
+    declare -r provider="$1"
     [[ -z $provider ]] && __error "Missing value for parameter --provider" && __usage
     ;;
   -tag|-t)
     shift
-    export TAG="$1"
+    declare -r tag="$1"
+    [[ -z $tag ]] && __error "Missing value for parameter --tag" && __usage
+    export TAG=$tag
+    ;;
+  -update|-u)
+    declare -r update=true
     ;;
   *)
     __usage
@@ -57,15 +66,23 @@ then
   export AWS_ACCOUNT_ID
   AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 
-  docker buildx bake --file aws/docker-bake.hcl --push
+  docker buildx bake --file docker-bake-aws.hcl --push
   
-  # aws ecs update-service --cluster app-cluster --service web --force-new-deployment 1> /dev/null
-  # aws ecs update-service --cluster app-cluster --service api --force-new-deployment 1> /dev/null
-elif [[ $provider == "scaleway" ]]
+  if [[ $update == true ]]
+  then
+    echo "Updating services..."
+    aws ecs update-service --cluster app-cluster --service web --force-new-deployment 1> /dev/null
+    aws ecs update-service --cluster app-cluster --service api --force-new-deployment 1> /dev/null
+  fi
+elif [[ $provider == "scaleway" || $provider == "scw" ]]
 then
-  docker buildx bake --file scaleway/docker-bake.hcl --push
+  docker buildx bake --file docker-bake-scaleway.hcl --push
 
-  # kubectl rollout restart -f k8s/app.yaml
+  if [[ $update == true ]]
+  then
+    echo "Updating services..."
+    kubectl rollout restart -f scaleway-k8s/app.yaml
+  fi
 else
-  __error "Missing value for parameter --provider" && __usage
+  __error "Provider with name '$provider' is not supported by this script" && __usage
 fi

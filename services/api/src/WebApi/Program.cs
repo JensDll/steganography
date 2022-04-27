@@ -49,8 +49,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseCors(corsDevPolicy);
 }
-
-app.UseCors(corsProdPolicy);
+else
+{
+    app.UseCors(corsProdPolicy);
+}
 
 Anonymous(
     app.MapPost<EncodeText>("/codec/encode/text"),

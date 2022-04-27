@@ -44,10 +44,22 @@ spec:
       labels:
         app: web
     spec:
+      volumes:
+        - name: nginx
+          configMap:
+            name: web-nginx-cm
+        - name: conf-d
+          configMap:
+            name: web-conf.d-cm
       containers:
         - name: web
           image: rg.fr-par.scw.cloud/image-data-hiding/web:latest
           imagePullPolicy: Always
+          volumeMounts:
+            - name: nginx
+              mountPath: /etc/nginx
+            - name: conf-d
+              mountPath: /etc/nginx/conf.d
           resources:
             limits:
               cpu: '250m'
@@ -81,7 +93,7 @@ spec:
           imagePullPolicy: Always
           resources:
             limits:
-              cpu: '1000m'
-              memory: '2048Mi'
+              cpu: '800m'
+              memory: '1024Mi'
           ports:
             - containerPort: 80

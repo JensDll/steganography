@@ -1,0 +1,10 @@
+resources:
+  - deployment.yaml
+configMapGenerator:
+  - name: web-nginx-cm
+    files:
+      - config/web/nginx.conf
+      - config/web/mime.types
+  - name: web-conf.d-cm
+    files:
+      - config/web/conf.d/server.conf
