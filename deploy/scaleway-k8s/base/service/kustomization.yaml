@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: service
 resources:
   - namespace.yaml
-  - issuer.yaml
   - certificate.yaml
   - web/config.yaml
   - web/service.yaml
@@ -18,6 +17,7 @@ patches:
       metadata:
         name: _
       spec:
+        automountServiceAccountToken: false
         revisionHistoryLimit: 5
         strategy:
           type: RollingUpdate

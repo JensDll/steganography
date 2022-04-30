@@ -6,7 +6,6 @@ namespace Domain.Entities;
 public class AesCounterMode : IDisposable
 {
     private readonly Aes _aes;
-
     // The first 32 bits represent the counter and the last 96 bits are the IV.
     private readonly byte[] _counterAndIV = new byte[16];
     private readonly ICryptoTransform _encryptor;

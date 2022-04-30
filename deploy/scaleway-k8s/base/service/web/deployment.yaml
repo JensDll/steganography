@@ -12,7 +12,6 @@ spec:
       labels:
         app: web
     spec:
-      automountServiceAccountToken: false
       containers:
         - name: web
           image: rg.fr-par.scw.cloud/image-data-hiding/web:latest

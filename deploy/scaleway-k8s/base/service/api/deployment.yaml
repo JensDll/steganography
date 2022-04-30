@@ -12,7 +12,6 @@ spec:
       labels:
         app: api
     spec:
-      automountServiceAccountToken: false
       containers:
         - name: api
           image: rg.fr-par.scw.cloud/image-data-hiding/api:latest

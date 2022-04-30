@@ -17,9 +17,10 @@
   box-shadow: 0 2px 20px 0 rgb(theme('colors.rgb.black') / 0.6);
 }
 
-@screen section {
+@media (min-width: 1340px) {
   .section {
     @apply mx-auto max-w-7xl rounded-2xl;
+    width: 90%;
     box-shadow: 4px 4px 40px 0 rgb(theme('colors.rgb.gray.900') / 0.12);
   }
 
