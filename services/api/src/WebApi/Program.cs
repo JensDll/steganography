@@ -28,7 +28,7 @@ webBuilder.Services.AddCors(options =>
 
     options.AddPolicy(corsProdPolicy, corsBuilder =>
     {
-        corsBuilder.WithOrigins("https://imagehiding.com").AllowAnyMethod();
+        corsBuilder.WithOrigins("https://imagehiding.com");
     });
 });
 

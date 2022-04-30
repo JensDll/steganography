@@ -9,6 +9,11 @@ public static class ModelBindingExtensions
 {
     public static string GetBoundary(this HttpContext context, int lengthLimit = 70)
     {
+        if (context.Request.ContentType == null)
+        {
+            throw new ModelBindingException("Missing content-type header");
+        }
+
         MediaTypeHeaderValue contentType = MediaTypeHeaderValue.Parse(context.Request.ContentType);
         string boundary = HeaderUtilities.RemoveQuotes(contentType.Boundary).Value;
 

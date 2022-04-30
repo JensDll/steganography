@@ -4,12 +4,18 @@ DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 install()
 {
+  if ! kubectl get namespace traefik &> /dev/null
+  then
+    kubectl create namespace traefik
+  fi
+
   helm install traefik traefik/traefik --namespace=traefik --values="$DIR/values.yaml"
 }
 
 uninstall()
 {
   helm uninstall traefik --namespace=traefik
+  kubectl delete namespace traefik
 }
 
 debug()

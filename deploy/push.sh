@@ -82,7 +82,7 @@ then
   if [[ $update == true ]]
   then
     echo "Updating services..."
-    kubectl rollout restart -f scaleway-k8s/app.yaml
+    kubectl rollout restart -f scaleway-k8s/deployment.yaml
   fi
 else
   __error "Provider with name '$provider' is not supported by this script" && __usage

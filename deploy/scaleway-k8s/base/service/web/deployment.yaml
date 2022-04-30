@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: web
+          image: rg.fr-par.scw.cloud/image-data-hiding/web:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: nginx
+              mountPath: /etc/nginx
+              readOnly: true
+            - name: default
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+          resources:
+            limits:
+              cpu: '250m'
+              memory: '256Mi'
+          ports:
+            - containerPort: 80
+      volumes:
+        - name: nginx
+          configMap:
+            name: web-nginx-config-map
+        - name: default
+          configMap:
+            name: web-default-config-map
