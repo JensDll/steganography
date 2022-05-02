@@ -1,0 +1,10 @@
+service:
+  spec:
+    loadBalancerIP: 51.159.26.206
+ingressClass:
+  enabled: true
+ports:
+  web:
+    redirectTo: websecure
+additionalArguments:
+  - '--entrypoints.websecure.http.tls'

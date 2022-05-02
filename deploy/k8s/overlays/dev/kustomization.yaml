@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+secretGenerator:
+  - name: dev-ca-cert
+    namespace: cert-manager
+    files:
+      - tls.crt
+      - tls.key
+    type: kubernetes.io/tls
+generatorOptions:
+  disableNameSuffixHash: true
+resources:
+  - issuer.yaml
+  - ..//service
+patchesStrategicMerge:
+  - domain.patch.yaml
+patches:
+  - path: replicas.patch.yaml
+    target:
+      kind: Deployment

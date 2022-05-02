@@ -6,7 +6,7 @@ ARG BUILD_MODE=production
 WORKDIR /out
 
 # Install pnpm
-RUN npm install -g pnpm@6.32.8
+RUN npm install -g pnpm@7.0.0
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml ./
@@ -16,7 +16,7 @@ RUN pnpm install --frozen-lockfile
 COPY . ./
 
 # Build the project
-RUN pnpm run build -- --mode ${BUILD_MODE}
+RUN pnpm run build --mode ${BUILD_MODE}
 
 # Build ngx_brotli from source
 FROM nginx:${ALPINE_VERSION}-alpine as ngx_brotli

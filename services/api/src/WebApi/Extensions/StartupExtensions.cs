@@ -8,7 +8,7 @@ using Serilog.Sinks.AwsCloudWatch;
 using Serilog.Sinks.AwsCloudWatch.LogStreamNameProvider;
 using ILogger = Serilog.ILogger;
 
-namespace WebApi.Common;
+namespace WebApi.Extensions;
 
 public static class StartupExtensions
 {

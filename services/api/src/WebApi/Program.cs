@@ -1,7 +1,6 @@
 using ApiBuilder;
 using Domain;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using WebApi.Common;
+using WebApi.Extensions;
 using WebApi.Features.Codec.Decode;
 using WebApi.Features.Codec.EncodeBinary;
 using WebApi.Features.Codec.EncodeText;
@@ -26,20 +25,14 @@ webBuilder.Services.AddCors(options =>
         corsBuilder.AllowAnyOrigin();
     });
 });
+
 webBuilder.Services.AddDomain();
+
 webBuilder.Services.AddEndpoints<Program>();
 
 webBuilder.WebHost.ConfigureKestrel(kestrelOptions =>
 {
     kestrelOptions.Limits.MaxRequestBodySize = 60 * 1024 * 1024; // 60 MB
-
-    if (!webBuilder.Environment.IsDevelopment())
-    {
-        kestrelOptions.ConfigureEndpointDefaults(configureOptions =>
-        {
-            configureOptions.Protocols = HttpProtocols.Http2;
-        });
-    }
 });
 
 WebApplication app = webBuilder.Build();

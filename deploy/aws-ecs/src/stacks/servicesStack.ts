@@ -53,7 +53,7 @@ export class ServicesStack extends cdk.Stack {
       targetGroupOptions: {
         protocol: aws_elasticloadbalancingv2.ApplicationProtocol.HTTP,
         protocolVersion:
-          aws_elasticloadbalancingv2.ApplicationProtocolVersion.HTTP2,
+          aws_elasticloadbalancingv2.ApplicationProtocolVersion.HTTP1,
         healthCheckPath: '/api/health'
       }
     })
