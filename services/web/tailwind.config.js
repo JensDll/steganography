@@ -1,8 +1,8 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 const Forms = require('@tailwindcss/forms')
 const Typography = require('@tailwindcss/typography')
+const { Icons } = require('tailwindcss-plugin-icons')
 
-const { Icons } = require('./tailwind/plugins/icons')
 const { Utilities } = require('./tailwind/plugins/utilities')
 const { Variants } = require('./tailwind/plugins/variants')
 
@@ -42,8 +42,8 @@ module.exports = {
   plugins: [
     Forms,
     Typography,
-    Icons(
-      {
+    Icons({
+      asMask: {
         'heroicons-outline': [
           'trash',
           'dots-vertical',
@@ -53,13 +53,16 @@ module.exports = {
           'desktop-computer'
         ],
         'heroicons-solid': ['lock-open', 'lock-closed', 'paper-clip'],
-        mdi: ['github'],
-        custom: ['loading']
+        mdi: ['github']
       },
-      {
+      asBackground: {
         'heroicons-outline': ['trash']
+      },
+      custom: {
+        asMask: ['loading'],
+        location: './src/icons.json'
       }
-    ),
+    }),
     Utilities(),
     Variants()
   ],
