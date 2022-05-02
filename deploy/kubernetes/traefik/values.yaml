@@ -1,6 +1,6 @@
 service:
   spec:
-    loadBalancerIP: 51.159.11.63
+    loadBalancerIP: 51.159.26.206
 ingressClass:
   enabled: true
 ports:

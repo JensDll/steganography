@@ -17,12 +17,14 @@ patches:
       metadata:
         name: _
       spec:
-        automountServiceAccountToken: false
         revisionHistoryLimit: 5
         strategy:
           type: RollingUpdate
           rollingUpdate:
             maxUnavailable: 1
             maxSurge: 1
+        template:
+          spec:
+            automountServiceAccountToken: false
     target:
       kind: Deployment
