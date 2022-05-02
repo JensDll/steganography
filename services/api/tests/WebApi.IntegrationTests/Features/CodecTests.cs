@@ -34,7 +34,7 @@ public class CodecTests : TestingBase
 
         // Act
         HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/codec/encode/text", encodeFormData);
+            await Client.PostAsync("/api/codec/encode/text", encodeFormData);
 
         // Assert
         Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -80,7 +80,7 @@ public class CodecTests : TestingBase
 
         // Act
         HttpResponseMessage decodeResponse =
-            await Client.PostAsync("/codec/decode", decodeFormData);
+            await Client.PostAsync("/api/codec/decode", decodeFormData);
 
         // Assert
         Assert.That(decodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -113,7 +113,7 @@ public class CodecTests : TestingBase
 
         // Act
         HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/codec/encode/binary", encodeFormData);
+            await Client.PostAsync("/api/codec/encode/binary", encodeFormData);
 
         // Assert
         Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -159,7 +159,7 @@ public class CodecTests : TestingBase
 
         // Act
         HttpResponseMessage decodeResponse =
-            await Client.PostAsync("/codec/decode", decodeFormData);
+            await Client.PostAsync("/api/codec/decode", decodeFormData);
 
         // Assert
         if (isSameKey)
@@ -205,7 +205,7 @@ public class CodecTests : TestingBase
 
         // Act
         HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/codec/encode/text", formData);
+            await Client.PostAsync("/api/codec/encode/text", formData);
 
         // Assert
         Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -226,7 +226,7 @@ public class CodecTests : TestingBase
 
         // Act
         HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/codec/encode/text", formData);
+            await Client.PostAsync("/api/codec/encode/text", formData);
 
         // Assert
         Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -247,7 +247,7 @@ public class CodecTests : TestingBase
 
         // Act
         HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/codec/encode/binary", formData);
+            await Client.PostAsync("/api/codec/encode/binary", formData);
 
         // Assert
         Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -269,7 +269,7 @@ public class CodecTests : TestingBase
 
         // Act
         HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/codec/encode/binary", formData);
+            await Client.PostAsync("/api/codec/encode/binary", formData);
 
         // Assert
         Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
