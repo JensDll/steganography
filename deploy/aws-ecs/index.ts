@@ -1,11 +1,6 @@
 import 'source-map-support/register'
 import * as cdk from 'aws-cdk-lib'
-import {
-  VpcStack,
-  ServicesStack,
-  IdentityPoolStack,
-  TaskDefinitionStack
-} from './src/stacks'
+import { VpcStack, ServicesStack, TaskDefinitionStack } from './src/stacks'
 
 const app = new cdk.App()
 
@@ -32,13 +27,6 @@ new ServicesStack(app, 'Services', {
   taskDefinitions: {
     web: taskDefinitionStack.web,
     api: taskDefinitionStack.api
-  }
-})
-
-new IdentityPoolStack(app, 'IdentityPool', {
-  env: {
-    region: process.env.CDK_DEFAULT_REGION,
-    account: process.env.CDK_DEFAULT_ACCOUNT
   }
 })
 
