@@ -118,14 +118,14 @@ watch(theme, changeThemePreference)
           <li class="pl-4">
             <a href="https://github.com/JensDll/image-data-hiding">
               <div
-                class="i-mdi-github h-6 w-6 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+                class="h-6 w-6 text-gray-400 i-mdi-github hover:text-gray-500 dark:hover:text-gray-300"
               ></div>
             </a>
           </li>
         </ul>
       </nav>
       <div
-        class="i-heroicons-outline-dots-vertical h-6 w-6 cursor-pointer md:hidden"
+        class="h-6 w-6 cursor-pointer i-heroicons-outline-dots-vertical md:hidden"
         @click="isPopupOpen = true"
       ></div>
     </div>
@@ -139,7 +139,7 @@ watch(theme, changeThemePreference)
       class="fixed top-5 right-5 left-5 rounded-lg bg-bg-base p-6 shadow-lg dark:bg-gray-800 sm:left-auto sm:w-full sm:max-w-xs"
     >
       <div
-        class="i-heroicons-outline-x absolute top-5 right-5 h-6 w-6 cursor-pointer text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
+        class="absolute top-5 right-5 h-6 w-6 cursor-pointer text-gray-500 i-heroicons-outline-x hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
         @click="closePopup"
       ></div>
       <ul class="space-y-6">
