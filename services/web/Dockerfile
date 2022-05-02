@@ -16,7 +16,7 @@ RUN pnpm install --frozen-lockfile
 COPY . ./
 
 # Build the project
-RUN pnpm run build -- --mode ${BUILD_MODE}
+RUN pnpm run build --mode ${BUILD_MODE}
 
 # Build ngx_brotli from source
 FROM nginx:${ALPINE_VERSION}-alpine as ngx_brotli
