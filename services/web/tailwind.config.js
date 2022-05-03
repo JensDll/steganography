@@ -44,7 +44,7 @@ module.exports = {
     Typography,
     Icons({
       asMask: {
-        'heroicons-outline': [
+        heroiconsOutline: [
           'trash',
           'dots-vertical',
           'x',
@@ -52,11 +52,11 @@ module.exports = {
           'sun',
           'desktop-computer'
         ],
-        'heroicons-solid': ['lock-open', 'lock-closed', 'paper-clip'],
+        heroiconsSolid: ['lock-open', 'lock-closed', 'paper-clip'],
         mdi: ['github']
       },
       asBackground: {
-        'heroicons-outline': ['trash']
+        heroiconsOutline: ['trash']
       },
       custom: {
         asMask: ['loading'],
