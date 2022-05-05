@@ -31,6 +31,14 @@ module.exports.Utilities = function () {
         }
       })
 
+      // https://stackblitz.com/edit/vitejs-vite-foltbu
+      addUtilities({
+        '.firefox-border-animation-bug-fix': {
+          border: '0.01px solid rgba(0, 0, 0, 0)',
+          backgroundClip: 'padding-box'
+        }
+      })
+
       matchUtilities({
         'grid-area': values => {
           return {

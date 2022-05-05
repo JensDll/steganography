@@ -1,3 +1,5 @@
+const path = require('path')
+
 const defaultTheme = require('tailwindcss/defaultTheme')
 const Forms = require('@tailwindcss/forms')
 const Typography = require('@tailwindcss/typography')
@@ -43,24 +45,26 @@ module.exports = {
     Forms,
     Typography,
     Icons({
-      asMask: {
-        heroiconsOutline: [
+      heroiconsOutline: {
+        icons: [
           'trash',
+          'trash?bg',
           'dots-vertical',
           'x',
           'moon',
           'sun',
           'desktop-computer'
-        ],
-        heroiconsSolid: ['lock-open', 'lock-closed', 'paper-clip'],
-        mdi: ['github']
+        ]
       },
-      asBackground: {
-        heroiconsOutline: ['trash']
+      heroiconsSolid: {
+        icons: ['lock-open', 'lock-closed', 'paper-clip']
+      },
+      mdi: {
+        icons: ['github']
       },
       custom: {
-        asMask: ['loading'],
-        location: './src/icons.json'
+        icons: ['loading'],
+        location: path.resolve(__dirname, './src/icons.json')
       }
     }),
     Utilities(),
