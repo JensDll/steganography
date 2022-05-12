@@ -1,0 +1,12 @@
+ports:
+  # web:
+  #   redirectTo: websecure
+  websecure:
+    tls:
+      enabled: true
+providers:
+  kubernetesIngress:
+    publishedService:
+      enabled: true
+# additionalArguments:
+#   - '--entrypoints.websecure.http.tls'
