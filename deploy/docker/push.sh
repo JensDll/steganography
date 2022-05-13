@@ -12,15 +12,14 @@ export DOCKER_BAKE_PLATFORM
 
 __usage()
 {
-  echo "Usage: $(basename "${BASH_SOURCE[0]}") --provider name [Options]
+  echo "Usage: $(basename "${BASH_SOURCE[0]}") [options]
 
-Required:
+Options:
     --provider | -p       The container registry provider.
                           Supported providers:
                             - aws
                             - docker
 
-Options:
     --tag      | -t       The container image tag.
 "
 
@@ -56,15 +55,15 @@ do
     export TAG=$tag
     ;;
   *)
-    __usage
+    __error "Unknown option: $1" && __usage
     ;;
   esac
 
   shift
 done
 
-if [[ $provider == "aws" ]]
-then
+case "$provider" in
+aws)
   AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
   AWS_REGION=$(aws configure get region)
 
@@ -72,13 +71,13 @@ then
   DOCKER_BAKE_PLATFORM="linux/arm64"
 
   docker buildx bake --file "$DIR/docker-bake.hcl" --push
-
-elif [[ $provider == "docker" ]]
-then
+  ;;
+docker)
   DOCKER_BAKE_REPOSITORY="jensdll/image-data-hiding"
   DOCKER_BAKE_PLATFORM="linux/arm64,linux/amd64"
 
   docker buildx bake --file "$DIR/docker-bake.hcl" --push
-else
-  __error "Provider with name '$provider' is not supported by this script" && __usage
-fi
+  ;;
+*)
+  __error "Unknown provider: $provider" && __usage
+esac
