@@ -42,6 +42,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseCors(corsDevPolicy);
+    app.Urls.Add("http://0.0.0.0:5000");
+    app.Urls.Add("https://0.0.0.0:5001");
 }
 
 Anonymous(

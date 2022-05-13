@@ -1,7 +1,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: www-redirect
+  name: web-www-redirect
 spec:
   redirectRegex:
     regex: ^https://www.imagehiding.com(.*)
@@ -19,27 +19,10 @@ spec:
     - match: Host(`imagehiding.com`) || Host(`www.imagehiding.com`)
       kind: Rule
       middlewares:
-        - name: www-redirect
+        - name: web-www-redirect
       services:
         - name: web-svc
           kind: Service
           port: 80
   tls:
     secretName: web-cert
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: api-route
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - match: Host(`api.imagehiding.com`)
-      kind: Rule
-      services:
-        - name: api-svc
-          kind: Service
-          port: 80
-  tls:
-    secretName: api-cert

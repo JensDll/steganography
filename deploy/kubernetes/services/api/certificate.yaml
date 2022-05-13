@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: api-cert
+spec:
+  commonName: api.imagehiding.com
+  secretName: api-cert
+  dnsNames:
+    - api.imagehiding.com
+  issuerRef:
+    name: cluster-issuer
+    kind: ClusterIssuer

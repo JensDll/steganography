@@ -7,14 +7,21 @@ spec:
   selector:
     matchLabels:
       app: web
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
         app: web
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: web
-          image: rg.fr-par.scw.cloud/image-data-hiding/web:latest
+          image: jensdll/image-data-hiding:web.latest
           imagePullPolicy: Always
           volumeMounts:
             - name: nginx

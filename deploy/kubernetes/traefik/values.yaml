@@ -1,12 +1,12 @@
+ingressClass:
+  enabled: true
 ports:
-  # web:
-  #   redirectTo: websecure
-  websecure:
-    tls:
-      enabled: true
-providers:
-  kubernetesIngress:
-    publishedService:
-      enabled: true
-# additionalArguments:
-#   - '--entrypoints.websecure.http.tls'
+  web:
+    redirectTo: websecure
+additionalArguments:
+  - '--entrypoints.websecure.http.tls'
+# External DNS is currently broken on LKE:
+# https://github.com/kubernetes-sigs/external-dns/issues/2499
+# service:
+#   annotations:
+#     external-dns.alpha.kubernetes.io/hostname: imagehiding.com
