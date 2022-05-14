@@ -24,9 +24,8 @@ public class Decode : EndpointWithoutResponse<Request>
         bool isValidKey = _keyService.TryParse(request.Key, out MessageType messageType, out int seed,
             out int messageLength, out byte[] key, out byte[] iV);
 
-        _logger.Information(
-            "Decoding {MessageType} message with valid key {IsValidKey} and length {MessageLength}",
-            messageType, isValidKey, messageLength);
+        _logger.Information("Decoding {MessageType} message with valid key {IsValidKey}",
+            messageType, isValidKey);
 
         if (!isValidKey || messageLength < 1 || messageLength > request.CoverImageCapacity)
         {

@@ -7,6 +7,7 @@ using WebApi.Features.Codec.EncodeText;
 using static ApiBuilder.EndpointAuthenticationDeclaration;
 
 const string corsDevPolicy = "cors:dev";
+const string corsProdPolicy = "cors:prod";
 
 WebApplicationBuilder webBuilder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,11 @@ webBuilder.Services.AddCors(options =>
     options.AddPolicy(corsDevPolicy, corsBuilder =>
     {
         corsBuilder.AllowAnyOrigin();
+    });
+
+    options.AddPolicy(corsProdPolicy, corsBuilder =>
+    {
+        corsBuilder.WithOrigins("https://imagehiding.com");
     });
 });
 
@@ -42,8 +48,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseCors(corsDevPolicy);
-    app.Urls.Add("http://0.0.0.0:5000");
-    app.Urls.Add("https://0.0.0.0:5001");
+}
+else
+{
+    app.UseCors(corsProdPolicy);
 }
 
 Anonymous(

@@ -1,8 +1,8 @@
 import * as cdk from 'aws-cdk-lib'
 import { aws_iam, aws_route53 } from 'aws-cdk-lib'
 
-class MainStack extends cdk.Stack {
-  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
+class ExternalDnsStack extends cdk.Stack {
+  constructor(scope, id, props) {
     super(scope, id, props)
 
     const domainName = 'imagehiding.com'
@@ -45,7 +45,7 @@ class MainStack extends cdk.Stack {
 
 const app = new cdk.App()
 
-new MainStack(app, 'Main', {
+new ExternalDnsStack(app, 'ExternalDns', {
   env: {
     region: 'eu-central-1',
     account: '378859530546'

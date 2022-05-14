@@ -8,8 +8,6 @@
         <InternalsVisibleTo Include="WebApi.IntegrationTests" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Serilog.Sinks.AwsCloudWatch" Version="4.0.171" />
-        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
     </ItemGroup>
     <ItemGroup>
