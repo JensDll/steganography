@@ -5,17 +5,13 @@ class CloudwatchStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props)
 
-    const userName = `CloudwatchAccess@image-data-hiding`
+    const userName = 'CloudwatchAccess.ImageDataHiding'
 
-    const cloudwatchAccessUser = new aws_iam.User(
-      this,
-      'CloudwatchAccessUser',
-      {
-        userName
-      }
-    )
+    const user = new aws_iam.User(this, 'User', {
+      userName
+    })
 
-    cloudwatchAccessUser.addManagedPolicy(
+    user.addManagedPolicy(
       aws_iam.ManagedPolicy.fromManagedPolicyArn(
         this,
         'Policy',

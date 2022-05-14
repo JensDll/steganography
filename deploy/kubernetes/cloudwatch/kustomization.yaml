@@ -4,7 +4,7 @@ namespace: amazon-cloudwatch
 secretGenerator:
   - name: cloudwatch-access
     envs:
-      - .env
+      - aws.credentials.env
 resources:
   - namespace.yaml
   - config.yaml

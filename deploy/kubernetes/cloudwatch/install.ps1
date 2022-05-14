@@ -2,7 +2,7 @@
 param (
   [Alias('r')]
   [switch]$RecreateCredentials,
-  
+
   [Parameter(ValueFromRemainingArguments)]
   [string[]]$HelmInstallArgs
 )
@@ -24,7 +24,7 @@ try {
 
 $credentials = Get-AwsCredentials -UserName $userName -Recreate:$RecreateCredentials -Verbose:$VerbosePreference
 
-helm upgrade external-dns bitnami/external-dns --install --namespace=external-dns `
-  --create-namespace `
-  --set "aws.credentials.accessKey=$($credentials.AccessKey),aws.credentials.secretKey=$($credentials.SecretKey)" `
-  --values="$PSScriptRoot/values.yaml" $HelmInstallArgs
+$Env:AWS_ACCESS_KEY = $credentials.SecretKey
+$Env:AWS_SECRET_KEY = $credentials.AccessKey
+
+kubectl kustomize $PSScriptRoot

@@ -29,16 +29,16 @@ class ExternalDnsStack extends cdk.Stack {
       ]
     })
 
-    const userName = `AllowDnsUpdates@${domainName}`
+    const userName = 'AllowDnsUpdates.ImageDataHiding'
 
-    const dnsAccessUser = new aws_iam.User(this, 'DnsAccessUser', {
+    const user = new aws_iam.User(this, 'User', {
       userName
     })
 
     new aws_iam.Policy(this, userName, {
       document: policyDocument,
       policyName: userName,
-      users: [dnsAccessUser]
+      users: [user]
     })
   }
 }
