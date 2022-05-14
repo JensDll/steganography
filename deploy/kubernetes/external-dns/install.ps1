@@ -2,7 +2,7 @@
 param (
   [Alias('r')]
   [switch]$RecreateCredentials,
-  
+
   [Parameter(ValueFromRemainingArguments)]
   [string[]]$HelmInstallArgs
 )

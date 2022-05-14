@@ -1,9 +1,9 @@
 ﻿<#
 .PARAMETER Provider
-    The container registry provider.
+  The container registry provider.
 
 .PARAMETER Tag
-    The tag to use for the image.
+  The tag to use for the image.
 #>
 
 [CmdletBinding()]
@@ -25,12 +25,12 @@ switch ($Provider) {
     $Env:DOCKER_BAKE_REPOSITORY = "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/image-data-hiding"
     $Env:DOCKER_BAKE_PLATFORM = 'linux/arm64'
 
-    docker buildx bake --file "$PSScriptRoot/docker-bake.hcl" --print
+    docker buildx bake --file "$PSScriptRoot/docker-bake.hcl" --push
   }
   docker {
     $Env:DOCKER_BAKE_REPOSITORY = 'jensdll/image-data-hiding'
     $Env:DOCKER_BAKE_PLATFORM = 'linux/arm64,linux/amd64'
 
-    docker buildx bake --file "$PSScriptRoot/docker-bake.hcl" --print
+    docker buildx bake --file "$PSScriptRoot/docker-bake.hcl" --push
   }
 }
