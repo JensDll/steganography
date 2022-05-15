@@ -5,8 +5,3 @@ ports:
     redirectTo: websecure
 additionalArguments:
   - '--entrypoints.websecure.http.tls'
-# External DNS is currently broken on LKE:
-# https://github.com/kubernetes-sigs/external-dns/issues/2499
-# service:
-#   annotations:
-#     external-dns.alpha.kubernetes.io/hostname: imagehiding.com

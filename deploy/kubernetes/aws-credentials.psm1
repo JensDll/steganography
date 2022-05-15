@@ -24,11 +24,13 @@ function Get-AwsCredentials {
     }
 
     New-AwsCredentials $UserName
-  } elseif ($doesNotHaveCredentials) {
+  }
+  elseif ($doesNotHaveCredentials) {
     Write-Verbose "Creating new AWS credentials for user '$UserName'"
 
     New-AwsCredentials $UserName
-  } else {
+  }
+  else {
     Write-Verbose 'Using existing AWS credentials'
   }
 

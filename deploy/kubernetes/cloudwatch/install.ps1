@@ -18,13 +18,19 @@ try {
   $userName = $user.Properties.UserName
 
   cdk deploy
-} finally {
+}
+finally {
   Pop-Location
 }
 
 $credentials = Get-AwsCredentials -UserName $userName -Recreate:$RecreateCredentials -Verbose:$VerbosePreference
 
-$Env:AWS_ACCESS_KEY = $credentials.SecretKey
-$Env:AWS_SECRET_KEY = $credentials.AccessKey
+$Env:AWS_ACCESS_KEY = $credentials.AccessKey
+$Env:AWS_SECRET_KEY = $credentials.SecretKey
 
-kubectl kustomize $PSScriptRoot
+if ($DebugPreference) {
+  kubectl kustomize $PSScriptRoot
+}
+else {
+  kubectl apply -k $PSScriptRoot
+}

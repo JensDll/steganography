@@ -18,7 +18,8 @@ try {
   $userName = $user.Properties.UserName
 
   cdk deploy
-} finally {
+}
+finally {
   Pop-Location
 }
 
