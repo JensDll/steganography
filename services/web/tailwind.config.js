@@ -1,5 +1,3 @@
-const path = require('path')
-
 const defaultTheme = require('tailwindcss/defaultTheme')
 const Forms = require('@tailwindcss/forms')
 const Typography = require('@tailwindcss/typography')
