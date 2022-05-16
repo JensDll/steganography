@@ -1,14 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: services
+namespace: services-dev
 
 secretGenerator:
   - name: dev-ca-cert
-    namespace: cert-manager
     files:
-      - tls.crt
-      - tls.key
+      - ca/tls.crt
+      - ca/private/tls.key
     type: kubernetes.io/tls
 generatorOptions:
   disableNameSuffixHash: true
@@ -17,6 +16,33 @@ resources:
   - namespace.yaml
   - issuer.yaml
   - ../../base
+
+patchesJson6902:
+  - target:
+      version: v1alpha1
+      kind: IngressRoute
+      name: web-route
+    patch: |-
+      - op: replace
+        path: /spec/routes/0/match
+        value: "Host(`dev.imagehiding.com`) || Host(`www.dev.imagehiding.com`)"
+  - target:
+      version: v1alpha1
+      kind: IngressRoute
+      name: api-route
+    patch: |-
+      - op: replace
+        path: /spec/routes/0/match
+        value: "Host(`api.dev.imagehiding.com`)"
+
+patchesStrategicMerge:
+  - domain.patch.yaml
+
+replicas:
+  - name: web-deploy
+    count: 1
+  - name: api-deploy
+    count: 1
 
 replacements:
   - source:

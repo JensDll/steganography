@@ -27,11 +27,11 @@ Options:
 }
 
 __error() {
-    echo -e "${RED}error: $*${RESET}" 1>&2
+  echo -e "${RED}error: $*${RESET}" 1>&2
 }
 
 __warn() {
-    echo -e "${YELLOW}warning: $*${RESET}"
+  echo -e "${YELLOW}warning: $*${RESET}"
 }
 
 while [[ $# -gt 0 ]]

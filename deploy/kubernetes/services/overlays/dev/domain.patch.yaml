@@ -1,0 +1,27 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: web-cert
+spec:
+  commonName: dev.imagehiding.com
+  dnsNames:
+    - dev.imagehiding.com
+    - www.dev.imagehiding.com
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: api-cert
+spec:
+  commonName: api.dev.imagehiding.com
+  dnsNames:
+    - api.dev.imagehiding.com
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: web-www-redirect
+spec:
+  redirectRegex:
+    regex: ^https://www.dev.imagehiding.com(.*)
+    replacement: https://dev.imagehiding.com${1}

@@ -1,0 +1,6 @@
+certs
+db
+private
+*.crt
+*.p12
+*.csr

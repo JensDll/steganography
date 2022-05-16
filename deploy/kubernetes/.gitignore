@@ -23,4 +23,4 @@ dist-ssr
 cdk.out
 
 # Secrets
-.*
+.*credentials*

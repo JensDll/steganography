@@ -27,8 +27,12 @@ spec:
             - name: nginx
               mountPath: /etc/nginx
               readOnly: true
-            - name: default
+            - name: conf-d
               mountPath: /etc/nginx/conf.d
+              readOnly: true
+            - name: config-js
+              mountPath: /data/www/config.js
+              subPath: config.js
               readOnly: true
           resources:
             limits:
@@ -39,7 +43,10 @@ spec:
       volumes:
         - name: nginx
           configMap:
-            name: web-nginx-config-map
-        - name: default
+            name: web.nginx
+        - name: conf-d
           configMap:
-            name: web-default-config-map
+            name: web.conf.d
+        - name: config-js
+          configMap:
+            name: web.config.js

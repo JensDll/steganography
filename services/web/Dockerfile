@@ -42,7 +42,5 @@ ARG ALPINE_VERSION
 COPY --from=build /out/dist/ /data/www/
 # Copy ngx_brotli modules
 COPY --from=ngx_brotli /compile/nginx-${ALPINE_VERSION}/objs/ngx_http_brotli*.so /usr/lib/nginx/modules/
-# Copy configuration files
-COPY nginx/ /etc/nginx/
 
 EXPOSE 80

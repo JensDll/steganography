@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: web-nginx-config-map
+  name: web.nginx
   labels:
     config: web
 data:
@@ -155,7 +155,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: web-default-config-map
+  name: web.conf.d
   labels:
     config: web
 data:
@@ -172,4 +172,16 @@ data:
             access_log off;
             return 200;
         }
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web.config.js
+  labels:
+    config: web
+data:
+  config.js: |
+    const APP_CONFIG = {
+      API_URI: 'https://api.dev.imagehiding.com'
     }
