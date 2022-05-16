@@ -7,7 +7,7 @@ param (
   [string[]]$HelmInstallArgs
 )
 
-Import-Module $PSScriptRoot/../aws-credentials.psm1 -Force
+Import-Module $PSScriptRoot/../../aws-credentials.psm1 -Force
 
 try {
   Push-Location $PSScriptRoot
@@ -25,7 +25,12 @@ finally {
 
 $credentials = Get-AwsCredentials -UserName $userName -Recreate:$RecreateCredentials -Verbose:$VerbosePreference
 
-helm upgrade external-dns bitnami/external-dns --install --namespace=external-dns `
-  --create-namespace `
-  --set "aws.credentials.accessKey=$($credentials.AccessKey),aws.credentials.secretKey=$($credentials.SecretKey)" `
-  --values="$PSScriptRoot/values.yaml" $HelmInstallArgs
+$Env:AWS_ACCESS_KEY = $credentials.AccessKey
+$Env:AWS_SECRET_KEY = $credentials.SecretKey
+
+if ($DebugPreference) {
+  kubectl kustomize $PSScriptRoot
+}
+else {
+  kubectl apply -k $PSScriptRoot
+}

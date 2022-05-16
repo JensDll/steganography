@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: services
 resources:
   - namespace.yaml
-  - issuer.yaml
   - web/certificate.yaml
   - web/config.yaml
   - web/service.yaml
