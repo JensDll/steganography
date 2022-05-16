@@ -8,5 +8,5 @@ spec:
   dnsNames:
     - api.imagehiding.com
   issuerRef:
-    name: cluster-issuer
-    kind: ClusterIssuer
+    kind: _
+    name: _

@@ -9,5 +9,5 @@ spec:
     - imagehiding.com
     - www.imagehiding.com
   issuerRef:
-    name: cluster-issuer
-    kind: ClusterIssuer
+    kind: _
+    name: _

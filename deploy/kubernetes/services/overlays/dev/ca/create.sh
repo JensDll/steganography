@@ -2,6 +2,8 @@
 
 DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
+openssl rand -hex 16 > "$DIR/db/serial"
+
 openssl req -new \
   -config "$DIR/root-ca.conf" \
   -out "$DIR/root-ca.csr" \
