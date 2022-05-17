@@ -86,7 +86,7 @@ async function handleSubmit() {
             <textarea
               id="message"
               v-model="form.textData.$value"
-              placeholder="Your data will be hidden and encrypted&#10;Nothing is logged or saved anywhere"
+              placeholder="Your data will be hidden and encrypted&#10;Nothing gets logged or saved anywhere"
               class="max-h-[24rem] min-h-[8rem] w-full"
               :class="{ error: form.textData.$hasError }"
             />
