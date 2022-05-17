@@ -183,5 +183,5 @@ metadata:
 data:
   config.js: |
     const APP_CONFIG = {
-      API_URI: 'https://api.dev.imagehiding.com'
+      API_URI: 'https://api.imagehiding.com'
     }

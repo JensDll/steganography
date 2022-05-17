@@ -2,9 +2,9 @@ services:
   web:
     build: services/web
     volumes:
-      - ./services/web/config/nginx/:/etc/nginx/
-      - ./services/web/config/www/config.js:/data/www/config.js
-    ports: 
+      - ./services/web/nginx/:/etc/nginx/
+      - ./services/web/public/config.js:/data/www/config.js
+    ports:
       - 5000:80
     networks:
       - appnet
