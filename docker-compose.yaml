@@ -3,12 +3,15 @@ services:
     build: services/web
     volumes:
       - ./services/web/nginx/:/etc/nginx/
-    ports: 
+      - ./services/web/public/config.js:/data/www/config.js
+    ports:
       - 5000:80
     networks:
       - appnet
   api:
     build: services/api
+    volumes:
+      - ./services/api/src/WebApi/appsettings.json:/app/appsettings.json
     environment:
       ASPNETCORE_ENVIRONMENT: Production
     ports:

@@ -1,11 +1,4 @@
-﻿using Amazon;
-using Amazon.CloudWatchLogs;
-using Serilog;
-using Serilog.Events;
-using Serilog.Filters;
-using Serilog.Formatting.Json;
-using Serilog.Sinks.AwsCloudWatch;
-using Serilog.Sinks.AwsCloudWatch.LogStreamNameProvider;
+﻿using Serilog;
 using ILogger = Serilog.ILogger;
 
 namespace WebApi.Extensions;
@@ -18,38 +11,9 @@ public static class StartupExtensions
     {
         webBuilder.Logging.ClearProviders();
 
-        JsonFormatter textFormatter = new(Environment.NewLine);
         LoggerConfiguration loggerConfiguration = new();
 
-        if (webBuilder.Environment.IsDeployment())
-        {
-            // Exclude logs from the health check endpoint
-            loggerConfiguration.Filter.ByExcluding(Matching.WithProperty<string>("RequestPath",
-                path => path == "/api/health"));
-
-            CloudWatchSinkOptions options = new()
-            {
-                LogGroupName = "app/api",
-                CreateLogGroup = true,
-                TextFormatter = textFormatter,
-                MinimumLogEventLevel = LogEventLevel.Information,
-                LogStreamNameProvider =
-                    new ConfigurableLogStreamNameProvider(
-                        DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss.fff"),
-                        false, false),
-                LogGroupRetentionPolicy = LogGroupRetentionPolicy.OneWeek
-            };
-            AmazonCloudWatchLogsClient client = new(RegionEndpoint.EUCentral1);
-
-            loggerConfiguration.WriteTo.AmazonCloudWatch(options, client);
-        }
-        else
-        {
-            loggerConfiguration.WriteTo.Console();
-            loggerConfiguration.WriteTo.File(textFormatter,
-                path: Path.Combine(webBuilder.Environment.ContentRootPath, "Logs", "log.txt"),
-                rollingInterval: RollingInterval.Day);
-        }
+        loggerConfiguration.WriteTo.Console();
 
         ILogger logger = loggerConfiguration.CreateLogger();
 
@@ -62,5 +26,12 @@ public static class StartupExtensions
     public static bool IsDeployment(this IWebHostEnvironment environment)
     {
         return environment.IsEnvironment(_deployment);
+    }
+
+    public static string[] AllowedOrigins(this IConfiguration configuration)
+    {
+        List<string> allowedOrigins = new();
+        configuration.GetSection("Cors:AllowedOrigins").Bind(allowedOrigins);
+        return allowedOrigins.ToArray();
     }
 }

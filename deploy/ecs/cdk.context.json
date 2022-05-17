@@ -1,0 +1,11 @@
+{
+  "availability-zones:account=378859530546:region=eu-central-1": [
+    "eu-central-1a",
+    "eu-central-1b",
+    "eu-central-1c"
+  ],
+  "hosted-zone:account=378859530546:domainName=imagedatahiding.com:region=eu-central-1": {
+    "Id": "/hostedzone/Z01488201I2367PHY7Q0B",
+    "Name": "imagedatahiding.com."
+  }
+}

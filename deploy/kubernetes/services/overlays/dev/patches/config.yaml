@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appsettings.json
+data:
+  appsettings.json: |
+    {
+      "Cors": {
+        "AllowedOrigins": ["https://dev.imagedatahiding.com"]
+      }
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web.config.js
+data:
+  config.js: |
+    const APP_CONFIG = {
+      API_URI: 'https://api.dev.imagedatahiding.com'
+    }

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: web
+          image: jensdll/image-data-hiding:web.latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: nginx
+              mountPath: /etc/nginx
+              readOnly: true
+            - name: conf-d
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+            - name: config-js
+              mountPath: /data/www/config.js
+              subPath: config.js
+              readOnly: true
+          resources:
+            limits:
+              cpu: '250m'
+              memory: '256Mi'
+          ports:
+            - containerPort: 80
+      volumes:
+        - name: nginx
+          configMap:
+            name: web.nginx
+        - name: conf-d
+          configMap:
+            name: web.conf.d
+        - name: config-js
+          configMap:
+            name: web.config.js

@@ -94,4 +94,4 @@ function createFetch(baseUri: string) {
   }
 }
 
-export const useFetch = createFetch(import.meta.env.VITE_API_BASE_URI)
+export const useFetch = createFetch(APP_CONFIG.API_URI)

@@ -1,0 +1,63 @@
+lockfileVersion: 5.4
+
+importers:
+
+  .:
+    specifiers:
+      aws-cdk-lib: 2.24.1
+      constructs: 10.1.7
+      prettier: 2.6.2
+      source-map-support: 0.5.21
+    dependencies:
+      aws-cdk-lib: 2.24.1_constructs@10.1.7
+      constructs: 10.1.7
+      prettier: 2.6.2
+      source-map-support: 0.5.21
+
+packages:
+
+  /aws-cdk-lib/2.24.1_constructs@10.1.7:
+    resolution: {integrity: sha512-xGeEX+9wPGppSiIUdf/JTLMmqMikGhlSi7bjijl3lwncZtySkdjX0j+W2A1fuKp0S8Yd2axkwVkltIMxzNH/gw==}
+    engines: {node: '>= 14.15.0'}
+    peerDependencies:
+      constructs: ^10.0.0
+    dependencies:
+      constructs: 10.1.7
+    dev: false
+    bundledDependencies:
+      - '@balena/dockerignore'
+      - case
+      - fs-extra
+      - ignore
+      - jsonschema
+      - minimatch
+      - punycode
+      - semver
+      - yaml
+
+  /buffer-from/1.1.2:
+    resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
+    dev: false
+
+  /constructs/10.1.7:
+    resolution: {integrity: sha512-U4zMM7Iqa81hzLSfof9IW9R7kUWSMdhzV2JS8lXGISRFXljZrd4qwzYxhSO/VMB+CS24Tt0/YYLyNxET+6/3Mg==}
+    engines: {node: '>= 14.17.0'}
+    dev: false
+
+  /prettier/2.6.2:
+    resolution: {integrity: sha512-PkUpF+qoXTqhOeWL9fu7As8LXsIUZ1WYaJiY/a7McAQzxjk82OF0tibkFXVCDImZtWxbvojFjerkiLb0/q8mew==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: false
+
+  /source-map-support/0.5.21:
+    resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
+    dependencies:
+      buffer-from: 1.1.2
+      source-map: 0.6.1
+    dev: false
+
+  /source-map/0.6.1:
+    resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
+    engines: {node: '>=0.10.0'}
+    dev: false

@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: api-route
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`api.imagedatahiding.com`)
+      kind: Rule
+      services:
+        - name: api-svc
+          kind: Service
+          port: 80
+  tls:
+    secretName: api-cert

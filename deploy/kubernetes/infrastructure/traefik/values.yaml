@@ -1,0 +1,7 @@
+ingressClass:
+  enabled: true
+ports:
+  web:
+    redirectTo: websecure
+additionalArguments:
+  - '--entrypoints.websecure.http.tls'
