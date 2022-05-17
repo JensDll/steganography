@@ -3,11 +3,11 @@ kind: Certificate
 metadata:
   name: web-cert
 spec:
-  commonName: imagehiding.com
+  commonName: imagedatahiding.com
   secretName: web-cert
   dnsNames:
-    - imagehiding.com
-    - www.imagehiding.com
+    - imagedatahiding.com
+    - www.imagedatahiding.com
   issuerRef:
     kind: _
     name: _

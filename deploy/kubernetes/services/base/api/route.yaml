@@ -6,7 +6,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`api.imagehiding.com`)
+    - match: Host(`api.imagedatahiding.com`)
       kind: Rule
       services:
         - name: api-svc

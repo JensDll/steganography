@@ -28,7 +28,7 @@ webBuilder.Services.AddCors(options =>
 
     options.AddPolicy(corsProdPolicy, corsBuilder =>
     {
-        corsBuilder.WithOrigins("https://imagehiding.com");
+        corsBuilder.WithOrigins(webBuilder.Configuration.AllowedOrigins());
     });
 });
 
@@ -55,10 +55,10 @@ else
 }
 
 Anonymous(
-    app.MapPost<EncodeText>("/api/codec/encode/text"),
-    app.MapPost<EncodeBinary>("/api/codec/encode/binary"),
-    app.MapPost<Decode>("/api/codec/decode"),
-    app.MapGet("/api/health", () => Results.Ok())
+    app.MapPost<EncodeText>("/codec/encode/text"),
+    app.MapPost<EncodeBinary>("/codec/encode/binary"),
+    app.MapPost<Decode>("/codec/decode"),
+    app.MapGet("/health", () => Results.Ok())
 );
 
 app.Run();

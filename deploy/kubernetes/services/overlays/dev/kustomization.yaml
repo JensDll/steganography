@@ -25,7 +25,7 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/routes/0/match
-        value: "Host(`dev.imagehiding.com`) || Host(`www.dev.imagehiding.com`)"
+        value: "Host(`dev.imagedatahiding.com`) || Host(`www.dev.imagedatahiding.com`)"
   - target:
       version: v1alpha1
       kind: IngressRoute
@@ -33,10 +33,11 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/routes/0/match
-        value: "Host(`api.dev.imagehiding.com`)"
+        value: "Host(`api.dev.imagedatahiding.com`)"
 
 patchesStrategicMerge:
-  - domain.patch.yaml
+  - patches/domain.yaml
+  - patches/config.yaml
 
 replicas:
   - name: web-deploy

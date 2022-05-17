@@ -3,10 +3,10 @@ kind: Certificate
 metadata:
   name: api-cert
 spec:
-  commonName: api.imagehiding.com
+  commonName: api.imagedatahiding.com
   secretName: api-cert
   dnsNames:
-    - api.imagehiding.com
+    - api.imagedatahiding.com
   issuerRef:
     kind: _
     name: _

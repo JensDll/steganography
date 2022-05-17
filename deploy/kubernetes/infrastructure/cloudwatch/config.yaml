@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: fluent-bit-cluster-info
 data:
-  cluster.name: 'image-data-hiding-dev'
+  cluster.name: 'image-data-hiding'
   http.port: '2020'
   http.server: 'On'
   logs.region: 'eu-central-1'

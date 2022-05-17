@@ -3,19 +3,19 @@ kind: Certificate
 metadata:
   name: web-cert
 spec:
-  commonName: dev.imagehiding.com
+  commonName: dev.imagedatahiding.com
   dnsNames:
-    - dev.imagehiding.com
-    - www.dev.imagehiding.com
+    - dev.imagedatahiding.com
+    - www.dev.imagedatahiding.com
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: api-cert
 spec:
-  commonName: api.dev.imagehiding.com
+  commonName: api.dev.imagedatahiding.com
   dnsNames:
-    - api.dev.imagehiding.com
+    - api.dev.imagedatahiding.com
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -23,5 +23,5 @@ metadata:
   name: web-www-redirect
 spec:
   redirectRegex:
-    regex: ^https://www.dev.imagehiding.com(.*)
-    replacement: https://dev.imagehiding.com${1}
+    regex: ^https://www.dev.imagedatahiding.com(.*)
+    replacement: https://dev.imagedatahiding.com${1}

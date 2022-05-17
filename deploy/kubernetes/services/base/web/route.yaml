@@ -4,8 +4,8 @@ metadata:
   name: web-www-redirect
 spec:
   redirectRegex:
-    regex: ^https://www.imagehiding.com(.*)
-    replacement: https://imagehiding.com${1}
+    regex: ^https://www.imagedatahiding.com(.*)
+    replacement: https://imagedatahiding.com${1}
     permanent: true
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -16,7 +16,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`imagehiding.com`) || Host(`www.imagehiding.com`)
+    - match: Host(`imagedatahiding.com`) || Host(`www.imagedatahiding.com`)
       kind: Rule
       middlewares:
         - name: web-www-redirect

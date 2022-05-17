@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: api-deploy
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: api
@@ -23,6 +23,11 @@ spec:
         - name: api
           image: jensdll/image-data-hiding:api.latest
           imagePullPolicy: Always
+          volumeMounts:
+            - name: appsettings-json
+              mountPath: /app/appsettings.json
+              subPath: appsettings.json
+              readOnly: true
           resources:
             requests:
               cpu: '600m'
@@ -32,3 +37,7 @@ spec:
               memory: '2Gi'
           ports:
             - containerPort: 80
+      volumes:
+        - name: appsettings-json
+          configMap:
+            name: appsettings.json

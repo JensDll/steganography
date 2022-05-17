@@ -1,3 +1,3 @@
 const APP_CONFIG = {
-  API_URI: 'https://localhost:5001'
+  API_URI: 'http://localhost:5001'
 }

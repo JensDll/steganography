@@ -27,4 +27,11 @@ public static class StartupExtensions
     {
         return environment.IsEnvironment(_deployment);
     }
+
+    public static string[] AllowedOrigins(this IConfiguration configuration)
+    {
+        List<string> allowedOrigins = new();
+        configuration.GetSection("Cors:AllowedOrigins").Bind(allowedOrigins);
+        return allowedOrigins.ToArray();
+    }
 }

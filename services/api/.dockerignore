@@ -6,3 +6,4 @@
 # Files
 Dockerfile*
 **/*.md
+public/config.js

@@ -2,12 +2,10 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: prod-issuer
-  annotations:
-    domain: example.com
 spec:
   acme:
     email: jens@doellmann.com
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: prod-issuer-key
     solvers:
