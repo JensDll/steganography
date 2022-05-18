@@ -5,10 +5,8 @@ class CloudwatchStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props)
 
-    const userName = 'CloudwatchAccess.ImageDataHiding'
-
     const user = new aws_iam.User(this, 'User', {
-      userName
+      userName: props.userName
     })
 
     user.addManagedPolicy(
@@ -23,7 +21,10 @@ class CloudwatchStack extends cdk.Stack {
 
 const app = new cdk.App()
 
-new CloudwatchStack(app, 'Cloudwatch', {
+const userName = process.env.AWS_USER_NAME
+
+new CloudwatchStack(app, `Cloudwatch${userName}`, {
+  userName: process.env.AWS_USER_NAME,
   env: {
     region: 'eu-central-1',
     account: '378859530546'

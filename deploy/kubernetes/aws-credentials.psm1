@@ -1,6 +1,6 @@
-﻿$fileName = '.aws.credentials'
+﻿$fileName = "$PSScriptRoot/.aws.credentials"
 
-function Get-AwsCredentials {
+function New-AwsCredentials {
   [CmdletBinding()]
   param(
     [Parameter(Mandatory)]
@@ -9,10 +9,9 @@ function Get-AwsCredentials {
   )
 
   if (-not (Test-Path $fileName)) {
-    New-Item -Path $PSScriptRoot -Name $fileName -ItemType File 1> $null
+    Write-Verbose 'Creating new credentials files'
+    New-Item $fileName -ItemType File 1> $null
   }
-
-  $doesNotHaveCredentials = -not (git config --get --file $fileName "$UserName.accessKey")
 
   if ($Recreate) {
     $accessKeys = (aws iam list-access-keys --user-name $UserName --query 'AccessKeyMetadata[].AccessKeyId' --output text) -split '\s+'
@@ -23,15 +22,28 @@ function Get-AwsCredentials {
       aws iam delete-access-key --access-key-id $accesKey --user-name $UserName
     }
 
-    New-AwsCredentials $UserName
-  }
-  elseif ($doesNotHaveCredentials) {
-    Write-Verbose "Creating new AWS credentials for user '$UserName'"
-
-    New-AwsCredentials $UserName
+    Write-AwsCredentials $UserName
   }
   else {
-    Write-Verbose 'Using existing AWS credentials'
+    if (Test-AwsCredentials $UserName) {
+      throw "User '$UserName' already has cached credentials"
+    }
+
+    Write-Verbose "Creating new AWS credentials for user '$UserName'"
+
+    Write-AwsCredentials $UserName
+  }
+}
+
+function Read-AwsCredentials {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory)]
+    [string]$UserName
+  )
+
+  if (-not (Test-AwsCredentials $UserName)) {
+    throw "No crendentials found for user '$UserName'"
   }
 
   $accessKey = git config --file $fileName --get "$UserName.accessKey"
@@ -43,7 +55,17 @@ function Get-AwsCredentials {
   }
 }
 
-function New-AwsCredentials {
+function Remove-AwsCredentials {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory)]
+    [string]$UserName
+  )
+
+  git config --file $fileName --remove-section $UserName
+}
+
+function Write-AwsCredentials {
   param(
     [Parameter(Mandatory)]
     [string]$UserName
@@ -55,4 +77,15 @@ function New-AwsCredentials {
   git config --file $fileName "$UserName.secretKey" $credentials[1]
 }
 
-Export-ModuleMember -Function Get-AwsCredentials
+function Test-AwsCredentials {
+  param(
+    [Parameter(Mandatory)]
+    [string]$UserName
+  )
+
+  [bool]$result = git config --get --file $fileName "$UserName.accessKey"
+
+  return $result
+}
+
+Export-ModuleMember -Function New-AwsCredentials, Read-AwsCredentials, Remove-AwsCredentials

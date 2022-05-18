@@ -5,10 +5,8 @@ class ExternalDnsStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props)
 
-    const domainName = 'imagehiding.com'
-
     const hostedZone = aws_route53.HostedZone.fromLookup(this, 'HostedZone', {
-      domainName
+      domainName: props.domainName
     })
 
     const policyDocument = new aws_iam.PolicyDocument({
@@ -29,15 +27,13 @@ class ExternalDnsStack extends cdk.Stack {
       ]
     })
 
-    const userName = 'AllowDnsUpdates.ImageDataHiding'
-
     const user = new aws_iam.User(this, 'User', {
-      userName
+      userName: props.userName
     })
 
-    new aws_iam.Policy(this, userName, {
+    new aws_iam.Policy(this, 'Policy', {
       document: policyDocument,
-      policyName: userName,
+      policyName: props.userName,
       users: [user]
     })
   }
@@ -45,7 +41,12 @@ class ExternalDnsStack extends cdk.Stack {
 
 const app = new cdk.App()
 
-new ExternalDnsStack(app, 'ExternalDns', {
+const userName = process.env.AWS_USER_NAME
+const domainName = process.env.AWS_DOMAIN_NAME
+
+new ExternalDnsStack(app, `ExternalDns${userName}`, {
+  userName,
+  domainName,
   env: {
     region: 'eu-central-1',
     account: '378859530546'
