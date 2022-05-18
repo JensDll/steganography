@@ -27,12 +27,10 @@ try {
     cdk destroy
     Remove-AwsCredentials -UserName $UserName
     return
-  }
-  else {
+  } else {
     cdk deploy --require-approval never
   }
-}
-finally {
+} finally {
   Pop-Location
 }
 

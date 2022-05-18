@@ -21,18 +21,15 @@ function New-AwsCredentials {
     foreach ($accesKey in $accessKeys) {
       aws iam delete-access-key --access-key-id $accesKey --user-name $UserName
     }
-
-    Write-AwsCredentials $UserName
-  }
-  else {
+  } else {
     if (Test-AwsCredentials $UserName) {
       throw "User '$UserName' already has cached credentials"
     }
 
     Write-Verbose "Creating new AWS credentials for user '$UserName'"
-
-    Write-AwsCredentials $UserName
   }
+
+  Write-AwsCredentials $UserName
 }
 
 function Read-AwsCredentials {
@@ -83,9 +80,7 @@ function Test-AwsCredentials {
     [string]$UserName
   )
 
-  [bool]$result = git config --get --file $fileName "$UserName.accessKey"
-
-  return $result
+  return [bool] (git config --get --file $fileName "$UserName.accessKey")
 }
 
 Export-ModuleMember -Function New-AwsCredentials, Read-AwsCredentials, Remove-AwsCredentials
