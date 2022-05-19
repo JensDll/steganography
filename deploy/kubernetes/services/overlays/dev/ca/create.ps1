@@ -1,4 +1,7 @@
-﻿try {
+﻿[CmdletBinding()]
+param()
+
+try {
   Push-Location $PSScriptRoot
 
   wsl --exec "cd $PSScriptRoot"
@@ -11,12 +14,14 @@
   $domain = Get-Content 'root-ca.conf' | Select-String -Pattern '^domain' | Select-Object -ExpandProperty Line
   $domain = $domain.Split('=')[1].Trim()
 
-  $cert = Get-ChildItem -Path Cert:\CurrentUser\Root -SSLServerAuthentication -Recurse -DnsName $domain
+  $cert = Get-ChildItem -Path Cert:\CurrentUser\Root -SSLServerAuthentication -DnsName $domain
 
   if ($cert) {
+    Write-Verbose 'Using existing certificate'
+
     $password = New-Object System.Security.SecureString
 
-    Export-PfxCertificate -Cert $cert -FilePath 'certs/tls.p12' -Password $password
+    Export-PfxCertificate -Cert $cert -FilePath 'certs/tls.p12' -Password $password 1> $null
 
     wsl --exec openssl pkcs12 `
       -in 'certs/tls.p12' `
