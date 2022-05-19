@@ -6,10 +6,10 @@ ARG BUILD_MODE=production
 WORKDIR /out
 
 # Install pnpm
-RUN npm install -g pnpm@7
+RUN npm install -g pnpm
 
 # Install dependencies
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml .npmrc ./
 RUN pnpm install --frozen-lockfile
 
 # Copy all files
