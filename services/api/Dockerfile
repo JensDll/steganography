@@ -24,7 +24,7 @@ FROM build AS publish
 RUN dotnet publish --configuration Release --no-build --output /app
 
 # Final image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0.4-alpine3.15
+FROM mcr.microsoft.com/dotnet/aspnet:6.0.5-alpine3.15
 
 WORKDIR /app
 
