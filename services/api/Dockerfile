@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0.201 as build
+FROM mcr.microsoft.com/dotnet/sdk:6.0.300 as build
 
 WORKDIR /build
 
@@ -24,7 +24,7 @@ FROM build AS publish
 RUN dotnet publish --configuration Release --no-build --output /app
 
 # Final image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0.4-alpine3.15
+FROM mcr.microsoft.com/dotnet/aspnet:6.0.5-alpine3.15
 
 WORKDIR /app
 
