@@ -1,6 +1,6 @@
 ARG ALPINE_VERSION=1.21.6
 
-FROM node:16 as build
+FROM node:18 as build
 
 ARG BUILD_MODE=production
 WORKDIR /out
