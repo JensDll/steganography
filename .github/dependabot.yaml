@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'sunday'
+
+  - package-ecosystem: 'nuget'
+    directory: '/services/api'
+    schedule:
+      interval: 'weekly'
+      day: 'sunday'
+
+  - package-ecosystem: 'docker'
+    directory: '/services/web'
+    schedule:
+      interval: 'weekly'
+      day: 'sunday'
+  - package-ecosystem: 'docker'
+    directory: '/services/api'
+    schedule:
+      interval: 'weekly'
+      day: 'sunday'

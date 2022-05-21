@@ -1,4 +1,5 @@
 name: Testing
+
 on:
   pull_request:
     branches:
@@ -6,11 +7,13 @@ on:
   push:
     branches:
       - 'main'
+
 jobs:
   should-run:
     uses: JensDll/should-run/.github/workflows/main.yaml@main
     with:
       projects: services/web services/api
+
   web:
     if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     runs-on: ubuntu-latest
@@ -22,22 +25,27 @@ jobs:
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v2
-      - name: Installing pnpm version 6.x.x
-        uses: pnpm/action-setup@v2.1.0
+
+      - name: Using pnpm version 7.x.x
+        uses: pnpm/action-setup@v2
         with:
-          version: 6.x.x
+          version: 7.x.x
       - name: Using node version 16
         uses: actions/setup-node@v2
         with:
           node-version: 16
           cache: 'pnpm'
           cache-dependency-path: services/web/pnpm-lock.yaml
+
       - name: Installing dependencies
         run: pnpm install
+
       - name: Running typecheck
         run: pnpm run typecheck
+
       - name: Checking for unfixable code style issues
         run: pnpm run lint
+
   api:
     if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     needs: should-run
@@ -52,13 +60,17 @@ jobs:
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v2
+
       - name: Setting up dotnet
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.x.x
+
       - name: Installing dependencies
         run: dotnet restore
+
       - name: Building the project
         run: dotnet build --configuration Release --no-restore
+
       - name: Running tests
         run: dotnet test --no-restore --verbosity normal
