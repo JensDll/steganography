@@ -3,11 +3,11 @@ name: Deploying new version
 on:
   workflow_run:
     workflows:
-      - 'Formatting'
+      - 'Testing'
     types:
       - 'completed'
     branches:
-      - main
+      - 'main'
 
 jobs:
   push-to-docker-hub:
