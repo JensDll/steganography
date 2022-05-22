@@ -13,8 +13,8 @@ jobs:
       projects: services/web services/api
 
   web:
-    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     needs: should-run
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     defaults:
       run:
         shell: bash
