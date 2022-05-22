@@ -40,7 +40,7 @@ jobs:
           cache-dependency-path: services/web/pnpm-lock.yaml
 
       - name: Installing dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Running code style fixes
         run: pnpm run fix
