@@ -1,4 +1,4 @@
-name: Building and pushing container images
+name: Build and push container images
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
     needs: should-run
     if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     environment:
-      name: deployment
+      name: DockerHub
       url: https://hub.docker.com/repository/docker/jensdll/image-data-hiding
     runs-on: ubuntu-latest
     steps:
@@ -49,7 +49,7 @@ jobs:
     needs: should-run
     if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     environment:
-      name: deployment
+      name: DockerHub
       url: https://hub.docker.com/repository/docker/jensdll/image-data-hiding
     runs-on: ubuntu-latest
     steps:

@@ -1,4 +1,4 @@
-name: Testing
+name: Test
 
 on:
   pull_request:
@@ -9,12 +9,12 @@ jobs:
     with:
       projects: services/web services/api
 
-  web:
+  test-web:
     needs: should-run
     if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
-    uses: ./.github/workflows/testingWeb.yaml
+    uses: ./.github/workflows/testWeb.yaml
 
-  api:
+  test-api:
     needs: should-run
     if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
-    uses: ./.github/workflows/testingApi.yaml
+    uses: ./.github/workflows/testApi.yaml

@@ -1,10 +1,10 @@
-name: Testing web
+name: Test web
 
 on:
   workflow_call:
 
 jobs:
-  test:
+  run:
     defaults:
       run:
         shell: bash
