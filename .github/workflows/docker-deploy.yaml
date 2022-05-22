@@ -13,7 +13,7 @@ jobs:
 
   build-push-web:
     needs: should-run
-    # if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     environment:
       name: DockerHub
     runs-on: ubuntu-latest
@@ -46,7 +46,7 @@ jobs:
 
   build-push-api:
     needs: should-run
-    # if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
+    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     environment:
       name: DockerHub
     runs-on: ubuntu-latest
