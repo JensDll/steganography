@@ -1,4 +1,4 @@
-name: Deploying new version
+name: Deployment
 
 on:
   workflow_run:
