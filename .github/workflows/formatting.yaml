@@ -6,14 +6,14 @@ on:
       - '**'
 
 jobs:
-  should-run:
-    uses: JensDll/should-run/.github/workflows/main.yaml@main
-    with:
-      projects: services/web services/api
+  # should-run:
+  #   uses: JensDll/should-run/.github/workflows/main.yaml@main
+  #   with:
+  #     projects: services/web services/api
 
   web:
-    needs: should-run
-    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
+    # needs: should-run
+    # if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     defaults:
       run:
         shell: bash
@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Testing web
-        uses: ./.github/workflows/test.web.yaml
+        uses: ./.github/workflows/test-web.yaml
 
       - name: Running code style fixes
         run: pnpm run fix
