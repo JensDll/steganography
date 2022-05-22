@@ -10,9 +10,19 @@ on:
       - main
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: env
+
   push-to-docker-hub:
     if: github.event.workflow_run.conclusion == 'success'
-    environment: deployment
+    environment:
+      name: deployment
+      url: https://hub.docker.com/repository/docker/jensdll/image-data-hiding
     defaults:
       run:
         shell: bash
