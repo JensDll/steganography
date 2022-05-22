@@ -1,4 +1,4 @@
-import tailwindColors from "tailwindcss/colors"
+import tailwindColors from 'tailwindcss/colors'
 import { parseColor } from 'tailwindcss/lib/util/color'
 import type { TailwindColorGroup } from 'tailwindcss/tailwind-config'
 
