@@ -3,11 +3,10 @@ name: Formatting
 on:
   push:
     branches:
-      - 'develop'
+      - '**'
 
 jobs:
   should-run:
-    if: inputs == null
     uses: JensDll/should-run/.github/workflows/main.yaml@main
     with:
       projects: services/web services/api
@@ -21,23 +20,8 @@ jobs:
         working-directory: services/web
     runs-on: ubuntu-latest
     steps:
-      - name: Checking out the repository
-        uses: actions/checkout@v3
-
-      - name: Using pnpm version 7.x.x
-        uses: pnpm/action-setup@v2
-        with:
-          version: 7.x.x
-
-      - name: Using node version 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'pnpm'
-          cache-dependency-path: services/web/pnpm-lock.yaml
-
-      - name: Installing dependencies
-        run: pnpm install
+      - name: Testing web
+        uses: ./.github/workflows/test.web.yaml
 
       - name: Running code style fixes
         run: pnpm run fix
@@ -56,14 +40,14 @@ jobs:
             echo "Nothing to commit!"
           fi
 
-  api:
-    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
-    needs: should-run
-    defaults:
-      run:
-        shell: bash
-        working-directory: services/api
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checking out the repository
-        uses: actions/checkout@v3
+  # api:
+  #   if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
+  #   needs: should-run
+  #   defaults:
+  #     run:
+  #       shell: bash
+  #       working-directory: services/api
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checking out the repository
+  #       uses: actions/checkout@v3
