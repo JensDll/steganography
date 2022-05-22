@@ -53,8 +53,8 @@ jobs:
         with:
           script: |
             const pullRequest = await github.rest.pulls.create({
-              owner: '${{ github.repository.owner.login }}',
-              repo: '${{ github.repository.name }}',
+              owner: '${{ github.event.repository.owner.login }}',
+              repo: '${{ github.event.repository.name }}',
               base: 'staging',
               head: 'github-actions-temp',
               title: 'github-actions: fix code style',
@@ -62,8 +62,8 @@ jobs:
             })
 
             const mergeResult = await github.rest.pulls.merge({
-              owner: '${{ github.repository.owner.login }}',
-              repo: '${{ github.repository.name }}',
+              owner: '${{ github.event.repository.owner.login }}',
+              repo: '${{ github.event.repository.name }}',
               pull_number: pullRequest.data.number,
               merge_method: 'rebase'
             })
@@ -71,8 +71,8 @@ jobs:
             console.log(mergeResult.status)
 
             const deleteResult = await github.rest.git.deleteRef({
-              owner: '${{ github.repository.owner.login }}',
-              repo: '${{ github.repository.name }}',
+              owner: '${{ github.event.repository.owner.login }}',
+              repo: '${{ github.event.repository.name }}',
               ref: 'heads/github-actions-temp',
             })
 
