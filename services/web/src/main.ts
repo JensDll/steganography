@@ -1,4 +1,4 @@
-import { createApp, ref } from 'vue'
+import { createApp } from 'vue'
 
 import App from './App.vue'
 import { router } from './modules/router'
@@ -13,7 +13,7 @@ app.use(router)
 app.use(validierung)
 app.use(directives)
 
-app.mount('#app')
+app.mount("#app")
 
 const favicon = document.querySelector(
   'head > link[rel="icon"]'
