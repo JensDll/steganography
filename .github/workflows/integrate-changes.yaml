@@ -7,13 +7,7 @@ jobs:
   merge-staging-into-main:
     runs-on: ubuntu-latest
     steps:
-      - name: Merging staging into main
-        uses: actions/github-script@v6
+      - name: Checking out the repository
+        uses: actions/checkout@v3
         with:
-          github-token: ${{ secrets.TOKEN }}
-          script: |
-            const result = await github.rest.repos.listForUser({
-              username: 'JensDll'
-            })
-
-            console.log(result)
+          ref: staging

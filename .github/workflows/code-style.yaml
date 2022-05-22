@@ -39,19 +39,44 @@ jobs:
       - name: Running code style fixes
         run: pnpm run fix
 
-      - name: Committing changes
+      - name: Preparing commit
         run: |
-          if ! git diff --quiet
-          then
-            git config user.name github-actions
-            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-            git pull
-            git add --update
-            git commit -m "github-actions: fix code style"
-            git push
-          else
-            echo "Nothing to commit!"
-          fi
+          git config user.name github-actions
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git checkout -b github-actions-temp
+          git add --update
+          git commit -m "github-actions: fix code style"
+          git push origin github-actions-temp
+
+      - name: Committing changes
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const pullRequest = await github.rest.pulls.create({
+              owner: '${{ github.repository.owner.login }}',
+              repo: '${{ github.repository.name }}',
+              base: 'staging',
+              head: 'github-actions-temp',
+              title: 'github-actions: fix code style',
+              body: ''
+            })
+
+            const mergeResult = await github.rest.pulls.merge({
+              owner: '${{ github.repository.owner.login }}',
+              repo: '${{ github.repository.name }}',
+              pull_number: pullRequest.data.number,
+              merge_method: 'rebase'
+            })
+
+            console.log(mergeResult.status)
+
+            const deleteResult = await github.rest.git.deleteRef({
+              owner: '${{ github.repository.owner.login }}',
+              repo: '${{ github.repository.name }}',
+              ref: 'heads/github-actions-temp',
+            })
+
+            console.log(deleteResult.status)
 
   api:
     defaults:
