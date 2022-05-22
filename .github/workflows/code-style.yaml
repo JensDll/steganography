@@ -3,7 +3,7 @@ name: Fix code style
 on:
   push:
     branches:
-      - develop
+      - staging
 
 jobs:
   should-run:
@@ -11,13 +11,7 @@ jobs:
     with:
       projects: services/web services/api
 
-  test-web:
-    needs: should-run
-    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
-    uses: ./.github/workflows/testWeb.yaml
-
   web:
-    needs: test-web
     defaults:
       run:
         shell: bash
@@ -59,13 +53,7 @@ jobs:
             echo "Nothing to commit!"
           fi
 
-  test-api:
-    needs: should-run
-    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
-    uses: ./.github/workflows/testApi.yaml
-
   api:
-    needs: test-api
     defaults:
       run:
         shell: bash

@@ -1,0 +1,19 @@
+name: Integrate changes into main
+
+on:
+  workflow_dispatch:
+
+jobs:
+  merge-staging-into-main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merging staging into main
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            const result = await github.rest.repos.listForUser({
+              username: 'JensDll'
+            })
+
+            console.log(result)
