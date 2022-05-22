@@ -11,11 +11,12 @@ on:
 
 jobs:
   push-to-docker-hub:
-    runs-on: ubuntu-latest
+    environment: deployment
     defaults:
       run:
         shell: bash
         working-directory: deploy/docker
+    runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v3

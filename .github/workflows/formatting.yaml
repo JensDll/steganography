@@ -1,22 +1,25 @@
 name: Formatting
 
 on:
-  workflow_run:
-    workflows:
-      - 'Testing'
-    types:
-      - 'completed'
+  push:
     branches:
       - 'develop'
 
 jobs:
+  should-run:
+    if: inputs == null
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
+    with:
+      projects: services/web services/api
+
   web:
-    runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
+    needs: should-run
     defaults:
       run:
         shell: bash
         working-directory: services/web
+    runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v3
@@ -54,12 +57,13 @@ jobs:
           fi
 
   api:
-    runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
+    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
+    needs: should-run
     defaults:
       run:
         shell: bash
         working-directory: services/api
+    runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v3
