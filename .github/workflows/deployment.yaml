@@ -1,23 +1,18 @@
 name: Deployment
 
 on:
-  workflow_run:
-    workflows:
-      - Testing
-    types:
-      - completed
+  # workflow_run:
+  #   workflows:
+  #     - Testing
+  #   types:
+  #     - completed
+  #   branches:
+  #     - main
+  push:
     branches:
       - main
 
 jobs:
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Debug
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: env
-
   push-to-docker-hub:
     if: github.event.workflow_run.conclusion == 'success'
     environment:
