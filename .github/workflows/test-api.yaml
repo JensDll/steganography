@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  main:
+  api:
     defaults:
       run:
         shell: bash
