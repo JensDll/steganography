@@ -1,22 +1,28 @@
 name: Formatting
 
 on:
-  workflow_run:
-    workflows:
-      - 'Testing'
-    types:
-      - 'completed'
+  push:
     branches:
-      - 'develop'
+      - deploy
 
 jobs:
+  should-run:
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
+    with:
+      projects: services/web services/api
+
+  test-web:
+    needs: should-run
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
+    uses: ./.github/workflows/test-web.yaml
+
   web:
-    runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
+    needs: test-web
     defaults:
       run:
         shell: bash
         working-directory: services/web
+    runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v3
@@ -53,13 +59,18 @@ jobs:
             echo "Nothing to commit!"
           fi
 
+  test-api:
+    needs: should-run
+    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
+    uses: ./.github/workflows/test-api.yaml
+
   api:
-    runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
+    needs: test-api
     defaults:
       run:
         shell: bash
         working-directory: services/api
+    runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v3

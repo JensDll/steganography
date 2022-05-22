@@ -2,12 +2,6 @@ name: Testing
 
 on:
   pull_request:
-    branches:
-      - '**'
-  push:
-    branches:
-      - 'main'
-      - 'develop'
 
 jobs:
   should-run:
@@ -16,63 +10,11 @@ jobs:
       projects: services/web services/api
 
   web:
-    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
-    runs-on: ubuntu-latest
     needs: should-run
-    defaults:
-      run:
-        shell: bash
-        working-directory: services/web
-    steps:
-      - name: Checking out the repository
-        uses: actions/checkout@v3
-
-      - name: Using pnpm version 7.x.x
-        uses: pnpm/action-setup@v2
-        with:
-          version: 7.x.x
-
-      - name: Using node version 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'pnpm'
-          cache-dependency-path: services/web/pnpm-lock.yaml
-
-      - name: Installing dependencies
-        run: pnpm install
-
-      - name: Running typecheck
-        run: pnpm run typecheck
-
-      - name: Checking for unfixable code style issues
-        run: pnpm run lint
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
+    uses: ./.github/workflows/test-web.yaml
 
   api:
-    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     needs: should-run
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-    runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: bash
-        working-directory: services/api
-    steps:
-      - name: Checking out the repository
-        uses: actions/checkout@v3
-
-      - name: Setting up dotnet
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: 6.x.x
-
-      - name: Installing dependencies
-        run: dotnet restore
-
-      - name: Building the project
-        run: dotnet build --configuration Release --no-restore
-
-      - name: Running tests
-        run: dotnet test --no-restore --verbosity normal
+    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
+    uses: ./.github/workflows/test-api.yaml

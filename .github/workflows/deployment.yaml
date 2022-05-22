@@ -1,21 +1,23 @@
-name: Deploying new version
+name: Deployment
 
 on:
   workflow_run:
     workflows:
-      - 'Testing'
+      - Testing
     types:
-      - 'completed'
+      - completed
     branches:
-      - 'main'
+      - main
 
 jobs:
   push-to-docker-hub:
-    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    environment: deployment
     defaults:
       run:
         shell: bash
         working-directory: deploy/docker
+    runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v3

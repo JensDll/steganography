@@ -1,0 +1,32 @@
+name: Testing api
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    defaults:
+      run:
+        shell: bash
+        working-directory: services/api
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checking out the repository
+        uses: actions/checkout@v3
+
+      - name: Setting up dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.x.x
+
+      - name: Installing dependencies
+        run: dotnet restore
+
+      - name: Building the project
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Running tests
+        run: dotnet test --no-restore --verbosity normal
