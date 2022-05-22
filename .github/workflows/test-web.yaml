@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  test-web:
+  test:
     defaults:
       run:
         shell: bash
