@@ -2,27 +2,27 @@ version: 2
 updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
-    target-branch: 'develop'
+    target-branch: 'staging'
     schedule:
       interval: 'weekly'
       day: 'sunday'
 
   - package-ecosystem: 'nuget'
     directory: '/services/api'
-    target-branch: 'develop'
+    target-branch: 'staging'
     schedule:
       interval: 'weekly'
       day: 'sunday'
 
   - package-ecosystem: 'docker'
     directory: '/services/web'
-    target-branch: 'develop'
+    target-branch: 'staging'
     schedule:
       interval: 'weekly'
       day: 'sunday'
   - package-ecosystem: 'docker'
     directory: '/services/api'
-    target-branch: 'develop'
+    target-branch: 'staging'
     schedule:
       interval: 'weekly'
       day: 'sunday'
