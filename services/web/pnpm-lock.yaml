@@ -29,7 +29,7 @@ specifiers:
   unplugin-vue-components: 0.19.5
   validierung: 1.0.2
   vite: 2.9.9
-  vitest: 0.12.8
+  vitest: 0.12.9
   vue: 3.2.35
   vue-router: 4.0.15
   vue-tsc: 0.34.15
@@ -63,7 +63,7 @@ dependencies:
   unplugin-vue-components: 0.19.5_nynx2wgb73qi4j32xww7x67zyy
   validierung: 1.0.2_vue@3.2.35
   vite: 2.9.9
-  vitest: 0.12.8
+  vitest: 0.12.9
   vue: 3.2.35
   vue-router: 4.0.15_vue@3.2.35
   vue-tsc: 0.34.15_typescript@4.6.4
@@ -2090,8 +2090,8 @@ packages:
       fsevents: 2.3.2
     dev: false
 
-  /vitest/0.12.8:
-    resolution: {integrity: sha512-/h0myRYwsUEzNwz6c1GFHVZYMZ0mGYMhkLMEZgsX+lJXFfOVHikUpZl1MRnnCzaZxDVPnRsuUje7OemDeW+h5w==}
+  /vitest/0.12.9:
+    resolution: {integrity: sha512-1NtyUANS72Qw5PwYvoztk067NX4fSiis2xQxhByOWS33eL2er/yupHyLxlBCOkF2ANe0dLFRvT1GVb+nczL5aw==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:
