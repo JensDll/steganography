@@ -1,10 +1,10 @@
-name: Testing api
+name: Test api
 
 on:
   workflow_call:
 
 jobs:
-  test:
+  run:
     defaults:
       run:
         shell: bash

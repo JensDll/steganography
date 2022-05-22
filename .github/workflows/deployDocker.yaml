@@ -1,0 +1,80 @@
+name: Build and push container images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  should-run:
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
+    with:
+      projects: services/web services/api
+
+  build-push-web:
+    needs: should-run
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
+    environment:
+      name: DockerHub
+      url: https://hub.docker.com/repository/docker/jensdll/image-data-hiding
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out the repository
+        uses: actions/checkout@v3
+
+      - name: Setting up Quick Emulator (QEMU)
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: linux/arm64,linux/amd64
+
+      - name: Setting up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Logging in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Building and pushing container image
+        uses: docker/build-push-action@v3
+        with:
+          context: services/web
+          platforms: linux/arm64,linux/amd64
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:web.latest
+
+  build-push-api:
+    needs: should-run
+    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
+    environment:
+      name: DockerHub
+      url: https://hub.docker.com/repository/docker/jensdll/image-data-hiding
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out the repository
+        uses: actions/checkout@v3
+
+      - name: Setting up Quick Emulator (QEMU)
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: linux/arm64,linux/amd64
+
+      - name: Setting up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Logging in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Building and pushing container image
+        uses: docker/build-push-action@v3
+        with:
+          context: services/api
+          platforms: linux/arm64,linux/amd64
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:api.latest
