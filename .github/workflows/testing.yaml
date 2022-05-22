@@ -16,9 +16,9 @@ jobs:
       projects: services/web services/api
 
   web:
-    needs: should-run
-    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
-    uses: ./.github/workflows/testing/web.yaml
+    # needs: should-run
+    # if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
+    uses: ./.github/workflows/test-web.yaml
 
   # api:
   #   if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
