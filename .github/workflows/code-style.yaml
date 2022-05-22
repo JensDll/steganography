@@ -12,6 +12,8 @@ jobs:
       projects: services/web services/api
 
   web:
+    needs: should-run
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     defaults:
       run:
         shell: bash
@@ -41,12 +43,14 @@ jobs:
 
       - name: Preparing commit
         run: |
+          TEMP_BRANCH=$(uuidgen)
+          echo "TEMP_BRANCH=$TEMP_BRANCH" >> $GITHUB_ENV
           git config user.name github-actions
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git checkout -b github-actions-temp
+          git checkout -b $TEMP_BRANCH
           git add --update
-          git commit -m "github-actions: fix code style"
-          git push origin github-actions-temp
+          git commit --message "github-actions: fix code style"
+          git push origin $TEMP_BRANCH
 
       - name: Committing changes
         uses: actions/github-script@v6
@@ -56,7 +60,7 @@ jobs:
               owner: '${{ github.event.repository.owner.login }}',
               repo: '${{ github.event.repository.name }}',
               base: 'staging',
-              head: 'github-actions-temp',
+              head: '${{ env.TEMP_BRANCH }}',
               title: 'github-actions: fix code style',
               body: ''
             })
@@ -73,12 +77,14 @@ jobs:
             const deleteResult = await github.rest.git.deleteRef({
               owner: '${{ github.event.repository.owner.login }}',
               repo: '${{ github.event.repository.name }}',
-              ref: 'heads/github-actions-temp',
+              ref: 'heads/${{ env.TEMP_BRANCH }}',
             })
 
             console.log(deleteResult.status)
 
   api:
+    needs: should-run
+    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     defaults:
       run:
         shell: bash
