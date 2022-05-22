@@ -1,4 +1,4 @@
-name: Formatting
+name: Fixing code style
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
   test-web:
     needs: should-run
     if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
-    uses: ./.github/workflows/test-web.yaml
+    uses: ./.github/workflows/testingWeb.yaml
 
   web:
     needs: test-web
@@ -62,7 +62,7 @@ jobs:
   test-api:
     needs: should-run
     if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
-    uses: ./.github/workflows/test-api.yaml
+    uses: ./.github/workflows/testingApi.yaml
 
   api:
     needs: test-api
