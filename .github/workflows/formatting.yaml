@@ -6,23 +6,24 @@ on:
       - '**'
 
 jobs:
-  # should-run:
-  #   uses: JensDll/should-run/.github/workflows/main.yaml@main
-  #   with:
-  #     projects: services/web services/api
+  should-run:
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
+    with:
+      projects: services/web services/api
+
+  test-web:
+    needs: should-run
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
+    uses: ./.github/workflows/test-web.yaml
 
   web:
-    # needs: should-run
-    # if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
+    needs: test-web
     defaults:
       run:
         shell: bash
         working-directory: services/web
     runs-on: ubuntu-latest
     steps:
-      - name: Testing web
-        uses: ./.github/workflows/test-web.yaml
-
       - name: Running code style fixes
         run: pnpm run fix
 

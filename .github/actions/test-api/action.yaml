@@ -1,0 +1,27 @@
+name: 'Testing Web'
+description: ''
+runs:
+  using: 'composite'
+  steps:
+    - name: Checking out the repository
+      uses: actions/checkout@v3
+
+    - name: Setting up dotnet
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.x.x
+
+    - name: Installing dependencies
+      shell: bash
+      working-directory: services/api
+      run: dotnet restore
+
+    - name: Building the project
+      shell: bash
+      working-directory: services/api
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Running tests
+      shell: bash
+      working-directory: services/api
+      run: dotnet test --no-restore --verbosity normal
