@@ -8,6 +8,13 @@ on:
       - main
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+
   should-run:
     uses: JensDll/should-run/.github/workflows/main.yaml@main
     with:
