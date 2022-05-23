@@ -1,5 +1,5 @@
 name: Pull merge
-description: Programmatically merge branches through a pull request
+description: Programmatically merge branches via a pull request
 
 inputs:
   base:
@@ -33,7 +33,8 @@ runs:
             base: '${{ inputs.base }}',
             head: '${{ inputs.head }}',
             title: '${{ inputs.title }}',
-            body: ''
+            body: '',
+            commit_message: '${{ inputs.title }}',
           })
 
           const mergeResult = await github.rest.pulls.merge({
