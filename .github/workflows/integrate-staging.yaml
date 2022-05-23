@@ -16,4 +16,4 @@ jobs:
           base: main
           head: staging
           title: integrate staging into main
-          merge_method: merge
+          merge_method: squash
