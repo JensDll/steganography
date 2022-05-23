@@ -7,7 +7,15 @@ jobs:
   merge-staging-into-main:
     runs-on: ubuntu-latest
     steps:
-      - name: Checking out the repository
-        uses: actions/checkout@v3
+      - name: Merging staging into main
+        uses: actions/github-script@v6
         with:
-          ref: staging
+          script: |
+            const mergeResult = await github.rest.repos.merge({
+              owner: '${{ github.event.repository.owner.login }}',
+              repo: '${{ github.event.repository.name }}',
+              base: 'main',
+              head: 'staging'
+            })
+
+            console.log(mergeResult)
