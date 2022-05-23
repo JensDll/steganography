@@ -40,12 +40,12 @@ runs:
             owner: '${{ github.event.repository.owner.login }}',
             repo: '${{ github.event.repository.name }}',
             pull_number: pullRequest.data.number,
-            merge_method: '${{ merge_method }}'
+            merge_method: '${{ inputs.merge_method }}'
           })
 
           console.log(mergeResult.status)
 
-          if ('${{ delete_head }}' === 'false') {
+          if ('${{ inputs.delete_head }}' === 'false') {
             return
           }
 
