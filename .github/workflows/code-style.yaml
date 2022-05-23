@@ -57,6 +57,7 @@ jobs:
           else
             echo "Nothing to commit!"
           fi
+
       - name: Committing changes
         if: steps.prepare.outputs.TEMP_BRANCH != null
         uses: actions/github-script@v6

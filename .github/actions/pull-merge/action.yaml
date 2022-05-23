@@ -1,0 +1,58 @@
+name: Pull merge
+description: Programmatically merge branches through a pull request
+
+inputs:
+  base:
+    description: The base branch
+    required: true
+  head:
+    description: The head branch
+    required: true
+  title:
+    description: The title of the pull request
+    required: true
+  merge_method:
+    description: The merge method
+    required: false
+    default: squash
+  delete_head:
+    description: Delete the head branch after merge
+    required: false
+    default: 'false'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checking out the repository
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const pullRequest = await github.rest.pulls.create({
+            owner: '${{ github.event.repository.owner.login }}',
+            repo: '${{ github.event.repository.name }}',
+            base: '${{ inputs.base }}',
+            head: '${{ inputs.head }}',
+            title: '${{ inputs.title }}',
+            body: ''
+          })
+
+          const mergeResult = await github.rest.pulls.merge({
+            owner: '${{ github.event.repository.owner.login }}',
+            repo: '${{ github.event.repository.name }}',
+            pull_number: pullRequest.data.number,
+            merge_method: '${{ merge_method }}'
+          })
+
+          console.log(mergeResult.status)
+
+          if ('${{ delete_head }}' === 'false') {
+            return
+          }
+
+          const deleteResult = await github.rest.git.deleteRef({
+            owner: '${{ github.event.repository.owner.login }}',
+            repo: '${{ github.event.repository.name }}',
+            ref: 'heads/${{ inputs.head }}',
+          })
+
+          console.log(deleteResult.status)
