@@ -1,7 +1,9 @@
 name: Build and push container images
 
 on:
-  push:
+  workflow_run:
+    workflows: ['Integrate staging into main']
+    types: [completed]
     branches:
       - main
 
