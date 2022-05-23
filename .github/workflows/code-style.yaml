@@ -41,7 +41,7 @@ jobs:
       - name: Running code style fixes
         run: pnpm run fix
 
-      - name: Preparing commit
+      - name: Preparing merge
         id: prepare
         run: |
           if ! git diff --quiet
@@ -58,36 +58,15 @@ jobs:
             echo "Nothing to commit!"
           fi
 
-      - name: Committing changes
+      - name: Merging fix
         if: steps.prepare.outputs.TEMP_BRANCH != null
-        uses: actions/github-script@v6
+        uses: ./.github/actions/pull-merge
         with:
-          script: |
-            const pullRequest = await github.rest.pulls.create({
-              owner: '${{ github.event.repository.owner.login }}',
-              repo: '${{ github.event.repository.name }}',
-              base: 'staging',
-              head: '${{ steps.prepare.outputs.TEMP_BRANCH  }}',
-              title: 'github-actions: fix code style',
-              body: ''
-            })
-
-            const mergeResult = await github.rest.pulls.merge({
-              owner: '${{ github.event.repository.owner.login }}',
-              repo: '${{ github.event.repository.name }}',
-              pull_number: pullRequest.data.number,
-              merge_method: 'squash'
-            })
-
-            console.log(mergeResult.status)
-
-            const deleteResult = await github.rest.git.deleteRef({
-              owner: '${{ github.event.repository.owner.login }}',
-              repo: '${{ github.event.repository.name }}',
-              ref: 'heads/${{ steps.prepare.outputs.TEMP_BRANCH }}',
-            })
-
-            console.log(deleteResult.status)
+          base: staging
+          head: ${{ steps.prepare.outputs.TEMP_BRANCH  }}
+          title: 'github-actions: fix code style'
+          merge_method: squash
+          delete_head: true
 
   api:
     needs: should-run

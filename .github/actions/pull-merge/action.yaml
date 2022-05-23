@@ -14,7 +14,7 @@ inputs:
   merge_method:
     description: The merge method
     required: false
-    default: squash
+    default: merge
   delete_head:
     description: Delete the head branch after merge
     required: false
