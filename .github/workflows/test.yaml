@@ -2,8 +2,8 @@ name: Test
 
 on:
   pull_request:
-    branches-ignore:
-      - main
+    branches:
+      - staging
 
 jobs:
   should-run:
@@ -14,9 +14,9 @@ jobs:
   test-web:
     needs: should-run
     if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
-    uses: ./.github/workflows/testWeb.yaml
+    uses: ./.github/workflows/test-web.yaml
 
   test-api:
     needs: should-run
     if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
-    uses: ./.github/workflows/testApi.yaml
+    uses: ./.github/workflows/test-api.yaml

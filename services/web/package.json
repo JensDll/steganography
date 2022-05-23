@@ -41,7 +41,7 @@
     "unplugin-vue-components": "0.19.5",
     "validierung": "1.0.2",
     "vite": "2.9.9",
-    "vitest": "0.12.8",
+    "vitest": "0.12.9",
     "vue": "3.2.35",
     "vue-router": "4.0.15",
     "vue-tsc": "0.34.15"
