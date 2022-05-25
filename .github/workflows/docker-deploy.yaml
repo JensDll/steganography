@@ -1,4 +1,4 @@
-name: Build and push container images
+name: Building and pushing container images
 
 on:
   push:
@@ -11,8 +11,21 @@ jobs:
     with:
       projects: services/web services/api
 
-  build-push-web:
-    needs: should-run
+  create-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - name: Creating new tag
+        id: tag
+        run: |
+          tag=$(date +"%d.%m.%Y")
+          echo "::set-output name=tag::$tag"
+
+  build-and-push-web:
+    needs:
+      - should-run
+      - create-tag
     if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     environment:
       name: DockerHub
@@ -42,10 +55,13 @@ jobs:
           context: services/web
           platforms: linux/arm64,linux/amd64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:web.latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:web.latest,
+            ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:web.${{{ needs.create-tag.outputs.tag }}}
 
-  build-push-api:
-    needs: should-run
+  build-and-push-api:
+    needs:
+      - should-run
+      - create-tag
     if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     environment:
       name: DockerHub
@@ -75,4 +91,5 @@ jobs:
           context: services/api
           platforms: linux/arm64,linux/amd64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:api.latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:api.latest,
+            ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:api.${{{ needs.create-tag.outputs.tag }}}
