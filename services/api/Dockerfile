@@ -30,6 +30,11 @@ WORKDIR /app
 
 COPY --from=publish /app/ ./
 
+RUN addgroup --system api && \
+    adduser --system --no-create-home --disabled-password --gecos "Api service user" --ingroup api api
+
+USER api:api
+
 ENV ASPNETCORE_ENVIRONMENT="Deployment"
 
 EXPOSE 80

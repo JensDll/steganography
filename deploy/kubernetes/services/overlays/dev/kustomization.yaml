@@ -6,8 +6,8 @@ namespace: services-dev
 secretGenerator:
   - name: dev-ca-cert
     files:
-      - ca/certs/tls.crt
-      - ca/private/tls.key
+      - ca/tls.key
+      - ca/tls.crt
     type: kubernetes.io/tls
 generatorOptions:
   disableNameSuffixHash: true
