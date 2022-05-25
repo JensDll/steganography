@@ -37,7 +37,7 @@ jobs:
           STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
           MATRIX_CONTEXT: ${{ toJSON(matrix) }}
           NEEDS_CONTEXT: ${{ toJSON(needs) }}
-        run: env
+        run: echo "Done"
 
   build-and-push-web:
     needs:
