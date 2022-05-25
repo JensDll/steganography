@@ -20,7 +20,7 @@ spec:
     spec:
       automountServiceAccountToken: false
       imagePullSecrets:
-        - name: docker-registry
+        - name: docker-pull
       containers:
         - name: api
           image: jensdll/image-data-hiding:api.latest
