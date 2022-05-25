@@ -38,7 +38,7 @@ FROM nginx:${ALPINE_VERSION}-alpine
 
 ARG ALPINE_VERSION
 
-# Fix freetype vulerability
+# Fix freetype vulnerability
 # https://security.snyk.io/vuln/SNYK-ALPINE315-FREETYPE-2834869
 RUN apk update && apk upgrade
 
