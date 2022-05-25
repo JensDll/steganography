@@ -3,7 +3,9 @@ name: Running tests
 on:
   pull_request:
     branches:
+      - main
       - staging
+
 jobs:
   should-run:
     uses: JensDll/should-run/.github/workflows/main.yaml@main
