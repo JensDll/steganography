@@ -10,8 +10,6 @@ param (
   [switch]$Recreate
 )
 
-Import-Module $PSScriptRoot/../../aws-credentials.psm1 -Force
-
 try {
   Push-Location $PSScriptRoot
 
@@ -31,4 +29,4 @@ try {
   Pop-Location
 }
 
-New-AwsCredentials -UserName $UserName -Recreate:$Recreate -Verbose:$VerbosePreference
+New-AWSCredentials -UserName $UserName -Recreate:$Recreate -Verbose:$VerbosePreference

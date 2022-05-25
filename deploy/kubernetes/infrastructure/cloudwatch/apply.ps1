@@ -8,9 +8,7 @@ param (
   [string]$UserName = 'CloudwatchAccessImageDataHiding'
 )
 
-Import-Module $PSScriptRoot/../../aws-credentials.psm1 -Force
-
-$credentials = Read-AwsCredentials -UserName $userName -Verbose:$VerbosePreference
+$credentials = Read-AWSCredentials -UserName $userName -Verbose:$VerbosePreference
 
 $Env:AWS_ACCESS_KEY = $credentials.AccessKey
 $Env:AWS_SECRET_KEY = $credentials.SecretKey

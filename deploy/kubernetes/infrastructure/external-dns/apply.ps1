@@ -11,9 +11,7 @@ param (
   [string[]]$HelmArgs
 )
 
-Import-Module $PSScriptRoot/../../aws-credentials.psm1 -Force
-
-$credentials = Read-AwsCredentials -UserName $userName -Verbose:$VerbosePreference
+$credentials = Read-AWSCredentials -UserName $userName -Verbose:$VerbosePreference
 
 switch ($Action) {
   install {
