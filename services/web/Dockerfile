@@ -38,6 +38,10 @@ FROM nginx:${ALPINE_VERSION}-alpine
 
 ARG ALPINE_VERSION
 
+# Fix freetype vulerability
+# https://security.snyk.io/vuln/SNYK-ALPINE315-FREETYPE-2834869
+RUN apk update && apk upgrade
+
 # Copy build output
 COPY --from=build /out/dist/ /data/www/
 # Copy ngx_brotli modules
