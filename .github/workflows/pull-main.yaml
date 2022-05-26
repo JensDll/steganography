@@ -2,7 +2,7 @@ name: Creating pull request onto main
 
 on:
   schedule:
-    - '* * * * *'
+    - cron: '* * * * *'
   workflow_dispatch:
 
 jobs:
