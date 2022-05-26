@@ -21,3 +21,8 @@ jobs:
     needs: should-run
     if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     uses: ./.github/workflows/test-api.yaml
+
+  # - name: Merging pull request
+  #   uses: ./.github/actions/merge-pull
+  #   with:
+  #     pull_number: ${{ steps.create-pull.outputs.pull_number }}

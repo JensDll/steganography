@@ -1,16 +1,10 @@
-name: Merge main
+name: Creating pull request onto main
 
 on:
   workflow_dispatch:
 
 jobs:
-  test-web:
-    uses: ./.github/workflows/test-web.yaml
-
-  test-api:
-    uses: ./.github/workflows/test-api.yaml
-
-  merge:
+  create-pull:
     needs:
       - test-web
       - test-api
@@ -39,8 +33,4 @@ jobs:
           base: main
           head: staging
           title: 'github-actions: merge staging into main'
-
-      - name: Merging pull request
-        uses: ./.github/actions/merge-pull
-        with:
-          pull_number: ${{ steps.create-pull.outputs.pull_number }}
+          github_token: ${{ secrets.WORKFLOW_TOKEN }}
