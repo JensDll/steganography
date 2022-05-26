@@ -22,7 +22,15 @@ jobs:
     if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     uses: ./.github/workflows/test-api.yaml
 
-  # - name: Merging pull request
-  #   uses: ./.github/actions/merge-pull
-  #   with:
-  #     pull_number: ${{ steps.create-pull.outputs.pull_number }}
+  merge-pull-request:
+    if: github.base.ref == 'main'
+    needs:
+      - test-web
+      - test-api
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merging pull request
+        uses: ./.github/actions/merge-pull
+        with:
+          pull_number: ${{ github.event.number }}
+          github_token: ${{ secrets.WORKFLOW_TOKEN }}
