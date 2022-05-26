@@ -23,22 +23,6 @@ jobs:
           tag=$(date +"%d.%m.%Y")
           echo "::set-output name=tag::$tag"
 
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Debug information
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-          ENV_CONTEXT: ${{ toJSON(env) }}
-          JOB_CONTEXT: ${{ toJSON(job) }}
-          STEPS_CONTEXT: ${{ toJSON(steps) }}
-          RUNNER_CONTEXT: ${{ toJSON(runner) }}
-          SECRETS_CONTEXT: ${{ toJSON(secrets) }}
-          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
-          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
-          NEEDS_CONTEXT: ${{ toJSON(needs) }}
-        run: echo "Done"
-
   build-and-push-web:
     needs:
       - should-run
