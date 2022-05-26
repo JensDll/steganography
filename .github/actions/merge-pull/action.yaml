@@ -18,7 +18,6 @@ inputs:
   github_token:
     description: The alternative GitHub token
     required: false
-    default: ${{ secrets.GITHUB_TOKEN }}
 
 runs:
   using: composite
@@ -26,7 +25,7 @@ runs:
     - name: Merging pull request
       uses: actions/github-script@v6
       with:
-        github-token: ${{ inputs.github_token }}
+        github-token: ${{ inputs.github_token == null && null || inputs.github_token }}
         script: |
           const owner = '${{ github.event.repository.owner.login }}'
           const repo = '${{ github.event.repository.name }}'

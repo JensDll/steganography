@@ -15,11 +15,10 @@ inputs:
   github_token:
     description: The alternative GitHub token
     required: false
-    default: ${{ secrets.GITHUB_TOKEN }}
 outputs:
   pull_number:
     description: The pull request number
-    value: ${{ steps.create-pull.outputs.pull_number }}
+    value: '${{ steps.create-pull.outputs.pull_number }}'
 
 runs:
   using: composite
@@ -28,7 +27,7 @@ runs:
       id: create-pull
       uses: actions/github-script@v6
       with:
-        github-token: ${{ inputs.github_token }}
+        github-token: ${{ inputs.github_token == null && null || inputs.github_token }}
         script: |
           const { data: pullRequest } = await github.rest.pulls.create({
             owner: '${{ github.event.repository.owner.login }}',
