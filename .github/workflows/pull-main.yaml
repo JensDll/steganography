@@ -12,19 +12,6 @@ jobs:
       - name: Checking out the repository
         uses: actions/checkout@v3
 
-      - name: Debug information
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-          ENV_CONTEXT: ${{ toJSON(env) }}
-          JOB_CONTEXT: ${{ toJSON(job) }}
-          STEPS_CONTEXT: ${{ toJSON(steps) }}
-          RUNNER_CONTEXT: ${{ toJSON(runner) }}
-          SECRETS_CONTEXT: ${{ toJSON(secrets) }}
-          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
-          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
-          NEEDS_CONTEXT: ${{ toJSON(needs) }}
-        run: echo "Done"
-
       - name: Creating pull request
         uses: ./.github/actions/create-pull
         id: create-pull
