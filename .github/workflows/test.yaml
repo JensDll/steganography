@@ -23,7 +23,7 @@ jobs:
     uses: ./.github/workflows/test-api.yaml
 
   merge-pull-request:
-    if: github.base.ref == 'main'
+    if: always() && github.base.ref == 'main'
     needs:
       - test-web
       - test-api
