@@ -58,14 +58,21 @@ jobs:
             echo "Nothing to commit!"
           fi
 
-      - name: Merging fix
+      - name: Creating pull request
         if: steps.prepare.outputs.TEMP_BRANCH != null
-        uses: ./.github/actions/pull-merge
+        id: create-pull
+        uses: ./.github/actions/create-pull
         with:
           base: staging
           head: ${{ steps.prepare.outputs.TEMP_BRANCH  }}
           title: 'github-actions: fix code style'
-          merge_method: squash
+
+      - name: Merging pull request
+        if: steps.create-pull.outputs.pull_number != null
+        uses: ./.github/actions/merge-pull
+        with:
+          pull_number: ${{ steps.create-pull.outputs.pull_number }}
+          merge_method: 'github_squash'
           delete_head: true
 
   api:
