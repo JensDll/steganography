@@ -23,10 +23,13 @@ jobs:
     uses: ./.github/workflows/test-api.yaml
 
   merge-pull-request:
-    if: always() && github.base.ref == 'main'
     needs:
       - test-web
       - test-api
+    if: always() &&
+      (needs.test-web.result == 'success' || needs.test-web.result == 'skipped') &&
+      (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
+      github.base_ref == 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Merging pull request
