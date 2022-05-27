@@ -20,7 +20,7 @@ jobs:
       - name: Creating new tag
         id: tag
         run: |
-          tag=$(date +"%d.%m.%Y")
+          tag=$(date +"%Y.%m.%d.%H.%M")
           echo "::set-output name=tag::$tag"
 
   build-and-push-web:

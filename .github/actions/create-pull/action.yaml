@@ -30,8 +30,8 @@ runs:
         github-token: ${{ inputs.github_token == null && null || inputs.github_token }}
         script: |
           const { data: pullRequest } = await github.rest.pulls.create({
-            owner: '${{ github.event.repository.owner.login }}',
-            repo: '${{ github.event.repository.name }}',
+            owner: 'JensDll',
+            repo: 'image-data-hiding',
             base: '${{ inputs.base }}',
             head: '${{ inputs.head }}',
             title: '${{ inputs.title }}',

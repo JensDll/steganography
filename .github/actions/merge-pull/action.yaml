@@ -27,8 +27,8 @@ runs:
       with:
         github-token: ${{ inputs.github_token == null && null || inputs.github_token }}
         script: |
-          const owner = '${{ github.event.repository.owner.login }}'
-          const repo = '${{ github.event.repository.name }}'
+          const owner = 'JensDll'
+          const repo = 'image-data-hiding'
 
           const { data: pullRequest } = await github.rest.pulls.get({
             owner,
