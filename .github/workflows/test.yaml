@@ -38,5 +38,5 @@ jobs:
       - name: Merging pull request
         uses: ./.github/actions/merge-pull
         with:
-          pull_number: ${{ github.event.number }}
           github_token: ${{ secrets.WORKFLOW_TOKEN }}
+          pull_number: ${{ github.event.number }}

@@ -16,7 +16,7 @@ jobs:
         uses: ./.github/actions/create-pull
         id: create-pull
         with:
+          github_token: ${{ secrets.WORKFLOW_TOKEN }}
           base: main
           head: staging
           title: 'github-actions: merge staging into main'
-          github_token: ${{ secrets.WORKFLOW_TOKEN }}

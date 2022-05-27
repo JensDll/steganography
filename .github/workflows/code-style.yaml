@@ -63,6 +63,7 @@ jobs:
         id: create-pull
         uses: ./.github/actions/create-pull
         with:
+          github_token: ${{ secrets.github_token }}
           base: staging
           head: ${{ steps.prepare.outputs.TEMP_BRANCH  }}
           title: 'github-actions: fix code style'
@@ -71,6 +72,7 @@ jobs:
         if: steps.create-pull.outputs.pull_number != null
         uses: ./.github/actions/merge-pull
         with:
+          github_token: ${{ secrets.github_token }}
           pull_number: ${{ steps.create-pull.outputs.pull_number }}
           merge_method: 'github_squash'
           delete_head: true

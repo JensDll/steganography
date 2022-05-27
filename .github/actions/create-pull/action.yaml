@@ -13,8 +13,8 @@ inputs:
     description: The title of the pull request
     required: true
   github_token:
-    description: The alternative GitHub token
-    required: false
+    description: The GitHub token to use
+    required: true
 outputs:
   pull_number:
     description: The pull request number
@@ -27,7 +27,7 @@ runs:
       id: create-pull
       uses: actions/github-script@v6
       with:
-        github-token: ${{ inputs.github_token == null && null || inputs.github_token }}
+        github-token: ${{ inputs.github_token }}
         script: |
           const { data: pullRequest } = await github.rest.pulls.create({
             owner: 'JensDll',
