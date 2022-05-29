@@ -106,7 +106,6 @@ data:
     load_module /usr/lib/nginx/modules/ngx_http_brotli_filter_module.so;
     load_module /usr/lib/nginx/modules/ngx_http_brotli_static_module.so;
 
-    user nginx;
     worker_processes auto;
 
     error_log /var/log/nginx/error.log notice;
@@ -162,10 +161,16 @@ data:
   server.conf: |
     server {
         listen 80 default_server;
-
+        
         location / {        
             try_files $uri /index.html;
+            root /data/www;  
+        }
+        
+        location ~* .(xml|html|svg|ico|js|css|woff|woff2)$ {
             root /data/www;
+            expires 1y;
+            add_header Cache-Control "public, no-transform";
         }
 
         location = /health {

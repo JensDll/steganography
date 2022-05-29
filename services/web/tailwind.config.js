@@ -23,7 +23,7 @@ module.exports = {
     screens: tailwindTheme.screens,
     extend: {
       fontFamily: {
-        sans: ['Montserrat', ...defaultTheme.fontFamily.sans]
+        sans: ['Montserrat', ...defaultTheme.fontFamily.sans],
       },
       typography: {
         DEFAULT: {
