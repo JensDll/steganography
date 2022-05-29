@@ -23,6 +23,7 @@ runs:
   using: composite
   steps:
     - name: Merging pull request
+      id: merge
       uses: actions/github-script@v6
       with:
         github-token: ${{ inputs.github_token }}
@@ -36,11 +37,15 @@ runs:
             pull_number: ${{ inputs.pull_number }}
           })
 
-          console.log('Merging pull request #${{ inputs.pull_number }}')
-
           let merge_method = '${{ inputs.merge_method }}'
           const isCustomRebase = merge_method === 'rebase'
           merge_method = isCustomRebase ? 'merge' : merge_method.replace(/^github_/, '')
+
+          core.setOutput('is_custom_rebase', isCustomRebase)
+          core.setOutput('base_ref', pullRequest.base.ref)
+          core.setOutput('head_ref', pullRequest.head.ref)
+
+          console.log('Merging pull request #${{ inputs.pull_number }}')
 
           await github.rest.pulls.merge({
             owner,
@@ -49,26 +54,16 @@ runs:
             merge_method
           })
 
-          if (isCustomRebase) {
-            console.log('Using custom rebase strategy')
+          console.log('Successfully merged pull request #${{ inputs.pull_number }}')
 
-            const { data: headRef } = await github.rest.git.getRef({
+          if (isCustomRebase) {
+            const { data: mergeCommitRef } = await github.rest.git.getRef({
               owner,
               repo,
               ref: `heads/${pullRequest.head.ref}`
             })
 
-            console.log('Deleting merge commit ...')
-
-            await github.rest.git.updateRef({
-              owner,
-              repo,
-              ref: `heads/${pullRequest.base.ref}`,
-              sha: headRef.object.sha,
-              force: true
-            })
-
-            console.log('Successfully deleted merge commit')
+            core.setOutput('merge_commit_sha', mergeCommitRef.object.sha)
           }
 
           if ('${{ inputs.delete_head }}' === 'true') {
@@ -80,5 +75,25 @@ runs:
               ref: `heads/${pullRequest.head.ref}`
             })
 
-            console.log(`Successfully deleted head branch. Was ${pullRequest.head.ref}`)
+            console.log(`Successfully deleted head branch. Was "${pullRequest.head.ref}"`)
           }
+
+    - name: Overwriting merge commit
+      if: steps.merge.outputs.is_custom_rebase == 'true'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const owner = 'JensDll'
+          const repo = 'image-data-hiding'
+
+          console.log('Overwriting merge commit (custom rebase) ...')
+
+          await github.rest.git.updateRef({
+            owner,
+            repo,
+            ref: 'heads/${{ steps.merge.outputs.base_ref }}',
+            sha: '${{ steps.merge.outputs.merge_commit_sha }}',
+            force: true
+          })
+
+          console.log('Successfully overwritten merge commit')
