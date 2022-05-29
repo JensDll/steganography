@@ -1,7 +1,6 @@
 name: Building and pushing container images
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -27,8 +26,7 @@ jobs:
     needs:
       - should-run
       - create-tag
-    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true' ||
-      github.event_name == 'workflow_dispatch'
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     environment:
       name: DockerHub
     runs-on: ubuntu-latest
@@ -66,8 +64,7 @@ jobs:
     needs:
       - should-run
       - create-tag
-    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true' ||
-      github.event_name == 'workflow_dispatch'
+    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     environment:
       name: DockerHub
     runs-on: ubuntu-latest
