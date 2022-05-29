@@ -83,6 +83,9 @@ runs:
       uses: actions/github-script@v6
       with:
         script: |
+          const owner = 'JensDll'
+          const repo = 'image-data-hiding'
+
           console.log('Overwriting merge commit (custom rebase) ...')
 
           await github.rest.git.updateRef({

@@ -29,9 +29,12 @@ runs:
       with:
         github-token: ${{ inputs.github_token }}
         script: |
+          const owner = 'JensDll'
+          const repo = 'image-data-hiding'
+
           const { data: pullRequest } = await github.rest.pulls.create({
-            owner: 'JensDll',
-            repo: 'image-data-hiding',
+            owner,
+            repo,
             base: '${{ inputs.base }}',
             head: '${{ inputs.head }}',
             title: '${{ inputs.title }}',
