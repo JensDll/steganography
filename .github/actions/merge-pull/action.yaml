@@ -78,7 +78,7 @@ runs:
             console.log(`Successfully deleted head branch. Was "${pullRequest.head.ref}"`)
           }
 
-    - name: Overwriting merge commit
+    - name: Overwriting merge commit (custom rebase)
       if: steps.merge.outputs.is_custom_rebase == 'true'
       uses: actions/github-script@v6
       with:
