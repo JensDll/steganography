@@ -39,4 +39,4 @@ runs:
             commit_message: '${{ inputs.title }}',
           })
 
-          core.setOutput('pull_number', pullRequest.number);
+          core.setOutput('pull_number', pullRequest.number)
