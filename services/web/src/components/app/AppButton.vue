@@ -27,7 +27,7 @@ const handleClick = (e: MouseEvent) => {
 </script>
 
 <template>
-  <div class="relative group ">
+  <div class="group relative">
     <div
       v-if="variant === 'landing'"
       class="absolute -inset-0.5 bg-gradient-to-r from-encode-500 to-decode-500 opacity-75 blur"
