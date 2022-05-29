@@ -38,13 +38,23 @@ FROM nginx:${ALPINE_VERSION}-alpine
 
 ARG ALPINE_VERSION
 
-# Fix freetype vulnerability
-# https://security.snyk.io/vuln/SNYK-ALPINE315-FREETYPE-2834869
-RUN apk update && apk upgrade
-
 # Copy build output
 COPY --from=build /out/dist/ /data/www/
 # Copy ngx_brotli modules
 COPY --from=ngx_brotli /compile/nginx-${ALPINE_VERSION}/objs/ngx_http_brotli*.so /usr/lib/nginx/modules/
+
+# Run upgrade to fix freetype vulnerability
+# https://security.snyk.io/vuln/SNYK-ALPINE315-FREETYPE-2834869
+RUN apk update && apk upgrade && \
+    # Add user and group
+    addgroup --system web && \
+    adduser --system --no-create-home --disabled-password --gecos "Web service user" --ingroup web web && \
+    # Create folder and files to avoid permission errors
+    mkdir /var/cache/nginx/client_temp /var/cache/nginx/proxy_temp /var/cache/nginx/fastcgi_temp \
+          /var/cache/nginx/uwsgi_temp /var/cache/nginx/scgi_temp && \
+    touch /var/run/nginx.pid && \
+    chown web /var/run/nginx.pid
+
+USER web:web
 
 EXPOSE 80
