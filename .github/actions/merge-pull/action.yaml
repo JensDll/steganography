@@ -37,8 +37,6 @@ runs:
             pull_number: ${{ inputs.pull_number }}
           })
 
-          console.log('Merging pull request #${{ inputs.pull_number }}')
-
           let merge_method = '${{ inputs.merge_method }}'
           const isCustomRebase = merge_method === 'rebase'
           merge_method = isCustomRebase ? 'merge' : merge_method.replace(/^github_/, '')
@@ -47,12 +45,16 @@ runs:
           core.setOutput('base_ref', pullRequest.base.ref)
           core.setOutput('head_ref', pullRequest.head.ref)
 
+          console.log('Merging pull request #${{ inputs.pull_number }}')
+
           await github.rest.pulls.merge({
             owner,
             repo,
             pull_number: pullRequest.number,
             merge_method
           })
+
+          console.log('Successfully merged pull request #${{ inputs.pull_number }}')
 
           if (isCustomRebase) {
             const { data: mergeCommitRef } = await github.rest.git.getRef({
@@ -81,8 +83,7 @@ runs:
       uses: actions/github-script@v6
       with:
         script: |
-          console.log('Using custom rebase strategy')
-          console.log('Overwriting merge commit ...')
+          console.log('Overwriting merge commit (custom rebase) ...')
 
           await github.rest.git.updateRef({
             owner,
