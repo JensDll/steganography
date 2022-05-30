@@ -5,8 +5,8 @@ Online Steganography service and an excuse to work on some fun algorithms.
 
 The image below contains a secret message:
 
-![image](https://user-images.githubusercontent.com/56021306/170973250-ba1bf831-7da0-4972-affb-01d00fd4d96f.png)
+![image](https://user-images.githubusercontent.com/56021306/170989032-dca4336f-3efa-418c-bbe8-75b8c40592c8.png)
 
-:key: AQBZlyFR74kGAGfrYI0Vz8DMqpBnRrHpUT9accTeNmw2QDERvTp1sJ9/nMZsX9gRFqy8ln/x
+:key: AQBT/0cCZrcGALnobzGZPeY68iJMTi3ZlfHV5yvkxOnjnbKG1lUWNqwtQDFPzRN09Jaal335
 
 **Visit https://imagedatahiding.com/codec/decode to view its content.**
