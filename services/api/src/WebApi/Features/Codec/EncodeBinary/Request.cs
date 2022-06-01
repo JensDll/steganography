@@ -55,9 +55,9 @@ public class Request : IBindRequest, IDisposable
         _pipeWriter = pipe.Writer;
     }
 
-    public async Task<int?> FillPipeAsync(AesCounterMode aes)
+    public async Task<int?> FillPipeAsync(AesCounterMode aes, CancellationToken cancellationToken)
     {
-        IReadOnlyList<MyFormFile>? files = await _multiPartReader.ReadFilesBufferedAsync();
+        IReadOnlyList<MyFormFile>? files = await _multiPartReader.ReadFilesBufferedAsync(cancellationToken);
 
         if (files is null)
         {
@@ -77,7 +77,7 @@ public class Request : IBindRequest, IDisposable
 
             if (fileNameSize > 256)
             {
-                _validationErrors.Add("File name can not be longer than 256 bytes");
+                _validationErrors.Add("File name cannot be longer than 256 bytes");
                 PipeReader.CancelPendingRead();
                 await _pipeWriter.CompleteAsync();
                 return null;
@@ -113,7 +113,7 @@ public class Request : IBindRequest, IDisposable
             aes.Transform(buffer.Span[..sizeHint], buffer.Span);
             _pipeWriter.Advance(sizeHint);
 
-            await _pipeWriter.FlushAsync();
+            await _pipeWriter.FlushAsync(cancellationToken);
         }
 
         foreach (MyFormFile file in files)
@@ -121,7 +121,7 @@ public class Request : IBindRequest, IDisposable
             while (true)
             {
                 Memory<byte> buffer = _pipeWriter.GetMemory();
-                int bytesRead = await file.ReadAsync(buffer);
+                int bytesRead = await file.ReadAsync(buffer, cancellationToken);
 
                 if (bytesRead == 0)
                 {
@@ -131,7 +131,7 @@ public class Request : IBindRequest, IDisposable
                 aes.Transform(buffer.Span[..bytesRead], buffer.Span);
                 _pipeWriter.Advance(bytesRead);
 
-                FlushResult result = await _pipeWriter.FlushAsync();
+                FlushResult result = await _pipeWriter.FlushAsync(cancellationToken);
 
                 if (result.IsCompleted)
                 {
@@ -148,7 +148,7 @@ public class Request : IBindRequest, IDisposable
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        // ReSharper disable once ConstantConditionalAccessQualifier
+        // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
         CoverImage?.Dispose();
     }
 }

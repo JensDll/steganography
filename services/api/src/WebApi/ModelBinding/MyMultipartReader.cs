@@ -76,12 +76,12 @@ public class MyMultiPartReader : MultipartReader
             files.Add(file);
         }
 
-        if (files.Count == 0)
+        if (files.Count != 0)
         {
-            _validationErrors.Add("Request does not contain any files");
-            return null;
+            return files;
         }
 
-        return files;
+        _validationErrors.Add("Request does not contain any files");
+        return null;
     }
 }

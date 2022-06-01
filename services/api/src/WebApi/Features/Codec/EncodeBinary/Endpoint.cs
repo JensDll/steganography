@@ -33,7 +33,7 @@ public class EncodeBinary : EndpointWithoutResponse<Request>
 
         try
         {
-            Task<int?> writing = request.FillPipeAsync(aes);
+            Task<int?> writing = request.FillPipeAsync(aes, cancellationToken);
             Task reading = encoder.EncodeAsync(request.PipeReader);
             await Task.WhenAll(writing, reading);
             messageLength = writing.Result;

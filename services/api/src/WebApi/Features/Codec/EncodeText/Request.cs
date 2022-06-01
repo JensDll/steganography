@@ -55,9 +55,9 @@ public class Request : IBindRequest, IDisposable
         _pipeWriter = pipe.Writer;
     }
 
-    public async Task<int?> FillPipeAsync(AesCounterMode aes)
+    public async Task<int?> FillPipeAsync(AesCounterMode aes, CancellationToken cancellationToken)
     {
-        NextSection? nextSection = await _multiPartReader.ReadNextSectionAsync();
+        NextSection? nextSection = await _multiPartReader.ReadNextSectionAsync(cancellationToken);
 
         if (nextSection is null)
         {
@@ -82,7 +82,7 @@ public class Request : IBindRequest, IDisposable
         {
             Memory<byte> buffer = _pipeWriter.GetMemory();
 
-            int bytesRead = await formSection.Body.ReadAsync(buffer);
+            int bytesRead = await formSection.Body.ReadAsync(buffer, cancellationToken);
 
             if (bytesRead == 0)
             {
@@ -95,7 +95,7 @@ public class Request : IBindRequest, IDisposable
             {
                 PipeReader.CancelPendingRead();
                 _pipeWriter.CancelPendingFlush();
-                await _pipeWriter.FlushAsync();
+                await _pipeWriter.FlushAsync(cancellationToken);
                 await _pipeWriter.CompleteAsync();
                 return null;
             }
@@ -103,7 +103,7 @@ public class Request : IBindRequest, IDisposable
             aes.Transform(buffer.Span[..bytesRead], buffer.Span);
             _pipeWriter.Advance(bytesRead);
 
-            FlushResult result = await _pipeWriter.FlushAsync();
+            FlushResult result = await _pipeWriter.FlushAsync(cancellationToken);
 
             if (result.IsCompleted)
             {
@@ -119,7 +119,7 @@ public class Request : IBindRequest, IDisposable
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        // ReSharper disable once ConstantConditionalAccessQualifier
+        // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
         CoverImage?.Dispose();
     }
 }

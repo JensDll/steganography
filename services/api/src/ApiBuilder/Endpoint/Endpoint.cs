@@ -25,15 +25,8 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
         {
             if (RequestTypeCache<TRequest>.BindAsync is not null)
             {
-                try
-                {
-                    await RequestTypeCache<TRequest>.BindAsync(request, HttpContext,
-                        ValidationErrors, cancellationToken);
-                }
-                catch (ModelBindingException e)
-                {
-                    ValidationErrors.Add(e.Message);
-                }
+                await RequestTypeCache<TRequest>.BindAsync(request, HttpContext,
+                    ValidationErrors, cancellationToken);
             }
 
             if (ValidationErrors.Count > 0)
@@ -48,6 +41,14 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
             {
                 await HandleAsync(request, cancellationToken);
             }
+        }
+        catch (ModelBindingException e)
+        {
+            ValidationErrors.Add(e.Message);
+        }
+        catch (OperationCanceledException)
+        {
+            ValidationErrors.Add("Request was cancelled");
         }
         finally
         {

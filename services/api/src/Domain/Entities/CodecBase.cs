@@ -13,7 +13,6 @@ public abstract class CodecBase : IDisposable
     private readonly int _permutationEnd;
 
     protected readonly Image<Rgb24> CoverImage;
-    protected readonly int CoverImageCapacity;
 
     protected byte BitPosition;
     protected byte ByteShift;
@@ -39,7 +38,6 @@ public abstract class CodecBase : IDisposable
             _prng.RentPermutation(_startPermutation[0], _permutationEnd, _permutationStep);
 
         CoverImage = coverImage;
-        CoverImageCapacity = coverImageSize * 3;
     }
 
     public void Dispose()
