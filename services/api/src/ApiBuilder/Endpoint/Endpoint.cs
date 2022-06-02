@@ -14,15 +14,15 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
         ValidationErrors = new List<string>();
         TRequest? request = default;
 
-        if (HttpContext.Request.HasJsonContentType())
-        {
-            request = await HttpContext.Request.ReadFromJsonAsync<TRequest>(cancellationToken);
-        }
-
-        request ??= new TRequest();
-
         try
         {
+            if (HttpContext.Request.HasJsonContentType())
+            {
+                request = await HttpContext.Request.ReadFromJsonAsync<TRequest>(cancellationToken);
+            }
+
+            request ??= new TRequest();
+
             if (RequestTypeCache<TRequest>.BindAsync is not null)
             {
                 try
@@ -49,9 +49,16 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
                 await HandleAsync(request, cancellationToken);
             }
         }
+        catch (OperationCanceledException)
+        {
+            if (!HttpContext.Response.HasStarted)
+            {
+                await SendValidationErrorAsync("Request was cancelled");
+            }
+        }
         finally
         {
-            if (RequestTypeCache<TRequest>.Dispose is not null)
+            if (RequestTypeCache<TRequest>.Dispose is not null && request is not null)
             {
                 RequestTypeCache<TRequest>.Dispose(request);
             }
