@@ -14,7 +14,6 @@ declare module '@vue/runtime-core' {
     FormFileInput: typeof import('./../src/components/form/FormFileInput.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    TheFooter: typeof import('./../src/components/layout/TheFooter.vue')['default']
     TheHeader: typeof import('./../src/components/layout/TheHeader.vue')['default']
     TheMain: typeof import('./../src/components/layout/TheMain.vue')['default']
   }

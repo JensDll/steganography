@@ -1,6 +1,6 @@
 import url from 'url'
 
-import { defineConfig, splitVendorChunkPlugin } from 'vite'
+import { defineConfig } from 'vite'
 import Vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 
@@ -20,7 +20,6 @@ export default defineConfig({
     Vue(),
     Components({
       dts: './dts/components.d.ts'
-    }),
-    splitVendorChunkPlugin()
+    })
   ]
 })
