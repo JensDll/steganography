@@ -19,7 +19,6 @@ jobs:
 
   build-and-push-web:
     needs:
-      - should-run
       - create-tag
     environment:
       name: DockerHub
@@ -56,7 +55,6 @@ jobs:
 
   build-and-push-api:
     needs:
-      - should-run
       - create-tag
     environment:
       name: DockerHub
