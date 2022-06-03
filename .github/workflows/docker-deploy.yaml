@@ -6,11 +6,6 @@ on:
       - main
 
 jobs:
-  should-run:
-    uses: JensDll/should-run/.github/workflows/main.yaml@main
-    with:
-      projects: services/web services/api
-
   create-tag:
     runs-on: ubuntu-latest
     outputs:
@@ -26,7 +21,6 @@ jobs:
     needs:
       - should-run
       - create-tag
-    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     environment:
       name: DockerHub
     runs-on: ubuntu-latest
@@ -64,7 +58,6 @@ jobs:
     needs:
       - should-run
       - create-tag
-    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     environment:
       name: DockerHub
     runs-on: ubuntu-latest
