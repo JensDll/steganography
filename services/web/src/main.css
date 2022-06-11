@@ -1,7 +1,7 @@
-@import './css/common.css';
 @import './css/font.css';
+@import './css/common.css';
 @import './css/form.css';
 
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
