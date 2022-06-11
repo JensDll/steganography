@@ -33,12 +33,6 @@
     --color-border-form-highlight: theme('colors.rgb.decode.600');
   }
 
-  *,
-  ::before,
-  ::after {
-    @apply border-border-base;
-  }
-
   body {
     @apply bg-bg-base font-sans text-text-base;
   }

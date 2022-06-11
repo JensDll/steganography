@@ -19,9 +19,9 @@ module.exports = {
     colors,
     screens: tailwindTheme.screens,
     extend: {
-      // borderColor: {
-      //   DEFAULT: 'var(--color-border-base)'
-      // },
+      borderColor: {
+        DEFAULT: 'rgb(var(--color-border-base))'
+      },
       fontFamily: {
         sans: ['Montserrat', ...defaultTheme.fontFamily.sans]
       },
