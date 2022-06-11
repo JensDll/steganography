@@ -27,25 +27,25 @@ import CallToAction from './CallToAction.vue'
   background-image: linear-gradient(
       12deg,
       theme('colors.encode.50'),
-      rgb(theme('colors.rgb.encode.50') / 0) 60%
+      theme('colors.encode.50' / 0) 60%
     ),
     linear-gradient(
       -12deg,
       theme('colors.decode.200'),
-      rgb(theme('colors.rgb.decode.200') / 0) 60%
+      theme('colors.decode.200' / 0) 60%
     );
 }
 
 .dark .bg-gradient {
   background-image: linear-gradient(
       12deg,
-      rgb(theme('colors.rgb.encode.900') / 0.9),
-      rgb(theme('colors.rgb.encode.900') / 0) 60%
+      theme('colors.encode.900' / 0.9),
+      theme('colors.encode.900' / 0) 60%
     ),
     linear-gradient(
       -12deg,
       theme('colors.decode.900'),
-      rgb(theme('colors.rgb.decode.900') / 0) 60%
+      theme('colors.decode.900' / 0) 60%
     );
 }
 </style>

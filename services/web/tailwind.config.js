@@ -2,19 +2,16 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 const Forms = require('@tailwindcss/forms')
 const Typography = require('@tailwindcss/typography')
 const { Icons } = require('tailwindcss-plugin-icons')
+const { register } = require('esbuild-register/dist/node')
 
 const { Utilities } = require('./tailwind/plugins/utilities')
 const { Variants } = require('./tailwind/plugins/variants')
-
-const { register } = require('esbuild-register/dist/node')
+const { colors } = require('./tailwind/colors')
 const { unregister } = register()
-const { colors } = require('./tailwind/colors.ts')
 const { tailwindTheme } = require('./tailwind/theme.ts')
 unregister()
 
-/**
- * @type {import('tailwindcss/tailwind-config').TailwindTheme}
- */
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: 'class',
@@ -22,6 +19,9 @@ module.exports = {
     colors,
     screens: tailwindTheme.screens,
     extend: {
+      // borderColor: {
+      //   DEFAULT: 'var(--color-border-base)'
+      // },
       fontFamily: {
         sans: ['Montserrat', ...defaultTheme.fontFamily.sans]
       },
