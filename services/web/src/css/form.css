@@ -80,7 +80,7 @@
   .dark textarea.error,
   .dark select.error,
   .dark .custom-file-input.error {
-    --color-border-form-base: theme('colors.rgb.red.700');
+    --color-border-form-base: theme('colors.rgb.red.600');
     --color-border-form-highlight: var(--color-text-error);
   }
 

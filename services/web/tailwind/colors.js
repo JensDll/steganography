@@ -42,15 +42,19 @@ for (const [colorName, value] of Object.entries(colors)) {
 }
 
 function withAlphaValue(variable) {
-  return `rgb(var(${variable}) / <alpha-value>)`
+  return `rgb(${asVar(variable)} / <alpha-value>)`
+}
+
+function asVar(variable) {
+  return `var(${variable})`
 }
 
 colors.rgb = rgb
 
 colors.text = {
-  base: withAlphaValue('--tw-prose-body'),
+  base: asVar('--tw-prose-body'),
   error: withAlphaValue('--color-text-error'),
-  heading: withAlphaValue('--tw-prose-headings')
+  heading: asVar('--tw-prose-headings')
 }
 
 colors.bg = {
