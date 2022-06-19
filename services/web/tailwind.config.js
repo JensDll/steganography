@@ -55,7 +55,7 @@ module.exports = {
         ]
       },
       heroiconsSolid: {
-        icons: ['lock-open', 'lock-closed', 'paper-clip']
+        icons: ['paper-clip']
       },
       mdi: {
         icons: ['github', 'lock', 'lock-open-variant']
