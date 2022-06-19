@@ -1,5 +1,6 @@
-# Image-Data-Hiding
-An online image-data-hiding service using Steganography and Cryptography.
+# Image Data Hiding
+
+An online image data hiding service using Steganography and Cryptography.
 
 ## Example
 
