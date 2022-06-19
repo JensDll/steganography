@@ -8,7 +8,7 @@ import CallToAction from './CallToAction.vue'
       class="grid grid-rows-[auto_auto_1fr] justify-items-center self-center pt-6 md:p-0"
     >
       <section>
-        <h1 class="px-5 text-center">Image Data Hiding</h1>
+        <h1 class="px-5 text-center">Image-Data-Hiding</h1>
         <p class="mx-auto mt-8 max-w-2xl px-5 text-center text-lg">
           Online Steganography service. Securely embed secret messages in images
           directly from the browser.
