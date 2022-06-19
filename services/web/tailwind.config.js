@@ -55,10 +55,10 @@ module.exports = {
         ]
       },
       heroiconsSolid: {
-        icons: ['paper-clip']
+        icons: ['paper-clip', 'lock-open', 'lock-closed']
       },
       mdi: {
-        icons: ['github', 'lock', 'lock-open-variant']
+        icons: ['github']
       },
       custom: {
         icons: ['loading'],
