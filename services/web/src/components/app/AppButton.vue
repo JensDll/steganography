@@ -35,7 +35,7 @@ const handleClick = (e: MouseEvent) => {
     <button
       :type="type"
       :class="[
-        'relative block rounded border-2 px-4 py-1 font-medium outline-offset-[2.5px] focus:outline focus:outline-2',
+        'relative flex rounded border-2 px-4 py-1 font-medium outline-offset-[2.5px] focus:outline focus:outline-2',
         {
           default: `border-gray-300 hover:bg-gray-100 focus:outline-gray-300`,
           landing: `border-gray-900 bg-gray-900 py-2 px-6 text-white outline-none hover:border-gray-700 hover:bg-gray-700

@@ -14,7 +14,7 @@
 }
 
 .dark .section {
-  box-shadow: 0 2px 20px 0 theme('colors.black' / 0.6);
+  box-shadow: 0 2px 20px 0 theme('colors.black' / 0.75);
 }
 
 @media (min-width: 1340px) {
@@ -25,7 +25,7 @@
   }
 
   .dark .section {
-    box-shadow: 4px 4px 40px 0 theme('colors.black' / 0.6);
+    box-shadow: 4px 4px 40px 0 theme('colors.black' / 0.75);
   }
 }
 </style>

@@ -58,7 +58,7 @@ module.exports = {
         icons: ['lock-open', 'lock-closed', 'paper-clip']
       },
       mdi: {
-        icons: ['github']
+        icons: ['github', 'lock', 'lock-open-variant']
       },
       custom: {
         icons: ['loading'],
