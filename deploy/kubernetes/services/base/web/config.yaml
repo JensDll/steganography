@@ -160,23 +160,33 @@ metadata:
 data:
   server.conf: |
     server {
-        listen 80 default_server;
-        
-        location / {        
-            try_files $uri /index.html;
-            root /data/www;  
-        }
-        
-        location ~* .(xml|html|svg|ico|js|css|woff|woff2)$ {
-            root /data/www;
-            expires 1y;
-            add_header Cache-Control "public, no-transform";
-        }
+      listen 80 default_server;
+      root /data/www;
 
-        location = /health {
-            access_log off;
-            return 200;
-        }
+      location / {        
+          try_files $uri /index.html;
+          expires epoch;
+          add_header Last-Modified "";
+      }
+
+      location /assets {
+          expires max;
+          etag off;
+          add_header Cache-Control "public, no-transform";
+          add_header Last-Modified "";
+      }
+
+      location /fonts {
+          expires max;
+          etag off;
+          add_header Cache-Control "public, no-transform";
+          add_header Last-Modified "";
+      }
+
+      location = /health {
+          access_log off;
+          return 200;
+      }
     }
 ---
 apiVersion: v1
