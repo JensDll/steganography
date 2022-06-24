@@ -1,4 +1,4 @@
-ARG ALPINE_VERSION=1.21.6
+ARG ALPINE_VERSION=1.23.0
 
 FROM node:16 as build
 
@@ -43,11 +43,7 @@ COPY --from=build /out/dist/ /data/www/
 # Copy ngx_brotli modules
 COPY --from=ngx_brotli /compile/nginx-${ALPINE_VERSION}/objs/ngx_http_brotli*.so /usr/lib/nginx/modules/
 
-# Run upgrade to fix freetype vulnerability
-# https://security.snyk.io/vuln/SNYK-ALPINE315-FREETYPE-2834869
-RUN apk update && apk upgrade && \
-    # Add user and group
-    addgroup --system web && \
+RUN addgroup --system web && \
     adduser --system --no-create-home --disabled-password --gecos "Web service user" --ingroup web web && \
     # Create some folder and files to avoid permission errors
     mkdir /var/cache/nginx/client_temp /var/cache/nginx/proxy_temp /var/cache/nginx/fastcgi_temp \
