@@ -1,6 +1,6 @@
 # Image Data Hiding
 
-An online image data hiding tool using Steganography and Cryptography.
+An online image data hiding tool, also known as image Steganography.
 
 ## Example
 
