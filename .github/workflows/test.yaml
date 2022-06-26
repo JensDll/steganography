@@ -14,22 +14,21 @@ jobs:
 
   test-web:
     needs: should-run
-    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true' ||
+      github.base_ref == 'main' # Always test when the PR base branch is main.
     uses: ./.github/workflows/test-web.yaml
 
   test-api:
     needs: should-run
-    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
+    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true' ||
+      github.base_ref == 'main' # Always test when the PR base branch is main.
     uses: ./.github/workflows/test-api.yaml
 
   merge-pull-request:
     needs:
       - test-web
       - test-api
-    if: always() &&
-      (needs.test-web.result == 'success' || needs.test-web.result == 'skipped') &&
-      (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
-      github.base_ref == 'main'
+    if: github.base_ref == 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
@@ -38,5 +37,6 @@ jobs:
       - name: Merging pull request
         uses: ./.github/actions/merge-pull
         with:
+          # Make sure to trigger push workflows.
           github_token: ${{ secrets.WORKFLOW_TOKEN }}
           pull_number: ${{ github.event.number }}
