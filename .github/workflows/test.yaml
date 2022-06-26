@@ -15,13 +15,13 @@ jobs:
   test-web:
     needs: should-run
     if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true' ||
-      github.base_ref == 'main' # Always test when the PR base branch is main.
+      github.base_ref == 'main' # Always test when the pull request base branch is main.
     uses: ./.github/workflows/test-web.yaml
 
   test-api:
     needs: should-run
     if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true' ||
-      github.base_ref == 'main' # Always test when the PR base branch is main.
+      github.base_ref == 'main' # Always test when the pull request base branch is main.
     uses: ./.github/workflows/test-api.yaml
 
   merge-pull-request:
