@@ -1,5 +1,5 @@
 @import './css/font.css';
-@import './css/common.css';
+@import './css/base.css';
 @import './css/form.css';
 
 @tailwind base;

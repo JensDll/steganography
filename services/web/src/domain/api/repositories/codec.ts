@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 
 import { useDownload, useFetch } from '~/domain'
+import { NETWORK_ERROR_RESPONSE } from './helper'
 
 export function codec() {
   const loading = ref(false)
@@ -22,7 +23,7 @@ export function codec() {
 
       try {
         if (isNetworkError) {
-          return
+          throw NETWORK_ERROR_RESPONSE
         }
 
         if (response.ok) {
@@ -53,7 +54,7 @@ export function codec() {
 
       try {
         if (isNetworkError) {
-          return
+          throw NETWORK_ERROR_RESPONSE
         }
 
         if (response.ok) {
@@ -82,7 +83,7 @@ export function codec() {
 
       try {
         if (isNetworkError) {
-          return
+          throw NETWORK_ERROR_RESPONSE
         }
 
         if (response.ok) {

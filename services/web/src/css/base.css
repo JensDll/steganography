@@ -68,4 +68,8 @@
   h4 {
     @apply text-xl font-semibold sm:text-2xl lg:text-3xl;
   }
+
+  .dark .text-text-error {
+    @apply font-medium;
+  }
 }

@@ -29,11 +29,12 @@ async function handleSubmit() {
     await decode(formData.coverImage[0], formData.key)
     errorMessage.value = ''
   } catch (error) {
+    console.log(error)
     if (!(error instanceof ValidationError)) {
       if (errorMessage.value) {
         animation.shake('#error-message')
       }
-      errorMessage.value = 'Decoding failed maybe your key is not valid'
+      errorMessage.value = 'Decoding failed. Maybe your key is not valid'
     } else {
       errorMessage.value = ''
     }

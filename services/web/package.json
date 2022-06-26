@@ -13,9 +13,9 @@
     "fix": "pnpm run format && pnpm run lint"
   },
   "dependencies": {
-    "@iconify-json/heroicons-outline": "1.1.1",
-    "@iconify-json/heroicons-solid": "1.1.1",
-    "@iconify-json/mdi": "1.1.23",
+    "@iconify-json/heroicons-outline": "1.1.2",
+    "@iconify-json/heroicons-solid": "1.1.2",
+    "@iconify-json/mdi": "1.1.24",
     "@tailwindcss/forms": "0.5.2",
     "@tailwindcss/typography": "0.5.2",
     "@types/node": "18.0.0",
@@ -40,9 +40,9 @@
     "unplugin-vue-components": "0.19.9",
     "validierung": "1.0.2",
     "vite": "2.9.12",
-    "vitest": "0.15.2",
+    "vitest": "0.16.0",
     "vue": "3.2.37",
     "vue-router": "4.0.16",
-    "vue-tsc": "0.38.1"
+    "vue-tsc": "0.38.2"
   }
 }
