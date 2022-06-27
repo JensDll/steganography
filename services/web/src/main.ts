@@ -24,10 +24,10 @@ const faviconAlternate = document.querySelector(
 
 useMediaQuery('(prefers-color-scheme: dark)', matches => {
   if (matches) {
-    favicon.setAttribute('href', '/favicon-dark.svg')
-    faviconAlternate.setAttribute('href', '/favicon-dark.ico')
+    favicon.setAttribute('href', '/logo.svg')
+    faviconAlternate.setAttribute('href', '/logo-dark.ico')
   } else {
-    favicon.setAttribute('href', '/favicon.svg')
-    faviconAlternate.setAttribute('href', '/favicon.ico')
+    favicon.setAttribute('href', '/logo.svg')
+    faviconAlternate.setAttribute('href', '/logo.ico')
   }
 })

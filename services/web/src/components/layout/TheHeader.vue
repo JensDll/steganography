@@ -58,9 +58,11 @@ watch(theme, changeThemePreference)
   >
     <div class="flex items-end justify-between py-6 container">
       <div
-        class="cursor-pointer text-xl font-semibold"
+        class="flex cursor-pointer items-center text-xl font-semibold"
         @click="$router.push({ name: 'home' })"
       >
+        <img src="/logo.svg" class="mr-3 h-6 w-6 dark:hidden" />
+        <img src="/logo-dark.svg" class="mr-3 hidden h-6 w-6 dark:block" />
         Steganography
       </div>
       <nav class="relative hidden md:block">

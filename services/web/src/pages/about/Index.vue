@@ -4,9 +4,7 @@
   <AppMarkdown>
     <div class="max-w-prose">
       <h1>About</h1>
-      <p>
-        Here you find some notes about how this works and the implementation.
-      </p>
+      <p>Here you find some notes about the project and how it works.</p>
       <h2>How is the message hidden in the image?</h2>
       <p>
         The current algorithm implements a Least Significant Bit Substitution
@@ -38,8 +36,10 @@
           initialization value (12 bytes)
         </li>
       </ul>
-      You have to make sure that only trusted parties know the key. Otherwise,
-      you risk losing your data.
+      <p>
+        You have to make sure that only trusted parties know the key.
+        Otherwise,&thinsp; you risk losing your data.
+      </p>
     </div>
   </AppMarkdown>
 </template>

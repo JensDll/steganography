@@ -14,12 +14,22 @@ const routes: RouteRecordRaw[] = [
   {
     name: 'home',
     path: '/',
-    component: HomeIndex
+    component: HomeIndex,
+    meta: {
+      title: 'Image Data Hiding',
+      description:
+        'Online image Steganography. Securely embed secret messages in images directly from the browser.'
+    }
   },
   {
     name: 'about',
     path: '/about',
-    component: AboutIndex
+    component: AboutIndex,
+    meta: {
+      title: 'About',
+      description:
+        'Online image Steganography. Notes about the project and how it works.'
+    }
   },
   {
     name: 'codec',
@@ -33,7 +43,9 @@ const routes: RouteRecordRaw[] = [
         alias: '',
         component: EncodeForm,
         meta: {
-          title: 'Encode'
+          title: 'Encode',
+          description:
+            'Provide a secret message to embed in a cover image. The message will be hidden and encrypted.'
         }
       },
       {
@@ -41,7 +53,9 @@ const routes: RouteRecordRaw[] = [
         path: 'decode',
         component: DecodeForm,
         meta: {
-          title: 'Decode'
+          title: 'Decode',
+          description:
+            'Provide a cover image to read and unprotect its secret message.'
         }
       }
     ]
@@ -54,7 +68,28 @@ export const router = createRouter({
   routes
 })
 
+const titleTag = document.head.querySelector('title')!
+const metaTitleTags = document.head.querySelectorAll('meta[property*="title"]')
+const metaDescriptionTags = document.head.querySelectorAll(
+  'meta[name="description"], meta[property*="description"]'
+)
+const metaUrlTags = document.head.querySelectorAll('meta[property*="url"]')
+
 router.beforeEach(to => {
+  titleTag.text = to.meta.title
+
+  metaTitleTags.forEach(tag => {
+    tag.setAttribute('content', to.meta.title)
+  })
+
+  metaDescriptionTags.forEach(tag => {
+    tag.setAttribute('content', to.meta.description)
+  })
+
+  metaUrlTags.forEach(function (this: string, tag) {
+    tag.setAttribute('content', this)
+  }, `${APP_CONFIG.THIS_URI}${to.fullPath}`)
+
   if (to.name === 'encode') {
     document.documentElement.classList.add('encode')
     document.documentElement.classList.remove('decode')
@@ -66,6 +101,7 @@ router.beforeEach(to => {
 
 declare module 'vue-router' {
   interface RouteMeta {
-    title?: string
+    title: string
+    description: string
   }
 }
