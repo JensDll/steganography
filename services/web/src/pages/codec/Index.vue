@@ -7,7 +7,7 @@
     >
       <h2 class="mb-6 sm:order-1 sm:mb-0">{{ $route.meta.title }}</h2>
       <ul
-        class="mb-6 flex space-x-4 border-b sm:order-2 sm:mb-0 sm:translate-y-2"
+        class="mb-4 flex space-x-4 border-b sm:order-2 sm:mb-0 sm:translate-y-2"
       >
         <RouterLink
           v-slot="{ navigate, isExactActive }"

@@ -4,25 +4,25 @@ importers:
 
   .:
     specifiers:
-      aws-cdk-lib: 2.28.1
-      constructs: 10.1.42
+      aws-cdk-lib: 2.30.0
+      constructs: 10.1.43
       prettier: 2.7.1
       source-map-support: 0.5.21
     dependencies:
-      aws-cdk-lib: 2.28.1_constructs@10.1.42
-      constructs: 10.1.42
+      aws-cdk-lib: 2.30.0_constructs@10.1.43
+      constructs: 10.1.43
       prettier: 2.7.1
       source-map-support: 0.5.21
 
 packages:
 
-  /aws-cdk-lib/2.28.1_constructs@10.1.42:
-    resolution: {integrity: sha512-YFJKvv3lU7HUfud+4uyQT5tNyJhidBB1ftBmc6NzML+UXAuelPZICJLdGuoE/dA6dU3mB/sT15S+fTzATTwvfg==}
+  /aws-cdk-lib/2.30.0_constructs@10.1.43:
+    resolution: {integrity: sha512-e9KKwRF4vPzPpOXPq8dtzUdn6j2tmTrrSZmQu2tOiZni0eB1vhiOVwaxc/8aEUrz8wUZ8t2gEitYdJmtm/GWhQ==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
     dependencies:
-      constructs: 10.1.42
+      constructs: 10.1.43
     dev: false
     bundledDependencies:
       - '@balena/dockerignore'
@@ -39,8 +39,8 @@ packages:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
     dev: false
 
-  /constructs/10.1.42:
-    resolution: {integrity: sha512-5AELa/PFtZG+WTjn9HoXhqsDZYV6l3J7Li9xw6vREYVMasF8cnVbTZvA4crP1gIyKtBAxAlnZCmzmCbicnH6eg==}
+  /constructs/10.1.43:
+    resolution: {integrity: sha512-I7CEsYPmcsTpmf+tT3DZq5klCzk2d0Gb6X67P5XxYq0an4+JiWrf8/LCIHV3xqOhnGLAbM/aGZ3bigUNTWeliA==}
     engines: {node: '>= 14.17.0'}
     dev: false
 

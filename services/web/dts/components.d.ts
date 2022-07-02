@@ -3,6 +3,8 @@
 // Read more: https://github.com/vuejs/core/pull/3399
 import '@vue/runtime-core'
 
+export {}
+
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AppButton: typeof import('./../src/components/app/AppButton.vue')['default']
@@ -17,6 +19,5 @@ declare module '@vue/runtime-core' {
     TheHeader: typeof import('./../src/components/layout/TheHeader.vue')['default']
     TheMain: typeof import('./../src/components/layout/TheMain.vue')['default']
   }
-}
 
-export {}
+}
