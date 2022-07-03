@@ -43,7 +43,7 @@ COPY --from=build /out/dist/ /data/www/
 # Copy ngx_brotli modules
 COPY --from=ngx_brotli /compile/nginx-${ALPINE_VERSION}/objs/ngx_http_brotli*.so /usr/lib/nginx/modules/
 
-RUN addgroup --system web && \
+RUN apk update && apk upgrade && addgroup --system web && \
     adduser --system --no-create-home --disabled-password --gecos "Web service user" --ingroup web web && \
     # Create some folder and files to avoid permission errors
     mkdir /var/cache/nginx/client_temp /var/cache/nginx/proxy_temp /var/cache/nginx/fastcgi_temp \
