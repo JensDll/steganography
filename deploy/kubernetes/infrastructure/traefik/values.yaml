@@ -5,3 +5,4 @@ ports:
     redirectTo: websecure
 additionalArguments:
   - '--entrypoints.websecure.http.tls'
+  - '--entrypoints.websecure.http.middlewares=traefik-buffering'
