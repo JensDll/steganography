@@ -45,7 +45,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           title: 'Encode',
           description:
-            'Provide a secret message to embed in a cover image. The message will be hidden and encrypted.'
+            'Provide a message to embed in an image. It will be hidden and encrypted.'
         }
       },
       {
