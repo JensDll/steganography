@@ -61,8 +61,12 @@ watch(theme, changeThemePreference)
         class="flex cursor-pointer items-center text-xl font-semibold"
         @click="$router.push({ name: 'home' })"
       >
-        <img src="/logo.svg" class="mr-3 h-6 w-6 dark:hidden" />
-        <img src="/logo-dark.svg" class="mr-3 hidden h-6 w-6 dark:block" />
+        <img src="/logo.svg" alt="logo" class="mr-3 h-6 w-6 dark:hidden" />
+        <img
+          src="/logo-dark.svg"
+          alt="logo"
+          class="mr-3 hidden h-6 w-6 dark:block"
+        />
         Steganography
       </div>
       <nav class="relative hidden md:block">
@@ -145,34 +149,31 @@ watch(theme, changeThemePreference)
         @click="closePopup"
       ></div>
       <ul class="space-y-6">
-        <RouterLink
-          v-slot="{ navigate, isActive }"
-          :to="{ name: 'codec' }"
-          custom
-        >
-          <li
-            class="mr-12 cursor-pointer font-medium hover:text-orange-600"
-            :class="{ 'text-orange-600': isActive }"
-            @click="navigate"
+        <li>
+          <RouterLink
+            class="mr-6 font-medium hover:text-orange-600"
+            active-class="text-orange-600"
+            :to="{ name: 'codec' }"
           >
             Codec
-          </li>
-        </RouterLink>
-        <RouterLink
-          v-slot="{ navigate, isActive }"
-          :to="{ name: 'about' }"
-          custom
-        >
-          <li
-            class="cursor-pointer font-medium hover:text-orange-600"
-            :class="{ 'text-orange-600': isActive }"
-            @click="navigate"
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink
+            class="font-medium hover:text-orange-600"
+            exact-active-class="text-orange-600"
+            :to="{ name: 'about' }"
           >
             About
-          </li>
-        </RouterLink>
-        <li class="cursor-pointer font-medium hover:text-orange-600">
-          <a href="https://github.com/JensDll/image-data-hiding">GitHub</a>
+          </RouterLink>
+        </li>
+        <li>
+          <a
+            class="cursor-pointer font-medium hover:text-orange-600"
+            href="https://github.com/JensDll/image-data-hiding"
+          >
+            GitHub
+          </a>
         </li>
       </ul>
       <div
