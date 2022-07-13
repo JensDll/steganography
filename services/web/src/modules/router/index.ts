@@ -45,7 +45,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           title: 'Encode',
           description:
-            'Provide a message to embed in an image. It will be hidden and encrypted.'
+            'Online image Steganography. Use text or binary data to protect and hide it in an image.'
         }
       },
       {
@@ -55,7 +55,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           title: 'Decode',
           description:
-            'Provide a cover image to read and unprotect its secret message.'
+            'Online image Steganography. Use a cover image to read and unprotect its secret message.'
         }
       }
     ]

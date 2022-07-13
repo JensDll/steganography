@@ -1,50 +1,50 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@esbuild-kit/esm-loader': 2.4.0
-  '@types/node': 18.0.0
-  aws-cdk-lib: 2.30.0
-  constructs: 10.1.43
+  '@esbuild-kit/esm-loader': 2.4.1
+  '@types/node': 18.0.4
+  aws-cdk-lib: 2.31.1
+  constructs: 10.1.44
   prettier: 2.7.1
   source-map-support: 0.5.21
   typescript: 4.7.4
 
 dependencies:
-  '@esbuild-kit/esm-loader': 2.4.0
-  '@types/node': 18.0.0
-  aws-cdk-lib: 2.30.0_constructs@10.1.43
-  constructs: 10.1.43
+  '@esbuild-kit/esm-loader': 2.4.1
+  '@types/node': 18.0.4
+  aws-cdk-lib: 2.31.1_constructs@10.1.44
+  constructs: 10.1.44
   prettier: 2.7.1
   source-map-support: 0.5.21
   typescript: 4.7.4
 
 packages:
 
-  /@esbuild-kit/core-utils/2.0.2:
-    resolution: {integrity: sha512-clNYQUsqtc36pzW5EufMsahcbLG45EaW3YDyf0DlaS0eCMkDXpxIlHwPC0rndUwG6Ytk9sMSD5k1qHbwYEC/OQ==}
+  /@esbuild-kit/core-utils/2.1.0:
+    resolution: {integrity: sha512-fZirrc2KjeTumVjE4bpleWOk2gD83b7WuGeQqOceKFQL+heNKKkNB5G5pekOUTLzfSBc0hP7hCSBoD9TuR0hLw==}
     dependencies:
       esbuild: 0.14.48
       source-map-support: 0.5.21
     dev: false
 
-  /@esbuild-kit/esm-loader/2.4.0:
-    resolution: {integrity: sha512-zS720jXh06nfg5yAzm6oob4sWN9VTP2E1SonhFgEb6zCBswa4S8fOQ/4Bksz1flDgn56NPqoTTDn2XmWRyMG9Q==}
+  /@esbuild-kit/esm-loader/2.4.1:
+    resolution: {integrity: sha512-6x44rygVfNODm27v0RW3wX5y61mqSrXDvB39G0nomgWWqxG3mjiKtPSwrFppdkrA39QIqDgVlD4gJmPOxnleSw==}
     dependencies:
-      '@esbuild-kit/core-utils': 2.0.2
+      '@esbuild-kit/core-utils': 2.1.0
       get-tsconfig: 4.1.0
     dev: false
 
-  /@types/node/18.0.0:
-    resolution: {integrity: sha512-cHlGmko4gWLVI27cGJntjs/Sj8th9aYwplmZFwmmgYQQvL5NUsgVJG7OddLvNfLqYS31KFN0s3qlaD9qCaxACA==}
+  /@types/node/18.0.4:
+    resolution: {integrity: sha512-M0+G6V0Y4YV8cqzHssZpaNCqvYwlCiulmm0PwpNLF55r/+cT8Ol42CHRU1SEaYFH2rTwiiE1aYg/2g2rrtGdPA==}
     dev: false
 
-  /aws-cdk-lib/2.30.0_constructs@10.1.43:
-    resolution: {integrity: sha512-e9KKwRF4vPzPpOXPq8dtzUdn6j2tmTrrSZmQu2tOiZni0eB1vhiOVwaxc/8aEUrz8wUZ8t2gEitYdJmtm/GWhQ==}
+  /aws-cdk-lib/2.31.1_constructs@10.1.44:
+    resolution: {integrity: sha512-1IFgMxr1PpX90KFzTRZKVwfY+qP/UzLsrNgfylvqveOKy3R6qtGAhAx186+Zy2nx+wYoy+hVz89CZSItGDapMA==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
     dependencies:
-      constructs: 10.1.43
+      constructs: 10.1.44
     dev: false
     bundledDependencies:
       - '@balena/dockerignore'
@@ -61,8 +61,8 @@ packages:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
     dev: false
 
-  /constructs/10.1.43:
-    resolution: {integrity: sha512-I7CEsYPmcsTpmf+tT3DZq5klCzk2d0Gb6X67P5XxYq0an4+JiWrf8/LCIHV3xqOhnGLAbM/aGZ3bigUNTWeliA==}
+  /constructs/10.1.44:
+    resolution: {integrity: sha512-0Y+Wc77/nBYw9vJsPmvjU0KVwRZvTn3DjZgDvlq9eTSIEeXNvbmLKYyZpZ2hXDy2QLoiMwosrBjb4vd9Aku+rg==}
     engines: {node: '>= 14.17.0'}
     dev: false
 

@@ -2,8 +2,8 @@
   "private": true,
   "dependencies": {
     "prettier": "2.7.1",
-    "aws-cdk-lib": "2.30.0",
-    "constructs": "10.1.43",
+    "aws-cdk-lib": "2.31.1",
+    "constructs": "10.1.44",
     "source-map-support": "0.5.21"
   }
 }

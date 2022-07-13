@@ -19,5 +19,4 @@ declare module '@vue/runtime-core' {
     TheHeader: typeof import('./../src/components/layout/TheHeader.vue')['default']
     TheMain: typeof import('./../src/components/layout/TheMain.vue')['default']
   }
-
 }
