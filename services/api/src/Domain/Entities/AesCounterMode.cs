@@ -7,7 +7,7 @@ public class AesCounterMode : IDisposable
 {
     private readonly Aes _aes;
     // The first 32 bits represent the counter and the last 96 bits are the IV.
-    private readonly byte[] _counterAndIV = new byte[16];
+    private readonly byte[] _counterAndIv = new byte[16];
     private readonly ICryptoTransform _encryptor;
     private readonly byte[] _keyStream = new byte[16];
     private int _keyStreamIdx;
@@ -35,8 +35,8 @@ public class AesCounterMode : IDisposable
         _aes.Mode = CipherMode.ECB;
         _aes.Padding = PaddingMode.None;
         _encryptor = _aes.CreateEncryptor();
-        IV.CopyTo(_counterAndIV, 4);
-        _encryptor.TransformBlock(_counterAndIV, 0, 16, _keyStream, 0);
+        IV.CopyTo(_counterAndIv, 4);
+        _encryptor.TransformBlock(_counterAndIv, 0, 16, _keyStream, 0);
     }
 
     public byte[] Key
@@ -70,7 +70,7 @@ public class AesCounterMode : IDisposable
     {
         unsafe
         {
-            fixed (byte* block = _counterAndIV)
+            fixed (byte* block = _counterAndIv)
             {
                 uint* counter = (uint*) block;
                 ++*counter;
@@ -78,6 +78,6 @@ public class AesCounterMode : IDisposable
         }
 
         _keyStreamIdx = 0;
-        _encryptor.TransformBlock(_counterAndIV, 0, 16, _keyStream, 0);
+        _encryptor.TransformBlock(_counterAndIv, 0, 16, _keyStream, 0);
     }
 }
