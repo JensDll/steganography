@@ -17,6 +17,7 @@ module.exports = {
     'plugin:vue/vue3-recommended',
     'prettier'
   ],
+  ignorePatterns: ['dist', 'public', 'nginx'],
   rules: {
     'no-empty': ['error', { allowEmptyCatch: true }],
     '@typescript-eslint/no-explicit-any': 'off',
