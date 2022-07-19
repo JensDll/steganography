@@ -2,18 +2,18 @@ lockfileVersion: 5.4
 
 specifiers:
   '@esbuild-kit/esm-loader': 2.4.1
-  '@types/node': 18.0.4
-  aws-cdk-lib: 2.31.1
-  constructs: 10.1.44
+  '@types/node': 18.0.6
+  aws-cdk-lib: 2.32.1
+  constructs: 10.1.50
   prettier: 2.7.1
   source-map-support: 0.5.21
   typescript: 4.7.4
 
 dependencies:
   '@esbuild-kit/esm-loader': 2.4.1
-  '@types/node': 18.0.4
-  aws-cdk-lib: 2.31.1_constructs@10.1.44
-  constructs: 10.1.44
+  '@types/node': 18.0.6
+  aws-cdk-lib: 2.32.1_constructs@10.1.50
+  constructs: 10.1.50
   prettier: 2.7.1
   source-map-support: 0.5.21
   typescript: 4.7.4
@@ -34,17 +34,17 @@ packages:
       get-tsconfig: 4.1.0
     dev: false
 
-  /@types/node/18.0.4:
-    resolution: {integrity: sha512-M0+G6V0Y4YV8cqzHssZpaNCqvYwlCiulmm0PwpNLF55r/+cT8Ol42CHRU1SEaYFH2rTwiiE1aYg/2g2rrtGdPA==}
+  /@types/node/18.0.6:
+    resolution: {integrity: sha512-/xUq6H2aQm261exT6iZTMifUySEt4GR5KX8eYyY+C4MSNPqSh9oNIP7tz2GLKTlFaiBbgZNxffoR3CVRG+cljw==}
     dev: false
 
-  /aws-cdk-lib/2.31.1_constructs@10.1.44:
-    resolution: {integrity: sha512-1IFgMxr1PpX90KFzTRZKVwfY+qP/UzLsrNgfylvqveOKy3R6qtGAhAx186+Zy2nx+wYoy+hVz89CZSItGDapMA==}
+  /aws-cdk-lib/2.32.1_constructs@10.1.50:
+    resolution: {integrity: sha512-P0qGCh9sjJwrM0IaF6uULfup6R4JBoQKOxQxefF0KeCCgI3DbYoNHZOTJPejnaPRdX0Vhq607t6i6bq6gYxjOQ==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
     dependencies:
-      constructs: 10.1.44
+      constructs: 10.1.50
     dev: false
     bundledDependencies:
       - '@balena/dockerignore'
@@ -61,8 +61,8 @@ packages:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
     dev: false
 
-  /constructs/10.1.44:
-    resolution: {integrity: sha512-0Y+Wc77/nBYw9vJsPmvjU0KVwRZvTn3DjZgDvlq9eTSIEeXNvbmLKYyZpZ2hXDy2QLoiMwosrBjb4vd9Aku+rg==}
+  /constructs/10.1.50:
+    resolution: {integrity: sha512-XNYxa3KvxY+RpLwC5KYoTecSSKrFaYVppOCozg6vFkAc+n99kH5Z94M2faaiOX6xQy9xCj84hCAtsBCpNSTxBA==}
     engines: {node: '>= 14.17.0'}
     dev: false
 

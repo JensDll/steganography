@@ -45,7 +45,7 @@ COPY --from=ngx_brotli /compile/nginx-${ALPINE_VERSION}/objs/ngx_http_brotli*.so
 
 RUN apk update && apk upgrade && addgroup --system web && \
     adduser --system --no-create-home --disabled-password --gecos "Web service user" --ingroup web web && \
-    # Create some folder and files to avoid permission errors
+    # Create necessary folders and files to avoid permission errors
     mkdir /var/cache/nginx/client_temp /var/cache/nginx/proxy_temp /var/cache/nginx/fastcgi_temp \
           /var/cache/nginx/uwsgi_temp /var/cache/nginx/scgi_temp && \
     touch /var/run/nginx.pid && \

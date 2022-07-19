@@ -2,8 +2,8 @@ services:
   web:
     build: services/web
     volumes:
-      - ./services/web/nginx/:/etc/nginx/
-      - ./services/web/public/config.js:/data/www/config.js
+      - ./services/web/nginx/nginx/:/etc/nginx/
+      - ./services/web/nginx/www/config.js:/data/www/config.js
     ports:
       - 4000:80
     networks:
