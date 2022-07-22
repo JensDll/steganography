@@ -10,8 +10,8 @@ import CallToAction from './CallToAction.vue'
       <section>
         <h1 class="px-5 text-center">Image Data Hiding</h1>
         <p class="mx-auto mt-8 max-w-2xl px-5 text-center text-lg">
-          Online image Steganography. Securely embed secret messages in images
-          directly from the browser.
+          Online image Steganography. Hide text or binary data in images using
+          this web-based tool.
         </p>
       </section>
       <CallToAction

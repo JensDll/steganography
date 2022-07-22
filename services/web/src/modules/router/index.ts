@@ -10,6 +10,9 @@ import CodecIndex from '~/pages/codec/Index.vue'
 import EncodeForm from '~/pages/codec/EncodeForm.vue'
 import DecodeForm from '~/pages/codec/DecodeForm.vue'
 
+const mainDescription =
+  'Online image Steganography. Hide text or binary data in images using this web-based tool. The message is first encrypted and then randomly embedded using a least significant bit substitution technique.'
+
 const routes: RouteRecordRaw[] = [
   {
     name: 'home',
@@ -17,8 +20,7 @@ const routes: RouteRecordRaw[] = [
     component: HomeIndex,
     meta: {
       title: 'Image Data Hiding',
-      description:
-        'Online image Steganography. Securely embed secret messages in images directly from the browser.'
+      description: mainDescription
     }
   },
   {
@@ -28,7 +30,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: 'About',
       description:
-        'Online image Steganography. Notes about the project and how it works.'
+        'Online image Steganography. Here you will find some notes about the project and how it works.'
     }
   },
   {
@@ -44,8 +46,7 @@ const routes: RouteRecordRaw[] = [
         component: EncodeForm,
         meta: {
           title: 'Encode',
-          description:
-            'Online image Steganography. Use text or binary data to protect and hide it in an image.'
+          description: mainDescription
         }
       },
       {
@@ -54,8 +55,7 @@ const routes: RouteRecordRaw[] = [
         component: DecodeForm,
         meta: {
           title: 'Decode',
-          description:
-            'Online image Steganography. Use a cover image to read and unprotect its secret message.'
+          description: mainDescription
         }
       }
     ]

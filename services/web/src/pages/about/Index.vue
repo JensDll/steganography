@@ -4,7 +4,7 @@
   <AppMarkdown>
     <div class="max-w-prose">
       <h1>About</h1>
-      <p>Here you find some notes about the project and how it works.</p>
+      <p>Here you will find some notes about the project and how it works.</p>
       <h2>How is the message hidden in the image?</h2>
       <p>
         The current algorithm implements a Least Significant Bit Substitution
@@ -26,14 +26,13 @@
       <h2>What information is part of the generated Base64 key?</h2>
       <ul>
         <li>
-          The first two bytes indicate the type of hidden message (text or
-          binary)
+          The first 2-byte indicate the type of hidden message (text or binary)
         </li>
-        <li>The next four bytes store the seed for the PRNG</li>
-        <li>Then another four bytes for the message length</li>
+        <li>The next 4-byte store the seed for the PRNG</li>
+        <li>Then another 4-byte for the message length</li>
         <li>
-          The remaining 44 bytes are used for the AES key (32 bytes) and
-          initialization value (12 bytes)
+          The remaining 44-byte are used for the AES key (32-byte) and
+          initialization value (12-byte)
         </li>
       </ul>
       <p>
