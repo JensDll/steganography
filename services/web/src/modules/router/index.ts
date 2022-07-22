@@ -11,7 +11,7 @@ import EncodeForm from '~/pages/codec/EncodeForm.vue'
 import DecodeForm from '~/pages/codec/DecodeForm.vue'
 
 const mainDescription =
-  'Online image Steganography. Hide text or binary data in images using this web-based tool. The message is first encrypted and then randomly embedded using a least significant bit substitution technique.'
+  'Online image Steganography. Hide text or binary data in images using this web-based tool. The data is first encrypted and then randomly embedded using a least significant bit substitution technique.'
 
 const routes: RouteRecordRaw[] = [
   {
