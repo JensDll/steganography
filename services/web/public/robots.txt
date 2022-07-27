@@ -1,2 +1,7 @@
 User-agent: *
 Disallow:
+
+Sitemap: https://imagedatahiding.com/sitemap.xml
+Sitemap: https://www.imagedatahiding.com/sitemap.xml
+Sitemap: http://imagedatahiding.com/sitemap.xml
+Sitemap: http://www.imagedatahiding.com/sitemap.xml

@@ -10,17 +10,13 @@ import CodecIndex from '~/pages/codec/Index.vue'
 import EncodeForm from '~/pages/codec/EncodeForm.vue'
 import DecodeForm from '~/pages/codec/DecodeForm.vue'
 
-const mainDescription =
-  'Online image Steganography. Hide text or binary data in images using this web-based tool. The data is first encrypted and then randomly embedded using a least significant bit substitution technique.'
-
 const routes: RouteRecordRaw[] = [
   {
     name: 'home',
     path: '/',
     component: HomeIndex,
     meta: {
-      title: 'Image Data Hiding',
-      description: mainDescription
+      title: 'Image Data Hiding'
     }
   },
   {
@@ -45,8 +41,7 @@ const routes: RouteRecordRaw[] = [
         alias: '',
         component: EncodeForm,
         meta: {
-          title: 'Encode',
-          description: mainDescription
+          title: 'Encode'
         }
       },
       {
@@ -54,8 +49,7 @@ const routes: RouteRecordRaw[] = [
         path: 'decode',
         component: DecodeForm,
         meta: {
-          title: 'Decode',
-          description: mainDescription
+          title: 'Decode'
         }
       }
     ]
@@ -70,9 +64,6 @@ export const router = createRouter({
 
 const titleTag = document.head.querySelector('title')!
 const metaTitleTags = document.head.querySelectorAll('meta[property*="title"]')
-const metaDescriptionTags = document.head.querySelectorAll(
-  'meta[name="description"], meta[property*="description"]'
-)
 const metaUrlTags = document.head.querySelectorAll('meta[property*="url"]')
 
 router.beforeEach(to => {
@@ -80,10 +71,6 @@ router.beforeEach(to => {
 
   metaTitleTags.forEach(tag => {
     tag.setAttribute('content', to.meta.title)
-  })
-
-  metaDescriptionTags.forEach(tag => {
-    tag.setAttribute('content', to.meta.description)
   })
 
   metaUrlTags.forEach(function (this: string, tag) {
@@ -102,6 +89,5 @@ router.beforeEach(to => {
 declare module 'vue-router' {
   interface RouteMeta {
     title: string
-    description: string
   }
 }
