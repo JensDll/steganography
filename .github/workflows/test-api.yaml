@@ -16,8 +16,7 @@ jobs:
 
       - name: Setting up dotnet
         uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: 6.x.x
+        # Use global.json version
 
       - name: Installing dependencies
         run: dotnet restore
