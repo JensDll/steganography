@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - staging
+  push:
+    branches:
+      - staging
 
 jobs:
   should-run:
