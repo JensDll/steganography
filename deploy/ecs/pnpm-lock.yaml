@@ -2,21 +2,21 @@ lockfileVersion: 5.4
 
 specifiers:
   '@esbuild-kit/esm-loader': 2.4.2
-  '@types/node': 18.7.5
-  aws-cdk-lib: 2.37.1
-  constructs: 10.1.76
+  '@types/node': 18.7.14
+  aws-cdk-lib: 2.39.1
+  constructs: 10.1.92
   prettier: 2.7.1
   source-map-support: 0.5.21
-  typescript: 4.7.4
+  typescript: 4.8.2
 
 dependencies:
   '@esbuild-kit/esm-loader': 2.4.2
-  '@types/node': 18.7.5
-  aws-cdk-lib: 2.37.1_constructs@10.1.76
-  constructs: 10.1.76
+  '@types/node': 18.7.14
+  aws-cdk-lib: 2.39.1_constructs@10.1.92
+  constructs: 10.1.92
   prettier: 2.7.1
   source-map-support: 0.5.21
-  typescript: 4.7.4
+  typescript: 4.8.2
 
 packages:
 
@@ -34,17 +34,17 @@ packages:
       get-tsconfig: 4.1.0
     dev: false
 
-  /@types/node/18.7.5:
-    resolution: {integrity: sha512-NcKK6Ts+9LqdHJaW6HQmgr7dT/i3GOHG+pt6BiWv++5SnjtRd4NXeiuN2kA153SjhXPR/AhHIPHPbrsbpUVOww==}
+  /@types/node/18.7.14:
+    resolution: {integrity: sha512-6bbDaETVi8oyIARulOE9qF1/Qdi/23z6emrUh0fNJRUmjznqrixD4MpGDdgOFk5Xb0m2H6Xu42JGdvAxaJR/wA==}
     dev: false
 
-  /aws-cdk-lib/2.37.1_constructs@10.1.76:
-    resolution: {integrity: sha512-TN9PkfxGvwpODOBedhmCHUFMwvrNBJIadY42BYyOerk1Hw9bOT5R3phqhm4ujzJDHKXtdgRNFRg1zw6spRodjg==}
+  /aws-cdk-lib/2.39.1_constructs@10.1.92:
+    resolution: {integrity: sha512-+KZBLBoCqq/TnC7LH8JMlQ+5IvKQtu7KHnVDiRmngtibLIXqLMVH4neKimNlSSIKhvSeOmqY2ZCaSp8v5szzrg==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
     dependencies:
-      constructs: 10.1.76
+      constructs: 10.1.92
     dev: false
     bundledDependencies:
       - '@balena/dockerignore'
@@ -61,8 +61,8 @@ packages:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
     dev: false
 
-  /constructs/10.1.76:
-    resolution: {integrity: sha512-jFv9KVYx/nW9h1/TWP/wU44Djj8EEJnL708utTkpw4MyD5sOWKmFWy+IKVXWMJXCrda1CYoyhP6yO6YjQ1BkpA==}
+  /constructs/10.1.92:
+    resolution: {integrity: sha512-ksULq4jw2mQyWGBJoxVktwhwsIkkWZFoxeCsWbiB9dt1hkXbK6z18R7FRsS/Ku7h6eGZo+odi699zC9hfZhvTg==}
     engines: {node: '>= 14.17.0'}
     dev: false
 
@@ -296,8 +296,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /typescript/4.7.4:
-    resolution: {integrity: sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==}
+  /typescript/4.8.2:
+    resolution: {integrity: sha512-C0I1UsrrDHo2fYI5oaCGbSejwX4ch+9Y5jTQELvovfmFkK3HHSZJB8MSJcWLmCUBzQBchCrZ9rMRV6GuNrvGtw==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: false

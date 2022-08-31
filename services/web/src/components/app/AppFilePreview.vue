@@ -92,7 +92,6 @@ function handleLoad() {
       />
       <div
         :class="[
-          'h-6 w-6',
           {
             'group-hover:bg-heroicons-outline-trash-black dark:group-hover:bg-heroicons-outline-trash-white':
               loaded

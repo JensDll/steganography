@@ -62,7 +62,7 @@ const totalFileSize = useFileSize(files)
         @remove="removeFile(i)"
       />
       <template v-if="!files.length">
-        <div class="h-5 w-5 i-heroicons-solid-paper-clip"></div>
+        <div class="i-heroicons-solid-paper-clip"></div>
         <p class="text-center">
           <span
             class="font-semibold text-border-form-highlight"
@@ -97,7 +97,7 @@ const totalFileSize = useFileSize(files)
         />
         <div
           v-if="!files.length"
-          class="mr-2 h-5 w-5 i-heroicons-solid-paper-clip"
+          class="i-heroicons-solid-paper-clip mr-2"
         ></div>
         <div class="text-center">
           <template v-if="files.length">

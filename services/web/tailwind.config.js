@@ -42,30 +42,42 @@ module.exports = {
   plugins: [
     Forms,
     Typography,
-    Icons({
+    Icons(() => ({
       heroiconsOutline: {
-        icons: [
-          'trash',
-          'trash?bg',
-          'dots-vertical',
-          'x',
-          'moon',
-          'sun',
-          'desktop-computer'
-        ]
+        icons: {
+          trash: {},
+          'trash?bg': {},
+          dotsVertical: {},
+          x: {},
+          moon: {},
+          sun: {},
+          desktopComputer: {}
+        },
+        scale: 1.5
       },
       heroiconsSolid: {
-        icons: ['paper-clip', 'lock-open', 'lock-closed']
+        icons: {
+          paperClip: {},
+          lockOpen: {},
+          lockClosed: {}
+        },
+        scale: 1.25
       },
       mdi: {
-        icons: ['github']
+        icons: {
+          github: {}
+        },
+        scale: 1.5
       },
       custom: {
-        icons: ['loading'],
+        icons: {
+          loading: {}
+        },
+        scale: 1.5,
         location:
           'https://gist.githubusercontent.com/JensDll/4e59cf6005f585581975941a94bc1d88/raw/0e70bdac81224add27d8f0576ab15406709e5938/icons.json'
       }
-    }),
+    })),
     Utilities(),
     Variants()
   ],

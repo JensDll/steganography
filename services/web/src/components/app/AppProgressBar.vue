@@ -133,7 +133,7 @@ watch(
       <div
         v-if="isLongLoad"
         :class="[
-          'h-6 w-6 justify-self-end i-custom-loading firefox-border-animation-bug-fix',
+          'i-custom-loading justify-self-end firefox-border-animation-bug-fix',
           {
             encode: 'text-encode-500',
             decode: 'text-decode-500'
