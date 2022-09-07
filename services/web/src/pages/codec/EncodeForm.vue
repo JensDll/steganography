@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useValidation, type Field } from 'validierung'
+import { type Field, useValidation } from 'validierung'
 import { computed, ref } from 'vue'
 
 import { api, rules } from '~/domain'
