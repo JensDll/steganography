@@ -79,7 +79,7 @@ onUnmounted(() => {
 <template>
   <div
     ref="containerRef"
-    class="relative grid h-28 place-items-center overflow-x-hidden"
+    class="relative grid h-28 place-items-center overflow-hidden"
   >
     <TransitionGroup appear v-on="animation">
       <div
