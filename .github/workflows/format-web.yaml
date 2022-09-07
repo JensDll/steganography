@@ -1,24 +1,22 @@
-name: Fixing code style
+name: Format web
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - Test web
+    types:
+      - completed
     branches:
       - staging
 
 jobs:
-  should-run:
-    uses: JensDll/should-run/.github/workflows/main.yaml@main
-    with:
-      projects: services/web services/api
-
-  web:
-    needs: should-run
-    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
+  on-success:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     defaults:
       run:
         shell: bash
         working-directory: services/web
-    runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v3
@@ -76,15 +74,3 @@ jobs:
           pull_number: ${{ steps.create-pull.outputs.pull_number }}
           merge_method: 'github_squash'
           delete_head: true
-
-  api:
-    needs: should-run
-    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
-    defaults:
-      run:
-        shell: bash
-        working-directory: services/api
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checking out the repository
-        uses: actions/checkout@v3
