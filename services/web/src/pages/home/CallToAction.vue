@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref, onUnmounted, type Ref } from 'vue'
+import { type Ref, onMounted, onUnmounted, ref } from 'vue'
 import { gsap } from 'gsap'
 
-import { useMediaQuery, type AnimationHooks } from '~/domain'
+import { type AnimationHooks, useMediaQuery } from '~/domain'
 
 const emit = defineEmits(['click'])
 

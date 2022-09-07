@@ -2,18 +2,18 @@ lockfileVersion: 5.4
 
 specifiers:
   '@esbuild-kit/esm-loader': 2.4.2
-  '@types/node': 18.7.14
-  aws-cdk-lib: 2.39.1
-  constructs: 10.1.92
+  '@types/node': 18.7.15
+  aws-cdk-lib: 2.40.0
+  constructs: 10.1.95
   prettier: 2.7.1
   source-map-support: 0.5.21
   typescript: 4.8.2
 
 dependencies:
   '@esbuild-kit/esm-loader': 2.4.2
-  '@types/node': 18.7.14
-  aws-cdk-lib: 2.39.1_constructs@10.1.92
-  constructs: 10.1.92
+  '@types/node': 18.7.15
+  aws-cdk-lib: 2.40.0_constructs@10.1.95
+  constructs: 10.1.95
   prettier: 2.7.1
   source-map-support: 0.5.21
   typescript: 4.8.2
@@ -34,17 +34,17 @@ packages:
       get-tsconfig: 4.1.0
     dev: false
 
-  /@types/node/18.7.14:
-    resolution: {integrity: sha512-6bbDaETVi8oyIARulOE9qF1/Qdi/23z6emrUh0fNJRUmjznqrixD4MpGDdgOFk5Xb0m2H6Xu42JGdvAxaJR/wA==}
+  /@types/node/18.7.15:
+    resolution: {integrity: sha512-XnjpaI8Bgc3eBag2Aw4t2Uj/49lLBSStHWfqKvIuXD7FIrZyMLWp8KuAFHAqxMZYTF9l08N1ctUn9YNybZJVmQ==}
     dev: false
 
-  /aws-cdk-lib/2.39.1_constructs@10.1.92:
-    resolution: {integrity: sha512-+KZBLBoCqq/TnC7LH8JMlQ+5IvKQtu7KHnVDiRmngtibLIXqLMVH4neKimNlSSIKhvSeOmqY2ZCaSp8v5szzrg==}
+  /aws-cdk-lib/2.40.0_constructs@10.1.95:
+    resolution: {integrity: sha512-AHDPU4I+WP3x+8W2TcSNPDhiA1wmvYkhaz5VjsQ9bqrnu2tJhcQaYkJCUu49MOVfUDpWYp9DnZIL0Yirlp5X6w==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
     dependencies:
-      constructs: 10.1.92
+      constructs: 10.1.95
     dev: false
     bundledDependencies:
       - '@balena/dockerignore'
@@ -61,8 +61,8 @@ packages:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
     dev: false
 
-  /constructs/10.1.92:
-    resolution: {integrity: sha512-ksULq4jw2mQyWGBJoxVktwhwsIkkWZFoxeCsWbiB9dt1hkXbK6z18R7FRsS/Ku7h6eGZo+odi699zC9hfZhvTg==}
+  /constructs/10.1.95:
+    resolution: {integrity: sha512-1DQi86eF+FoKLfOnR+lNraxZ9cnTdK5EfnbHiR3Nto8kcOdIeaL4TdSJXKhnjs5g562mGUp6FLPBJH27/DNmJw==}
     engines: {node: '>= 14.17.0'}
     dev: false
 

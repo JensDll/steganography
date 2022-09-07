@@ -1,4 +1,4 @@
-import { computed, type WritableComputedRef } from 'vue'
+import { type WritableComputedRef, computed } from 'vue'
 
 export function useVModel<
   TProps extends Record<'modelValue', any>,

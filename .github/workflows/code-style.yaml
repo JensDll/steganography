@@ -38,8 +38,8 @@ jobs:
       - name: Installing dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Running code style fixes
-        run: pnpm run fix
+      - name: Formatting code
+        run: pnpm run format
 
       - name: Preparing merge
         id: prepare

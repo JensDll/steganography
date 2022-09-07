@@ -19,10 +19,22 @@ module.exports = {
   ],
   ignorePatterns: ['dist', 'public', 'nginx'],
   rules: {
+    // https://eslint.org/docs/latest/rules/sort-imports
+    'sort-imports': [
+      'error',
+      {
+        ignoreDeclarationSort: true
+      }
+    ],
+    // https://eslint.org/docs/latest/rules/no-empty
     'no-empty': ['error', { allowEmptyCatch: true }],
+    // https://typescript-eslint.io/rules/no-explicit-any
     '@typescript-eslint/no-explicit-any': 'off',
+    // https://typescript-eslint.io/rules/no-var-requires
     '@typescript-eslint/no-var-requires': 'off',
+    // https://typescript-eslint.io/rules/no-non-null-assertion
     '@typescript-eslint/no-non-null-assertion': 'off',
+    // https://eslint.vuejs.org/rules/multi-word-component-names
     'vue/multi-word-component-names': [
       'error',
       {

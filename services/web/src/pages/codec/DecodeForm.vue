@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useValidation, ValidationError, type Field } from 'validierung'
+import { type Field, ValidationError, useValidation } from 'validierung'
 import { ref } from 'vue'
 
-import { rules, api, animation } from '~/domain'
+import { animation, api, rules } from '~/domain'
 
 type FormData = {
   key: Field<string>
@@ -16,7 +16,7 @@ const { form, validateFields } = useValidation<FormData>({
   },
   coverImage: {
     $value: [],
-    $rules: [rules.minMax(1, 1)('Attach a cover image')]
+    $rules: [rules.minMax(1, 1)('Please attach a cover image')]
   }
 })
 
@@ -29,7 +29,10 @@ async function handleSubmit() {
     await decode(formData.coverImage[0], formData.key)
     errorMessage.value = ''
   } catch (error) {
-    console.log(error)
+    if (import.meta.env.DEV) {
+      console.log(error)
+    }
+
     if (!(error instanceof ValidationError)) {
       if (errorMessage.value) {
         animation.shake('#error-message')

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, computed, ref, type PropType } from 'vue'
+import { type PropType, computed, ref, watch } from 'vue'
 import { guards, useFileSize } from '~/domain'
 
 const emit = defineEmits(['remove'])

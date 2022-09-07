@@ -1,4 +1,4 @@
-import { computed, isRef, type ComputedRef } from 'vue'
+import { type ComputedRef, computed, isRef } from 'vue'
 
 import type { AnyRef } from '..'
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useValidation, type Field } from 'validierung'
-import { ref, computed } from 'vue'
+import { type Field, useValidation } from 'validierung'
+import { computed, ref } from 'vue'
 
-import { rules, api } from '~/domain'
+import { api, rules } from '~/domain'
 
 type FormData = {
   textData: Field<string>
@@ -27,13 +27,13 @@ const { form, validateFields } = useValidation<FormData>({
     $value: [],
     $rules: [
       rules.withPrecondition(isBinaryMode)(
-        rules.min(1)('Attach one or more files')
+        rules.min(1)('Please attach one or more files')
       )
     ]
   },
   coverImage: {
     $value: [],
-    $rules: [rules.minMax(1, 1)('Attach a cover image')]
+    $rules: [rules.minMax(1, 1)('Please attach a cover image')]
   }
 })
 

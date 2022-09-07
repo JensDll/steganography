@@ -33,4 +33,10 @@ jobs:
         run: pnpm run typecheck
 
       - name: Checking for unfixable code style issues
-        run: pnpm run lint
+        run: pnpm run lint --fix-dry-run
+
+      - name: Building the project
+        run: pnpm run build
+
+      - name: Checking for no console statements
+        run: pnpm run no-console
