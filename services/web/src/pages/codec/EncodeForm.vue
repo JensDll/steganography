@@ -33,7 +33,7 @@ const { form, validateFields } = useValidation<FormData>({
   },
   coverImage: {
     $value: [],
-    $rules: [rules.minMax(1, 1)('Attach a cover image')]
+    $rules: [rules.minMax(1, 1)('Please attach a cover image')]
   }
 })
 
