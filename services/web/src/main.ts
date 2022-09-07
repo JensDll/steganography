@@ -7,6 +7,8 @@ import { directives } from './modules/directives'
 import { useMediaQuery } from './domain'
 import './main.css'
 
+console.log('FOO')
+
 const app = createApp(App)
 
 app.use(router)
