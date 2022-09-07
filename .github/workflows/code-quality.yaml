@@ -1,4 +1,4 @@
-name: Test
+name: Code quality
 
 on:
   pull_request:
@@ -27,7 +27,12 @@ jobs:
       github.base_ref == 'main' # Always test when the pull request base branch is main.
     uses: ./.github/workflows/test-api.yaml
 
-  merge-pull-request:
+  format-web:
+    needs: test-web
+    if: github.base_ref != 'main'
+    uses: ./.github/workflows/format-web.yaml
+
+  merge-main-pull-request:
     needs:
       - test-web
       - test-api
