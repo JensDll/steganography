@@ -32,7 +32,12 @@ jobs:
     if: github.event_name == 'push'
     uses: ./.github/workflows/format-web.yaml
 
-  merge-main-pull-request:
+  format-api:
+    needs: test-api
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/format-api.yaml
+
+  merge-main:
     needs:
       - test-web
       - test-api
