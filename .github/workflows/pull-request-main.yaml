@@ -1,4 +1,4 @@
-name: Pull main
+name: Pull request main
 
 on:
   workflow_dispatch:
