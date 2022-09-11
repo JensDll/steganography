@@ -9,6 +9,6 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.1" />
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
     </ItemGroup>
 </Project>
