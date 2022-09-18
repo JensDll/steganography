@@ -7,7 +7,7 @@ import { type AnimationHooks, useMediaQuery } from '~/domain'
 const emit = defineEmits(['click'])
 
 const containerRef = ref() as Ref<HTMLDivElement>
-const lockDim = 24
+const lockDim = 20
 const numLocks = ref(8)
 const animationState = {
   x: 0,
@@ -85,12 +85,12 @@ onUnmounted(() => {
       <div
         v-for="i in numLocks"
         :key="`closed-${i}`"
-        class="i-heroicons-solid-lock-open absolute top-0 right-full origin-center text-decode-200 dark:text-decode-500"
+        class="i-heroicons-lock-open-20-solid absolute top-0 right-full text-decode-200 dark:text-decode-500"
       ></div>
       <div
         v-for="i in numLocks"
         :key="`closed-${i}`"
-        class="i-heroicons-solid-lock-closed absolute top-0 right-full text-encode-200 dark:text-encode-500"
+        class="i-heroicons-lock-closed-20-solid absolute top-0 right-full text-encode-200 dark:text-encode-500"
       ></div>
     </TransitionGroup>
     <AppButton variant="landing" @click="emit('click')">

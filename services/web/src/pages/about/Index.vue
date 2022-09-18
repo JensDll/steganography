@@ -4,7 +4,10 @@
   <AppMarkdown>
     <div class="max-w-prose">
       <h1>About</h1>
-      <p>Here you will find some notes about the project and how it works.</p>
+      <p>
+        Here you will find some notes about the project and how it works in a
+        FAQ format.
+      </p>
       <h2>How is the message hidden in the image?</h2>
       <p>
         The current algorithm implements a Least Significant Bit Substitution

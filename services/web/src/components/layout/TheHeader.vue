@@ -13,17 +13,17 @@ const themes: Theme[] = [
   {
     name: 'light',
     text: 'Light',
-    icon: 'i-heroicons-outline-sun'
+    icon: 'i-heroicons-sun'
   },
   {
     name: 'dark',
     text: 'Dark',
-    icon: 'i-heroicons-outline-moon'
+    icon: 'i-heroicons-moon'
   },
   {
     name: 'system',
     text: 'System',
-    icon: 'i-heroicons-outline-desktop-computer'
+    icon: 'i-heroicons-computer-desktop'
   }
 ]
 
@@ -94,7 +94,7 @@ watch(theme, changeThemePreference)
             <div
               :class="[
                 'cursor-pointer text-orange-600',
-                isLight ? 'i-heroicons-outline-sun' : 'i-heroicons-outline-moon'
+                isLight ? 'i-heroicons-sun' : 'i-heroicons-moon'
               ]"
               outline="Sun"
             ></div>
@@ -131,7 +131,7 @@ watch(theme, changeThemePreference)
         </ul>
       </nav>
       <div
-        class="i-heroicons-outline-dots-vertical cursor-pointer md:hidden"
+        class="i-heroicons-ellipsis-vertical cursor-pointer md:hidden"
         @click="isPopupOpen = true"
       ></div>
     </div>
@@ -145,7 +145,7 @@ watch(theme, changeThemePreference)
       class="fixed top-5 right-5 left-5 rounded-lg bg-bg-base p-6 shadow-lg dark:bg-gray-800 sm:left-auto sm:w-full sm:max-w-xs"
     >
       <div
-        class="i-heroicons-outline-x absolute top-5 right-5 cursor-pointer text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
+        class="i-heroicons-x absolute top-5 right-5 cursor-pointer text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
         @click="closePopup"
       ></div>
       <ul class="space-y-6">

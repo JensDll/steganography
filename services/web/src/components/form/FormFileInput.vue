@@ -41,14 +41,12 @@ const totalFileSize = useFileSize(files)
       class="custom-file-input relative min-h-[8rem]"
       :class="[
         { error: errors.length },
-        files.length
-          ? 'card-grid p-6'
-          : 'flex flex-col items-center justify-center px-6'
+        files.length ? 'card-grid p-6' : 'flex items-center justify-center px-6'
       ]"
     >
       <input
         :id="`file-${label}`"
-        class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+        class="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
         type="file"
         :accept="accept"
         multiple
@@ -58,12 +56,12 @@ const totalFileSize = useFileSize(files)
         v-for="(file, i) in files"
         :key="file.name"
         :file="file"
-        class="relative"
+        class="z-20"
         @remove="removeFile(i)"
       />
       <template v-if="!files.length">
-        <div class="i-heroicons-solid-paper-clip"></div>
-        <p class="text-center">
+        <div class="i-heroicons-paper-clip-20-solid mr-2"></div>
+        <p>
           <span
             class="font-semibold text-border-form-highlight"
             :class="{ error: errors.length }"
@@ -91,15 +89,15 @@ const totalFileSize = useFileSize(files)
         <input
           id="file-input"
           type="file"
-          class="absolute inset-0 h-full w-full opacity-0"
+          class="absolute inset-0 z-10 h-full w-full opacity-0"
           :accept="accept"
           v-on="fileListeners"
         />
         <div
           v-if="!files.length"
-          class="i-heroicons-solid-paper-clip mr-2"
+          class="i-heroicons-paper-clip-20-solid mr-2"
         ></div>
-        <div class="text-center">
+        <p>
           <template v-if="files.length">
             {{ files[0].name }}
           </template>
@@ -112,7 +110,7 @@ const totalFileSize = useFileSize(files)
             </span>
             <span class="hidden md:inline-block">or drag and drop</span> here
           </template>
-        </div>
+        </p>
       </div>
       <AppFilePreview
         :file="files[0]"
