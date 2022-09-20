@@ -30,8 +30,8 @@ WORKDIR /app
 
 COPY --from=publish /app/ ./
 
-RUN addgroup --system api && \
-    adduser --system --no-create-home --disabled-password --gecos "Api service user" --ingroup api api
+RUN apk -U upgrade && addgroup --system api && \
+    adduser --system --no-create-home --disabled-password --gecos "API service user" --ingroup api api
 
 USER api:api
 

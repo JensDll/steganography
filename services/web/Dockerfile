@@ -24,7 +24,7 @@ FROM nginx:${ALPINE_VERSION}-alpine as ngx_brotli
 ARG ALPINE_VERSION
 WORKDIR /compile
 
-RUN apk update && apk upgrade && apk add git g++ pcre-dev zlib-dev make
+RUN apk -U upgrade && apk add git g++ pcre-dev zlib-dev make
 RUN wget https://nginx.org/download/nginx-${ALPINE_VERSION}.tar.gz && tar xzf nginx-${ALPINE_VERSION}.tar.gz
 RUN git clone https://github.com/google/ngx_brotli --recursive
 
@@ -43,7 +43,7 @@ COPY --from=build /out/dist/ /data/www/
 # Copy ngx_brotli modules
 COPY --from=ngx_brotli /compile/nginx-${ALPINE_VERSION}/objs/ngx_http_brotli*.so /usr/lib/nginx/modules/
 
-RUN apk update && apk upgrade && addgroup --system web && \
+RUN apk -U upgrade && addgroup --system web && \
     adduser --system --no-create-home --disabled-password --gecos "Web service user" --ingroup web web && \
     # Create necessary folders and files to avoid permission errors
     mkdir /var/cache/nginx/client_temp /var/cache/nginx/proxy_temp /var/cache/nginx/fastcgi_temp \
