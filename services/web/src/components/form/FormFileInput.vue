@@ -52,7 +52,7 @@ const totalFileSize = useFileSize(files)
         multiple
         v-on="fileListeners"
       />
-      <AppFilePreview
+      <VFilePreview
         v-for="(file, i) in files"
         :key="file.name"
         :file="file"
@@ -63,7 +63,7 @@ const totalFileSize = useFileSize(files)
         <div class="i-heroicons-paper-clip-20-solid mr-2"></div>
         <p>
           <span
-            class="font-semibold text-border-form-highlight"
+            class="text-highlight font-semibold"
             :class="{ error: errors.length }"
           >
             Choose files
@@ -97,22 +97,22 @@ const totalFileSize = useFileSize(files)
           v-if="!files.length"
           class="i-heroicons-paper-clip-20-solid mr-2"
         ></div>
-        <p>
+        <div>
           <template v-if="files.length">
             {{ files[0].name }}
           </template>
           <template v-else>
             <span
-              class="font-semibold text-border-form-highlight"
+              class="text-highlight font-semibold"
               :class="{ error: errors.length }"
             >
               Choose
             </span>
             <span class="hidden md:inline-block">or drag and drop</span> here
           </template>
-        </p>
+        </div>
       </div>
-      <AppFilePreview
+      <VFilePreview
         :file="files[0]"
         variant="reduced"
         @remove="removeFile(0)"

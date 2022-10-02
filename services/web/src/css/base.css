@@ -1,40 +1,22 @@
 @layer base {
   html {
-    @apply prose-slate;
-
-    --color-text-error: theme('colors.rgb.red.500');
-
-    --color-fill: theme('colors.rgb.gray.50');
-    --color-form-fill: theme('colors.rgb.white');
-
-    --color-border-base: theme('colors.rgb.gray.200');
-    --color-border-form-base: var(--color-border-base);
-    --color-border-form-highlight: theme('colors.rgb.encode.500');
-  }
-
-  html.decode {
-    --color-border-form-highlight: theme('colors.rgb.decode.500');
+    @apply prose prose-slate theme-encode max-w-none;
   }
 
   html.dark {
-    @apply prose-invert;
+    @apply theme-encode-dark prose-invert;
+  }
 
-    --color-text-error: theme('colors.rgb.red.600');
-
-    --color-fill: theme('colors.rgb.gray.900');
-    --color-form-fill: theme('colors.rgb.gray.800');
-
-    --color-border-base: theme('colors.rgb.gray.800');
-    --color-border-form-base: theme('colors.rgb.gray.700');
-    --color-border-form-highlight: theme('colors.rgb.encode.600');
+  html.decode {
+    @apply theme-decode;
   }
 
   html.dark.decode {
-    --color-border-form-highlight: theme('colors.rgb.decode.600');
+    @apply theme-decode-dark;
   }
 
   body {
-    @apply bg-bg-base font-sans text-text-base;
+    @apply bg-fill font-sans;
   }
 
   #app {
@@ -46,30 +28,29 @@
       'main';
   }
 
-  h1,
-  h2,
-  h3,
-  h4 {
-    @apply text-text-heading;
+  @screen lg {
+    html {
+      @apply prose-lg;
+    }
   }
 
-  h1 {
-    @apply text-4xl font-extrabold sm:text-5xl lg:text-6xl;
+  html :where(h1):not(:where([class~='app-markdown'] *)) {
+    @apply m-0;
   }
 
-  h2 {
-    @apply text-3xl font-extrabold sm:text-4xl lg:text-5xl;
+  html :where(a):not(:where([class~='app-markdown'] *)) {
+    @apply no-underline;
   }
 
-  h3 {
-    @apply text-2xl font-semibold sm:text-3xl lg:text-4xl;
+  html :where(ul):not(:where([class~='app-markdown'] *)) {
+    @apply m-0 list-none p-0;
   }
 
-  h4 {
-    @apply text-xl font-semibold sm:text-2xl lg:text-3xl;
+  html :where(ul > li):not(:where([class~='app-markdown'] *)) {
+    @apply m-0 p-0;
   }
 
-  .dark .text-text-error {
-    @apply font-medium;
+  html :where(img):not(:where([class~='app-markdown'] *)) {
+    @apply m-0;
   }
 }

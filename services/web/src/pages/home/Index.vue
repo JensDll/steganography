@@ -7,17 +7,16 @@ import CallToAction from './CallToAction.vue'
     <div
       class="grid grid-rows-[auto_auto_1fr] justify-items-center self-center pt-6 md:p-0"
     >
-      <section>
+      <VMarkdown class="px-0">
         <h1 class="px-5 text-center">Image Data Hiding</h1>
-        <p class="mx-auto mt-8 max-w-2xl px-5 text-center text-lg">
+        <p class="mx-auto max-w-2xl px-5 text-center">
           Online image Steganography. Hide text or binary data in images using
           this web-based tool.
         </p>
-      </section>
-      <CallToAction
-        class="mt-6 w-full max-w-4xl lg:mt-8"
-        @click="$router.push({ name: 'encode' })"
-      />
+        <p class="mx-auto max-w-4xl">
+          <CallToAction @click="$router.push({ name: 'encode' })" />
+        </p>
+      </VMarkdown>
     </div>
   </section>
 </template>

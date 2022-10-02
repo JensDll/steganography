@@ -2,6 +2,7 @@
 
 <template>
   <main
+    class="text-foo"
     :class="[
       $route.name === 'home'
         ? 'h-screen grid-area-[header/header/main/main]'

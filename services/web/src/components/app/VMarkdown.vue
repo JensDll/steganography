@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <section class="prose container dark:prose-invert lg:prose-lg">
+  <section class="app-markdown max-w-prose container">
     <slot></slot>
   </section>
 </template>

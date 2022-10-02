@@ -1,3 +1,5 @@
+import type { ErrorResponse } from '~/domain/api/types'
+
 const toUrlParams = (params: Record<string, unknown>) =>
   Object.entries(params).reduce<string>((uri, [key, value]) => {
     return uri + `&${key}=${value}`
@@ -5,23 +7,20 @@ const toUrlParams = (params: Record<string, unknown>) =>
 
 type RequestInitMinusMethod = Omit<RequestInit, 'method'>
 
-type FetchResult = Promise<
-  | {
-      response: undefined
-      responseType: undefined
-      isNetworkError: true
-    }
-  | {
-      response: Response
-      responseType: 'json' | 'text' | 'blob'
-      isNetworkError: false
-    }
->
+type FetchResult = Promise<{
+  response: Response
+  responseType: 'json' | 'text' | 'blob'
+}>
+
+const NETWORK_ERROR_RESPONSE: ErrorResponse = {
+  statusCode: -1,
+  message: 'Unexpected network error',
+  errors: []
+}
 
 async function makeRequest(uri: string, init: RequestInit): FetchResult {
   let response: Response | undefined = undefined
   let responseType: 'json' | 'text' | 'blob' | undefined = undefined
-  let isNetworkError = false
 
   try {
     response = await fetch(uri, init)
@@ -45,14 +44,13 @@ async function makeRequest(uri: string, init: RequestInit): FetchResult {
         responseType = 'blob'
     }
   } catch {
-    isNetworkError = true
+    throw NETWORK_ERROR_RESPONSE
   }
 
   return {
     response,
-    responseType,
-    isNetworkError
-  } as never
+    responseType
+  }
 }
 
 function verbs(uri: string) {
@@ -94,4 +92,4 @@ function createFetch(baseUri: string) {
   }
 }
 
-export const useFetch = createFetch(APP_CONFIG.API_URI)
+export const useFetch = createFetch($config.API_URI)

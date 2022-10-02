@@ -46,9 +46,9 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <AppSection class="justify-self-center">
+  <FormProvider class="justify-self-center">
     <form @submit.prevent="handleSubmit">
-      <section class="py-12 container">
+      <section class="container py-12">
         <div>
           <label class="label" for="key">Key phrase</label>
           <input
@@ -68,30 +68,29 @@ async function handleSubmit() {
           class="mt-6"
         />
       </section>
-      <section class="bg-decode-100 py-4 dark:bg-decode-900">
+      <section class="bg-decode-100 dark:bg-decode-800 py-4">
         <div
-          class="grid grid-cols-[1fr_auto] gap-x-8 container md:gap-x-12"
+          class="container grid grid-cols-[1fr_auto] gap-x-8 md:gap-x-12"
           :class="{ 'justify-between': loading }"
         >
-          <AppProgressBar
+          <VProgressBar
             class="mr-12 w-full lg:w-2/3"
             variant="decode"
             :active="loading"
           />
-
-          <AppButton
+          <VButton
             type="submit"
             variant="decode"
             class="grid-area-[1/2/2/3]"
             :disabled="loading"
           >
             Decode
-          </AppButton>
+          </VButton>
         </div>
       </section>
     </form>
-  </AppSection>
-  <div class="mt-10 container">
+  </FormProvider>
+  <div class="container mt-10">
     <Transition v-on="animation.appear">
       <p v-if="errorMessage" id="error-message" class="text-text-error">
         {{ errorMessage }}

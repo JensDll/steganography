@@ -1,15 +1,15 @@
-import { ref } from 'vue'
 import { tryOnBeforeMount, tryOnScopeDispose } from '@vueuse/core'
 import type { TailwindTheme } from 'tailwind-theme'
+import { ref } from 'vue'
 
-type Query =
+type MediaQuery =
   | '(prefers-reduced-motion: reduce)'
   | `(max-width: ${TailwindTheme['screens'][keyof TailwindTheme['screens']]})`
   | `(orientation: ${'landscape' | 'portrait'})`
   | `(prefers-color-scheme: ${'dark' | 'light'})`
 
 export function useMediaQuery(
-  query: Query,
+  query: MediaQuery,
   onUpdate?: (matches: boolean) => void
 ) {
   const mediaQuery = window.matchMedia(query)

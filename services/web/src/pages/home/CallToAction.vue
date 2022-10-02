@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { type Ref, onMounted, onUnmounted, ref } from 'vue'
 import { gsap } from 'gsap'
+import { type Ref, onMounted, onUnmounted, ref } from 'vue'
 
 import { type AnimationHooks, useMediaQuery } from '~/domain'
 
@@ -8,7 +8,7 @@ const emit = defineEmits(['click'])
 
 const containerRef = ref() as Ref<HTMLDivElement>
 const lockDim = 20
-const numLocks = ref(8)
+const numLocks = ref(6)
 const animationState = {
   x: 0,
   randomY: () => 0,
@@ -93,8 +93,8 @@ onUnmounted(() => {
         class="i-heroicons-lock-closed-20-solid absolute top-0 right-full text-encode-200 dark:text-encode-500"
       ></div>
     </TransitionGroup>
-    <AppButton variant="landing" @click="emit('click')">
+    <VButton variant="landing" @click="emit('click')">
       Getting Started
-    </AppButton>
+    </VButton>
   </div>
 </template>

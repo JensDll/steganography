@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 
 import { useDownload, useFetch } from '~/domain'
-import { NETWORK_ERROR_RESPONSE } from './helper'
 
 export function codec() {
   const loading = ref(false)
@@ -15,16 +14,10 @@ export function codec() {
       formData.append('coverImage', coverImage)
       formData.append('message', message)
 
-      const { isNetworkError, response } = await useFetch(
-        '/codec/encode/text'
-      ).post({
-        body: formData
-      })
-
       try {
-        if (isNetworkError) {
-          throw NETWORK_ERROR_RESPONSE
-        }
+        const { response } = await useFetch('/codec/encode/text').post({
+          body: formData
+        })
 
         if (response.ok) {
           const zip = await response.blob()
@@ -46,16 +39,10 @@ export function codec() {
         formData.append('', file)
       }
 
-      const { isNetworkError, response } = await useFetch(
-        '/codec/encode/binary'
-      ).post({
-        body: formData
-      })
-
       try {
-        if (isNetworkError) {
-          throw NETWORK_ERROR_RESPONSE
-        }
+        const { response } = await useFetch('/codec/encode/binary').post({
+          body: formData
+        })
 
         if (response.ok) {
           const zip = await response.blob()
@@ -75,16 +62,12 @@ export function codec() {
       formData.append('coverImage', coverImage)
       formData.append('key', key)
 
-      const { isNetworkError, response, responseType } = await useFetch(
-        '/codec/decode'
-      ).post({
-        body: formData
-      })
-
       try {
-        if (isNetworkError) {
-          throw NETWORK_ERROR_RESPONSE
-        }
+        const { response, responseType } = await useFetch('/codec/decode').post(
+          {
+            body: formData
+          }
+        )
 
         if (response.ok) {
           if (responseType === 'text') {
