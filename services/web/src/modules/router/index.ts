@@ -1,14 +1,11 @@
 import { type RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 
-import NotFoundIndex from '~/pages/not_found/Index.vue'
-
-import HomeIndex from '~/pages/home/Index.vue'
-
 import AboutIndex from '~/pages/about/Index.vue'
-
-import CodecIndex from '~/pages/codec/Index.vue'
-import EncodeForm from '~/pages/codec/EncodeForm.vue'
 import DecodeForm from '~/pages/codec/DecodeForm.vue'
+import EncodeForm from '~/pages/codec/EncodeForm.vue'
+import CodecIndex from '~/pages/codec/Index.vue'
+import HomeIndex from '~/pages/home/Index.vue'
+import NotFoundIndex from '~/pages/not_found/Index.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -63,19 +60,9 @@ export const router = createRouter({
 })
 
 const titleTag = document.head.querySelector('title')!
-const metaTitleTags = document.head.querySelectorAll('meta[property*="title"]')
-const metaUrlTags = document.head.querySelectorAll('meta[property*="url"]')
 
 router.beforeEach(to => {
   titleTag.text = to.meta.title
-
-  metaTitleTags.forEach(tag => {
-    tag.setAttribute('content', to.meta.title)
-  })
-
-  metaUrlTags.forEach(function (this: string, tag) {
-    tag.setAttribute('content', this)
-  }, `${APP_CONFIG.THIS_URI}${to.fullPath}`)
 
   if (to.name === 'encode') {
     document.documentElement.classList.add('encode')

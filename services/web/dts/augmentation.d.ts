@@ -6,4 +6,10 @@ declare module 'tailwindcss/tailwind-config' {
   }
 }
 
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    APP_CONFIG: typeof APP_CONFIG
+  }
+}
+
 export {}

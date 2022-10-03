@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { type PropType, onMounted, ref, watch } from 'vue'
 import { gsap } from 'gsap'
+import { type PropType, onMounted, ref, watch } from 'vue'
 
 import type { AnimationHooks } from '~/domain'
 

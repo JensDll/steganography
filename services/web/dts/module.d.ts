@@ -1,9 +1,3 @@
-declare module '@tailwindcss/forms' {
-  import { TailwindPlugin } from 'tailwindcss/plugin'
-  declare const Forms: TailwindPlugin
-  export default Forms
-}
-
 declare module 'tailwindcss/lib/util/flattenColorPalette' {
   declare function flattenColorPalette(colors: object): any
   export default flattenColorPalette

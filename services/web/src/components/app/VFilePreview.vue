@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { type PropType, computed, ref, watch } from 'vue'
+
 import { guards, useFileSize } from '~/domain'
 
 const emit = defineEmits(['remove'])
@@ -99,13 +100,13 @@ function handleLoad() {
         ]"
       ></div>
     </div>
-    <p
+    <div
       v-if="variant === 'default'"
       class="mt-1 break-all text-sm group-hover:line-through"
     >
       {{ file?.name }}
-    </p>
-    <p
+    </div>
+    <div
       :class="[
         'whitespace-nowrap pt-1 text-xs text-gray-600 dark:text-gray-300',
         {
@@ -118,6 +119,6 @@ function handleLoad() {
       ]"
     >
       {{ fileSize }}
-    </p>
+    </div>
   </div>
 </template>

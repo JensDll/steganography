@@ -52,11 +52,11 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <AppSection>
+  <FormProvider>
     <form @submit.prevent="handleSubmit">
-      <section class="py-8 container lg:py-12">
+      <section class="container py-8 lg:py-12">
         <div>
-          <label for="message">Secret message</label>
+          <label for="message" class="mb-0">Secret message</label>
           <div class="mb-2 flex items-center">
             <input
               id="text-mode"
@@ -107,26 +107,26 @@ async function handleSubmit() {
           class="mt-6"
         />
       </section>
-      <section class="bg-encode-100 py-4 dark:bg-encode-900">
+      <section class="bg-encode-100 dark:bg-encode-800 py-4">
         <div
-          class="grid grid-cols-[1fr_auto] gap-x-8 container md:gap-x-12"
+          class="container grid grid-cols-[1fr_auto] gap-x-8 md:gap-x-12"
           :class="{ 'justify-between': loading }"
         >
-          <AppProgressBar
+          <VProgressBar
             class="mr-12 w-full lg:w-2/3"
             variant="encode"
             :active="loading"
           />
-          <AppButton
+          <VButton
             type="submit"
             variant="encode"
             class="grid-area-[1/2/2/3]"
             :disabled="loading"
           >
             Encode
-          </AppButton>
+          </VButton>
         </div>
       </section>
     </form>
-  </AppSection>
+  </FormProvider>
 </template>

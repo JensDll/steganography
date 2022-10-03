@@ -7,16 +7,19 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    AppButton: typeof import('./../src/components/app/AppButton.vue')['default']
-    AppFilePreview: typeof import('./../src/components/app/AppFilePreview.vue')['default']
-    AppMarkdown: typeof import('./../src/components/app/AppMarkdown.vue')['default']
-    AppProgressBar: typeof import('./../src/components/app/AppProgressBar.vue')['default']
-    AppSection: typeof import('./../src/components/app/AppSection.vue')['default']
     FormErrors: typeof import('./../src/components/form/FormErrors.vue')['default']
     FormFileInput: typeof import('./../src/components/form/FormFileInput.vue')['default']
+    FormProvider: typeof import('./../src/components/form/FormProvider.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TheHeader: typeof import('./../src/components/layout/TheHeader.vue')['default']
+    TheLogo: typeof import('./../src/components/layout/TheLogo.vue')['default']
     TheMain: typeof import('./../src/components/layout/TheMain.vue')['default']
+    TheNav: typeof import('./../src/components/layout/TheNav.vue')['default']
+    TheNavMobile: typeof import('./../src/components/layout/TheNavMobile.vue')['default']
+    VButton: typeof import('./../src/components/app/VButton.vue')['default']
+    VFilePreview: typeof import('./../src/components/app/VFilePreview.vue')['default']
+    VMarkdown: typeof import('./../src/components/app/VMarkdown.vue')['default']
+    VProgressBar: typeof import('./../src/components/app/VProgressBar.vue')['default']
   }
 }

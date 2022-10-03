@@ -3,45 +3,24 @@
 <template>
   <section>
     <nav
-      class="mb-8 flex flex-col container sm:mb-16 sm:flex-row sm:items-end sm:justify-between"
+      class="container mb-8 flex flex-col sm:mb-12 sm:flex-row sm:items-end sm:justify-between lg:mb-16"
     >
-      <h2 class="mb-6 sm:order-1 sm:mb-0">{{ $route.meta.title }}</h2>
-      <ul
+      <h1 class="mb-6 sm:order-1 sm:mb-0">
+        {{ $route.meta.title }}
+      </h1>
+      <nav
         class="mb-4 flex space-x-4 border-b sm:order-2 sm:mb-0 sm:translate-y-2"
       >
         <RouterLink
-          v-slot="{ navigate, isExactActive }"
-          :to="{ name: 'encode' }"
-          custom
+          v-for="name in ['encode', 'decode']"
+          :key="name"
+          :to="{ name }"
+          class="py-3 px-4 capitalize hover:-mb-px hover:border-b-2 hover:border-gray-300 dark:hover:border-gray-700"
+          exact-active-class="-mb-px border-b-2 !border-highlight text-highlight"
         >
-          <li
-            :class="[
-              'cursor-pointer py-3 px-4 font-semibold hover:-mb-px hover:border-b-2 hover:border-gray-300 dark:hover:border-gray-700',
-              isExactActive &&
-                '-mb-px border-b-2 !border-encode-500 text-encode-500 dark:border-encode-600'
-            ]"
-            @click="navigate"
-          >
-            Encode
-          </li>
+          {{ name }}
         </RouterLink>
-        <RouterLink
-          v-slot="{ navigate, isExactActive }"
-          :to="{ name: 'decode' }"
-          custom
-        >
-          <li
-            :class="[
-              'cursor-pointer py-3 px-4 font-semibold hover:-mb-px hover:border-b-2 hover:border-gray-300 dark:hover:border-gray-700',
-              isExactActive &&
-                '-mb-px border-b-2 !border-decode-500 text-decode-500 dark:border-decode-600'
-            ]"
-            @click="navigate"
-          >
-            Decode
-          </li>
-        </RouterLink>
-      </ul>
+      </nav>
     </nav>
     <RouterView></RouterView>
   </section>

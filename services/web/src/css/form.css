@@ -1,6 +1,6 @@
 @layer base {
   label {
-    @apply mb-1 block font-medium;
+    @apply mb-1 block cursor-pointer font-medium;
   }
 
   textarea {
@@ -14,7 +14,7 @@
   }
 
   [type='radio'] {
-    @apply border-border-form-base bg-bg-form-base text-border-form-highlight;
+    @apply border-border-form bg-fill-form text-border-form-highlight;
   }
 
   [type='text'],
@@ -33,11 +33,11 @@
   [type='radio'] [multiple],
   textarea,
   select {
-    @apply rounded-md border border-border-form-base bg-bg-form-base;
+    @apply border-border-form bg-fill-form rounded-md border;
   }
 
   .custom-file-input {
-    @apply rounded-md border-2 border-dashed border-border-form-base bg-bg-form-base;
+    @apply border-border-form bg-fill-form rounded-md border-2 border-dashed;
   }
 
   [type='text'].error,
@@ -58,8 +58,9 @@
   textarea.error,
   select.error,
   .custom-file-input.error {
-    --color-border-form-base: theme('colors.rgb.red.300');
-    --color-border-form-highlight: var(--color-text-error);
+    --highlight: var(--error);
+    --border-form: theme('colors.rgb.red.300');
+    --border-form-highlight: var(--error);
   }
 
   .dark [type='text'].error,
@@ -80,8 +81,8 @@
   .dark textarea.error,
   .dark select.error,
   .dark .custom-file-input.error {
-    --color-border-form-base: var(--color-text-error);
-    --color-border-form-highlight: var(--color-text-error);
+    --border-form: var(--error);
+    --border-form-highlight: var(--error);
   }
 
   [type='text']:focus,
@@ -102,8 +103,8 @@
   textarea:focus,
   select:focus,
   .custom-file-input:focus-within {
-    border-color: theme('colors.border.form.highlight');
-    box-shadow: 0 0 0 4px theme('colors.border.form.highlight' / 0.12);
+    border-color: theme('colors.border-form-highlight');
+    box-shadow: 0 0 0 4px theme('colors.border-form-highlight' / 0.12);
   }
 
   .dark [type='text']:focus,
@@ -124,7 +125,7 @@
   .dark textarea:focus,
   .dark select:focus,
   .dark .custom-file-input:focus-within {
-    border-color: theme('colors.border.form.highlight');
-    box-shadow: 0 0 0 4px theme('colors.border.form.highlight' / 0.35);
+    border-color: theme('colors.border-form-highlight');
+    box-shadow: 0 0 0 4px theme('colors.border-form-highlight' / 0.35);
   }
 }

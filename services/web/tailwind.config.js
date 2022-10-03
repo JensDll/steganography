@@ -1,12 +1,12 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
 const Forms = require('@tailwindcss/forms')
 const Typography = require('@tailwindcss/typography')
-const { Icons, SCALE } = require('tailwindcss-plugin-icons')
 const { register } = require('esbuild-register/dist/node')
+const { Icons, SCALE } = require('tailwindcss-plugin-icons')
+const defaultTheme = require('tailwindcss/defaultTheme')
 
+const { Themes } = require('./tailwind/plugins/themes')
 const { Utilities } = require('./tailwind/plugins/utilities')
 const { Variants } = require('./tailwind/plugins/variants')
-const { colors } = require('./tailwind/colors')
 const { unregister } = register()
 const { tailwindTheme } = require('./tailwind/theme.ts')
 unregister()
@@ -16,14 +16,10 @@ module.exports = {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
-    colors,
     screens: tailwindTheme.screens,
     extend: {
-      borderColor: {
-        DEFAULT: 'rgb(var(--color-border-base))'
-      },
       fontFamily: {
-        sans: ['Montserrat', ...defaultTheme.fontFamily.sans]
+        sans: ['Inter', ...defaultTheme.fontFamily.sans]
       },
       typography: {
         DEFAULT: {
@@ -40,14 +36,15 @@ module.exports = {
     }
   },
   plugins: [
-    Forms,
-    Typography,
+    Forms(),
+    Typography(),
     Icons(() => ({
       heroicons: {
         icons: {
           trash: {},
           'trash?bg': {},
           'ellipsis-vertical': {},
+          'x-mark': {},
           moon: {},
           sun: {},
           'computer-desktop': {},
@@ -79,7 +76,8 @@ module.exports = {
       }
     })),
     Utilities(),
-    Variants()
+    Variants(),
+    Themes()
   ],
   corePlugins: {
     ringColor: false,

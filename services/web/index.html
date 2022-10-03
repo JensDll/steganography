@@ -5,40 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Online image Steganography. Hide text or binary data in images using this web-based tool. The data is first encrypted and then randomly embedded using a least significant bit substitution technique."
+      content="Online image Steganography. Hide text or binary data in images using a least significant bit substitution technique."
     />
-    <meta property="og:url" content="https://imagedatahiding.com" />
-    <meta property="og:title" content="Image Data Hiding" />
-    <meta
-      property="og:description"
-      content="Online image Steganography. Hide text or binary data in images using this web-based tool. The data is first encrypted and then randomly embedded using a least significant bit substitution technique."
-    />
-    <meta property="og:image" content="/logo.png" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="1200" />
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="Image Data Hiding" />
-    <meta
-      property="twitter:description"
-      content="Online image Steganography. Hide text or binary data in images using this web-based tool. The data is first encrypted and then randomly embedded using a least significant bit substitution technique."
-    />
-    <meta property="twitter:image:src" content="/logo.png" />
-    <meta property="twitter:image:width" content="1200" />
-    <meta property="twitter:image:height" content="1200" />
     <title>Image Data Hiding</title>
-    <link rel="alternate icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link
       rel="preload"
-      href="/fonts/montserrat-latin.woff2"
+      href="/fonts/inter-v12-vietnamese_latin_cyrillic-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/inter-v12-vietnamese_latin_cyrillic-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/inter-v12-vietnamese_latin_cyrillic-600.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/inter-v12-vietnamese_latin_cyrillic-800.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
     <script src="/config.js"></script>
     <script>
-      function changeTheme(theme) {
+      function $changeTheme(theme) {
         switch (theme) {
           case 'light':
             localStorage.setItem('theme', 'light')
@@ -58,7 +59,7 @@
         }
       }
 
-      changeTheme(localStorage.theme)
+      $changeTheme(localStorage.theme)
     </script>
   </head>
   <body>
