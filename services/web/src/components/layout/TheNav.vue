@@ -21,7 +21,7 @@ const closeDropdown = () => {
     <ul class="flex items-center">
       <li>
         <RouterLink
-          class="hover:text-link mr-6 font-medium"
+          class="mr-6 font-medium hover:text-link"
           active-class="text-link"
           :to="{ name: 'codec' }"
         >
@@ -30,7 +30,7 @@ const closeDropdown = () => {
       </li>
       <li>
         <RouterLink
-          class="hover:text-link font-medium"
+          class="font-medium hover:text-link"
           exact-active-class="text-link"
           :to="{ name: 'about' }"
         >
@@ -40,7 +40,7 @@ const closeDropdown = () => {
       <li class="mx-6 border-l py-3"></li>
       <li @click="openDropdown">
         <div
-          class="text-link cursor-pointer"
+          class="cursor-pointer text-link"
           :class="{ 'i-heroicons-sun': isLight, 'i-heroicons-moon': isDark }"
         ></div>
         <ul

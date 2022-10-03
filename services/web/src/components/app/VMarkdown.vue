@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <section class="app-markdown max-w-prose container">
+  <section class="app-markdown container max-w-prose">
     <slot></slot>
   </section>
 </template>

@@ -21,7 +21,7 @@ const { activeTheme, themes } = useTheme()
       <ul class="space-y-6">
         <li>
           <RouterLink
-            class="hover:text-link mr-6 font-medium"
+            class="mr-6 font-medium hover:text-link"
             active-class="text-link"
             :to="{ name: 'codec' }"
           >
@@ -30,7 +30,7 @@ const { activeTheme, themes } = useTheme()
         </li>
         <li>
           <RouterLink
-            class="hover:text-link font-medium"
+            class="font-medium hover:text-link"
             exact-active-class="text-link"
             :to="{ name: 'about' }"
           >
@@ -39,7 +39,7 @@ const { activeTheme, themes } = useTheme()
         </li>
         <li>
           <a
-            class="hover:text-link cursor-pointer font-medium"
+            class="cursor-pointer font-medium hover:text-link"
             href="https://github.com/JensDll/image-data-hiding"
           >
             GitHub
