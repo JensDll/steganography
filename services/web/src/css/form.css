@@ -33,11 +33,11 @@
   [type='radio'] [multiple],
   textarea,
   select {
-    @apply border-border-form bg-fill-form rounded-md border;
+    @apply rounded-md border border-border-form bg-fill-form;
   }
 
   .custom-file-input {
-    @apply border-border-form bg-fill-form rounded-md border-2 border-dashed;
+    @apply rounded-md border-2 border-dashed border-border-form bg-fill-form;
   }
 
   [type='text'].error,

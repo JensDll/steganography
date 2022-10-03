@@ -85,12 +85,12 @@ onUnmounted(() => {
       <div
         v-for="i in numLocks"
         :key="`closed-${i}`"
-        class="text-decode-200 dark:text-decode-500 i-heroicons-lock-open-20-solid absolute top-0 right-full"
+        class="i-heroicons-lock-open-20-solid absolute top-0 right-full text-decode-200 dark:text-decode-500"
       ></div>
       <div
         v-for="i in numLocks"
         :key="`closed-${i}`"
-        class="text-encode-200 dark:text-encode-500 i-heroicons-lock-closed-20-solid absolute top-0 right-full"
+        class="i-heroicons-lock-closed-20-solid absolute top-0 right-full text-encode-200 dark:text-encode-500"
       ></div>
     </TransitionGroup>
     <VButton variant="landing" @click="emit('click')">

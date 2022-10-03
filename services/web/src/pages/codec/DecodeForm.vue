@@ -68,7 +68,7 @@ async function handleSubmit() {
           class="mt-6"
         />
       </section>
-      <section class="bg-decode-100 dark:bg-decode-800 py-4">
+      <section class="bg-decode-100 py-4 dark:bg-decode-800">
         <div
           class="container grid grid-cols-[1fr_auto] gap-x-8 md:gap-x-12"
           :class="{ 'justify-between': loading }"
