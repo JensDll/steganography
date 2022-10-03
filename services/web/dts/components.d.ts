@@ -13,6 +13,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TheHeader: typeof import('./../src/components/layout/TheHeader.vue')['default']
+    TheLogo: typeof import('./../src/components/layout/TheLogo.vue')['default']
     TheMain: typeof import('./../src/components/layout/TheMain.vue')['default']
     TheNav: typeof import('./../src/components/layout/TheNav.vue')['default']
     TheNavMobile: typeof import('./../src/components/layout/TheNavMobile.vue')['default']

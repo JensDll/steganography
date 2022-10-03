@@ -6,17 +6,15 @@ const isNavMobileOpen = ref(false)
 
 <template>
   <header
-    class="bg-bg-base supports-backdrop-blur:bg-bg-base/95 sticky top-0 z-10 border-b backdrop-blur grid-area-[header]"
+    class="bg-bg-base supports-backdrop-blur:bg-bg-base/95 sticky top-0 z-50 border-b backdrop-blur grid-area-[header]"
     :class="{ '!border-b-0': $route.name === 'home' }"
   >
-    <div class="container flex items-end justify-between py-6">
-      <img
-        src="/logo.svg"
-        alt="logo"
-        class="h-8 cursor-pointer"
+    <div class="container flex items-center justify-between py-6 md:items-end">
+      <TheLogo
+        class="h-7 cursor-pointer"
         @click="$router.push({ name: 'home' })"
       />
-      <TheNav />
+      <TheNav class="hidden md:block lg:text-sm" />
       <div
         class="i-heroicons-ellipsis-vertical cursor-pointer md:hidden"
         @click="isNavMobileOpen = true"
@@ -25,7 +23,7 @@ const isNavMobileOpen = ref(false)
   </header>
   <TheNavMobile
     v-if="isNavMobileOpen"
-    class="md:hidden"
+    class="translate-y-1 md:hidden"
     @close="isNavMobileOpen = false"
   />
 </template>

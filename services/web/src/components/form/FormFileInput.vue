@@ -63,7 +63,7 @@ const totalFileSize = useFileSize(files)
         <div class="i-heroicons-paper-clip-20-solid mr-2"></div>
         <p>
           <span
-            class="text-highlight font-semibold"
+            class="font-semibold text-highlight"
             :class="{ error: errors.length }"
           >
             Choose files
@@ -73,7 +73,7 @@ const totalFileSize = useFileSize(files)
         </p>
       </template>
     </div>
-    <p class="mt-2">{{ totalFileSize }}</p>
+    <div class="mt-2">{{ totalFileSize }}</div>
     <FormErrors :errors="errors" />
   </div>
   <div v-else>
@@ -103,7 +103,7 @@ const totalFileSize = useFileSize(files)
           </template>
           <template v-else>
             <span
-              class="text-highlight font-semibold"
+              class="font-semibold text-highlight"
               :class="{ error: errors.length }"
             >
               Choose

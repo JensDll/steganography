@@ -12,7 +12,7 @@ const { activeTheme, themes } = useTheme()
     @click.self="$emit('close')"
   >
     <div
-      class="bg-fill fixed top-5 right-5 left-5 rounded-lg p-6 shadow-lg dark:bg-gray-800 sm:left-auto sm:w-full sm:max-w-xs"
+      class="fixed top-5 right-5 left-5 rounded-lg bg-fill p-6 shadow-lg dark:bg-gray-800 sm:left-auto sm:w-full sm:max-w-xs"
     >
       <div
         class="i-heroicons-x-mark absolute top-6 right-6 cursor-pointer text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
@@ -21,8 +21,8 @@ const { activeTheme, themes } = useTheme()
       <ul class="space-y-6">
         <li>
           <RouterLink
-            class="mr-6 font-medium hover:text-orange-500"
-            active-class="text-orange-500"
+            class="hover:text-link mr-6 font-medium"
+            active-class="text-link"
             :to="{ name: 'codec' }"
           >
             Codec
@@ -30,8 +30,8 @@ const { activeTheme, themes } = useTheme()
         </li>
         <li>
           <RouterLink
-            class="font-medium hover:text-orange-500"
-            exact-active-class="text-orange-500"
+            class="hover:text-link font-medium"
+            exact-active-class="text-link"
             :to="{ name: 'about' }"
           >
             About
@@ -39,7 +39,7 @@ const { activeTheme, themes } = useTheme()
         </li>
         <li>
           <a
-            class="cursor-pointer font-medium hover:text-orange-500"
+            class="hover:text-link cursor-pointer font-medium"
             href="https://github.com/JensDll/image-data-hiding"
           >
             GitHub

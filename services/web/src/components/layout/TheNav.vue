@@ -17,12 +17,12 @@ const closeDropdown = () => {
 </script>
 
 <template>
-  <nav class="relative hidden md:block">
+  <nav class="relative">
     <ul class="flex items-center">
       <li>
         <RouterLink
-          class="mr-6 font-medium hover:text-orange-500"
-          active-class="text-orange-500"
+          class="hover:text-link mr-6 font-medium"
+          active-class="text-link"
           :to="{ name: 'codec' }"
         >
           Codec
@@ -30,8 +30,8 @@ const closeDropdown = () => {
       </li>
       <li>
         <RouterLink
-          class="font-medium hover:text-orange-500"
-          exact-active-class="text-orange-500"
+          class="hover:text-link font-medium"
+          exact-active-class="text-link"
           :to="{ name: 'about' }"
         >
           About
@@ -40,7 +40,7 @@ const closeDropdown = () => {
       <li class="mx-6 border-l py-3"></li>
       <li @click="openDropdown">
         <div
-          class="cursor-pointer text-orange-500"
+          class="text-link cursor-pointer"
           :class="{ 'i-heroicons-sun': isLight, 'i-heroicons-moon': isDark }"
         ></div>
         <ul
@@ -52,14 +52,14 @@ const closeDropdown = () => {
             v-for="{ theme, text, icon } in themes"
             :key="theme"
             class="flex cursor-pointer items-center py-1 px-2 font-semibold hover:bg-gray-50 dark:hover:bg-gray-600/30"
-            :class="{ 'text-orange-500': theme === activeTheme }"
+            :class="{ 'text-link': theme === activeTheme }"
             @click="changeTheme(theme)"
           >
             <span
               :class="[
                 'mr-2 text-gray-400',
                 icon,
-                { '!text-orange-500': theme === activeTheme }
+                { '!text-link': theme === activeTheme }
               ]"
             ></span>
             {{ text }}

@@ -1,6 +1,6 @@
 @layer base {
   label {
-    @apply mb-1 block font-medium;
+    @apply mb-1 block cursor-pointer font-medium;
   }
 
   textarea {
@@ -81,8 +81,8 @@
   .dark textarea.error,
   .dark select.error,
   .dark .custom-file-input.error {
-    --color-border-form: var(--color-error);
-    --color-border-form-highlight: var(--color-error);
+    --border-form: var(--error);
+    --border-form-highlight: var(--error);
   }
 
   [type='text']:focus,

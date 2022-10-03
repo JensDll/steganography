@@ -19,7 +19,7 @@ module.exports = {
     screens: tailwindTheme.screens,
     extend: {
       fontFamily: {
-        sans: ['Montserrat', ...defaultTheme.fontFamily.sans]
+        sans: ['Inter', ...defaultTheme.fontFamily.sans]
       },
       typography: {
         DEFAULT: {
