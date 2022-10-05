@@ -27,7 +27,7 @@ const errorMessage = ref('')
 
 async function handleSubmit() {
   try {
-    const formData = await validateFields({ names: [] })
+    const formData = await validateFields()
     await decode(formData.coverImage[0], formData.key)
     errorMessage.value = ''
   } catch (error) {
@@ -96,7 +96,7 @@ async function handleSubmit() {
         >
           {{ errorMessage }}
           <div
-            class="dark:bg cursor-pointer rounded-full bg-red-100 p-1 hover:bg-red-200/60 dark:bg-red-300/25 dark:hover:bg-red-200/30"
+            class="dark:bg ml-4 cursor-pointer rounded-full bg-red-100 p-1 hover:bg-red-200/60 dark:bg-red-300/25 dark:hover:bg-red-200/30"
             @click="errorMessage = ''"
           >
             <div class="i-heroicons-x-mark"></div>

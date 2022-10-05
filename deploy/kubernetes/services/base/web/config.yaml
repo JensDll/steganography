@@ -199,7 +199,7 @@ metadata:
     config: web
 data:
   config.js: |
-    const APP_CONFIG = {
+    const $config = {
       THIS_URI: 'https://imagedatahiding.com',
       API_URI: 'https://api.imagedatahiding.com'
     }
