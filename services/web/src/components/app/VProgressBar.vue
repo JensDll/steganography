@@ -116,12 +116,12 @@ watch(
   >
     <div class="text-sm">{{ progress }}</div>
     <div
-      class="relative h-2 overflow-hidden rounded-full bg-white shadow-sm dark:bg-gray-300"
+      class="relative h-2 overflow-hidden rounded-full bg-white/80 shadow-sm"
     >
       <div
         id="bar"
         :class="[
-          `absolute inset-0 rounded-full`,
+          `absolute inset-0 rounded-full bg-highlight`,
           {
             encode: 'bg-encode-500 dark:bg-encode-600',
             decode: 'bg-decode-500 dark:bg-decode-600'
@@ -133,11 +133,7 @@ watch(
       <div
         v-if="isLongLoad"
         :class="[
-          'i-custom-loading justify-self-end firefox-border-animation-bug-fix',
-          {
-            encode: 'text-encode-500',
-            decode: 'text-decode-500'
-          }[variant]
+          'i-custom-loading justify-self-end text-highlight firefox-border-animation-bug-fix'
         ]"
       ></div>
     </Transition>

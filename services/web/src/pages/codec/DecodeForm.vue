@@ -3,6 +3,7 @@ import { type Field, ValidationError, useValidation } from 'validierung'
 import { ref } from 'vue'
 
 import { animation, api, rules } from '~/domain'
+import { FetchError } from '~/domain/composables/useFetch'
 
 type FormData = {
   key: Field<string>
@@ -20,24 +21,21 @@ const { form, validateFields } = useValidation<FormData>({
   }
 })
 
-const { loading, decode } = api.codec()
+const { loading, abort, decode } = api.codec()
+
 const errorMessage = ref('')
 
 async function handleSubmit() {
   try {
-    const formData = await validateFields()
+    const formData = await validateFields({ names: [] })
     await decode(formData.coverImage[0], formData.key)
     errorMessage.value = ''
   } catch (error) {
-    if (import.meta.env.DEV) {
-      console.log(error)
-    }
-
-    if (!(error instanceof ValidationError)) {
+    if (!(error instanceof ValidationError) && !(error instanceof FetchError)) {
       if (errorMessage.value) {
         animation.shake('#error-message')
       }
-      errorMessage.value = 'Decoding failed. Maybe your key is not valid'
+      errorMessage.value = 'Decoding failed. Maybe your key is not valid.'
     } else {
       errorMessage.value = ''
     }
@@ -78,24 +76,34 @@ async function handleSubmit() {
             variant="decode"
             :active="loading"
           />
-          <VButton
-            type="submit"
-            variant="decode"
-            class="grid-area-[1/2/2/3]"
-            :disabled="loading"
-          >
-            Decode
-          </VButton>
+          <div class="flex grid-area-[1/2/2/3]">
+            <VButton class="mr-4" @click="abort.value()">Cancel</VButton>
+            <VButton type="submit" variant="decode" :disabled="loading">
+              Decode
+            </VButton>
+          </div>
         </div>
       </section>
     </form>
   </FormProvider>
   <div class="container mt-10">
-    <Transition v-on="animation.appear">
-      <p v-if="errorMessage" id="error-message" class="text-text-error">
-        {{ errorMessage }}
-      </p>
-    </Transition>
+    <ul>
+      <Transition v-on="animation.appear">
+        <li
+          v-if="errorMessage"
+          id="error-message"
+          class="flex items-center justify-between bg-red-50 px-6 py-4 text-error dark:bg-red-900/60 dark:text-red-300"
+        >
+          {{ errorMessage }}
+          <div
+            class="dark:bg cursor-pointer rounded-full bg-red-100 p-1 hover:bg-red-200/60 dark:bg-red-300/25 dark:hover:bg-red-200/30"
+            @click="errorMessage = ''"
+          >
+            <div class="i-heroicons-x-mark"></div>
+          </div>
+        </li>
+      </Transition>
+    </ul>
   </div>
 </template>
 

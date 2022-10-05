@@ -1,22 +1,12 @@
-import type { ErrorResponse } from '~/domain/api/types'
-
 const toUrlParams = (params: Record<string, unknown>) =>
   Object.entries(params).reduce<string>((uri, [key, value]) => {
     return uri + `&${key}=${value}`
   }, '')
 
-type RequestInitMinusMethod = Omit<RequestInit, 'method'>
-
 type FetchResult = Promise<{
   response: Response
   responseType: 'json' | 'text' | 'blob'
 }>
-
-const NETWORK_ERROR_RESPONSE: ErrorResponse = {
-  statusCode: -1,
-  message: 'Unexpected network error',
-  errors: []
-}
 
 async function makeRequest(uri: string, init: RequestInit): FetchResult {
   let response: Response | undefined = undefined
@@ -43,8 +33,16 @@ async function makeRequest(uri: string, init: RequestInit): FetchResult {
       default:
         responseType = 'blob'
     }
-  } catch {
-    throw NETWORK_ERROR_RESPONSE
+  } catch (e) {
+    if (import.meta.env.DEV) {
+      console.error(e)
+    }
+
+    if (e instanceof Error && e.name === 'AbortError') {
+      throw new FetchError(e.message)
+    }
+
+    throw new FetchError('Request failed')
   }
 
   return {
@@ -53,35 +51,75 @@ async function makeRequest(uri: string, init: RequestInit): FetchResult {
   }
 }
 
+interface VerbsInit extends Omit<RequestInit, 'method' | 'signal'> {}
+
 function verbs(uri: string) {
-  let init: RequestInit
+  function Get({ ...init }: VerbsInit = {}) {
+    const abortController = new AbortController()
+
+    Get.abort = () => {
+      abortController.abort()
+    }
+    ;(init as RequestInit).method = 'GET'
+    ;(init as RequestInit).signal = abortController.signal
+
+    return makeRequest(uri, init)
+  }
+  Get.abort = () => {}
+
+  function Post({ ...init }: VerbsInit = {}) {
+    const abortController = new AbortController()
+
+    Post.abort = () => {
+      abortController.abort()
+    }
+    ;(init as RequestInit).method = 'POST'
+    ;(init as RequestInit).signal = abortController.signal
+
+    return makeRequest(uri, init)
+  }
+  Post.abort = () => {}
+
+  function Put({ ...init }: VerbsInit = {}) {
+    const abortController = new AbortController()
+
+    Put.abort = () => {
+      abortController.abort()
+    }
+    ;(init as RequestInit).method = 'PUT'
+    ;(init as RequestInit).signal = abortController.signal
+
+    return makeRequest(uri, init)
+  }
+  Put.abort = () => {}
+
+  function Delete({ ...init }: VerbsInit = {}) {
+    const abortController = new AbortController()
+
+    Delete.abort = () => {
+      abortController.abort()
+    }
+    ;(init as RequestInit).method = 'DELETE'
+    ;(init as RequestInit).signal = abortController.signal
+
+    return makeRequest(uri, init)
+  }
+  Delete.abort = () => {}
 
   return {
-    get(options: RequestInitMinusMethod = {}) {
-      init = options
-      init.method = 'GET'
-      return makeRequest(uri, init)
-    },
-    post(options: RequestInitMinusMethod = {}) {
-      init = options
-      init.method = 'POST'
-      return makeRequest(uri, init)
-    },
-    put(options: RequestInitMinusMethod = {}) {
-      init = options
-      init.method = 'PUT'
-      return makeRequest(uri, init)
-    },
-    delete(options: RequestInitMinusMethod = {}) {
-      init = options
-      init.method = 'DELETE'
-      return makeRequest(uri, init)
-    }
+    get: Get,
+    post: Post,
+    put: Put,
+    delete: Delete
   }
 }
 
+type UseFetchOptions = {
+  params?: Record<string | number, unknown>
+}
+
 function createFetch(baseUri: string) {
-  return function (uri: string, params: Record<string | number, unknown> = {}) {
+  return (uri: string, { params = {} }: UseFetchOptions = {}) => {
     uri = baseUri + uri
 
     if (Object.keys(params).length > 0) {
@@ -93,3 +131,10 @@ function createFetch(baseUri: string) {
 }
 
 export const useFetch = createFetch($config.API_URI)
+
+export class FetchError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'FetchError'
+  }
+}

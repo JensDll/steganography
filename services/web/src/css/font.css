@@ -3,44 +3,39 @@
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
-    src: local(''),
-      url('/fonts/inter-v12-vietnamese_latin_cyrillic-regular.woff2')
-        format('woff2');
+    src: url('/fonts/inter-v12-vietnamese_latin_cyrillic-regular.woff2')
+      format('woff2');
   }
 
   @font-face {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 500;
-    src: local(''),
-      url('/fonts/inter-v12-vietnamese_latin_cyrillic-500.woff2')
-        format('woff2');
+    src: url('/fonts/inter-v12-vietnamese_latin_cyrillic-500.woff2')
+      format('woff2');
   }
 
   @font-face {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 600;
-    src: local(''),
-      url('/fonts/inter-v12-vietnamese_latin_cyrillic-600.woff2')
-        format('woff2');
+    src: url('/fonts/inter-v12-vietnamese_latin_cyrillic-600.woff2')
+      format('woff2');
   }
 
   @font-face {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 700;
-    src: local(''),
-      url('/fonts/inter-v12-vietnamese_latin_cyrillic-700.woff2')
-        format('woff2');
+    src: url('/fonts/inter-v12-vietnamese_latin_cyrillic-700.woff2')
+      format('woff2');
   }
 
   @font-face {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 800;
-    src: local(''),
-      url('/fonts/inter-v12-vietnamese_latin_cyrillic-800.woff2')
-        format('woff2');
+    src: url('/fonts/inter-v12-vietnamese_latin_cyrillic-800.woff2')
+      format('woff2');
   }
 }

@@ -5,12 +5,7 @@
     stroke-width="4"
     stroke-linecap="round"
   />
-  <path
-    d="M8 12.5h12"
-    stroke="#f8fafc"
-    stroke-width="4"
-    stroke-linecap="round"
-  />
+  <path d="M8 12.5h12" stroke="#fff" stroke-width="4" stroke-linecap="round" />
   <path
     d="M4 19.5h12"
     stroke="#38bdf8"

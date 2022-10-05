@@ -41,7 +41,7 @@ public class Decode : EndpointWithoutResponse<Request>
             if (messageType == MessageType.Text)
             {
                 HttpContext.Response.ContentType = "text/plain";
-                await decoder.DecodeAsync(HttpContext.Response.BodyWriter);
+                await decoder.DecodeAsync(HttpContext.Response.BodyWriter, cancellationToken);
                 return;
             }
 
@@ -57,7 +57,7 @@ public class Decode : EndpointWithoutResponse<Request>
                 ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
                 await using Stream entryStream = entry.Open();
                 PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
-                await decoder.DecodeAsync(entryStreamWriter, fileLength);
+                await decoder.DecodeAsync(entryStreamWriter, fileLength, cancellationToken);
             }
         }
         catch (InvalidOperationException e)

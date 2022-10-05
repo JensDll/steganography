@@ -37,7 +37,7 @@ const { form, validateFields } = useValidation<FormData>({
   }
 })
 
-const { loading, encodeText, encodeBinary } = api.codec()
+const { loading, abort, encodeText, encodeBinary } = api.codec()
 
 async function handleSubmit() {
   try {
@@ -117,14 +117,12 @@ async function handleSubmit() {
             variant="encode"
             :active="loading"
           />
-          <VButton
-            type="submit"
-            variant="encode"
-            class="grid-area-[1/2/2/3]"
-            :disabled="loading"
-          >
-            Encode
-          </VButton>
+          <div class="flex grid-area-[1/2/2/3]">
+            <VButton class="mr-4" @click="abort.value()">Cancel</VButton>
+            <VButton type="submit" variant="encode" :disabled="loading">
+              Encode
+            </VButton>
+          </div>
         </div>
       </section>
     </form>

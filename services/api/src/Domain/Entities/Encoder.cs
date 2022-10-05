@@ -12,11 +12,11 @@ public class Encoder : CodecBase
     {
     }
 
-    public async Task EncodeAsync(PipeReader pipeReader)
+    public async Task EncodeAsync(PipeReader pipeReader, CancellationToken cancellationToken)
     {
         while (true)
         {
-            ReadResult result = await pipeReader.ReadAsync();
+            ReadResult result = await pipeReader.ReadAsync(cancellationToken);
             ReadOnlySequence<byte> buffer = result.Buffer;
 
             if (buffer.IsEmpty || result.IsCanceled)

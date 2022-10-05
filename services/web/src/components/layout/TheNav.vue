@@ -7,11 +7,7 @@ const isDropdownOpen = ref(false)
 
 const { themes, activeTheme, isLight, isDark, changeTheme } = useTheme()
 
-const openDropdown = () => {
-  isDropdownOpen.value = true
-}
-
-const closeDropdown = () => {
+function closeDropdown() {
   isDropdownOpen.value = false
 }
 </script>
@@ -21,7 +17,7 @@ const closeDropdown = () => {
     <ul class="flex items-center">
       <li>
         <RouterLink
-          class="mr-6 font-medium hover:text-link"
+          class="mr-6 text-sm font-medium hover:text-link"
           active-class="text-link"
           :to="{ name: 'codec' }"
         >
@@ -30,7 +26,7 @@ const closeDropdown = () => {
       </li>
       <li>
         <RouterLink
-          class="font-medium hover:text-link"
+          class="text-sm font-medium hover:text-link"
           exact-active-class="text-link"
           :to="{ name: 'about' }"
         >
@@ -38,7 +34,7 @@ const closeDropdown = () => {
         </RouterLink>
       </li>
       <li class="mx-6 border-l py-3"></li>
-      <li @click="openDropdown">
+      <li @click="isDropdownOpen = true">
         <div
           class="cursor-pointer text-link"
           :class="{ 'i-heroicons-sun': isLight, 'i-heroicons-moon': isDark }"

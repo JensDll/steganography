@@ -14,7 +14,7 @@ const isNavMobileOpen = ref(false)
         class="h-7 cursor-pointer"
         @click="$router.push({ name: 'home' })"
       />
-      <TheNav class="hidden md:block lg:text-sm" />
+      <TheNav class="hidden md:block" />
       <div
         class="i-heroicons-ellipsis-vertical cursor-pointer md:hidden"
         @click="isNavMobileOpen = true"

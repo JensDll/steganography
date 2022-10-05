@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Pipelines;
+using System.Threading;
 using System.Threading.Tasks;
 using Domain.Entities;
 using SixLabors.ImageSharp;
@@ -29,7 +30,7 @@ internal class EncoderTests
 
             Pipe pipe = new();
             Task writing = WriteAsync(pipe.Writer, messageLength);
-            Task reading = encoder.EncodeAsync(pipe.Reader);
+            Task reading = encoder.EncodeAsync(pipe.Reader, CancellationToken.None);
 
             await Task.WhenAll(writing, reading);
         }
@@ -56,7 +57,7 @@ internal class EncoderTests
 
             Pipe pipe = new();
             Task writing = WriteAsync(pipe.Writer, messageLength);
-            Task reading = encoder.EncodeAsync(pipe.Reader);
+            Task reading = encoder.EncodeAsync(pipe.Reader, CancellationToken.None);
 
             await Task.WhenAll(writing, reading);
         }

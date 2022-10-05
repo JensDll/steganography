@@ -19,14 +19,14 @@ public class Decoder : CodecBase
         _aes = aes;
     }
 
-    public async Task DecodeAsync(PipeWriter writer)
+    public async Task DecodeAsync(PipeWriter writer, CancellationToken cancellationToken)
     {
-        await WriteMessageAsync(writer, _messageLength);
+        await WriteMessageAsync(writer, _messageLength, cancellationToken);
     }
 
-    public async Task DecodeAsync(PipeWriter writer, int messageLength)
+    public async Task DecodeAsync(PipeWriter writer, int messageLength, CancellationToken cancellationToken)
     {
-        await WriteMessageAsync(writer, messageLength);
+        await WriteMessageAsync(writer, messageLength, cancellationToken);
     }
 
     public IEnumerable<(string fileName, int fileLength)> DecodeFileInformation()
@@ -122,7 +122,7 @@ public class Decoder : CodecBase
         }
     }
 
-    private async Task WriteMessageAsync(PipeWriter pipeWriter, int messageLength)
+    private async Task WriteMessageAsync(PipeWriter pipeWriter, int messageLength, CancellationToken cancellationToken)
     {
         bool done = false;
 
@@ -183,7 +183,7 @@ public class Decoder : CodecBase
                 }
             });
 
-            await pipeWriter.FlushAsync();
+            await pipeWriter.FlushAsync(cancellationToken);
 
             if (done)
             {
