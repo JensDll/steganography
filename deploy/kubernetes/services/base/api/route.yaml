@@ -6,7 +6,7 @@ spec:
   rateLimit:
     average: 1
     period: 1h
-    burst: 60
+    burst: 90
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
