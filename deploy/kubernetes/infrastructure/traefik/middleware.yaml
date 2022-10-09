@@ -5,3 +5,12 @@ metadata:
 spec:
   buffering:
     maxRequestBodyBytes: 62914560 # 60 MB
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: access-control-header
+spec:
+  headers:
+    accessControlAllowOriginList:
+      - 'https://imagedatahiding.com'

@@ -3,6 +3,9 @@ ingressClass:
 ports:
   web:
     redirectTo: websecure
+  websecure:
+    middlewares:
+      - traefik-access-control-header@kubernetescrd
+      - traefik-buffering@kubernetescrd
 additionalArguments:
   - '--entrypoints.websecure.http.tls'
-  - '--entrypoints.websecure.http.middlewares=traefik-buffering@kubernetescrd'
