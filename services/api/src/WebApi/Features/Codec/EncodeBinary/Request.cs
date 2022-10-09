@@ -29,7 +29,7 @@ public class Request : IBindRequest, IDisposable
 
         if (nextSection is null)
         {
-            validationErrors.Add("Request does not contain a cover image");
+            validationErrors.Add("The request does not contain a cover image");
             return;
         }
 
@@ -77,7 +77,7 @@ public class Request : IBindRequest, IDisposable
 
             if (fileNameSize > 256)
             {
-                _validationErrors.Add("File name cannot be longer than 256 bytes");
+                _validationErrors.Add("The file name cannot be longer than 256 bytes");
                 PipeReader.CancelPendingRead();
                 await _pipeWriter.CompleteAsync();
                 return null;
@@ -88,7 +88,7 @@ public class Request : IBindRequest, IDisposable
 
             if (messageLength > CoverImageCapacity)
             {
-                _validationErrors.Add("Message is too large for the cover image");
+                _validationErrors.Add("The message is too large for the cover image");
                 PipeReader.CancelPendingRead();
                 await _pipeWriter.CompleteAsync();
                 return null;

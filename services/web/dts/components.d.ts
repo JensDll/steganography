@@ -18,6 +18,7 @@ declare module '@vue/runtime-core' {
     TheNav: typeof import('./../src/components/layout/TheNav.vue')['default']
     TheNavMobile: typeof import('./../src/components/layout/TheNavMobile.vue')['default']
     VButton: typeof import('./../src/components/app/VButton.vue')['default']
+    VErrorList: typeof import('./../src/components/app/VErrorList.vue')['default']
     VFilePreview: typeof import('./../src/components/app/VFilePreview.vue')['default']
     VMarkdown: typeof import('./../src/components/app/VMarkdown.vue')['default']
     VProgressBar: typeof import('./../src/components/app/VProgressBar.vue')['default']

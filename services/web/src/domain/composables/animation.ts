@@ -1,6 +1,6 @@
 import { gsap } from 'gsap'
 
-import type { AnimationHooks } from '../common/types'
+import type { AnimationHooks } from '~/domain/common/types'
 
 const appear: AnimationHooks = {
   enter(el, done) {
