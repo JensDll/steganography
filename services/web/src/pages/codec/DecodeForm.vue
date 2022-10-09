@@ -28,7 +28,7 @@ const errors = ref<string[]>([])
 
 async function handleSubmit() {
   try {
-    const formData = await validateFields({ names: [] })
+    const formData = await validateFields()
     await decode(formData.coverImage[0], formData.key)
     VErrorListClear(errors)
   } catch (e) {
