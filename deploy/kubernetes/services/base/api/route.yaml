@@ -1,4 +1,14 @@
 apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: rate-limit
+spec:
+  rateLimit:
+    average: 1
+    period: 1h
+    burst: 60
+---
+apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: api-route
@@ -8,6 +18,8 @@ spec:
   routes:
     - match: Host(`api.imagedatahiding.com`)
       kind: Rule
+      middlewares:
+        - name: rate-limit
       services:
         - name: api-svc
           kind: Service

@@ -29,7 +29,7 @@ public class Request : IBindRequest, IDisposable
 
         if (nextSection is null)
         {
-            validationErrors.Add("Request does not contain a cover image");
+            validationErrors.Add("The request does not contain a cover image");
             return;
         }
 
@@ -61,7 +61,7 @@ public class Request : IBindRequest, IDisposable
 
         if (nextSection is null)
         {
-            _validationErrors.Add("Request does not contain a message");
+            _validationErrors.Add("The request does not contain a message");
             PipeReader.CancelPendingRead();
             await _pipeWriter.CompleteAsync();
             return null;

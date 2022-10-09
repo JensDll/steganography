@@ -2,7 +2,9 @@
 import { type Field, useValidation } from 'validierung'
 import { computed, ref } from 'vue'
 
+import { VErrorListAdd, VErrorListClear } from '~/components/app/VErrorList.vue'
 import { api, rules } from '~/domain'
+import { ApiError } from '~/domain/api/apiError'
 
 type FormData = {
   textData: Field<string>
@@ -39,6 +41,8 @@ const { form, validateFields } = useValidation<FormData>({
 
 const { loading, abort, encodeText, encodeBinary } = api.codec()
 
+const errors = ref<string[]>([])
+
 async function handleSubmit() {
   try {
     const formData = await validateFields()
@@ -47,7 +51,12 @@ async function handleSubmit() {
     } else {
       await encodeBinary(formData.coverImage[0], formData.binaryData)
     }
-  } catch {}
+    VErrorListClear(errors)
+  } catch (error) {
+    if (error instanceof ApiError) {
+      VErrorListAdd(errors, error.message)
+    }
+  }
 }
 </script>
 
@@ -127,4 +136,5 @@ async function handleSubmit() {
       </section>
     </form>
   </FormProvider>
+  <VErrorList :errors="errors" />
 </template>

@@ -9,12 +9,8 @@ module.exports.Utilities = function () {
           marginLeft: 'auto',
           marginRight: 'auto',
           maxWidth: theme('maxWidth.5xl'),
-          paddingLeft: theme('padding.5'),
-          paddingRight: theme('padding.5'),
-          [`@media (min-width: ${theme('screens.md')})`]: {
-            paddingLeft: theme('padding.8'),
-            paddingRight: theme('padding.8')
-          }
+          paddingLeft: theme('padding.container'),
+          paddingRight: theme('padding.container')
         }
       })
 

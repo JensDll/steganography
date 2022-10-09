@@ -6,7 +6,8 @@ const isNavMobileOpen = ref(false)
 
 <template>
   <header
-    class="bg-bg-base supports-backdrop-blur:bg-bg-base/95 sticky top-0 z-50 border-b backdrop-blur grid-area-[header]"
+    id="the-header"
+    class="sticky top-0 z-50 border-b bg-fill backdrop-blur grid-area-[header] supports-backdrop-blur:bg-fill/80"
     :class="{ '!border-b-0': $route.name === 'home' }"
   >
     <div class="container flex items-center justify-between py-6 md:items-end">

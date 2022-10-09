@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { type Field, ValidationError, useValidation } from 'validierung'
+import { type Field, useValidation } from 'validierung'
 import { ref } from 'vue'
 
-import { animation, api, rules } from '~/domain'
-import { FetchError } from '~/domain/composables/useFetch'
+import { VErrorListAdd, VErrorListClear } from '~/components/app/VErrorList.vue'
+import { api, rules } from '~/domain'
+import { ApiError } from '~/domain/api/apiError'
 
 type FormData = {
   key: Field<string>
@@ -23,21 +24,16 @@ const { form, validateFields } = useValidation<FormData>({
 
 const { loading, abort, decode } = api.codec()
 
-const errorMessage = ref('')
+const errors = ref<string[]>([])
 
 async function handleSubmit() {
   try {
-    const formData = await validateFields()
+    const formData = await validateFields({ names: [] })
     await decode(formData.coverImage[0], formData.key)
-    errorMessage.value = ''
-  } catch (error) {
-    if (!(error instanceof ValidationError) && !(error instanceof FetchError)) {
-      if (errorMessage.value) {
-        animation.shake('#error-message')
-      }
-      errorMessage.value = 'Decoding failed. Maybe your key is not valid.'
-    } else {
-      errorMessage.value = ''
+    VErrorListClear(errors)
+  } catch (e) {
+    if (e instanceof ApiError) {
+      VErrorListAdd(errors, e.message)
     }
   }
 }
@@ -87,23 +83,7 @@ async function handleSubmit() {
     </form>
   </FormProvider>
   <div class="container mt-10">
-    <ul>
-      <Transition v-on="animation.appear">
-        <li
-          v-if="errorMessage"
-          id="error-message"
-          class="flex items-center justify-between bg-red-50 px-6 py-4 text-error dark:bg-red-900/60 dark:text-red-300"
-        >
-          {{ errorMessage }}
-          <div
-            class="dark:bg ml-4 cursor-pointer rounded-full bg-red-100 p-1 hover:bg-red-200/60 dark:bg-red-300/25 dark:hover:bg-red-200/30"
-            @click="errorMessage = ''"
-          >
-            <div class="i-heroicons-x-mark"></div>
-          </div>
-        </li>
-      </Transition>
-    </ul>
+    <VErrorList :errors="errors" />
   </div>
 </template>
 

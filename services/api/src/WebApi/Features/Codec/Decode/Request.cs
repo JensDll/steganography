@@ -22,7 +22,7 @@ public class Request : IBindRequest, IDisposable
 
         if (nextSection is null)
         {
-            validationErrors.Add("Request does not contain a cover image");
+            validationErrors.Add("The request does not contain a cover image");
             return;
         }
 
@@ -47,7 +47,7 @@ public class Request : IBindRequest, IDisposable
 
         if (nextSection is null)
         {
-            validationErrors.Add("Request does not contain a key");
+            validationErrors.Add("The request does not contain a key");
             return;
         }
 

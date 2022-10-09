@@ -1,6 +1,8 @@
 import { computed, ref } from 'vue'
 
 import { useDownload, useFetch } from '~/domain'
+import { ApiError, API_ERROR_GENERIC } from '~/domain/api/apiError'
+import type { ErrorResponse } from '~/domain/api/types'
 
 export function codec() {
   const abort = {
@@ -30,7 +32,13 @@ export function codec() {
         const zip = await response.blob()
         useDownload('secret.zip').file(zip)
       } else {
-        throw await response.json()
+        const { errors } = (await response.json()) as ErrorResponse
+
+        if (errors.length) {
+          throw new ApiError(`${errors.join('. ')}.`)
+        } else {
+          throw API_ERROR_GENERIC
+        }
       }
     } finally {
       abort.value = () => {}
@@ -62,7 +70,13 @@ export function codec() {
         const zip = await response.blob()
         useDownload('secret.zip').file(zip)
       } else {
-        throw await response.json()
+        const { errors } = (await response.json()) as ErrorResponse
+
+        if (errors.length) {
+          throw new ApiError(`${errors.join('. ')}.`)
+        } else {
+          throw API_ERROR_GENERIC
+        }
       }
     } finally {
       abort.value = () => {}
@@ -99,7 +113,7 @@ export function codec() {
           useDownload('result.zip').file(zip)
         }
       } else {
-        throw await response.json()
+        throw new ApiError('Decoding failed. Maybe your key is not valid.')
       }
     } finally {
       abort.value = () => {}

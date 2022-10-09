@@ -1,6 +1,7 @@
 @layer base {
   html {
     @apply prose prose-slate theme-encode max-w-none;
+    --spacing-container: theme('spacing.5');
   }
 
   html.dark {
@@ -26,6 +27,12 @@
     grid-template-areas:
       'header'
       'main';
+  }
+
+  @screen md {
+    html {
+      --spacing-container: theme('spacing.8');
+    }
   }
 
   @screen lg {

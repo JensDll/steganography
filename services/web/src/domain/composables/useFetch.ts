@@ -1,3 +1,10 @@
+import {
+  ApiError,
+  API_ERROR_GENERIC,
+  API_ERROR_RATE_LIMIT,
+  API_ERROR_TOO_LARGE
+} from '~/domain/api/apiError'
+
 const toUrlParams = (params: Record<string, unknown>) =>
   Object.entries(params).reduce<string>((uri, [key, value]) => {
     return uri + `&${key}=${value}`
@@ -23,6 +30,13 @@ async function makeRequest(uri: string, init: RequestInit): FetchResult {
       )
     }
 
+    switch (response.status) {
+      case 429:
+        throw API_ERROR_RATE_LIMIT
+      case 413:
+        throw API_ERROR_TOO_LARGE
+    }
+
     switch (response.headers.get('Content-Type')?.split(';')[0]) {
       case 'application/json':
         responseType = 'json'
@@ -35,14 +49,18 @@ async function makeRequest(uri: string, init: RequestInit): FetchResult {
     }
   } catch (e) {
     if (import.meta.env.DEV) {
-      console.error(e)
+      console.log(e)
+    }
+
+    if (e instanceof ApiError) {
+      throw e
     }
 
     if (e instanceof Error && e.name === 'AbortError') {
-      throw new FetchError(e.message)
+      throw e
     }
 
-    throw new FetchError('Request failed')
+    throw API_ERROR_GENERIC
   }
 
   return {
@@ -131,10 +149,3 @@ function createFetch(baseUri: string) {
 }
 
 export const useFetch = createFetch($config.API_URI)
-
-export class FetchError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'FetchError'
-  }
-}
