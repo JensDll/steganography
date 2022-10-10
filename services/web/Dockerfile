@@ -2,7 +2,6 @@ ARG ALPINE_VERSION=1.23.1
 
 FROM node:16 as build
 
-ARG BUILD_MODE=production
 WORKDIR /out
 
 # Install pnpm
@@ -16,7 +15,7 @@ RUN pnpm install --frozen-lockfile
 COPY . ./
 
 # Build the project
-RUN pnpm run build --mode ${BUILD_MODE}
+RUN pnpm run build
 
 # Build ngx_brotli from source
 FROM nginx:${ALPINE_VERSION}-alpine as ngx_brotli

@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --host",
-    "build": "vue-tsc --noEmit && vite build && prettier dist/index.html --write",
+    "build": "vue-tsc --noEmit && vite build --mode=production && prettier dist/index.html --write",
     "test": "vitest",
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --max-warnings 0",
@@ -38,7 +38,7 @@
     "unplugin-auto-import": "0.11.2",
     "unplugin-vue-components": "0.22.8",
     "validierung": "1.0.3",
-    "vite": "3.1.6",
+    "vite": "3.1.7",
     "vitest": "0.24.0",
     "vue": "3.2.40",
     "vue-eslint-parser": "9.1.0",
