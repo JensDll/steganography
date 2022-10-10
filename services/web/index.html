@@ -16,8 +16,6 @@
       type="font/woff2"
       crossorigin
     />
-    <script defer src="/config.js"></script>
-    <script defer type="module" src="/src/main.ts"></script>
     <script>
       function $changeTheme(theme) {
         switch (theme) {
@@ -41,8 +39,10 @@
 
       $changeTheme(localStorage.theme)
     </script>
+    <script defer src="/config.js"></script>
   </head>
   <body>
     <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
