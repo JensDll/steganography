@@ -38,7 +38,7 @@ jobs:
           if ! git diff --quiet
           then
             TEMP_BRANCH=$(uuidgen)
-            echo "::set-output name=TEMP_BRANCH::$TEMP_BRANCH"
+            echo "TEMP_BRANCH=$TEMP_BRANCH" >> $GITHUB_OUTPUT
             git config user.name github-actions
             git config user.email 41898282+github-actions[bot]@users.noreply.github.com
             git checkout -b $TEMP_BRANCH
