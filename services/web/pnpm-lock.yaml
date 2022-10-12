@@ -5,7 +5,7 @@ specifiers:
   '@iconify-json/mdi': 1.1.33
   '@tailwindcss/forms': 0.5.3
   '@tailwindcss/typography': 0.5.7
-  '@types/node': 18.8.4
+  '@types/node': 18.8.0
   '@typescript-eslint/eslint-plugin': 5.40.0
   '@typescript-eslint/parser': 5.40.0
   '@vitejs/plugin-vue': 3.1.2
@@ -39,7 +39,7 @@ dependencies:
   '@iconify-json/mdi': 1.1.33
   '@tailwindcss/forms': 0.5.3_tailwindcss@3.1.8
   '@tailwindcss/typography': 0.5.7_tailwindcss@3.1.8
-  '@types/node': 18.8.4
+  '@types/node': 18.8.0
   '@typescript-eslint/eslint-plugin': 5.40.0_25sstg4uu2sk4pm7xcyzuov7xq
   '@typescript-eslint/parser': 5.40.0_z4bbprzjrhnsfa24uvmcbu7f5q
   '@vitejs/plugin-vue': 3.1.2_vite@3.1.7+vue@3.2.40
@@ -238,6 +238,10 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: false
+
+  /@types/node/18.8.0:
+    resolution: {integrity: sha512-u+h43R6U8xXDt2vzUaVP3VwjjLyOJk6uEciZS8OSyziUQGOwmk+l+4drxcsDboHXwyTaqS1INebghmWMRxq3LA==}
     dev: false
 
   /@types/node/18.8.4:

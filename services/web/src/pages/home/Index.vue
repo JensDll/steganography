@@ -8,7 +8,7 @@ import CallToAction from './CallToAction.vue'
       class="grid grid-rows-[auto_auto_1fr] justify-items-center self-center pt-6 md:p-0"
     >
       <h1
-        class="container text-center text-4xl font-extrabold tracking-tight md:text-5xl"
+        class="container text-center text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl"
       >
         Image Data Hiding
       </h1>
