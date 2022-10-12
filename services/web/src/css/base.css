@@ -1,6 +1,7 @@
 @layer base {
   html {
     @apply prose prose-slate theme-encode max-w-none;
+    --max-w-container: theme('maxWidth.5xl');
     --spacing-container: theme('spacing.5');
   }
 

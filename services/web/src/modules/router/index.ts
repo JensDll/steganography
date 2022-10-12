@@ -51,7 +51,12 @@ const routes: RouteRecordRaw[] = [
       }
     ]
   },
-  { path: '/:pathMatch(.*)*', name: 'notFound', component: NotFoundIndex }
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'notFound',
+    component: NotFoundIndex,
+    meta: { title: 'Not Found' }
+  }
 ]
 
 export const router = createRouter({

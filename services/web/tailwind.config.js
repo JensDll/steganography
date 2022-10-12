@@ -39,6 +39,9 @@ module.exports = {
           },
           'x-mark-20-solid': {
             [SCALE]: 1.25
+          },
+          'arrow-left-20-solid': {
+            [SCALE]: 1.25
           }
         },
         scale: 1.5

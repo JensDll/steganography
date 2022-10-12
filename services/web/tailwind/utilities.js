@@ -8,7 +8,7 @@ module.exports.Utilities = function () {
           width: '100%',
           marginLeft: 'auto',
           marginRight: 'auto',
-          maxWidth: theme('maxWidth.5xl'),
+          maxWidth: theme('maxWidth.container'),
           paddingLeft: theme('padding.container'),
           paddingRight: theme('padding.container')
         }

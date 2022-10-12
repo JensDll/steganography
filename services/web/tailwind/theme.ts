@@ -1,6 +1,7 @@
+import type { Config } from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
-export const theme = {
+export const theme: Config['theme'] = {
   screens: {
     sm: '640px',
     md: '768px',
@@ -9,6 +10,9 @@ export const theme = {
     '2xl': '1536px'
   },
   extend: {
+    maxWidth: {
+      container: 'var(--max-w-container)'
+    },
     spacing: {
       container: 'var(--spacing-container)'
     },
@@ -28,6 +32,6 @@ export const theme = {
       }
     }
   }
-} as const
+}
 
 export type TailwindTheme = typeof theme
