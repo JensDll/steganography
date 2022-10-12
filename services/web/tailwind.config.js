@@ -25,7 +25,6 @@ module.exports = {
           'trash?bg': {},
           'ellipsis-vertical': {},
           'x-mark': {},
-
           moon: {},
           sun: {},
           'computer-desktop': {},
