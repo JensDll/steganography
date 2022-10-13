@@ -140,6 +140,7 @@ watch(
 
 <style scoped>
 .safari-fix-overflow {
+  mask-image: radial-gradient(white, black);
   -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 </style>

@@ -69,7 +69,7 @@ async function handleSubmit() {
         >
           <VProgressBar
             class="mr-12 hidden w-full md:grid lg:w-2/3"
-            variant="encode"
+            variant="decode"
             :active="loading"
           />
           <div class="flex grid-area-[1/2/2/3]">
@@ -84,7 +84,7 @@ async function handleSubmit() {
   </FormProvider>
   <VProgressBar
     class="mx-container mt-8 md:hidden"
-    variant="encode"
+    variant="decode"
     :active="loading"
   />
   <VErrorList :errors="errors" />
