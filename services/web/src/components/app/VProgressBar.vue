@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { gsap } from 'gsap'
-import { type PropType, onMounted, ref, watch } from 'vue'
+import { type PropType, onMounted, ref, watch, type Ref } from 'vue'
 
 import type { AnimationHooks } from '~/domain'
 
@@ -19,11 +19,36 @@ const props = defineProps({
 const progress = ref(0)
 const isActive = ref(props.active)
 const isLongLoad = ref(false)
+const progressBarRef = ref() as Ref<HTMLDivElement>
+
+const loadingHooks: AnimationHooks = {
+  enter(el, done) {
+    gsap.to(el, {
+      duration: 0.65,
+      rotate: 360,
+      ease: 'power1.out',
+      repeat: -1
+    })
+    gsap.from(el, {
+      duration: 0.4,
+      opacity: 0,
+      onComplete: done
+    })
+  },
+  leave(el, done) {
+    gsap.to(el, {
+      duration: 0.2,
+      opacity: 0,
+      x: -6,
+      onComplete: done
+    })
+  }
+}
 
 let barTween: gsap.core.Tween
 
 function barReset() {
-  gsap.set('#bar', {
+  gsap.set(progressBarRef.value, {
     x: '-100%',
     immediateRender: true
   })
@@ -31,8 +56,8 @@ function barReset() {
 }
 
 function barAnimate() {
-  barTween = gsap.to('#bar', {
-    duration: 1,
+  barTween = gsap.to(progressBarRef.value, {
+    duration: 1.3,
     ease: 'none',
     x: 0,
     onUpdate() {
@@ -40,9 +65,9 @@ function barAnimate() {
       progress.value = progressPercentage
 
       if (props.active) {
-        if (progressPercentage > 89) {
+        if (progressPercentage > 84) {
           this.pause()
-        } else if (progressPercentage > 88) {
+        } else if (progressPercentage > 83) {
           isLongLoad.value = true
           emit('longLoad')
         } else if (progressPercentage > 60) {
@@ -68,31 +93,6 @@ function barAnimate() {
   })
 }
 
-const loadingHooks: AnimationHooks = {
-  enter(el, done) {
-    gsap.to(el, {
-      duration: 0.6,
-      rotate: 360,
-      ease: 'power1.out',
-      repeat: -1
-    })
-    gsap.from(el, {
-      duration: 0.2,
-      opacity: 0,
-      x: -5,
-      onComplete: done
-    })
-  },
-  leave(el, done) {
-    gsap.to(el, {
-      duration: 0.2,
-      opacity: 0,
-      x: -5,
-      onComplete: done
-    })
-  }
-}
-
 onMounted(barReset)
 
 watch(
@@ -112,30 +112,34 @@ watch(
 <template>
   <div
     v-show="isActive"
-    class="grid grid-cols-[2.5rem_1fr_2.5rem] items-center"
+    class="grid min-h-[1.5rem] grid-cols-[2.5rem_1fr_2.5rem] items-center"
   >
     <div class="text-sm">{{ progress }}</div>
     <div
-      class="relative h-2 overflow-hidden rounded-full bg-white/80 shadow-sm"
+      class="safari-fix-overflow relative h-2 overflow-hidden rounded-full bg-white/80"
     >
       <div
-        id="bar"
-        :class="[
-          `absolute inset-0 rounded-full bg-highlight`,
+        ref="progressBarRef"
+        class="absolute inset-0 rounded-full bg-highlight"
+        :class="
           {
             encode: 'bg-encode-500 dark:bg-encode-600',
             decode: 'bg-decode-500 dark:bg-decode-600'
           }[variant]
-        ]"
+        "
       ></div>
     </div>
     <Transition v-on="loadingHooks">
       <div
         v-if="isLongLoad"
-        :class="[
-          'i-custom-loading justify-self-end text-highlight firefox-border-animation-bug-fix'
-        ]"
+        class="i-custom-loading justify-self-end text-highlight firefox-border-animation-bug-fix"
       ></div>
     </Transition>
   </div>
 </template>
+
+<style scoped>
+.safari-fix-overflow {
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+</style>

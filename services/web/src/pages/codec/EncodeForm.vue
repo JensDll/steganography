@@ -122,7 +122,7 @@ async function handleSubmit() {
           :class="{ 'justify-between': loading }"
         >
           <VProgressBar
-            class="mr-12 w-full lg:w-2/3"
+            class="mr-12 hidden w-full md:grid lg:w-2/3"
             variant="encode"
             :active="loading"
           />
@@ -136,5 +136,10 @@ async function handleSubmit() {
       </section>
     </form>
   </FormProvider>
+  <VProgressBar
+    class="mx-container mt-8 md:hidden"
+    variant="encode"
+    :active="loading"
+  />
   <VErrorList :errors="errors" />
 </template>
