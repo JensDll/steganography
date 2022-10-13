@@ -6,7 +6,7 @@ namespace Domain.Entities;
 public class AesCounterMode : IDisposable
 {
     private readonly Aes _aes;
-    // The first 32 bits represent the counter and the last 96 bits are the IV.
+    // The first 32-bit represent the counter and the last 96-bit are the IV.
     private readonly byte[] _counterAndIv = new byte[16];
     private readonly ICryptoTransform _encryptor;
     private readonly byte[] _keyStream = new byte[16];
@@ -21,12 +21,12 @@ public class AesCounterMode : IDisposable
     {
         if (key.Length != 32)
         {
-            throw new CryptographicException("Key must be 32 bytes long");
+            throw new CryptographicException("Key must be 32-byte long");
         }
 
         if (iV.Length != 12)
         {
-            throw new CryptographicException("Initialization value must be 12 bytes long");
+            throw new CryptographicException("Initialization value must be 12-byte long");
         }
 
         _aes = Aes.Create();
