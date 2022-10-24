@@ -2,10 +2,10 @@ import { createApp } from 'vue'
 
 import '~/main.css'
 import App from '~/App.vue'
-import { useMediaQuery } from '~/domain'
-import { directives } from '~/modules/directives'
-import { router } from '~/modules/router'
-import { validierung } from '~/modules/validierung'
+import { useMediaQuery } from '~/composables'
+import { directives } from '~/directives'
+import { router } from '~/lib/router'
+import { validierung } from '~/lib/validierung'
 
 const app = createApp(App)
 

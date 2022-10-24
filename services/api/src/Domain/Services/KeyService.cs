@@ -10,7 +10,7 @@ public class KeyService : IKeyService
     {
         Span<byte> base64KeyBytes = stackalloc byte[54];
 
-        // The first 2 bytes are used for the message type to get to a multiple of 3
+        // The first 2-byte are used for the message type to get to a multiple of 3
         base64KeyBytes[0] = (byte) messageType;
         BitConverter.TryWriteBytes(base64KeyBytes[2..6], seed);
         BitConverter.TryWriteBytes(base64KeyBytes[6..10], messageLength);
@@ -29,9 +29,9 @@ public class KeyService : IKeyService
         key = Array.Empty<byte>();
         iV = Array.Empty<byte>();
 
-        // The full key has a length of 54 bytes.
-        // The first 10 bytes are metadata and the last 44 bytes are the key + initialization value.
-        // 3 bytes result in 4 base64 characters: (54 / 3) * 4 = 18 * 4 = 72
+        // The full key has a length of 54-byte.
+        // The first 10-byte are metadata and the last 44-byte are the key + initialization value.
+        // 3-byte result in 4 base64 characters: (54 / 3) * 4 = 18 * 4 = 72
         if (base64Key.Length != 72)
         {
             return false;

@@ -19,6 +19,7 @@ export default defineConfig({
   plugins: [
     Vue(),
     Components({
+      dirs: ['src/components', 'src/features/*/components'],
       dts: './dts/components.d.ts'
     })
   ]
