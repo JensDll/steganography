@@ -8,7 +8,7 @@
     "test": "vitest",
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --max-warnings 0",
-    "lint:no-console": "eslint dist --parser-options=ecmaVersion:latest --rule \"no-console: [\"error\", { allow: [\"warn\", \"error\"] }]\" --no-eslintrc --max-warnings 0",
+    "lint:no-console": "eslint dist --parser-options=ecmaVersion:latest,sourceType:module --rule \"no-console: [\"error\", { allow: [\"warn\", \"error\"] }]\" --no-eslintrc --max-warnings 0",
     "format": "prettier . --write && pnpm run lint --fix"
   },
   "dependencies": {
