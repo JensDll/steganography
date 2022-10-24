@@ -78,7 +78,7 @@ async function handleSubmit() {
               name="messageType"
               value="text"
             />
-            <label for="text-mode" class="mb-0 ml-1 font-normal">
+            <label for="text-mode" class="mb-0 pl-1 font-normal">
               Text data
             </label>
             <input
@@ -90,7 +90,7 @@ async function handleSubmit() {
               class="ml-3"
               value="binary"
             />
-            <label for="binary-mode" class="mb-0 ml-1 font-normal">
+            <label for="binary-mode" class="mb-0 pl-1 font-normal">
               Binary data
             </label>
           </div>

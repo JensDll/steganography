@@ -1,10 +1,12 @@
 import { type RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 
+import HomeView from '~/features/home/routes/HomeView.vue'
+
 const routes: RouteRecordRaw[] = [
   {
     name: 'home',
     path: '/',
-    component: () => import('~/features/home/routes/HomeView.vue'),
+    component: HomeView,
     meta: {
       title: 'Image Data Hiding'
     }
