@@ -23,9 +23,13 @@ async function makeRequest(
       console.log('[FETCH]', error)
     }
 
-    await Promise.all(
-      interceptors.response.map(interceptor => interceptor.error(error))
-    )
+    if (error instanceof Error && error.name !== 'AbortError') {
+      await Promise.all(
+        interceptors.response.map(interceptor =>
+          interceptor.error(error as Error)
+        )
+      )
+    }
 
     throw error
   }
@@ -125,7 +129,7 @@ function verbs(uri: string, interceptors: Interceptors) {
 export type RequestInterceptor = (init: RequestInit) => RequestInit
 export type ResponseInterceptor = {
   response(response: Response): Promise<void>
-  error(error: unknown): Promise<void>
+  error(error: Error): Promise<void>
 }
 
 type Interceptors = {

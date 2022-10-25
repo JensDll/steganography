@@ -39,7 +39,7 @@ function BaseErrorListRemove(errors: VNode[], idx: number) {
           v-for="(error, idx) in errors"
           :id="`v-error-list-${idx}`"
           :key="error.key as never"
-          class="mb-4 flex w-fit items-center justify-between rounded bg-red-50 bg-opacity-90 px-3 py-2 text-red-900 dark:bg-red-900/75 dark:text-red-300"
+          class="mb-4 flex w-fit items-center justify-between rounded bg-red-50 bg-opacity-95 px-3 py-2 text-red-900 dark:bg-red-900/80 dark:text-red-300"
         >
           <div
             class="close-icon i-heroicons-x-mark-20-solid order-2 ml-4 shrink-0 cursor-pointer"
