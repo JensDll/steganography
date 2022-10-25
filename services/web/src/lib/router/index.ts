@@ -1,5 +1,9 @@
 import { type RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 
+import AboutViewVue from '~/features/about/routes/AboutView.vue'
+import CodecView from '~/features/codec/routes/CodecView.vue'
+import DecodeView from '~/features/codec/routes/DecodeView.vue'
+import EncodeView from '~/features/codec/routes/EncodeView.vue'
 import HomeView from '~/features/home/routes/HomeView.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -14,7 +18,7 @@ const routes: RouteRecordRaw[] = [
   {
     name: 'about',
     path: '/about',
-    component: () => import('~/features/about/routes/AboutView.vue'),
+    component: AboutViewVue,
     meta: {
       title: 'About'
     }
@@ -23,13 +27,13 @@ const routes: RouteRecordRaw[] = [
     name: 'codec',
     path: '/codec',
     redirect: { name: 'encode' },
-    component: () => import('~/features/codec/routes/CodecView.vue'),
+    component: CodecView,
     children: [
       {
         name: 'encode',
         path: 'encode',
         alias: '',
-        component: () => import('~/features/codec/routes/EncodeView.vue'),
+        component: EncodeView,
         meta: {
           title: 'Encode'
         }
@@ -37,7 +41,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'decode',
         path: 'decode',
-        component: () => import('~/features/codec/routes/DecodeView.vue'),
+        component: DecodeView,
         meta: {
           title: 'Decode'
         }
