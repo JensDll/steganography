@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTheme } from '~/domain/composables'
+import { useTheme } from '~/composables'
 
 defineEmits(['close'])
 

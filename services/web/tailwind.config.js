@@ -27,6 +27,7 @@ module.exports = {
           'x-mark': {},
           moon: {},
           sun: {},
+          'x-circle': {},
           'computer-desktop': {},
           'paper-clip-20-solid': {
             [SCALE]: 1.25
@@ -38,6 +39,9 @@ module.exports = {
             [SCALE]: 1.25
           },
           'x-mark-20-solid': {
+            [SCALE]: 1.25
+          },
+          'x-circle-20-solid': {
             [SCALE]: 1.25
           },
           'arrow-left-20-solid': {

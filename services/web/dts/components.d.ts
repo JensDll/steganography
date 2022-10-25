@@ -7,6 +7,12 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    BaseButton: typeof import('./../src/components/base/BaseButton.vue')['default']
+    BaseErrorList: typeof import('./../src/components/base/BaseErrorList.vue')['default']
+    BaseFilePreview: typeof import('./../src/components/base/BaseFilePreview.vue')['default']
+    BaseMarkdown: typeof import('./../src/components/base/BaseMarkdown.vue')['default']
+    BaseProgressBar: typeof import('./../src/components/base/BaseProgressBar.vue')['default']
+    CallToAction: typeof import('./../src/features/home/components/CallToAction.vue')['default']
     FormErrors: typeof import('./../src/components/form/FormErrors.vue')['default']
     FormFileInput: typeof import('./../src/components/form/FormFileInput.vue')['default']
     FormProvider: typeof import('./../src/components/form/FormProvider.vue')['default']
@@ -17,10 +23,5 @@ declare module '@vue/runtime-core' {
     TheMain: typeof import('./../src/components/layout/TheMain.vue')['default']
     TheNav: typeof import('./../src/components/layout/TheNav.vue')['default']
     TheNavMobile: typeof import('./../src/components/layout/TheNavMobile.vue')['default']
-    VButton: typeof import('./../src/components/app/VButton.vue')['default']
-    VErrorList: typeof import('./../src/components/app/VErrorList.vue')['default']
-    VFilePreview: typeof import('./../src/components/app/VFilePreview.vue')['default']
-    VMarkdown: typeof import('./../src/components/app/VMarkdown.vue')['default']
-    VProgressBar: typeof import('./../src/components/app/VProgressBar.vue')['default']
   }
 }

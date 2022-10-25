@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
-import { useFileSize, useVModelFiles } from '~/domain'
+import { useFileSize, useVModelFiles } from '~/composables'
 
 const emit = defineEmits({
   'update:modelValue': (files: File[]) => Array.isArray(files)
@@ -52,7 +52,7 @@ const totalFileSize = useFileSize(files)
         multiple
         v-on="fileListeners"
       />
-      <VFilePreview
+      <BaseFilePreview
         v-for="(file, i) in files"
         :key="file.name"
         :file="file"
@@ -112,7 +112,7 @@ const totalFileSize = useFileSize(files)
           </template>
         </div>
       </div>
-      <VFilePreview
+      <BaseFilePreview
         :file="files[0]"
         variant="reduced"
         @remove="removeFile(0)"

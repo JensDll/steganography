@@ -55,7 +55,7 @@ public abstract class CodecBase : IDisposable
 
             if (++BitPosition == 8)
             {
-                throw new InvalidOperationException("Message is too long for the cover image");
+                throw new InvalidOperationException("The message is too long for the cover image");
             }
 
             PixelValueMask = (byte) ~(~PixelValueMask << 1);

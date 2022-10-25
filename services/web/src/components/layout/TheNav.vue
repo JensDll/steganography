@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { useTheme } from '~/domain/composables'
+import { useTheme } from '~/composables'
 
 const isDropdownOpen = ref(false)
 
