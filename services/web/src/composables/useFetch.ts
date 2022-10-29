@@ -21,22 +21,21 @@ export class ApiError {
 
 export const API_ERROR_UNKNOWN = new ApiError(
   h('span', { key: 'API_ERROR_UNKNOWN' }, [
-    'An unknown error occurred. Please try again. If the problem persists, contact us via email at ',
+    'An unknown error occurred. Please try again. If the problem persists, email us at ',
     h(
       'a',
       { href: `mailto:help@${window.location.hostname}` },
       `help@${window.location.hostname}`
-    ),
-    '.'
+    )
   ])
 )
 
 export const API_ERROR_REQUEST_TOO_LARGE = new ApiError(
-  'The request is too big. Please reduce its size and try again.'
+  'The request is too big. Please reduce its size and try again'
 )
 
 export const API_ERROR_RATE_LIMIT = new ApiError(
-  "You've exceeded the rate limit. There are 90 requests allowed per hour."
+  "You've exceeded the rate limit. There are 90 requests allowed per hour"
 )
 
 const statusCodeInterceptor: ResponseInterceptor = {

@@ -111,8 +111,8 @@ watch(
 
 <template>
   <div
-    v-show="isActive"
-    class="grid min-h-[1.5rem] grid-cols-[2.5rem_1fr_2.5rem] items-center"
+    class="grid min-h-[1.5rem] grid-cols-[2.5rem_1fr_2.5rem] items-center opacity-0"
+    :class="{ 'opacity-100': isActive }"
   >
     <div class="text-sm">{{ progress }}</div>
     <div

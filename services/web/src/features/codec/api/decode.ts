@@ -29,7 +29,7 @@ export async function decode(coverImage: File, key: string) {
         useDownload('result.zip').file(zip)
       }
     } else {
-      throw new ApiError('Decoding failed. Maybe your key is not valid.')
+      throw new ApiError('Decoding failed. Maybe your key is not valid')
     }
   } finally {
     decode.abort = () => {}

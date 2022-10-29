@@ -29,7 +29,7 @@ export async function encodeText(coverImage: File, message: string) {
       const { errors } = (await response.json()) as ErrorResponse
 
       if (errors.length) {
-        throw new ApiError(`${errors.join('. ')}.`)
+        throw new ApiError(errors.join('. '))
       }
 
       throw API_ERROR_UNKNOWN
