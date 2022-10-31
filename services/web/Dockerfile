@@ -42,14 +42,14 @@ COPY --from=build /out/dist/ /data/www/
 # Copy ngx_brotli modules
 COPY --from=ngx_brotli /compile/nginx-${ALPINE_VERSION}/objs/ngx_http_brotli*.so /usr/lib/nginx/modules/
 
-RUN apk -U upgrade && addgroup --system web && \
-    adduser --system --no-create-home --disabled-password --gecos "Web service user" --ingroup web web && \
+RUN apk -U upgrade && addgroup --system app && \
+    adduser --system --no-create-home --disabled-password --gecos "Web service user" --ingroup app appuser && \
     # Create necessary folders and files to avoid permission errors
     mkdir /var/cache/nginx/client_temp /var/cache/nginx/proxy_temp /var/cache/nginx/fastcgi_temp \
           /var/cache/nginx/uwsgi_temp /var/cache/nginx/scgi_temp && \
     touch /var/run/nginx.pid && \
-    chown web /var/run/nginx.pid
+    chown appuser /var/run/nginx.pid
 
-USER web:web
+USER appuser:app
 
 EXPOSE 80

@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web-deploy
+  annotations:
+    kubernetes.io/change-cause: 'Conform to restricted Pod Security Standards'
 spec:
   replicas: 3
   selector:
@@ -21,10 +23,20 @@ spec:
       automountServiceAccountToken: false
       imagePullSecrets:
         - name: docker-pull
+      securityContext:
+        runAsUser: 100
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: web
           image: jensdll/image-data-hiding:web.latest
           imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           volumeMounts:
             - name: nginx
               mountPath: /etc/nginx
