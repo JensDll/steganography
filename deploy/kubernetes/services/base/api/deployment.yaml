@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: api-deploy
   annotations:
-    kubernetes.io/change-cause: 'Conform to restricted Pod Security Standards'
+    kubernetes.io/change-cause: 'Move security context to containers'
 spec:
   replicas: 2
   selector:
@@ -23,16 +23,15 @@ spec:
       automountServiceAccountToken: false
       imagePullSecrets:
         - name: docker-pull
-      securityContext:
-        runAsUser: 100
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
       containers:
         - name: api
           image: jensdll/image-data-hiding:api.latest
           imagePullPolicy: Always
           securityContext:
+            runAsUser: 100
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:
