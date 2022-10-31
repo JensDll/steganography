@@ -30,10 +30,10 @@ WORKDIR /app
 
 COPY --from=publish /app/ ./
 
-RUN apk -U upgrade && addgroup --system app && \
-    adduser --system --no-create-home --disabled-password --gecos "API service user" --ingroup app appuser
+RUN apk -U upgrade && addgroup --system app_user_group && \
+    adduser --system --no-create-home --disabled-password --gecos "App user" --ingroup app_user_group app_user
 
-USER appuser:app
+USER app_user:app_user_group
 
 ENV ASPNETCORE_ENVIRONMENT="Deployment"
 
