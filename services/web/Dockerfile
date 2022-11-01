@@ -37,11 +37,6 @@ FROM nginx:${ALPINE_VERSION}-alpine
 
 ARG ALPINE_VERSION
 
-# Copy build output
-COPY --from=build /out/dist/ /data/www/
-# Copy ngx_brotli modules
-COPY --from=ngx_brotli /compile/nginx-${ALPINE_VERSION}/objs/ngx_http_brotli*.so /usr/lib/nginx/modules/
-
 RUN apk -U upgrade && addgroup --system app_user_group && \
     adduser --system --no-create-home --disabled-password --gecos "App user" --ingroup app_user_group app_user && \
     # Create necessary folders and files to avoid permission errors
@@ -49,6 +44,11 @@ RUN apk -U upgrade && addgroup --system app_user_group && \
           /var/cache/nginx/uwsgi_temp /var/cache/nginx/scgi_temp && \
     touch /var/run/nginx.pid && \
     chown app_user /var/run/nginx.pid
+
+# Copy ngx_brotli modules
+COPY --from=ngx_brotli --chown=app_user:app_user_group /compile/nginx-${ALPINE_VERSION}/objs/ngx_http_brotli*.so /usr/lib/nginx/modules/
+# Copy build output
+COPY --from=build --chown=app_user:app_user_group /out/dist/ /data/www/
 
 USER app_user:app_user_group
 

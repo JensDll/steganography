@@ -28,10 +28,10 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0.10-alpine3.16
 
 WORKDIR /app
 
-COPY --from=publish /app/ ./
-
 RUN apk -U upgrade && addgroup --system app_user_group && \
     adduser --system --no-create-home --disabled-password --gecos "App user" --ingroup app_user_group app_user
+
+COPY --from=publish --chown=app_user:app_user_group /app/ ./
 
 USER app_user:app_user_group
 
