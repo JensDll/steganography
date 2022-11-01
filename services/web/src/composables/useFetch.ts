@@ -24,8 +24,8 @@ export const API_ERROR_UNKNOWN = new ApiError(
     'An unknown error occurred. Please try again. If the problem persists, email us at ',
     h(
       'a',
-      { href: `mailto:help@${window.location.hostname}` },
-      `help@${window.location.hostname}`
+      { href: `mailto:support@${window.location.hostname}` },
+      `support@${window.location.hostname}`
     )
   ])
 )
