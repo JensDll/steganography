@@ -1,12 +1,12 @@
 {
   "private": true,
   "dependencies": {
-    "@esbuild-kit/esm-loader": "2.4.2",
-    "@types/node": "18.7.15",
-    "aws-cdk-lib": "2.40.0",
-    "constructs": "10.1.95",
+    "@esbuild-kit/esm-loader": "2.5.0",
+    "@types/node": "18.11.9",
+    "aws-cdk-lib": "2.50.0",
+    "constructs": "10.1.149",
     "prettier": "2.7.1",
     "source-map-support": "0.5.21",
-    "typescript": "4.8.2"
+    "typescript": "4.8.4"
   }
 }

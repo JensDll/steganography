@@ -1,3 +1,0 @@
-aws:
-  zoneType: 'public'
-  preferCNAME: 'false'
