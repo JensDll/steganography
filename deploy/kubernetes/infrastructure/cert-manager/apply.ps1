@@ -12,8 +12,9 @@ $namespace = 'cert-manager'
 
 switch ($Action) {
   install {
-    helm upgrade cert-manager bitnami/cert-manager --install --namespace=$namespace `
+    helm upgrade cert-manager jetstack/cert-manager --install --namespace=$namespace `
       --create-namespace `
+      --version="v1.10.0" `
       --values="$PSScriptRoot/values.yaml" $HelmArgs
   }
   delete {

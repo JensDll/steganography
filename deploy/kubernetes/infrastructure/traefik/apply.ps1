@@ -13,13 +13,19 @@ $namespace = 'traefik'
 switch ($Action) {
   install {
     if ($HelmArgs -contains '--dry-run') {
+      if (-not (kubectl get namespace $namespace --ignore-not-found)) {
+        kubectl create namespace $namespace --dry-run=client
+      }
       kubectl apply -f "$PSScriptRoot/middleware.yaml" --namespace=$namespace --dry-run=client
     } else {
+      if (-not (kubectl get namespace $namespace --ignore-not-found)) {
+        kubectl create namespace $namespace
+      }
       kubectl apply -f "$PSScriptRoot/middleware.yaml" --namespace=$namespace
     }
 
     helm upgrade traefik traefik/traefik --install --namespace=$namespace `
-      --create-namespace `
+      --version="19.0.3" `
       --values="$PSScriptRoot/values.yaml" $HelmArgs
   }
   delete {
