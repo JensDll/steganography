@@ -69,28 +69,29 @@ async function handleSubmit() {
       <section class="container py-8 lg:py-12">
         <div>
           <label for="message" class="mb-0">Secret message</label>
-          <div class="mb-2 flex items-center">
-            <input
-              id="text-mode"
-              v-model="messageMode"
-              :class="{ error: isTextMode && form.textData.$hasError }"
-              type="radio"
-              name="messageType"
-              value="text"
-            />
-            <label for="text-mode" class="mb-0 pl-1 font-normal">
+          <div class="mb-2 flex">
+            <label class="mb-0 flex cursor-pointer items-center font-normal">
+              <input
+                v-model="messageMode"
+                class="mr-1 cursor-pointer"
+                :class="{ error: isTextMode && form.textData.$hasError }"
+                type="radio"
+                name="messageType"
+                value="text"
+              />
               Text data
             </label>
-            <input
-              id="binary-mode"
-              v-model="messageMode"
-              :class="{ error: isBinaryMode && form.binaryData.$hasError }"
-              type="radio"
-              name="messageType"
-              class="ml-3"
-              value="binary"
-            />
-            <label for="binary-mode" class="mb-0 pl-1 font-normal">
+            <label
+              class="ml-3 mb-0 flex cursor-pointer items-center font-normal"
+            >
+              <input
+                v-model="messageMode"
+                class="mr-1 cursor-pointer"
+                :class="{ error: isBinaryMode && form.binaryData.$hasError }"
+                type="radio"
+                name="messageType"
+                value="binary"
+              />
               Binary data
             </label>
           </div>
@@ -106,6 +107,7 @@ async function handleSubmit() {
           </template>
           <FormFileInput
             v-else
+            id="message"
             v-model="form.binaryData.$value"
             :errors="form.binaryData.$errors"
             multiple

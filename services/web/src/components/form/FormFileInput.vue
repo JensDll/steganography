@@ -12,6 +12,10 @@ const props = defineProps({
     type: String,
     default: ''
   },
+  id: {
+    type: String,
+    default: ''
+  },
   modelValue: {
     type: Array as PropType<File[]>,
     required: true
@@ -45,7 +49,7 @@ const totalFileSize = useFileSize(files)
       ]"
     >
       <input
-        :id="`file-${label}`"
+        :id="id || `file-${label}`"
         class="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
         type="file"
         :accept="accept"
@@ -87,7 +91,7 @@ const totalFileSize = useFileSize(files)
         }"
       >
         <input
-          id="file-input"
+          :id="id || 'file-input'"
           type="file"
           class="absolute inset-0 z-10 h-full w-full opacity-0"
           :accept="accept"
