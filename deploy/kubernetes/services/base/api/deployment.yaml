@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: api-deploy
   annotations:
-    kubernetes.io/change-cause: 'Move security context to containers'
+    kubernetes.io/change-cause: 'Adjust resource management'
 spec:
   replicas: 2
   selector:
@@ -11,10 +11,7 @@ spec:
       app: api
   revisionHistoryLimit: 5
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 1
+    type: Recreate
   template:
     metadata:
       labels:
@@ -43,11 +40,11 @@ spec:
               readOnly: true
           resources:
             requests:
-              cpu: '600m'
-              memory: '1Gi'
+              cpu: '550m'
+              memory: '1200Mi'
             limits:
-              cpu: '1200m'
-              memory: '2Gi'
+              cpu: '800m'
+              memory: '1400Mi'
           ports:
             - containerPort: 80
       volumes:
