@@ -35,7 +35,7 @@ export const API_ERROR_REQUEST_TOO_LARGE = new ApiError(
 )
 
 export const API_ERROR_RATE_LIMIT = new ApiError(
-  "You've exceeded the rate limit. There are 90 requests allowed per hour"
+  `You've exceeded the rate limit. There are ${$config.API.RATE_LIMIT} requests allowed per hour`
 )
 
 const statusCodeInterceptor: ResponseInterceptor = {
@@ -55,7 +55,7 @@ const statusCodeInterceptor: ResponseInterceptor = {
 }
 
 export const useFetch = createFetch({
-  baseUri: $config.API_URI,
+  baseUri: $config.API.URI,
   interceptors: {
     response: [statusCodeInterceptor]
   }

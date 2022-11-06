@@ -24,7 +24,7 @@
     "autoprefixer": "10.4.13",
     "esbuild": "0.15.13",
     "esbuild-register": "3.3.3",
-    "eslint": "8.26.0",
+    "eslint": "8.27.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-vue": "9.7.0",

@@ -4,11 +4,11 @@ metadata:
   name: api-rate-limit
 spec:
   rateLimit:
-    # Allow 90 request per hour. Link below for how this is calculated:
+    # Allow 60 request per hour. See below for how this is calculated:
     # https://github.com/traefik/traefik/issues/4549#issuecomment-474700751
     average: 1
     period: 1h
-    burst: 90
+    burst: 60
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute

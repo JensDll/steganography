@@ -198,5 +198,4 @@ metadata:
   labels:
     config: web
 data:
-  config.js: |
-    const $config={THIS_URI:'https://imagedatahiding.com',API_URI:'https://api.imagedatahiding.com'}
+  config.js: const $config={API:{URI:'https://api.imagedatahiding.com',RATE_LIMIT:60}}
