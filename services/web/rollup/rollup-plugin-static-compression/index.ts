@@ -15,27 +15,28 @@ export function Compression({
   return {
     name: 'compression',
     apply: 'build',
-
     async writeBundle({ dir }) {
       if (!dir) {
-        return
+        throw new Error('Missing output directory')
       }
 
       const promises: Promise<void>[] = []
 
       for await (const path of recursiveReadDir(dir)) {
-        if (test.test(path)) {
-          promises.push(
-            brotliCompressFile(path, {
-              params: {
-                [zlip.constants.BROTLI_PARAM_QUALITY]: 11
-              }
-            }),
-            gzipCompressFile(path, {
-              level: zlip.constants.Z_BEST_COMPRESSION
-            })
-          )
+        if (!test.test(path)) {
+          continue
         }
+
+        promises.push(
+          brotliCompressFile(path, {
+            params: {
+              [zlip.constants.BROTLI_PARAM_QUALITY]: 11
+            }
+          }),
+          gzipCompressFile(path, {
+            level: zlip.constants.Z_BEST_COMPRESSION
+          })
+        )
       }
 
       await Promise.all(promises)

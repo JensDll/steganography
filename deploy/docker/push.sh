@@ -5,11 +5,6 @@ RESET="\033[0m"
 RED="\033[0;31m"
 YELLOW="\033[0;33m"
 
-export DOCKER_BAKE_REPOSITORY
-export DOCKER_BAKE_CONTEXT
-DOCKER_BAKE_CONTEXT="$(git rev-parse --show-toplevel)/services"
-export DOCKER_BAKE_PLATFORM
-
 __usage()
 {
   echo "Usage: $(basename "${BASH_SOURCE[0]}") [options]
@@ -66,18 +61,19 @@ case "$provider" in
 aws)
   AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
   AWS_REGION=$(aws configure get region)
-
-  DOCKER_BAKE_REPOSITORY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/image-data-hiding"
-  DOCKER_BAKE_PLATFORM="linux/arm64"
-
-  docker buildx bake --file "$DIR/docker-bake.hcl" --push
+  REPOSITORY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/image-data-hiding"
+  PLATFORM="linux/arm64"
   ;;
 docker)
-  DOCKER_BAKE_REPOSITORY="jensdll/image-data-hiding"
-  DOCKER_BAKE_PLATFORM="linux/arm64,linux/amd64"
-
-  docker buildx bake --file "$DIR/docker-bake.hcl" --push
+  REPOSITORY="jensdll/image-data-hiding"
+  PLATFORM="linux/arm64,linux/amd64"
   ;;
 *)
   __error "Unknown provider: $provider" && __usage
 esac
+
+docker buildx bake --file "$DIR/docker-bake.hcl" --push \
+  --set "nginx-base.context=$DIR/nginx-base" \
+  --set "*.platform=$PLATFORM" \
+  --set "nginx-base.args.ALPINE_VERSION=1.23.2" \
+  --set "nginx-base.tags=$REPOSITORY:nginx-base.1.23.2-alpine"
