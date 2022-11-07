@@ -71,4 +71,4 @@ docker buildx bake --file "$script_root/docker-bake.hcl" --push \
   --set "nginx-base.context=$script_root/nginx-base" \
   --set "*.platform=$platform" \
   --set "nginx-base.args.ALPINE_VERSION=$nginx_alpine_version" \
-  --set "nginx-base.tags=$repository:nginx-base.1.23.2-alpine"
+  --set "nginx-base.tags=$repository:nginx-base.$nginx_alpine_version-alpine"
