@@ -120,7 +120,7 @@ watch(
   >
     <div class="text-sm">{{ progress }}</div>
     <div
-      class="safari-fix-overflow relative h-2 overflow-hidden rounded-full bg-white/80"
+      class="relative h-2 overflow-hidden rounded-full bg-white/80 safari-fix-overflow"
     >
       <div
         ref="progressBarRef"
