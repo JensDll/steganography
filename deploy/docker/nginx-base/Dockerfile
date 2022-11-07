@@ -1,6 +1,8 @@
 ARG ALPINE_VERSION
 
-FROM nginx:${ALPINE_VERSION}-alpine as ngx_brotli
+FROM nginxinc/nginx-unprivileged:${ALPINE_VERSION}-alpine as ngx_brotli
+
+USER root
 
 ARG ALPINE_VERSION
 WORKDIR /compile
@@ -15,9 +17,8 @@ RUN ./configure --with-compat --add-dynamic-module=../ngx_brotli
 RUN make modules
 
 # Final image
-FROM nginx:${ALPINE_VERSION}-alpine
+FROM nginxinc/nginx-unprivileged:${ALPINE_VERSION}-alpine
 
 ARG ALPINE_VERSION
 
-# Copy ngx_brotli modules
 COPY --from=ngx_brotli /compile/nginx-${ALPINE_VERSION}/objs/ngx_http_brotli*.so /usr/lib/nginx/modules/

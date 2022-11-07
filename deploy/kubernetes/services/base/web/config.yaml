@@ -109,15 +109,21 @@ data:
     worker_processes auto;
 
     error_log /var/log/nginx/error.log notice;
-    pid /var/run/nginx.pid;
+    pid /tmp/nginx.pid;
 
     events {
       worker_connections 1024;
     }
 
     http {
-      include /etc/nginx/mime.types;
-      default_type application/octet-stream;
+      proxy_temp_path /tmp/proxy_temp;
+      client_body_temp_path /tmp/client_temp;
+      fastcgi_temp_path /tmp/fastcgi_temp;
+      uwsgi_temp_path /tmp/uwsgi_temp;
+      scgi_temp_path /tmp/scgi_temp;
+
+      include       /etc/nginx/mime.types;
+      default_type  application/octet-stream;
 
       log_format main '$remote_addr - [$time_local] '
                       '[$request $status $body_bytes_sent] '
@@ -138,14 +144,14 @@ data:
                       application/x-javascript application/x-font-truetype application/xml+rss
                       image/x-icon image/x-win-bitmap image/svg+xml image/vnd.microsoft.icon;
 
-      brotli              on;
-      brotli_static       on;
-      brotli_comp_level   4;
-      brotli_types        text/plain text/xml text/javascript text/css
-                          application/x-font-ttf application/x-font-opentype application/json
-                          application/xml application/xhtml+xml application/vnd.ms-fontobject application/javascript
-                          application/x-javascript application/x-font-truetype application/xml+rss
-                          image/x-icon image/x-win-bitmap image/svg+xml image/vnd.microsoft.icon;
+      brotli            on;
+      brotli_static     on;
+      brotli_comp_level 4;
+      brotli_types      text/plain text/xml text/javascript text/css
+                        application/x-font-ttf application/x-font-opentype application/json
+                        application/xml application/xhtml+xml application/vnd.ms-fontobject application/javascript
+                        application/x-javascript application/x-font-truetype application/xml+rss
+                        image/x-icon image/x-win-bitmap image/svg+xml image/vnd.microsoft.icon;
 
       include /etc/nginx/conf.d/*.conf;
     }
