@@ -1,9 +1,6 @@
 ﻿<#
 .PARAMETER Provider
   The container registry provider.
-
-.PARAMETER Tag
-  The tag to use for the image.
 #>
 
 [CmdletBinding()]
