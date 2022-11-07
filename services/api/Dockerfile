@@ -28,12 +28,12 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0.10-alpine3.16
 
 WORKDIR /app
 
-RUN apk -U upgrade && addgroup --system app_user_group && \
-    adduser --system --no-create-home --disabled-password --gecos "App user" --ingroup app_user_group app_user
+RUN apk -U upgrade && addgroup --system app_group && \
+    adduser --system --no-create-home --disabled-password --gecos "App user" --ingroup app_group app_user
 
-COPY --from=publish --chown=app_user:app_user_group /app/ ./
+COPY --from=publish --chown=app_user:app_group /app/ ./
 
-USER app_user:app_user_group
+USER app_user:app_group
 
 ENV ASPNETCORE_ENVIRONMENT="Deployment"
 
