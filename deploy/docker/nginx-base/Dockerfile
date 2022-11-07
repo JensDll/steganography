@@ -15,7 +15,7 @@ RUN ./configure --with-compat --add-dynamic-module=../ngx_brotli
 RUN make modules
 
 # Final image
-FROM nginx:${ALPINE_VERSION}-alpine
+FROM nginxinc/nginx-unprivileged:${ALPINE_VERSION}-alpine
 
 ARG ALPINE_VERSION
 

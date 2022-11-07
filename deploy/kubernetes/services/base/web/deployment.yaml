@@ -25,7 +25,7 @@ spec:
           image: jensdll/image-data-hiding:web.latest
           imagePullPolicy: Always
           securityContext:
-            runAsUser: 100
+            runAsUser: 101
             runAsNonRoot: true
             seccompProfile:
               type: RuntimeDefault
