@@ -57,7 +57,7 @@ function barReset() {
 
 function barAnimate() {
   barTween = gsap.to(progressBarRef.value, {
-    duration: 1.3,
+    duration: 2,
     ease: 'none',
     x: 0,
     onUpdate() {
@@ -70,12 +70,16 @@ function barAnimate() {
         } else if (progressPercentage > 83) {
           isLongLoad.value = true
           emit('longLoad')
-        } else if (progressPercentage > 60) {
+        } else if (progressPercentage > 75) {
           this.timeScale(0.1)
-        } else if (progressPercentage > 40) {
+        } else if (progressPercentage > 60) {
+          this.timeScale(0.15)
+        } else if (progressPercentage > 50) {
           this.timeScale(0.2)
+        } else if (progressPercentage > 40) {
+          this.timeScale(0.3)
         } else if (progressPercentage > 20) {
-          this.timeScale(0.4)
+          this.timeScale(0.5)
         }
       }
     },
@@ -120,7 +124,7 @@ watch(
     >
       <div
         ref="progressBarRef"
-        class="absolute inset-0 rounded-full bg-highlight"
+        class="absolute inset-x-0 -inset-y-[1px] rounded-full bg-highlight"
         :class="
           {
             encode: 'bg-encode-500 dark:bg-encode-600',
@@ -137,10 +141,3 @@ watch(
     </Transition>
   </div>
 </template>
-
-<style scoped>
-.safari-fix-overflow {
-  mask-image: radial-gradient(white, black);
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
-}
-</style>

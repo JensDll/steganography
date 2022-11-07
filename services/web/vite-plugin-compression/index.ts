@@ -17,7 +17,7 @@ export function Compression({
     apply: 'build',
     async writeBundle({ dir }) {
       if (!dir) {
-        throw new Error('Missing output directory')
+        throw new Error('[vite-plugin-compression] Missing output directory')
       }
 
       const promises: Promise<void>[] = []
@@ -30,7 +30,8 @@ export function Compression({
         promises.push(
           brotliCompressFile(path, {
             params: {
-              [zlip.constants.BROTLI_PARAM_QUALITY]: 11
+              [zlip.constants.BROTLI_PARAM_QUALITY]:
+                zlip.constants.BROTLI_MAX_QUALITY
             }
           }),
           gzipCompressFile(path, {

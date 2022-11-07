@@ -28,6 +28,6 @@
     "src/**/*",
     "src/**/*.vue",
     "tailwind",
-    "rollup"
+    "vite-plugin-compression"
   ]
 }

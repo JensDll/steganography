@@ -31,6 +31,9 @@ module.exports.Utilities = function () {
         '.firefox-border-animation-bug-fix': {
           border: '0.01px solid rgba(0, 0, 0, 0)',
           backgroundClip: 'padding-box'
+        },
+        '.safari-fix-overflow': {
+          maskImage: 'radial-gradient(white, black)'
         }
       })
 

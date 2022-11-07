@@ -4,7 +4,7 @@ import Vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 
-import { Compression } from './rollup/rollup-plugin-static-compression'
+import { Compression } from './vite-plugin-compression'
 
 const srcPath = url.fileURLToPath(new url.URL('./src', import.meta.url))
 const tailwindThemePath = url.fileURLToPath(
