@@ -1,6 +1,5 @@
 #!/bin/bash
 
-DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 RESET="\033[0m"
 RED="\033[0;31m"
 YELLOW="\033[0;33m"
@@ -10,12 +9,10 @@ __usage()
   echo "Usage: $(basename "${BASH_SOURCE[0]}") [options]
 
 Options:
-    --provider | -p       The container registry provider.
-                          Supported providers:
+    --provider | -p     The container registry provider.
+                        Supported providers:
                             - aws
                             - docker
-
-    --tag      | -t       The container image tag.
 "
 
   exit 2
@@ -43,12 +40,6 @@ do
     declare -r provider="$1"
     [[ -z $provider ]] && __error "Missing value for parameter --provider" && __usage
     ;;
-  -tag|-t)
-    shift
-    declare -r tag="$1"
-    [[ -z $tag ]] && __error "Missing value for parameter --tag" && __usage
-    export TAG=$tag
-    ;;
   *)
     __error "Unknown option: $1" && __usage
     ;;
@@ -57,23 +48,27 @@ do
   shift
 done
 
+script_root=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+
 case "$provider" in
 aws)
-  AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-  AWS_REGION=$(aws configure get region)
-  REPOSITORY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/image-data-hiding"
-  PLATFORM="linux/arm64"
+  aws_account_id=$(aws sts get-caller-identity --query 'Account' --output text)
+  aws_region=$(aws configure get region)
+  repository="${aws_account_id}.dkr.ecr.${aws_region}.amazonaws.com/image-data-hiding"
+  platform="linux/arm64"
   ;;
 docker)
-  REPOSITORY="jensdll/image-data-hiding"
-  PLATFORM="linux/arm64,linux/amd64"
+  repository="jensdll/image-data-hiding"
+  platform="linux/arm64,linux/amd64"
   ;;
 *)
   __error "Unknown provider: $provider" && __usage
 esac
 
-docker buildx bake --file "$DIR/docker-bake.hcl" --push \
-  --set "nginx-base.context=$DIR/nginx-base" \
-  --set "*.platform=$PLATFORM" \
-  --set "nginx-base.args.ALPINE_VERSION=1.23.2" \
-  --set "nginx-base.tags=$REPOSITORY:nginx-base.1.23.2-alpine"
+nginx_alpine_version="1.23.2"
+
+docker buildx bake --file "$script_root/docker-bake.hcl" --push \
+  --set "nginx-base.context=$script_root/nginx-base" \
+  --set "*.platform=$platform" \
+  --set "nginx-base.args.ALPINE_VERSION=$nginx_alpine_version" \
+  --set "nginx-base.tags=$repository:nginx-base.1.23.2-alpine"
