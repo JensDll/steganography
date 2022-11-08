@@ -41,6 +41,7 @@ const { activeTheme, themes } = useTheme()
           <a
             class="cursor-pointer font-medium hover:text-link"
             href="https://github.com/JensDll/image-data-hiding"
+            aria-label="Link to the source code on GitHub"
           >
             GitHub
           </a>

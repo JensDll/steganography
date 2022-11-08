@@ -63,7 +63,10 @@ function closeDropdown() {
         </ul>
       </li>
       <li class="pl-4">
-        <a href="https://github.com/JensDll/image-data-hiding">
+        <a
+          href="https://github.com/JensDll/image-data-hiding"
+          aria-label="Link to the source code on GitHub"
+        >
           <div
             class="i-mdi-github text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
           ></div>
