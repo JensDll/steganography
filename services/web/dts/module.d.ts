@@ -3,6 +3,12 @@ declare module 'tailwindcss/lib/util/flattenColorPalette' {
   export default flattenColorPalette
 }
 
+declare module '@tailwindcss/typography/src/styles' {
+  import type { CSSRuleObject } from 'tailwindcss/types/config'
+  declare const styles: CSSRuleObject
+  export default styles
+}
+
 declare module 'tailwindcss/lib/util/color' {
   type Color = {
     mode: 'rgb' | 'hsl'
