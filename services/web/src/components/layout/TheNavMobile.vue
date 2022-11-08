@@ -47,7 +47,7 @@ const { activeTheme, themes } = useTheme()
         </li>
       </ul>
       <div
-        class="border-border-form-base mt-5 flex items-center justify-between border-t pt-5"
+        class="mt-5 flex items-center justify-between border-t border-border-form pt-5"
       >
         <label class="m-0" for="theme">Switch theme</label>
         <select
