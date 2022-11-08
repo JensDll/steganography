@@ -1,9 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: web.nginx
-  labels:
-    config: web
+  name: web-config
 data:
   mime.types: |
     types {
@@ -66,14 +64,7 @@ data:
 
       include /etc/nginx/conf.d/*.conf;
     }
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: web.conf.d
-  labels:
-    config: web
-data:
+
   server.conf: |
     server {
       listen 80 default_server;
@@ -107,12 +98,5 @@ data:
         return 200;
       }
     }
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: web.config.js
-  labels:
-    config: web
-data:
+
   config.js: const $config={API:{URI:'https://api.imagedatahiding.com',RATE_LIMIT:60}}

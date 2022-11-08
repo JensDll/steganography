@@ -1,9 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: appsettings.json
-  labels:
-    config: api
+  name: api-config
 data:
   appsettings.json: |
     {

@@ -37,10 +37,10 @@ spec:
             - name: nginx
               mountPath: /etc/nginx
               readOnly: true
-            - name: conf-d
+            - name: conf
               mountPath: /etc/nginx/conf.d
               readOnly: true
-            - name: config-js
+            - name: config
               mountPath: /data/www/config.js
               subPath: config.js
               readOnly: true
@@ -56,10 +56,21 @@ spec:
       volumes:
         - name: nginx
           configMap:
-            name: web.nginx
-        - name: conf-d
+            name: web-config
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+              - key: mime.types
+                path: mime.types
+        - name: conf
           configMap:
-            name: web.conf.d
-        - name: config-js
+            name: web-config
+            items:
+              - key: server.conf
+                path: server.conf
+        - name: config
           configMap:
-            name: web.config.js
+            name: web-config
+            items:
+              - key: config.js
+                path: config.js

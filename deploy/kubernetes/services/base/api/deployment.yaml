@@ -34,7 +34,7 @@ spec:
               drop:
                 - ALL
           volumeMounts:
-            - name: appsettings-json
+            - name: appsettings
               mountPath: /app/appsettings.json
               subPath: appsettings.json
               readOnly: true
@@ -48,6 +48,9 @@ spec:
           ports:
             - containerPort: 80
       volumes:
-        - name: appsettings-json
+        - name: appsettings
           configMap:
-            name: appsettings.json
+            name: api-config
+            items:
+              - key: appsettings.json
+                path: appsettings.json
