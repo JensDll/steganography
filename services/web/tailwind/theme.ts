@@ -1,7 +1,9 @@
-import type { Config } from 'tailwindcss'
-import defaultTheme from 'tailwindcss/defaultTheme'
+import typographyTheme from '@tailwindcss/typography/src/styles'
+import tailwindcssTheme from 'tailwindcss/defaultTheme'
 
-export const theme: Config['theme'] = {
+removeUnusedTypographyStyles(typographyTheme)
+
+export const theme = {
   screens: {
     sm: '640px',
     md: '768px',
@@ -9,6 +11,7 @@ export const theme: Config['theme'] = {
     xl: '1280px',
     '2xl': '1536px'
   },
+  typography: typographyTheme,
   extend: {
     maxWidth: {
       container: 'var(--max-w-container)'
@@ -17,21 +20,22 @@ export const theme: Config['theme'] = {
       container: 'var(--spacing-container)'
     },
     fontFamily: {
-      sans: ['Inter', ...defaultTheme.fontFamily.sans]
-    },
-    typography: {
-      DEFAULT: {
-        css: {
-          'code::before': {
-            content: '""'
-          },
-          'code::after': {
-            content: '""'
-          }
-        }
-      }
+      sans: ['Inter var', ...tailwindcssTheme.fontFamily.sans]
+    }
+  }
+} as const
+
+export type TailwindTheme = typeof theme
+
+function removeUnusedTypographyStyles(theme: any) {
+  for (const [key, value] of Object.entries(theme)) {
+    if (/pre|code/.test(key)) {
+      delete theme[key]
+      continue
+    }
+
+    if (value !== null && (typeof value === 'object' || Array.isArray(value))) {
+      removeUnusedTypographyStyles(value)
     }
   }
 }
-
-export type TailwindTheme = typeof theme
