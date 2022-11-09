@@ -35,7 +35,8 @@ public static class WebApplicationExtensions
         return app.MapDelete(pattern, RequestHandler<TEndpoint>);
     }
 
-    private static Task RequestHandler<TEndpoint>(HttpContext context, CancellationToken cancellationToken)
+    private static Task<IResult> RequestHandler<TEndpoint>(HttpContext context,
+        CancellationToken cancellationToken)
         where TEndpoint : EndpointBase
     {
         TEndpoint endpoint = (TEndpoint) context.RequestServices.GetService(typeof(TEndpoint))!;
