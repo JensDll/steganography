@@ -93,7 +93,7 @@ public class Request : IBindRequest, IDisposable
 
             if (messageLength > CoverImageCapacity)
             {
-                _validationErrors.Add("The message is too large for the cover image");
+                _validationErrors.Add("The message is too long for the cover image");
                 PipeReader.CancelPendingRead();
                 _pipeWriter.CancelPendingFlush();
                 await _pipeWriter.FlushAsync(cancellationToken);

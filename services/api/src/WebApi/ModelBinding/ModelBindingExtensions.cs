@@ -15,7 +15,7 @@ public static class ModelBindingExtensions
         }
 
         MediaTypeHeaderValue contentType = MediaTypeHeaderValue.Parse(context.Request.ContentType);
-        string boundary = HeaderUtilities.RemoveQuotes(contentType.Boundary).Value;
+        string? boundary = HeaderUtilities.RemoveQuotes(contentType.Boundary).Value;
 
         if (string.IsNullOrWhiteSpace(boundary))
         {

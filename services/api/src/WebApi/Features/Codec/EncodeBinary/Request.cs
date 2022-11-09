@@ -73,22 +73,22 @@ public class Request : IBindRequest, IDisposable
         {
             MyFormFile file = files[i];
 
-            int fileNameSize = Encoding.UTF8.GetByteCount(file.FileName);
+            int filenameSize = Encoding.UTF8.GetByteCount(file.FileName);
 
-            if (fileNameSize > 256)
+            if (filenameSize > 256)
             {
-                _validationErrors.Add("The file name cannot be longer than 256 bytes");
+                _validationErrors.Add("The filename cannot be longer than 256 bytes");
                 PipeReader.CancelPendingRead();
                 await _pipeWriter.CompleteAsync();
                 return null;
             }
 
-            int sizeHint = 6 + fileNameSize;
+            int sizeHint = 6 + filenameSize;
             messageLength += sizeHint + file.Length;
 
             if (messageLength > CoverImageCapacity)
             {
-                _validationErrors.Add("The message is too large for the cover image");
+                _validationErrors.Add("The message is too long for the cover image");
                 PipeReader.CancelPendingRead();
                 await _pipeWriter.CompleteAsync();
                 return null;

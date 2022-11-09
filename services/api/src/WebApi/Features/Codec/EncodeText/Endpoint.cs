@@ -9,7 +9,7 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApi.Features.Codec.EncodeText;
 
-public class EncodeText : EndpointWithoutResponse<Request>
+public class EncodeText : Endpoint<Request>
 {
     private readonly IKeyService _keyService;
     private readonly ILogger _logger;
@@ -20,7 +20,7 @@ public class EncodeText : EndpointWithoutResponse<Request>
         _logger = logger;
     }
 
-    protected override async Task HandleAsync(Request request, CancellationToken cancellationToken)
+    protected override async Task<IResult> HandleAsync(Request request, CancellationToken cancellationToken)
     {
         _logger.Information("Encoding text message with cover image (width: {Width}, height: {Height})",
             request.CoverImage.Width, request.CoverImage.Height);
@@ -41,14 +41,12 @@ public class EncodeText : EndpointWithoutResponse<Request>
         catch (InvalidOperationException e)
         {
             ValidationErrors.Add(e.Message);
-            await SendValidationErrorAsync("Encoding failed");
-            return;
+            return ErrorResult("Encoding failed");
         }
 
         if (!messageLength.HasValue)
         {
-            await SendValidationErrorAsync("Encoding failed");
-            return;
+            return ErrorResult("Encoding failed");
         }
 
         string base64Key = _keyService.ToBase64String(MessageType.Text, seed, messageLength.Value, aes.Key, aes.IV);
@@ -68,5 +66,7 @@ public class EncodeText : EndpointWithoutResponse<Request>
         await using Stream keyStream = keyEntry.Open();
         await using StreamWriter keyStreamWriter = new(keyStream);
         await keyStreamWriter.WriteAsync(base64Key);
+
+        return Results.Empty;
     }
 }

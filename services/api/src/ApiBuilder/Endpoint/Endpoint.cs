@@ -4,11 +4,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace ApiBuilder;
 
-public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
+public abstract partial class Endpoint<TRequest> : EndpointBase
     where TRequest : notnull, new()
-    where TResponse : notnull, new()
 {
-    internal sealed override async Task ExecuteAsync(HttpContext context, CancellationToken cancellationToken)
+    internal sealed override async Task<IResult> ExecuteAsync(HttpContext context, CancellationToken cancellationToken)
     {
         HttpContext = context;
         ValidationErrors = new List<string>();
@@ -38,22 +37,23 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
 
             if (ValidationErrors.Count > 0)
             {
-                await SendValidationErrorAsync("Model binding failed");
-                return;
+                return ErrorResult("Model binding failed");
             }
 
             bool isValid = await ValidateAsync(request, cancellationToken);
 
             if (isValid)
             {
-                await HandleAsync(request, cancellationToken);
+                return await HandleAsync(request, cancellationToken);
             }
+
+            return ErrorResult("Validation failed");
         }
         catch (OperationCanceledException)
         {
             if (!HttpContext.Response.HasStarted)
             {
-                await SendValidationErrorAsync("Request was cancelled");
+                return ErrorResult("Request was cancelled");
             }
         }
         finally
@@ -63,9 +63,11 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
                 RequestTypeCache<TRequest>.Dispose(request);
             }
         }
+
+        return ErrorResult("An error occurred");
     }
 
-    protected abstract Task HandleAsync(TRequest request, CancellationToken cancellationToken);
+    protected abstract Task<IResult> HandleAsync(TRequest request, CancellationToken cancellationToken);
 
     private async Task<bool> ValidateAsync(TRequest request, CancellationToken cancellationToken)
     {
@@ -89,28 +91,6 @@ public abstract partial class Endpoint<TRequest, TResponse> : EndpointBase
             ValidationErrors.Add(error.ErrorMessage);
         }
 
-        await SendValidationErrorAsync("Validation failed");
-
         return false;
     }
-}
-
-public abstract class EndpointWithoutRequest<TResponse> : Endpoint<EmptyRequest, TResponse>
-    where TResponse : notnull, new()
-{
-    protected sealed override Task HandleAsync(EmptyRequest emptyRequest, CancellationToken cancellationToken)
-    {
-        return HandleAsync(cancellationToken);
-    }
-
-    protected abstract Task HandleAsync(CancellationToken cancellationToken);
-}
-
-public abstract class EndpointWithoutResponse<TRequest> : Endpoint<TRequest, EmptyResponse>
-    where TRequest : notnull, new()
-{
-}
-
-public abstract class EndpointWithoutAny : EndpointWithoutRequest<EmptyResponse>
-{
 }
