@@ -7,7 +7,7 @@ COPY src/ApiBuilder/ApiBuilder.csproj ./ApiBuilder/
 COPY src/Domain/Domain.csproj ./Domain/
 COPY src/WebApi/WebApi.csproj ./WebApi/
 
-RUN dotnet restore ./WebApi/WebApi.csproj --runtime linux-musl-x64
+RUN dotnet restore ./WebApi/WebApi.csproj
 
 # Copy everything else and build
 COPY src/ApiBuilder ./ApiBuilder/
@@ -16,7 +16,7 @@ COPY src/WebApi ./WebApi/
 
 WORKDIR /build/WebApi
 
-RUN dotnet publish --configuration Release --output /app --runtime linux-musl-x64 --self-contained false --no-restore
+RUN dotnet publish --configuration Release --output /app --no-restore
 
 # Final image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0.0-alpine3.16
