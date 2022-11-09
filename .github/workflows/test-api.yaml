@@ -16,6 +16,8 @@ jobs:
 
       - name: Setting up dotnet
         uses: actions/setup-dotnet@v3.0.3
+        with:
+          dotnet-version: 7.0.x
 
       - name: Installing dependencies
         run: dotnet restore
