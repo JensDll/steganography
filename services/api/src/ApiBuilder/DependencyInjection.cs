@@ -24,7 +24,6 @@ public static class DependencyInjection
                 return type == typeof(EndpointBase);
             });
 
-
         foreach (Type endpoint in endpoints)
         {
             services.AddScoped(endpoint);
