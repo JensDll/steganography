@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0.100 as build
+FROM mcr.microsoft.com/dotnet/sdk:7.0.100-alpine3.16 as build
 
 WORKDIR /build
 
@@ -7,7 +7,7 @@ COPY src/ApiBuilder/ApiBuilder.csproj ./ApiBuilder/
 COPY src/Domain/Domain.csproj ./Domain/
 COPY src/WebApi/WebApi.csproj ./WebApi/
 
-RUN dotnet restore WebApi/WebApi.csproj
+RUN dotnet restore ./WebApi/WebApi.csproj --runtime linux-musl-x64
 
 # Copy everything else and build
 COPY src/ApiBuilder ./ApiBuilder/
@@ -16,12 +16,7 @@ COPY src/WebApi ./WebApi/
 
 WORKDIR /build/WebApi
 
-RUN dotnet build --configuration Release --no-restore
-
-FROM build AS publish
-
-# Publish in release configuration
-RUN dotnet publish --configuration Release --no-build --output /app
+RUN dotnet publish --configuration Release --output /app --runtime linux-musl-x64 --self-contained false --no-restore
 
 # Final image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0.0-alpine3.16
@@ -31,7 +26,7 @@ WORKDIR /app
 RUN apk -U upgrade && addgroup --system app_group && \
     adduser --system --no-create-home --disabled-password --gecos "App user" --ingroup app_group app_user
 
-COPY --from=publish --chown=app_user:app_group /app/ ./
+COPY --from=build --chown=app_user:app_group /app/ ./
 
 USER app_user:app_group
 

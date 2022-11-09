@@ -16,7 +16,6 @@ webBuilder.AddSerilogLogger();
 if (webBuilder.Environment.IsDevelopment())
 {
     webBuilder.Services.AddEndpointsApiExplorer();
-    webBuilder.Services.AddSwaggerGen();
 }
 
 webBuilder.Services.AddCors(options =>
@@ -43,16 +42,7 @@ webBuilder.WebHost.ConfigureKestrel(kestrelOptions =>
 
 WebApplication app = webBuilder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseCors(corsDevPolicy);
-}
-else
-{
-    app.UseCors(corsProdPolicy);
-}
+app.UseCors(app.Environment.IsDevelopment() ? corsDevPolicy : corsProdPolicy);
 
 Anonymous(
     app.MapPost<EncodeText>("/codec/encode/text"),
