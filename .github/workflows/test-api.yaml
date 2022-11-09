@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
-        uses: actions/checkout@v3.0.3
+        uses: actions/checkout@v3
 
       - name: Setting up dotnet
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v3.0.3
 
       - name: Installing dependencies
         run: dotnet restore
