@@ -55,7 +55,7 @@ Anonymous(
     app.MapPost<EncodeText>("/codec/encode/text"),
     app.MapPost<EncodeBinary>("/codec/encode/binary"),
     app.MapPost<Decode>("/codec/decode"),
-    app.MapGet("/health", () => Results.Ok()).WithOpenApi()
+    app.MapGet("/health", () => Results.Ok())
 );
 
 app.Run();
