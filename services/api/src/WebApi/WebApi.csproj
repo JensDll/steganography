@@ -11,4 +11,7 @@
         <ProjectReference Include="..\Domain\Domain.csproj" />
         <ProjectReference Include="..\ApiBuilder\ApiBuilder.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    </ItemGroup>
 </Project>

@@ -40,6 +40,7 @@ public static class WebApplicationExtensions
         where TEndpoint : EndpointBase
     {
         TEndpoint endpoint = (TEndpoint) context.RequestServices.GetService(typeof(TEndpoint))!;
+
         return endpoint.ExecuteAsync(context, cancellationToken);
     }
 

@@ -58,8 +58,6 @@ public class Decode : Endpoint<Request>
                 PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
                 await decoder.DecodeAsync(entryStreamWriter, fileLength, cancellationToken);
             }
-
-            return Results.Empty;
         }
         catch (InvalidOperationException e)
         {
@@ -67,5 +65,7 @@ public class Decode : Endpoint<Request>
             ValidationErrors.Add(e.Message);
             return ErrorResult("Decoding failed");
         }
+
+        return Results.Empty;
     }
 }

@@ -13,10 +13,8 @@ WebApplicationBuilder webBuilder = WebApplication.CreateBuilder(args);
 
 webBuilder.AddSerilogLogger();
 
-if (webBuilder.Environment.IsDevelopment())
-{
-    webBuilder.Services.AddEndpointsApiExplorer();
-}
+webBuilder.Services.AddEndpointsApiExplorer();
+webBuilder.Services.AddSwaggerGen();
 
 webBuilder.Services.AddCors(options =>
 {
@@ -42,13 +40,22 @@ webBuilder.WebHost.ConfigureKestrel(kestrelOptions =>
 
 WebApplication app = webBuilder.Build();
 
-app.UseCors(app.Environment.IsDevelopment() ? corsDevPolicy : corsProdPolicy);
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.UseCors(corsDevPolicy);
+}
+else
+{
+    app.UseCors(corsProdPolicy);
+}
 
 Anonymous(
     app.MapPost<EncodeText>("/codec/encode/text"),
     app.MapPost<EncodeBinary>("/codec/encode/binary"),
     app.MapPost<Decode>("/codec/decode"),
-    app.MapGet("/health", () => Results.Ok())
+    app.MapGet("/health", () => Results.Ok()).WithOpenApi()
 );
 
 app.Run();
