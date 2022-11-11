@@ -16,8 +16,8 @@ module.exports = {
   darkMode: 'class',
   theme,
   plugins: [
-    Forms(),
     Typography(),
+    Forms(),
     Icons(() => ({
       heroicons: {
         icons: {

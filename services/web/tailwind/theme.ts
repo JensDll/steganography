@@ -1,6 +1,6 @@
 import tailwindcssTheme from 'tailwindcss/defaultTheme'
 
-import { typographyTheme } from './defaults/typography'
+import { typography } from './defaults/typography'
 
 export const theme = {
   screens: {
@@ -10,7 +10,7 @@ export const theme = {
     xl: '1280px',
     '2xl': '1536px'
   },
-  typography: typographyTheme,
+  typography,
   extend: {
     maxWidth: {
       container: 'var(--max-w-container)'

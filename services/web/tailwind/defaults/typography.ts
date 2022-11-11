@@ -15,4 +15,7 @@ function removeUnusedTypographyStyles(theme: any) {
 
 removeUnusedTypographyStyles(defaultTypographyTheme)
 
-export const typographyTheme = defaultTypographyTheme as any
+// Remove default variables from typography theme
+defaultTypographyTheme.DEFAULT.css.splice(1, 1)
+
+export const typography = defaultTypographyTheme as any

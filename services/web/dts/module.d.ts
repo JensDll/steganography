@@ -4,8 +4,7 @@ declare module 'tailwindcss/lib/util/flattenColorPalette' {
 }
 
 declare module '@tailwindcss/typography/src/styles' {
-  import type { CSSRuleObject } from 'tailwindcss/types/config'
-  declare const styles: CSSRuleObject
+  declare const styles: any
   export default styles
 }
 
