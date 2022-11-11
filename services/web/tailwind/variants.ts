@@ -1,6 +1,6 @@
-const plugin = require('tailwindcss/plugin')
+import plugin from 'tailwindcss/plugin'
 
-module.exports.Variants = function () {
+export function Variants() {
   return plugin(({ addVariant }) => {
     addVariant(
       'supports-backdrop-blur',

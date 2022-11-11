@@ -1,12 +1,12 @@
 @layer base {
   html {
-    @apply prose prose-slate theme-encode max-w-none;
+    @apply prose theme-encode max-w-none;
     --max-w-container: theme('maxWidth.5xl');
     --spacing-container: theme('spacing.5');
   }
 
   html.dark {
-    @apply prose-invert theme-encode-dark;
+    @apply theme-encode-dark;
   }
 
   html.decode {

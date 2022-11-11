@@ -1,6 +1,6 @@
-const plugin = require('tailwindcss/plugin')
+import plugin from 'tailwindcss/plugin'
 
-module.exports.Utilities = function () {
+export function Common() {
   return plugin(
     ({ addUtilities, matchUtilities, theme, addBase }) => {
       addBase({

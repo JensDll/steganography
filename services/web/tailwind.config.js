@@ -4,11 +4,11 @@ const { register } = require('esbuild-register/dist/node')
 const { Icons, SCALE } = require('tailwindcss-plugin-icons')
 
 const { unregister } = register()
-const { theme } = require('./tailwind/theme.ts')
-unregister()
+const { Common } = require('./tailwind/common')
+const { theme } = require('./tailwind/theme')
 const { Themes } = require('./tailwind/themes')
-const { Utilities } = require('./tailwind/utilities')
 const { Variants } = require('./tailwind/variants')
+unregister()
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -65,7 +65,7 @@ module.exports = {
           'https://gist.githubusercontent.com/JensDll/4e59cf6005f585581975941a94bc1d88/raw/0e70bdac81224add27d8f0576ab15406709e5938/icons.json'
       }
     })),
-    Utilities(),
+    Common(),
     Variants(),
     Themes()
   ],

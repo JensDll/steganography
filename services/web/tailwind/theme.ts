@@ -1,7 +1,6 @@
-import typographyTheme from '@tailwindcss/typography/src/styles'
 import tailwindcssTheme from 'tailwindcss/defaultTheme'
 
-removeUnusedTypographyStyles(typographyTheme)
+import { typographyTheme } from './defaults/typography'
 
 export const theme = {
   screens: {
@@ -26,16 +25,3 @@ export const theme = {
 } as const
 
 export type TailwindTheme = typeof theme
-
-function removeUnusedTypographyStyles(theme: any) {
-  for (const [key, value] of Object.entries(theme)) {
-    if (/pre|code/.test(key)) {
-      delete theme[key]
-      continue
-    }
-
-    if (value !== null && (typeof value === 'object' || Array.isArray(value))) {
-      removeUnusedTypographyStyles(value)
-    }
-  }
-}
