@@ -1,9 +1,9 @@
-FROM node:16 as build
+FROM node:18.12 as build
 
 WORKDIR /out
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@7.16.0 --activate
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml .npmrc ./

@@ -15,7 +15,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["vite/client", "vitest"],
+    "types": ["vite/client"],
     "paths": {
       "tailwind-theme": ["./tailwind/theme"],
       "~/*": ["src/*"]
