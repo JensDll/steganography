@@ -25,7 +25,7 @@ switch ($Action) {
     }
 
     helm upgrade traefik traefik/traefik --install --namespace=$namespace `
-      --version="19.0.3" `
+      --version="20.2.0" `
       --values="$PSScriptRoot/values.yaml" $HelmArgs
   }
   delete {
