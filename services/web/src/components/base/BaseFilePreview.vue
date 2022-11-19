@@ -93,12 +93,10 @@ function handleLoad() {
         @load="handleLoad"
       />
       <div
-        :class="[
-          {
-            'group-hover:bg-heroicons-trash-black dark:group-hover:bg-heroicons-trash-white':
-              loaded
-          }
-        ]"
+        :class="{
+          'group-hover:bg-heroicons-trash-black dark:group-hover:bg-heroicons-trash-white':
+            loaded
+        }"
       ></div>
     </div>
     <div
