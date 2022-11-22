@@ -26,7 +26,7 @@ export function useMediaQuery(
     if ('addEventListener' in mediaQuery) {
       mediaQuery.addEventListener('change', update)
     } else {
-      mediaQuery.addListener(update)
+      ;(mediaQuery as MediaQueryList).addListener(update)
     }
   })
 
