@@ -67,7 +67,7 @@ data:
 
   server.conf: |
     server {
-      listen 80 default_server;
+      listen 8080 default_server;
       root /data/www;
       charset utf-8;
       if_modified_since off;
