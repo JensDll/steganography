@@ -20,4 +20,4 @@ FROM jensdll/image-data-hiding:nginx-base.1.23.2-alpine
 
 COPY --from=build --chown=nginx:nginx /out/dist/ /data/www/
 
-EXPOSE 80
+EXPOSE 8080

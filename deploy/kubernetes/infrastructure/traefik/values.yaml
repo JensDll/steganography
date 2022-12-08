@@ -1,5 +1,3 @@
-ingressClass:
-  enabled: true
 ports:
   web:
     redirectTo: websecure

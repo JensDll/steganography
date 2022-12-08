@@ -31,7 +31,8 @@ COPY --from=build --chown=app_user:app_group /app/ ./
 USER app_user:app_group
 
 ENV ASPNETCORE_ENVIRONMENT="Deployment"
+ENV ASPNETCORE_URLS="http://+:8080"
 
-EXPOSE 80
+EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "WebApi.dll"]

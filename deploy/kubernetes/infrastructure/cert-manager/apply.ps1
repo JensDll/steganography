@@ -14,7 +14,7 @@ switch ($Action) {
   install {
     helm upgrade cert-manager jetstack/cert-manager --install --namespace=$namespace `
       --create-namespace `
-      --version="v1.10.0" `
+      --version="v1.10.1" `
       --values="$PSScriptRoot/values.yaml" $HelmArgs
   }
   delete {
