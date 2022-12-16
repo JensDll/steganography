@@ -16,15 +16,7 @@ internal static class RequestTypeCache<TRequest>
                 (Func<TRequest, HttpContext, List<string>, CancellationToken, ValueTask>) Delegate.CreateDelegate(
                     typeof(Func<TRequest, HttpContext, List<string>, CancellationToken, ValueTask>), bindAsync);
         }
-
-        MethodInfo? dispose = tRequest.GetMethod("Dispose");
-        if (dispose is not null)
-        {
-            Dispose = (Action<TRequest>) Delegate.CreateDelegate(typeof(Action<TRequest>), dispose);
-        }
     }
 
     internal static Func<TRequest, HttpContext, List<string>, CancellationToken, ValueTask>? BindAsync { get; }
-
-    internal static Action<TRequest>? Dispose { get; }
 }

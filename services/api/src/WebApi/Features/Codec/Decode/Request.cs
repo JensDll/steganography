@@ -6,7 +6,7 @@ using WebApi.ModelBinding;
 
 namespace WebApi.Features.Codec.Decode;
 
-public class Request : IBindRequest, IDisposable
+public class Request : IBindRequest
 {
     public Image<Rgb24> CoverImage { get; private set; } = null!;
 
@@ -40,6 +40,8 @@ public class Request : IBindRequest, IDisposable
             return;
         }
 
+        context.Response.RegisterForDispose(coverImage);
+
         CoverImage = coverImage;
         CoverImageCapacity = CoverImage.Width * CoverImage.Height * 3;
 
@@ -59,12 +61,5 @@ public class Request : IBindRequest, IDisposable
         }
 
         Key = await formSection.GetValueAsync();
-    }
-
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-        // ReSharper disable once ConstantConditionalAccessQualifier
-        CoverImage?.Dispose();
     }
 }

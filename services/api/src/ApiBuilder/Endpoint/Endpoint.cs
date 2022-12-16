@@ -56,13 +56,6 @@ public abstract partial class Endpoint<TRequest> : EndpointBase
                 return ErrorResult("Request was cancelled");
             }
         }
-        finally
-        {
-            if (RequestTypeCache<TRequest>.Dispose is not null && request is not null)
-            {
-                RequestTypeCache<TRequest>.Dispose(request);
-            }
-        }
 
         return ErrorResult("An error occurred");
     }

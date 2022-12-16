@@ -7,7 +7,7 @@ using WebApi.ModelBinding;
 
 namespace WebApi.Features.Codec.EncodeText;
 
-public class Request : IBindRequest, IDisposable
+public class Request : IBindRequest
 {
     private MyMultiPartReader _multiPartReader = null!;
     private PipeWriter _pipeWriter = null!;
@@ -46,6 +46,8 @@ public class Request : IBindRequest, IDisposable
         {
             return;
         }
+
+        context.Response.RegisterForDispose(coverImage);
 
         CoverImage = coverImage;
         CoverImageCapacity = coverImage.Width * coverImage.Height * 3;
@@ -115,12 +117,5 @@ public class Request : IBindRequest, IDisposable
         await _pipeWriter.CompleteAsync();
 
         return messageLength;
-    }
-
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-        // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-        CoverImage?.Dispose();
     }
 }
