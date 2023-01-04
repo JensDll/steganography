@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
+﻿using System.IO.Compression;
 using System.Net;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using Domain.Enums;
 using Domain.Services;
+using NUnit.Framework;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace WebApi.IntegrationTests.Features.Codec;
 
-public class EncodeBinary : TestingBase
+public class EncodeBinary
 {
     [TestCase(true)]
     [TestCase(false)]
@@ -38,7 +33,7 @@ public class EncodeBinary : TestingBase
 
         // Act
         HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/codec/encode/binary", encodeFormData);
+            await TestSetup.Client.PostAsync("/codec/encode/binary", encodeFormData);
 
         // Assert
         Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -63,7 +58,7 @@ public class EncodeBinary : TestingBase
 
         if (!isSameKey)
         {
-            key = AlterBase64Key(key);
+            key = TestHelper.AlterBase64Key(key);
         }
 
         KeyService keyService = new();
@@ -84,7 +79,7 @@ public class EncodeBinary : TestingBase
 
         // Act
         HttpResponseMessage decodeResponse =
-            await Client.PostAsync("/codec/decode", decodeFormData);
+            await TestSetup.Client.PostAsync("/codec/decode", decodeFormData);
 
         // Assert
         if (isSameKey)
@@ -131,7 +126,7 @@ public class EncodeBinary : TestingBase
 
         // Act
         HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/codec/encode/binary", formData);
+            await TestSetup.Client.PostAsync("/codec/encode/binary", formData);
 
         // Assert
         Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -153,7 +148,7 @@ public class EncodeBinary : TestingBase
 
         // Act
         HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/codec/encode/binary", formData);
+            await TestSetup.Client.PostAsync("/codec/encode/binary", formData);
 
         // Assert
         Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));

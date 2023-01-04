@@ -1,17 +1,15 @@
-﻿using System.IO;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Net;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using Domain.Enums;
 using Domain.Services;
+using NUnit.Framework;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace WebApi.IntegrationTests.Features.Codec;
 
-public class EncodeText : TestingBase
+public class EncodeText
 {
     [TestCase(true)]
     [TestCase(false)]
@@ -30,7 +28,7 @@ public class EncodeText : TestingBase
 
         // Act
         HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/codec/encode/text", encodeFormData);
+            await TestSetup.Client.PostAsync("/codec/encode/text", encodeFormData);
 
         // Assert
         Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -55,7 +53,7 @@ public class EncodeText : TestingBase
 
         if (!isSameKey)
         {
-            key = AlterBase64Key(key);
+            key = TestHelper.AlterBase64Key(key);
         }
 
         KeyService keyService = new();
@@ -76,7 +74,7 @@ public class EncodeText : TestingBase
 
         // Act
         HttpResponseMessage decodeResponse =
-            await Client.PostAsync("/codec/decode", decodeFormData);
+            await TestSetup.Client.PostAsync("/codec/decode", decodeFormData);
 
         // Assert
         Assert.That(decodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -101,7 +99,7 @@ public class EncodeText : TestingBase
 
         // Act
         HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/codec/encode/text", formData);
+            await TestSetup.Client.PostAsync("/codec/encode/text", formData);
 
         // Assert
         Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -122,7 +120,7 @@ public class EncodeText : TestingBase
 
         // Act
         HttpResponseMessage encodeResponse =
-            await Client.PostAsync("/codec/encode/text", formData);
+            await TestSetup.Client.PostAsync("/codec/encode/text", formData);
 
         // Assert
         Assert.That(encodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));

@@ -9,9 +9,9 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Domain\Domain.csproj" />
-        <ProjectReference Include="..\ApiBuilder\ApiBuilder.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+        <PackageReference Include="MinimalApiBuilder" Version="0.1.0-beta.6" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 </Project>

@@ -6,11 +6,9 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Domain.Entities;
 
-public class Encoder : CodecBase
+public class Encoder : ImageCodec
 {
-    public Encoder(Image<Rgb24> coverImage, int seed) : base(coverImage, seed)
-    {
-    }
+    public Encoder(Image<Rgb24> coverImage, int seed) : base(coverImage, seed) { }
 
     public async Task EncodeAsync(PipeReader pipeReader, CancellationToken cancellationToken)
     {
@@ -54,12 +52,12 @@ public class Encoder : CodecBase
                 {
                     fixed (Rgb24* pixel = &row[x])
                     {
-                        byte* pixelValues = (byte*) pixel;
+                        byte* pixelValues = (byte*)pixel;
 
                         while (PixelIdx < 3)
                         {
-                            pixelValues[PixelIdx] = (byte) ((pixelValues[PixelIdx++] & PixelValueMask) |
-                                                            (((currentByte >> ByteShift++) & 1) << BitPosition));
+                            pixelValues[PixelIdx] = (byte)((pixelValues[PixelIdx++] & PixelValueMask) |
+                                                           (((currentByte >> ByteShift++) & 1) << BitPosition));
 
                             if (ByteShift != 8)
                             {

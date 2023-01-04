@@ -1,55 +1,72 @@
 ﻿using System.IO.Compression;
 using System.IO.Pipelines;
-using ApiBuilder;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
+using MinimalApiBuilder;
 using ILogger = Serilog.ILogger;
 
 namespace WebApi.Features.Codec.Decode;
 
-public class Decode : Endpoint<Request>
+public partial class DecodeEndpoint : MinimalApiBuilderEndpoint
 {
     private readonly IKeyService _keyService;
     private readonly ILogger _logger;
 
-    public Decode(IKeyService keyService, ILogger logger)
+    public DecodeEndpoint(IKeyService keyService, ILogger logger)
     {
         _keyService = keyService;
         _logger = logger;
     }
 
-    protected override async Task<IResult> HandleAsync(Request request, CancellationToken cancellationToken)
+    public static void Configure(RouteHandlerBuilder builder) { }
+
+    private static async Task<IResult> HandleAsync(
+        DecodeRequest request,
+        DecodeEndpoint endpoint,
+        HttpContext httpContext,
+        CancellationToken cancellationToken)
     {
-        bool isValidKey = _keyService.TryParse(request.Key, out MessageType messageType, out int seed,
+        bool isValidKey = endpoint._keyService.TryParse(request.Key, out MessageType messageType, out int seed,
             out int messageLength, out byte[] key, out byte[] iV);
 
-        _logger.Information("Decoding {MessageType} message with valid key {IsValidKey}",
+        endpoint._logger.Information("Decoding {MessageType} message with valid key {IsValidKey}",
             messageType, isValidKey);
 
         if (!isValidKey || messageLength < 1 || messageLength > request.CoverImageCapacity)
         {
-            return ErrorResult("Decoding failed");
+            return endpoint.ErrorResult("Decoding failed");
         }
 
-        using AesCounterMode aes = new(key, iV);
-        using Decoder decoder = new(request.CoverImage, seed, messageLength, aes);
+        AesCounterMode aes = new(key, iV);
+        httpContext.Response.RegisterForDispose(aes);
 
-        try
+        Decoder decoder = new(request.CoverImage, seed, messageLength, aes);
+        httpContext.Response.RegisterForDispose(decoder);
+
+        if (messageType == MessageType.Text)
         {
-            if (messageType == MessageType.Text)
-            {
-                HttpContext.Response.ContentType = "text/plain";
-                await decoder.DecodeAsync(HttpContext.Response.BodyWriter, cancellationToken);
-                return Results.Empty;
-            }
+            httpContext.Response.ContentType = "text/plain";
+            await decoder.DecodeAsync(httpContext.Response.BodyWriter, cancellationToken);
+            return Results.Empty;
+        }
 
-            HttpContext.Response.ContentType = "application/zip";
-            HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=result.zip");
+        if (!decoder.TryDecodeFileInformation(out List<(string fileName, int fileLength)> fileInformation))
+        {
+            return endpoint.ErrorResult("Decoding failed");
+        }
 
-            IEnumerable<(string fileName, int fileLength)> fileInformation = decoder.DecodeFileInformation();
+        return Results.Extensions.BodyWriterStream(SendAsZipAsync(decoder, fileInformation, cancellationToken),
+            "application/zip", "result.zip");
+    }
 
-            using ZipArchive archive = new(HttpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+    private static Func<Stream, Task> SendAsZipAsync(
+        Decoder decoder,
+        IEnumerable<(string fileName, int fileLength)> fileInformation,
+        CancellationToken cancellationToken) =>
+        async stream =>
+        {
+            using ZipArchive archive = new(stream, ZipArchiveMode.Create);
 
             foreach ((string fileName, int fileLength) in fileInformation)
             {
@@ -58,14 +75,5 @@ public class Decode : Endpoint<Request>
                 PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
                 await decoder.DecodeAsync(entryStreamWriter, fileLength, cancellationToken);
             }
-        }
-        catch (InvalidOperationException e)
-        {
-            _logger.Information("Decoding failed: {Message}", e.Message);
-            ValidationErrors.Add(e.Message);
-            return ErrorResult("Decoding failed");
-        }
-
-        return Results.Empty;
-    }
+        };
 }

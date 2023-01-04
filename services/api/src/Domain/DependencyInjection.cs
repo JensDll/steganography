@@ -6,8 +6,8 @@ namespace Domain;
 
 public static class DependencyInjection
 {
-    public static void AddDomain(this IServiceCollection services)
+    public static IServiceCollection AddDomain(this IServiceCollection services)
     {
-        services.AddSingleton<IKeyService, KeyService>();
+        return services.AddSingleton<IKeyService, KeyService>();
     }
 }
