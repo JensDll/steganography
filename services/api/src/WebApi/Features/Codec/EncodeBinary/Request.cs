@@ -114,9 +114,9 @@ public class EncodeBinaryRequest
 
             Memory<byte> buffer = PipeWriter.GetMemory(sizeHint);
             // Write the file length (4-byte)
-            BitConverter.TryWriteBytes(buffer.Span, file.Length);
+            BitConverter.TryWriteBytes(buffer.Span, (int)file.Length);
             // Write the file name size (2-byte)
-            BitConverter.TryWriteBytes(buffer.Span[4..], (short)sizeHint - 6);
+            BitConverter.TryWriteBytes(buffer.Span[4..], (short)(sizeHint - 6));
             // Write the file name (max 256-byte)
             Encoding.UTF8.GetBytes(file.FileName, buffer.Span[6..]);
 
