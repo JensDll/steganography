@@ -1,80 +1,85 @@
 ﻿using System.IO.Pipelines;
-using ApiBuilder;
 using Domain.Entities;
+using Microsoft.AspNetCore.WebUtilities;
+using MinimalApiBuilder;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using WebApi.ModelBinding;
+using WebApi.Extensions;
+using MultipartReader = MinimalApiBuilder.MultipartReader;
 
 namespace WebApi.Features.Codec.EncodeText;
 
-public class Request : IBindRequest
+public class EncodeTextRequest
 {
-    private MyMultiPartReader _multiPartReader = null!;
-    private PipeWriter _pipeWriter = null!;
-    private List<string> _validationErrors = null!;
+    private PipeWriter PipeWriter { get; init; } = null!;
+    private MultipartReader MultipartReader { get; init; } = null!;
 
-    public Image<Rgb24> CoverImage { get; private set; } = null!;
+    public required Image<Rgb24> CoverImage { get; init; }
+    public required int CoverImageCapacity { get; init; }
+    public required PipeReader PipeReader { get; init; }
 
-    public int CoverImageCapacity { get; private set; }
-
-    public PipeReader PipeReader { get; private set; } = null!;
-
-    public async ValueTask BindAsync(HttpContext context, List<string> validationErrors,
-        CancellationToken cancellationToken)
+    public static async ValueTask<EncodeTextRequest?> BindAsync(HttpContext context)
     {
-        _validationErrors = validationErrors;
-        _multiPartReader = new MyMultiPartReader(context, validationErrors);
+        MultipartReader multipartReader;
 
-        NextSection? nextSection = await _multiPartReader.ReadNextSectionAsync(cancellationToken);
-
-        if (nextSection is null)
+        try
         {
-            validationErrors.Add("The request does not contain a cover image");
-            return;
+            multipartReader = new MultipartReader(context);
+        }
+        catch
+        {
+            return null;
         }
 
-        MyFileMultipartSection? fileSection = nextSection.AsFileSection("coverImage");
+        NextSection? nextSection = await multipartReader.ReadNextSectionAsync();
+        FileMultipartSection? fileSection = nextSection?.AsFileSection("coverImage");
 
         if (fileSection is null)
         {
-            return;
+            return null;
         }
 
-        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync(cancellationToken);
+        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync();
 
         if (coverImage is null)
         {
-            return;
+            return null;
         }
 
         context.Response.RegisterForDispose(coverImage);
 
-        CoverImage = coverImage;
-        CoverImageCapacity = coverImage.Width * coverImage.Height * 3;
-
         Pipe pipe = new();
-        PipeReader = pipe.Reader;
-        _pipeWriter = pipe.Writer;
+
+        return new EncodeTextRequest
+        {
+            CoverImage = coverImage,
+            CoverImageCapacity = coverImage.Width * coverImage.Height * 3,
+            PipeReader = pipe.Reader,
+            MultipartReader = multipartReader,
+            PipeWriter = pipe.Writer
+        };
     }
 
-    public async Task<int?> FillPipeAsync(AesCounterMode aes, CancellationToken cancellationToken)
+    public async Task<int?> FillPipeAsync(AesCounterMode aes,
+        Action<string> addValidationError,
+        CancellationToken cancellationToken)
     {
-        NextSection? nextSection = await _multiPartReader.ReadNextSectionAsync(cancellationToken);
+        NextSection? nextSection = await MultipartReader.ReadNextSectionAsync(cancellationToken);
 
         if (nextSection is null)
         {
-            _validationErrors.Add("The request does not contain a message");
+            addValidationError("The request does not contain a message");
             PipeReader.CancelPendingRead();
-            await _pipeWriter.CompleteAsync();
+            await PipeWriter.CompleteAsync();
             return null;
         }
 
-        MyFormMultipartSection? formSection = nextSection.AsFormSection("message");
+        FormMultipartSection? formSection = nextSection.AsFormSection("message");
 
         if (formSection is null)
         {
             PipeReader.CancelPendingRead();
-            await _pipeWriter.CompleteAsync();
+            await PipeWriter.CompleteAsync();
             return null;
         }
 
@@ -82,9 +87,9 @@ public class Request : IBindRequest
 
         while (true)
         {
-            Memory<byte> buffer = _pipeWriter.GetMemory();
+            Memory<byte> buffer = PipeWriter.GetMemory();
 
-            int bytesRead = await formSection.Body.ReadAsync(buffer, cancellationToken);
+            int bytesRead = await formSection.Section.Body.ReadAsync(buffer, cancellationToken);
 
             if (bytesRead == 0)
             {
@@ -95,18 +100,18 @@ public class Request : IBindRequest
 
             if (messageLength > CoverImageCapacity)
             {
-                _validationErrors.Add("The message is too long for the cover image");
+                addValidationError("The message is too long for the cover image");
                 PipeReader.CancelPendingRead();
-                _pipeWriter.CancelPendingFlush();
-                await _pipeWriter.FlushAsync(cancellationToken);
-                await _pipeWriter.CompleteAsync();
+                PipeWriter.CancelPendingFlush();
+                await PipeWriter.FlushAsync(cancellationToken);
+                await PipeWriter.CompleteAsync();
                 return null;
             }
 
             aes.Transform(buffer.Span[..bytesRead], buffer.Span);
-            _pipeWriter.Advance(bytesRead);
+            PipeWriter.Advance(bytesRead);
 
-            FlushResult result = await _pipeWriter.FlushAsync(cancellationToken);
+            FlushResult result = await PipeWriter.FlushAsync(cancellationToken);
 
             if (result.IsCompleted)
             {
@@ -114,7 +119,7 @@ public class Request : IBindRequest
             }
         }
 
-        await _pipeWriter.CompleteAsync();
+        await PipeWriter.CompleteAsync();
 
         return messageLength;
     }

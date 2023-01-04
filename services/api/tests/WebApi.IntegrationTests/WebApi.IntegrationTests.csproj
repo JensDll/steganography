@@ -3,6 +3,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -16,10 +17,5 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\src\WebApi\WebApi.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <Reference Include="JetBrains.ReSharper.TestRunner.Abstractions, Version=2.6.2.0, Culture=neutral, PublicKeyToken=5c492ec4f3eccde3">
-            <HintPath>..\..\..\..\..\..\..\AppData\Local\JetBrains\Toolbox\apps\Rider\ch-0\213.6775.4\lib\ReSharperHost\TestRunner\netcoreapp3.0\JetBrains.ReSharper.TestRunner.Abstractions.dll</HintPath>
-        </Reference>
     </ItemGroup>
 </Project>

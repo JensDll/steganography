@@ -5,7 +5,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Domain.Entities;
 
-public abstract class CodecBase : IDisposable
+public abstract class ImageCodec : IDisposable
 {
     private readonly Random _prng;
     private readonly int[] _startPermutation;
@@ -26,12 +26,12 @@ public abstract class CodecBase : IDisposable
     protected readonly int StartPermutationCount;
     protected int StartPermutationIdx = 1;
 
-    protected CodecBase(Image<Rgb24> coverImage, int seed)
+    protected ImageCodec(Image<Rgb24> coverImage, int seed)
     {
         int coverImageSize = coverImage.Width * coverImage.Height;
         _prng = new Random(seed);
         _permutationEnd = coverImageSize - 1;
-        _permutationStep = (int) (coverImage.Width * 0.7);
+        _permutationStep = (int)(coverImage.Width * 0.7);
 
         (_startPermutation, StartPermutationCount) = _prng.RentPermutation(0, _permutationStep - 1);
         (Permutation, PermutationCount) =
@@ -58,7 +58,7 @@ public abstract class CodecBase : IDisposable
                 throw new InvalidOperationException("The message is too long for the cover image");
             }
 
-            PixelValueMask = (byte) ~(~PixelValueMask << 1);
+            PixelValueMask = (byte)~(~PixelValueMask << 1);
         }
 
         PermutationIdx = 0;

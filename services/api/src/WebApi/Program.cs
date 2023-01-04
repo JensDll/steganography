@@ -1,61 +1,53 @@
-using ApiBuilder;
 using Domain;
+using MinimalApiBuilder;
 using WebApi.Extensions;
 using WebApi.Features.Codec.Decode;
 using WebApi.Features.Codec.EncodeBinary;
 using WebApi.Features.Codec.EncodeText;
-using static ApiBuilder.EndpointAuthenticationDeclaration;
 
-const string corsDevPolicy = "cors:dev";
-const string corsProdPolicy = "cors:prod";
+const string corsDevelopment = "cors:dev";
+const string corsProduction = "cors:prod";
 
-WebApplicationBuilder webBuilder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-webBuilder.AddSerilogLogger();
+builder.AddSerilogLogger();
 
-webBuilder.Services.AddEndpointsApiExplorer();
-webBuilder.Services.AddSwaggerGen();
-
-webBuilder.Services.AddCors(options =>
-{
-    options.AddPolicy(corsDevPolicy, corsBuilder =>
+builder.Services
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen()
+    .AddMinimalApiBuilderEndpoints()
+    .AddDomain()
+    .AddCors(options =>
     {
-        corsBuilder.AllowAnyOrigin();
+        options.AddPolicy(corsDevelopment, corsBuilder => { corsBuilder.AllowAnyOrigin(); });
+        options.AddPolicy(corsProduction,
+            corsBuilder => { corsBuilder.WithOrigins(builder.Configuration.AllowedOrigins()); });
     });
 
-    options.AddPolicy(corsProdPolicy, corsBuilder =>
-    {
-        corsBuilder.WithOrigins(webBuilder.Configuration.AllowedOrigins());
-    });
-});
-
-webBuilder.Services.AddDomain();
-
-webBuilder.Services.AddEndpoints<Program>();
-
-webBuilder.WebHost.ConfigureKestrel(kestrelOptions =>
+builder.WebHost.ConfigureKestrel(options =>
 {
-    kestrelOptions.Limits.MaxRequestBodySize = 60 * 1024 * 1024; // 60 MB
+    options.Limits.MaxRequestBodySize = 60 * 1024 * 1024; // 60 MB
 });
 
-WebApplication app = webBuilder.Build();
+WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseCors(corsDevPolicy);
+    app.UseCors(corsDevelopment);
 }
 else
 {
-    app.UseCors(corsProdPolicy);
+    app.UseCors(corsProduction);
 }
 
-Anonymous(
-    app.MapPost<EncodeText>("/codec/encode/text"),
-    app.MapPost<EncodeBinary>("/codec/encode/binary"),
-    app.MapPost<Decode>("/codec/decode"),
-    app.MapGet("/health", () => Results.Ok())
-);
+RouteGroupBuilder codec = app.MapGroup("/codec").WithTags("Codec");
+codec.MapPost<EncodeTextEndpoint>("/encode/text");
+codec.MapPost<EncodeBinaryEndpoint>("/encode/binary");
+codec.MapPost<DecodeEndpoint>("/decode");
+
+RouteGroupBuilder auxiliary = app.MapGroup("/").WithTags("Auxiliary");
+auxiliary.MapGet("/health", () => TypedResults.Ok());
 
 app.Run();

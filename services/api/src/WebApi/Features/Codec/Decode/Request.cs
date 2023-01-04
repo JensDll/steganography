@@ -1,65 +1,64 @@
-﻿using ApiBuilder;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using MinimalApiBuilder;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
-using WebApi.ModelBinding;
+using WebApi.Extensions;
+using MultipartReader = MinimalApiBuilder.MultipartReader;
 
 namespace WebApi.Features.Codec.Decode;
 
-public class Request : IBindRequest
+public class DecodeRequest
 {
-    public Image<Rgb24> CoverImage { get; private set; } = null!;
+    public required Image<Rgb24> CoverImage { get; init; }
+    public required int CoverImageCapacity { get; init; }
+    public required string Key { get; init; }
 
-    public int CoverImageCapacity { get; private set; }
-
-    public string Key { get; private set; } = null!;
-
-    public async ValueTask BindAsync(HttpContext context, List<string> validationErrors,
-        CancellationToken cancellationToken)
+    public static async ValueTask<DecodeRequest?> BindAsync(HttpContext context)
     {
-        MyMultiPartReader reader = new(context, validationErrors);
-        NextSection? nextSection = await reader.ReadNextSectionAsync(cancellationToken);
+        MultipartReader multipartReader;
 
-        if (nextSection is null)
+        try
         {
-            validationErrors.Add("The request does not contain a cover image");
-            return;
+            multipartReader = new MultipartReader(context);
+        }
+        catch
+        {
+            return null;
         }
 
-        MyFileMultipartSection? fileSection = nextSection.AsFileSection("coverImage");
+        NextSection? nextSection = await multipartReader.ReadNextSectionAsync();
+        FileMultipartSection? fileSection = nextSection?.AsFileSection("coverImage");
 
         if (fileSection is null)
         {
-            return;
+            return null;
         }
 
-        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync<PngFormat>(cancellationToken);
+        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync<PngFormat>();
 
         if (coverImage is null)
         {
-            return;
+            return null;
         }
 
         context.Response.RegisterForDispose(coverImage);
 
-        CoverImage = coverImage;
-        CoverImageCapacity = CoverImage.Width * CoverImage.Height * 3;
-
-        nextSection = await reader.ReadNextSectionAsync(cancellationToken);
-
-        if (nextSection is null)
-        {
-            validationErrors.Add("The request does not contain a key");
-            return;
-        }
-
-        MyFormMultipartSection? formSection = nextSection.AsFormSection("key");
+        nextSection = await multipartReader.ReadNextSectionAsync();
+        FormMultipartSection? formSection = nextSection?.AsFormSection("key");
 
         if (formSection is null)
         {
-            return;
+            return null;
         }
 
-        Key = await formSection.GetValueAsync();
+        string key = await formSection.GetValueAsync();
+
+        return new DecodeRequest()
+        {
+            CoverImage = coverImage,
+            CoverImageCapacity = coverImage.Width * coverImage.Height * 3,
+            Key = key
+        };
     }
 }

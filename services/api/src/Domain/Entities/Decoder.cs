@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Domain.Entities;
 
-public class Decoder : CodecBase
+public class Decoder : ImageCodec
 {
     private readonly int _messageLength;
     private readonly AesCounterMode _aes;
@@ -29,9 +29,9 @@ public class Decoder : CodecBase
         await WriteMessageAsync(writer, messageLength, cancellationToken);
     }
 
-    public IEnumerable<(string fileName, int fileLength)> DecodeFileInformation()
+    public bool TryDecodeFileInformation(out List<(string fileName, int fileLength)> fileInformation)
     {
-        List<(string fileName, int fileLength)> fileInformation = new();
+        fileInformation = new List<(string fileName, int fileLength)>();
         int messageLength = _messageLength;
 
         Span<byte> buffer = stackalloc byte[6];
@@ -45,14 +45,14 @@ public class Decoder : CodecBase
 
             if (fileLength < 0 || fileNameLength is <= 0 or > 256)
             {
-                throw new InvalidOperationException("File name or file length is invalid");
+                return false;
             }
 
             messageLength -= 6 + fileLength + fileNameLength;
 
             if (messageLength < 0)
             {
-                throw new InvalidOperationException("File name or file length is invalid");
+                return false;
             }
 
             Span<byte> fileNameBuffer = fileNameBytes[..fileNameLength];
@@ -67,7 +67,7 @@ public class Decoder : CodecBase
             }
         }
 
-        return fileInformation;
+        return true;
     }
 
     private void ReadNextBytes(Span<byte> buffer)
@@ -88,12 +88,12 @@ public class Decoder : CodecBase
                 {
                     fixed (Rgb24* pixel = &row[x])
                     {
-                        byte* pixelValues = (byte*) pixel;
+                        byte* pixelValues = (byte*)pixel;
 
                         while (PixelIdx < 3)
                         {
                             buffer[bytesRead] |=
-                                (byte) (((pixelValues[PixelIdx++] >> BitPosition) & 1) << ByteShift++);
+                                (byte)(((pixelValues[PixelIdx++] >> BitPosition) & 1) << ByteShift++);
 
                             if (ByteShift != 8)
                             {
@@ -147,12 +147,12 @@ public class Decoder : CodecBase
                         {
                             fixed (Rgb24* pixel = &row[x])
                             {
-                                byte* pixelValues = (byte*) pixel;
+                                byte* pixelValues = (byte*)pixel;
 
                                 while (PixelIdx < 3)
                                 {
                                     buffer[bytesRead] |=
-                                        (byte) (((pixelValues[PixelIdx++] >> BitPosition) & 1) << ByteShift++);
+                                        (byte)(((pixelValues[PixelIdx++] >> BitPosition) & 1) << ByteShift++);
 
                                     if (ByteShift != 8)
                                     {

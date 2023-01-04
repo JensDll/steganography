@@ -3,14 +3,12 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0.101-alpine3.16 as build
 WORKDIR /build
 
 # Copy csproj and restore as distinct layers
-COPY src/ApiBuilder/ApiBuilder.csproj ./ApiBuilder/
 COPY src/Domain/Domain.csproj ./Domain/
 COPY src/WebApi/WebApi.csproj ./WebApi/
 
 RUN dotnet restore ./WebApi/WebApi.csproj
 
 # Copy everything else and build
-COPY src/ApiBuilder ./ApiBuilder/
 COPY src/Domain ./Domain/
 COPY src/WebApi ./WebApi/
 
