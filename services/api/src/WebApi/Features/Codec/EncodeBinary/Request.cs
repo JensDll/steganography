@@ -21,13 +21,9 @@ public class EncodeBinaryRequest
 
     public static async ValueTask<EncodeBinaryRequest?> BindAsync(HttpContext context)
     {
-        MultipartReader multipartReader;
+        MultipartReader? multipartReader = MultipartReader.Create(context);
 
-        try
-        {
-            multipartReader = new MultipartReader(context);
-        }
-        catch
+        if (multipartReader is null)
         {
             return null;
         }

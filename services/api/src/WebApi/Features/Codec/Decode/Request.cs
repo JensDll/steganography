@@ -16,13 +16,9 @@ public class DecodeRequest
 
     public static async ValueTask<DecodeRequest?> BindAsync(HttpContext context)
     {
-        MultipartReader multipartReader;
+        MultipartReader? multipartReader = MultipartReader.Create(context);
 
-        try
-        {
-            multipartReader = new MultipartReader(context);
-        }
-        catch
+        if (multipartReader is null)
         {
             return null;
         }
