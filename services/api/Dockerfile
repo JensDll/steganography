@@ -17,7 +17,7 @@ WORKDIR /build/WebApi
 RUN dotnet publish --configuration Release --output /app --no-restore
 
 # Final image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0.1-alpine3.16
+FROM mcr.microsoft.com/dotnet/aspnet:7.0.2-alpine3.16
 
 WORKDIR /app
 
