@@ -56,24 +56,18 @@ public partial class DecodeEndpoint : MinimalApiBuilderEndpoint
             return endpoint.ErrorResult("Decoding failed");
         }
 
-        return Results.Extensions.BodyWriterStream(SendAsZipAsync(decoder, fileInformation, cancellationToken),
+        return Results.Extensions.BodyWriterStream(async stream =>
+            {
+                using ZipArchive archive = new(stream, ZipArchiveMode.Create);
+
+                foreach ((string fileName, int fileLength) in fileInformation)
+                {
+                    ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+                    await using Stream entryStream = entry.Open();
+                    PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
+                    await decoder.DecodeAsync(entryStreamWriter, fileLength, cancellationToken);
+                }
+            },
             "application/zip", "result.zip");
     }
-
-    private static Func<Stream, Task> SendAsZipAsync(
-        Decoder decoder,
-        IEnumerable<(string fileName, int fileLength)> fileInformation,
-        CancellationToken cancellationToken) =>
-        async stream =>
-        {
-            using ZipArchive archive = new(stream, ZipArchiveMode.Create);
-
-            foreach ((string fileName, int fileLength) in fileInformation)
-            {
-                ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
-                await using Stream entryStream = entry.Open();
-                PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
-                await decoder.DecodeAsync(entryStreamWriter, fileLength, cancellationToken);
-            }
-        };
 }

@@ -58,24 +58,21 @@ public partial class EncodeBinaryEndpoint : MinimalApiBuilderEndpoint
         string base64Key = endpoint._keyService.ToBase64String(MessageType.Binary, seed,
             messageLength.Value, aes.Key, aes.IV);
 
-        return Results.Extensions.BodyWriterStream(SendAsZipAsync(request, base64Key),
+        return Results.Extensions.BodyWriterStream(async stream =>
+            {
+                using ZipArchive archive = new(stream, ZipArchiveMode.Create);
+
+                ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
+                await using (Stream coverImageStream = coverImageEntry.Open())
+                {
+                    await request.CoverImage.SaveAsPngAsync(coverImageStream);
+                }
+
+                ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);
+                await using Stream keyStream = keyEntry.Open();
+                await using StreamWriter keyStreamWriter = new(keyStream);
+                await keyStreamWriter.WriteAsync(base64Key);
+            },
             "application/zip", "secret.zip");
     }
-
-    private static Func<Stream, Task> SendAsZipAsync(EncodeBinaryRequest request, string base64Key) =>
-        async stream =>
-        {
-            using ZipArchive archive = new(stream, ZipArchiveMode.Create);
-
-            ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
-            await using (Stream coverImageStream = coverImageEntry.Open())
-            {
-                await request.CoverImage.SaveAsPngAsync(coverImageStream);
-            }
-
-            ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);
-            await using Stream keyStream = keyEntry.Open();
-            await using StreamWriter keyStreamWriter = new(keyStream);
-            await keyStreamWriter.WriteAsync(base64Key);
-        };
 }

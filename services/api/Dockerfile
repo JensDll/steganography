@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0.102-alpine3.16 as build
+FROM mcr.microsoft.com/dotnet/sdk:7.0.102-alpine3.17 as build
 
 WORKDIR /build
 
@@ -17,7 +17,7 @@ WORKDIR /build/WebApi
 RUN dotnet publish --configuration Release --output /app --no-restore
 
 # Final image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0.2-alpine3.16
+FROM mcr.microsoft.com/dotnet/aspnet:7.0.2-alpine3.17
 
 WORKDIR /app
 
