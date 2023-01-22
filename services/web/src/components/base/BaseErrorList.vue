@@ -2,10 +2,18 @@
 export function BaseErrorListAdd(errors: Ref<VNode[]>, error: VNode) {
   const idx = errors.value.findIndex(e => e.key === error.key)
 
-  if (idx >= 0) {
-    animateShake(`#v-error-list-${idx}`)
-  } else {
+  if (idx < 0) {
     errors.value.push(error)
+    return
+  }
+
+  const element = document.getElementById(`v-error-list-${idx}`)
+
+  if (element && !element.classList.contains('animate-shake')) {
+    element.classList.add('animate-shake')
+    setTimeout(() => {
+      element.classList.remove('animate-shake')
+    }, 400)
   }
 }
 
@@ -16,8 +24,6 @@ export function BaseErrorListClear(errors: Ref<VNode[]>) {
 
 <script setup lang="ts">
 import type { PropType, Ref, VNode } from 'vue'
-
-import { animateShake } from '~/common/animate'
 
 defineProps({
   errors: {
@@ -72,6 +78,22 @@ function BaseErrorListRemove(errors: VNode[], idx: number) {
 
 .list-leave-active {
   position: absolute;
+}
+
+.animate-shake {
+  animation: shake 400ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes shake {
+  30%,
+  90% {
+    transform: translateX(-3px);
+  }
+
+  60% {
+    transform: translateX(4px);
+  }
 }
 </style>
 

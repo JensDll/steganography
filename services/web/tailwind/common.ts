@@ -28,11 +28,11 @@ export function Common() {
       })
 
       addUtilities({
-        '.firefox-border-animation-bug-fix': {
-          border: '0.01px solid rgba(0, 0, 0, 0)',
+        '.firefox-border-animation-fix': {
+          border: '0.05px solid rgba(0, 0, 0, 0)',
           backgroundClip: 'padding-box'
         },
-        '.safari-fix-overflow': {
+        '.safari-overflow-fix': {
           maskImage: 'radial-gradient(white, black)'
         }
       })

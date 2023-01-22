@@ -47,7 +47,13 @@ public partial class DecodeEndpoint : MinimalApiBuilderEndpoint
         if (messageType == MessageType.Text)
         {
             httpContext.Response.ContentType = "text/plain";
-            await decoder.DecodeAsync(httpContext.Response.BodyWriter, cancellationToken);
+
+            try
+            {
+                await decoder.DecodeAsync(httpContext.Response.BodyWriter, cancellationToken);
+            }
+            catch (OperationCanceledException) { }
+
             return Results.Empty;
         }
 
@@ -65,7 +71,15 @@ public partial class DecodeEndpoint : MinimalApiBuilderEndpoint
                     ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
                     await using Stream entryStream = entry.Open();
                     PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
-                    await decoder.DecodeAsync(entryStreamWriter, fileLength, cancellationToken);
+
+                    try
+                    {
+                        await decoder.DecodeAsync(entryStreamWriter, fileLength, cancellationToken);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        return;
+                    }
                 }
             },
             "application/zip", "result.zip");

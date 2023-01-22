@@ -32,6 +32,9 @@ module.exports = {
           sun: {},
           'x-circle': {},
           'computer-desktop': {},
+          'arrow-down-tray-20-solid': {
+            [SCALE]: 1.25
+          },
           'paper-clip-20-solid': {
             [SCALE]: 1.25
           },

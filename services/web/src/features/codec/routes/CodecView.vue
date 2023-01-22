@@ -3,7 +3,7 @@
 <template>
   <section>
     <nav
-      class="container mb-8 flex flex-col sm:mb-12 sm:flex-row sm:items-end sm:justify-between lg:mb-16"
+      class="container mb-8 flex max-w-3xl flex-col sm:mb-12 sm:flex-row sm:items-end sm:justify-between lg:mb-16"
     >
       <h1 class="mb-6 sm:order-1 sm:mb-0">
         {{ $route.meta.title }}

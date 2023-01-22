@@ -44,6 +44,10 @@ public partial class EncodeBinaryEndpoint : MinimalApiBuilderEndpoint
             await Task.WhenAll(writing, reading);
             messageLength = writing.Result;
         }
+        catch (OperationCanceledException)
+        {
+            return Results.Empty;
+        }
         catch (InvalidOperationException e)
         {
             endpoint.AddValidationError(e.Message);
@@ -63,9 +67,15 @@ public partial class EncodeBinaryEndpoint : MinimalApiBuilderEndpoint
                 using ZipArchive archive = new(stream, ZipArchiveMode.Create);
 
                 ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
-                await using (Stream coverImageStream = coverImageEntry.Open())
+
+                try
                 {
-                    await request.CoverImage.SaveAsPngAsync(coverImageStream);
+                    await using Stream coverImageStream = coverImageEntry.Open();
+                    await request.CoverImage.SaveAsPngAsync(coverImageStream, cancellationToken);
+                }
+                catch (TaskCanceledException)
+                {
+                    return;
                 }
 
                 ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);

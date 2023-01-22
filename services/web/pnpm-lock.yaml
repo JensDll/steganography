@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@iconify-json/heroicons': 1.1.8
-  '@iconify-json/mdi': 1.1.43
+  '@iconify-json/mdi': 1.1.44
   '@tailwindcss/forms': 0.5.3
   '@tailwindcss/typography': 0.5.9
   '@types/node': 18.11.18
@@ -17,7 +17,6 @@ specifiers:
   eslint-config-prettier: 8.6.0
   eslint-plugin-import: 2.27.5
   eslint-plugin-vue: 9.9.0
-  gsap: 3.11.4
   postcss: 8.4.21
   prettier: 2.8.3
   prettier-plugin-tailwindcss: 0.2.1
@@ -35,7 +34,7 @@ specifiers:
 
 dependencies:
   '@iconify-json/heroicons': 1.1.8
-  '@iconify-json/mdi': 1.1.43
+  '@iconify-json/mdi': 1.1.44
   '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.4
   '@tailwindcss/typography': 0.5.9_tailwindcss@3.2.4
   '@types/node': 18.11.18
@@ -50,7 +49,6 @@ dependencies:
   eslint-config-prettier: 8.6.0_eslint@8.32.0
   eslint-plugin-import: 2.27.5_2l6piu6guil2f63lj3qmhzbnn4
   eslint-plugin-vue: 9.9.0_eslint@8.32.0
-  gsap: 3.11.4
   postcss: 8.4.21
   prettier: 2.8.3
   prettier-plugin-tailwindcss: 0.2.1_prettier@2.8.3
@@ -538,8 +536,8 @@ packages:
       '@iconify/types': 2.0.0
     dev: false
 
-  /@iconify-json/mdi/1.1.43:
-    resolution: {integrity: sha512-5dJivoZ6emys0aoLuVv8wOOjJUzlYp02CcN74hWj2XnhsGRDBTED6QvRoocgIpkXc7dDqHMoJJ52I2JhLuzZ2A==}
+  /@iconify-json/mdi/1.1.44:
+    resolution: {integrity: sha512-Apg9JY3jzWUTNiDWVBo7pD0WUAxdgoDhqr+X5TF1X6kVmM6U4Uo+Fo9dFaf4Qfwfsbt23zp2BHiaV1h1Hqm31g==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: false
@@ -1775,10 +1773,6 @@ packages:
 
   /grapheme-splitter/1.0.4:
     resolution: {integrity: sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==}
-    dev: false
-
-  /gsap/3.11.4:
-    resolution: {integrity: sha512-McHhEguHyExMMnjqKA8G+7TvxmlKQGMbjgwAilnFe1e4id7V/tFveRQ2YMZhTYu0oxHGWvbPltdVYQOu3z1SCA==}
     dev: false
 
   /has-bigints/1.0.2:
