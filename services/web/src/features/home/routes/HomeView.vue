@@ -4,7 +4,7 @@
   <section class="grid h-full min-h-[600px] items-center">
     <div>
       <h1
-        class="container text-center text-4xl font-extrabold tracking-tight md:text-5xl 2xl:text-6xl"
+        class="container mb-0 text-center text-4xl font-extrabold tracking-tight md:text-5xl 2xl:text-6xl"
       >
         Image Data Hiding
       </h1>

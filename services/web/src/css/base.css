@@ -1,7 +1,7 @@
 @layer base {
   html {
     @apply prose theme-encode max-w-none;
-    --max-w-container: theme('maxWidth.4xl');
+    --max-w-container: theme('maxWidth.5xl');
     --spacing-container: theme('spacing.5');
   }
 
@@ -40,10 +40,6 @@
     html {
       @apply prose-lg;
     }
-  }
-
-  html :where(h1):not(:where([class~='app-markdown'] *)) {
-    @apply m-0;
   }
 
   html :where(a):not(:where([class~='app-markdown'] *)) {

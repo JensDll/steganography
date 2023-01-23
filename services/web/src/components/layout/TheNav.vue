@@ -24,7 +24,7 @@ function closeDropdown() {
           Codec
         </RouterLink>
       </li>
-      <li class="mr-10">
+      <li class="mr-12">
         <RouterLink
           class="font-medium hover:text-link"
           exact-active-class="text-link"
@@ -36,12 +36,15 @@ function closeDropdown() {
       <li class="mr-4" @click="isDropdownOpen = true">
         <div
           class="cursor-pointer text-link"
-          :class="{ 'i-heroicons-sun': isLight, 'i-heroicons-moon': isDark }"
+          :class="{
+            'i-ic-twotone-wb-sunny': isLight,
+            'i-ic-twotone-dark-mode': isDark
+          }"
         ></div>
         <ul
           v-if="isDropdownOpen"
           v-on-click-outside="closeDropdown"
-          class="absolute top-12 right-0 w-32 rounded-lg border bg-white py-1 shadow dark:bg-gray-800"
+          class="absolute top-12 right-0 w-32 rounded-lg border border-border-form bg-white py-1 shadow dark:bg-gray-800"
         >
           <li
             v-for="{ theme, text, icon } in themes"

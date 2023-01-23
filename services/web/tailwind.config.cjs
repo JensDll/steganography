@@ -56,16 +56,16 @@ module.exports = {
         },
         scale: 1.5
       },
+      ic: {
+        includeAll: true,
+        scale: 1.5
+      },
       mdi: {
-        icons: {
-          github: {}
-        },
+        includeAll: true,
         scale: 1.5
       },
       custom: {
-        icons: {
-          loading: {}
-        },
+        includeAll: true,
         scale: 1.5,
         location:
           'https://gist.githubusercontent.com/JensDll/4e59cf6005f585581975941a94bc1d88/raw/0e70bdac81224add27d8f0576ab15406709e5938/icons.json'

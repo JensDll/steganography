@@ -50,7 +50,7 @@ const handleClick = (e: MouseEvent) => {
   >
     <div
       v-if="variant === 'landing'"
-      class="absolute -inset-0.5 -z-10 bg-gradient-to-r from-encode-500 to-decode-500 opacity-75 blur group-hover:-inset-1"
+      class="absolute -inset-0.5 -z-10 bg-gradient-to-r from-encode-500 to-decode-500 opacity-75 blur"
     ></div>
     <slot></slot>
   </button>

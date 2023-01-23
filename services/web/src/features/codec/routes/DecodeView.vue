@@ -42,7 +42,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <form class="container max-w-3xl" @submit.prevent="handleSubmit">
+  <form @submit.prevent="handleSubmit">
     <section>
       <div>
         <label class="label" for="key">Key phrase</label>
@@ -63,7 +63,7 @@ async function handleSubmit() {
         class="mt-6"
       />
     </section>
-    <section class="mt-12 flex items-center justify-end">
+    <section class="mt-10 flex items-center justify-end">
       <LoadingIndicator
         class="mr-6 text-highlight-decode"
         :loading="decode.loading.value"
@@ -74,6 +74,7 @@ async function handleSubmit() {
         variant="decode"
         :disabled="decode.loading.value"
       >
+        <span class="i-mdi-image-search-outline mr-1 inline-block"></span>
         Decode
       </BaseButton>
     </section>

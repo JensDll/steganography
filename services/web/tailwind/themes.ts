@@ -32,7 +32,7 @@ const baseDark = {
   '--error': colors.rgb.red['600'],
   '--fill': colors.rgb.gray['900'],
   '--fill-form': colors.rgb.gray['800'],
-  '--border': colors.rgb.gray['800'],
+  '--border': colors.rgb.gray['700'],
   '--border-form': colors.rgb.gray['700']
 }
 

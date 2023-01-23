@@ -12,17 +12,17 @@ const themes: Theme[] = [
   {
     theme: 'light',
     text: 'Light',
-    icon: 'i-heroicons-sun'
+    icon: 'i-ic-twotone-wb-sunny'
   },
   {
     theme: 'dark',
     text: 'Dark',
-    icon: 'i-heroicons-moon'
+    icon: 'i-ic-twotone-dark-mode'
   },
   {
     theme: 'system',
     text: 'System',
-    icon: 'i-heroicons-computer-desktop'
+    icon: 'i-ic-twotone-computer'
   }
 ]
 

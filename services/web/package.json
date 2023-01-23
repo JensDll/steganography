@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@iconify-json/heroicons": "1.1.8",
+    "@iconify-json/ic": "1.1.12",
     "@iconify-json/mdi": "1.1.44",
     "@tailwindcss/forms": "0.5.3",
     "@tailwindcss/typography": "0.5.9",
@@ -22,7 +23,7 @@
     "@vitejs/plugin-vue": "4.0.0",
     "@vueuse/core": "9.11.1",
     "autoprefixer": "10.4.13",
-    "esbuild": "0.17.3",
+    "esbuild": "0.17.4",
     "esbuild-register": "3.4.2",
     "eslint": "8.32.0",
     "eslint-config-prettier": "8.6.0",

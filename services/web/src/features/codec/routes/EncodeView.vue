@@ -65,7 +65,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <form class="container max-w-3xl" @submit.prevent="handleSubmit">
+  <form @submit.prevent="handleSubmit">
     <section>
       <div>
         <label for="message" class="mb-0">Secret message</label>
@@ -119,10 +119,11 @@ async function handleSubmit() {
         class="mt-6"
       />
     </section>
-    <section class="mt-12 flex items-center justify-end">
+    <section class="mt-10 flex items-center justify-end">
       <LoadingIndicator class="mr-6 text-highlight-encode" :loading="loading" />
       <BaseButton class="mr-4" @click="abort()">Cancel</BaseButton>
       <BaseButton type="submit" variant="encode" :disabled="loading">
+        <span class="i-mdi-image-lock-outline mr-1 inline-block"></span>
         Encode
       </BaseButton>
     </section>
