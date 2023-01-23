@@ -1,42 +1,40 @@
-﻿using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace Domain.Entities;
 
 public class AesCounterMode : IDisposable
 {
     private readonly Aes _aes;
-    // The first 32-bit represent the counter and the last 96-bit are the IV.
-    private readonly byte[] _counterAndIv = new byte[16];
+    // The first 4-byte represent the counter and the last 12-byte are the initialization value
+    private readonly byte[] _counterAndInitializationValue = new byte[16];
     private readonly ICryptoTransform _encryptor;
     private readonly byte[] _keyStream = new byte[16];
     private int _keyStreamIdx;
 
     public AesCounterMode() :
-        this(RandomNumberGenerator.GetBytes(32), RandomNumberGenerator.GetBytes(12))
-    {
-    }
+        this(RandomNumberGenerator.GetBytes(32), RandomNumberGenerator.GetBytes(12)) { }
 
-    public AesCounterMode(byte[] key, byte[] iV)
+    public AesCounterMode(byte[] key, byte[] initializationValue)
     {
         if (key.Length != 32)
         {
             throw new CryptographicException("Key must be 32-byte long");
         }
 
-        if (iV.Length != 12)
+        if (initializationValue.Length != 12)
         {
             throw new CryptographicException("Initialization value must be 12-byte long");
         }
 
         _aes = Aes.Create();
         Key = key;
-        IV = iV;
+        InitializationValue = initializationValue;
         _aes.Mode = CipherMode.ECB;
         _aes.Padding = PaddingMode.None;
         _encryptor = _aes.CreateEncryptor();
-        IV.CopyTo(_counterAndIv, 4);
-        _encryptor.TransformBlock(_counterAndIv, 0, 16, _keyStream, 0);
+        InitializationValue.CopyTo(_counterAndInitializationValue, 4);
+        _encryptor.TransformBlock(_counterAndInitializationValue, 0, 16,
+            _keyStream, 0);
     }
 
     public byte[] Key
@@ -45,7 +43,7 @@ public class AesCounterMode : IDisposable
         private init => _aes.Key = value;
     }
 
-    public byte[] IV { get; }
+    public byte[] InitializationValue { get; }
 
     public void Dispose()
     {
@@ -57,7 +55,7 @@ public class AesCounterMode : IDisposable
     {
         for (int i = 0; i < source.Length; ++i)
         {
-            destination[i] = (byte) (source[i] ^ _keyStream[_keyStreamIdx++]);
+            destination[i] = (byte)(source[i] ^ _keyStream[_keyStreamIdx++]);
             if (_keyStreamIdx == _keyStream.Length)
             {
                 GenerateNewKeyStream();
@@ -65,19 +63,19 @@ public class AesCounterMode : IDisposable
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void GenerateNewKeyStream()
     {
         unsafe
         {
-            fixed (byte* block = _counterAndIv)
+            fixed (byte* block = _counterAndInitializationValue)
             {
-                uint* counter = (uint*) block;
+                uint* counter = (uint*)block;
                 ++*counter;
             }
         }
 
         _keyStreamIdx = 0;
-        _encryptor.TransformBlock(_counterAndIv, 0, 16, _keyStream, 0);
+        _encryptor.TransformBlock(_counterAndInitializationValue, 0, 16,
+            _keyStream, 0);
     }
 }

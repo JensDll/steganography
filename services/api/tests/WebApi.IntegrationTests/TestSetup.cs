@@ -30,6 +30,7 @@ public class TestWebApplicationFactory<TProgram>
 {
     protected override IHost CreateHost(IHostBuilder builder)
     {
+        // ReSharper disable once UnusedParameter.Local
         builder.ConfigureServices(services => { });
         return base.CreateHost(builder);
     }

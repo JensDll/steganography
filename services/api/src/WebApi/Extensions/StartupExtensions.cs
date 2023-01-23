@@ -5,8 +5,6 @@ namespace WebApi.Extensions;
 
 public static class StartupExtensions
 {
-    private const string _deployment = "Deployment";
-
     public static ILogger AddSerilogLogger(this WebApplicationBuilder webBuilder)
     {
         webBuilder.Logging.ClearProviders();
@@ -21,11 +19,6 @@ public static class StartupExtensions
         webBuilder.Services.AddSingleton(logger);
 
         return logger;
-    }
-
-    public static bool IsDeployment(this IWebHostEnvironment environment)
-    {
-        return environment.IsEnvironment(_deployment);
     }
 
     public static string[] AllowedOrigins(this IConfiguration configuration)

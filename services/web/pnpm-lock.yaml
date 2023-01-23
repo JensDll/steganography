@@ -2,7 +2,6 @@ lockfileVersion: 5.4
 
 specifiers:
   '@iconify-json/heroicons': 1.1.8
-  '@iconify-json/ic': 1.1.12
   '@iconify-json/mdi': 1.1.44
   '@tailwindcss/forms': 0.5.3
   '@tailwindcss/typography': 0.5.9
@@ -35,7 +34,6 @@ specifiers:
 
 dependencies:
   '@iconify-json/heroicons': 1.1.8
-  '@iconify-json/ic': 1.1.12
   '@iconify-json/mdi': 1.1.44
   '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.4
   '@tailwindcss/typography': 0.5.9_tailwindcss@3.2.4
@@ -534,12 +532,6 @@ packages:
 
   /@iconify-json/heroicons/1.1.8:
     resolution: {integrity: sha512-AlfKxl5MRYxSpT5FRa7FiTKneR15ptvNvxU3OY8szK8115uUBkSlFCuOUZPMUcUxnhkDrhriPqScc5TAv1hBNA==}
-    dependencies:
-      '@iconify/types': 2.0.0
-    dev: false
-
-  /@iconify-json/ic/1.1.12:
-    resolution: {integrity: sha512-J0rDxdAc9GjJ1iS95hPXseN76ioZr9olGmdu9H+NKrmYAHanaeMIfWZ6PlANA5kCc+lNOFcDySSvQQ7DLMMoRQ==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: false

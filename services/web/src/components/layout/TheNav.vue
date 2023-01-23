@@ -5,7 +5,7 @@ import { useTheme } from '~/composables'
 
 const isDropdownOpen = ref(false)
 
-const { themes, activeTheme, isLight, isDark, changeTheme } = useTheme()
+const { themes, activeTheme } = useTheme()
 
 function closeDropdown() {
   isDropdownOpen.value = false
@@ -36,10 +36,7 @@ function closeDropdown() {
       <li class="mr-4" @click="isDropdownOpen = true">
         <div
           class="cursor-pointer text-link"
-          :class="{
-            'i-ic-twotone-wb-sunny': isLight,
-            'i-ic-twotone-dark-mode': isDark
-          }"
+          :class="activeTheme.activeIcon"
         ></div>
         <ul
           v-if="isDropdownOpen"
@@ -47,20 +44,17 @@ function closeDropdown() {
           class="absolute top-12 right-0 w-32 rounded-lg border border-border-form bg-white py-1 shadow dark:bg-gray-800"
         >
           <li
-            v-for="{ theme, text, icon } in themes"
-            :key="theme"
+            v-for="theme in themes"
+            :key="theme.name"
             class="flex cursor-pointer items-center py-1 px-2 font-semibold hover:bg-gray-50 dark:hover:bg-gray-600/30"
-            :class="{ 'text-link': theme === activeTheme }"
-            @click="changeTheme(theme)"
+            :class="{ 'text-link': theme.isActive }"
+            @click="activeTheme = theme"
           >
             <span
-              :class="[
-                'mr-2 text-gray-400',
-                icon,
-                { '!text-link': theme === activeTheme }
-              ]"
+              class="mr-2 text-gray-400"
+              :class="[theme.icon, { '!text-link': theme.isActive }]"
             ></span>
-            {{ text }}
+            {{ theme.text }}
           </li>
         </ul>
       </li>

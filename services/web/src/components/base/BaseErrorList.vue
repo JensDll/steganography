@@ -39,7 +39,7 @@ function BaseErrorListRemove(errors: VNode[], idx: number) {
 
 <template>
   <Teleport to="body">
-    <div class="fixed top-24 z-20 w-full max-w-prose px-container">
+    <div class="fixed top-24 z-30 w-full max-w-prose px-container">
       <TransitionGroup name="list" tag="ul" class="relative">
         <li
           v-for="(error, idx) in errors"

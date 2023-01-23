@@ -56,8 +56,8 @@ const { activeTheme, themes } = useTheme()
           v-model="activeTheme"
           class="dark:border-gray-600 dark:bg-gray-700"
         >
-          <option v-for="{ theme, text } in themes" :key="theme" :value="theme">
-            {{ text }}
+          <option v-for="theme in themes" :key="theme.name" :value="theme">
+            {{ theme.text }}
           </option>
         </select>
       </div>

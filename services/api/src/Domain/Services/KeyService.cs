@@ -11,7 +11,7 @@ public class KeyService : IKeyService
         Span<byte> base64KeyBytes = stackalloc byte[54];
 
         // The first 2-byte are used for the message type to get to a multiple of 3
-        base64KeyBytes[0] = (byte) messageType;
+        base64KeyBytes[0] = (byte)messageType;
         BitConverter.TryWriteBytes(base64KeyBytes[2..6], seed);
         BitConverter.TryWriteBytes(base64KeyBytes[6..10], messageLength);
         key.CopyTo(base64KeyBytes[10..]);
@@ -39,7 +39,7 @@ public class KeyService : IKeyService
 
         ReadOnlySpan<byte> fullKey = Convert.FromBase64String(base64Key);
 
-        messageType = (MessageType) fullKey[0];
+        messageType = (MessageType)fullKey[0];
 
         if (!Enum.IsDefined(messageType))
         {

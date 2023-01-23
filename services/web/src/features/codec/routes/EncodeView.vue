@@ -8,7 +8,7 @@ import {
   BaseErrorListAdd,
   BaseErrorListClear
 } from '~/components/base/BaseErrorList.vue'
-import { ApiError } from '~/composables/useFetch'
+import { ApiError } from '~/composables'
 
 type FormData = {
   textData: Field<string>

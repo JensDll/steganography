@@ -32,10 +32,10 @@ public partial class EncodeBinaryEndpoint : MinimalApiBuilderEndpoint
             request.CoverImage.Width, request.CoverImage.Height);
 
         int seed = RandomNumberGenerator.GetInt32(int.MaxValue);
+        int? messageLength;
+
         using AesCounterMode aes = new();
         using Encoder encoder = new(request.CoverImage, seed);
-
-        int? messageLength;
 
         try
         {
@@ -60,7 +60,7 @@ public partial class EncodeBinaryEndpoint : MinimalApiBuilderEndpoint
         }
 
         string base64Key = endpoint._keyService.ToBase64String(MessageType.Binary, seed,
-            messageLength.Value, aes.Key, aes.IV);
+            messageLength.Value, aes.Key, aes.InitializationValue);
 
         return Results.Extensions.BodyWriterStream(async stream =>
             {
@@ -73,7 +73,7 @@ public partial class EncodeBinaryEndpoint : MinimalApiBuilderEndpoint
                     await using Stream coverImageStream = coverImageEntry.Open();
                     await request.CoverImage.SaveAsPngAsync(coverImageStream, cancellationToken);
                 }
-                catch (TaskCanceledException)
+                catch (OperationCanceledException)
                 {
                     return;
                 }

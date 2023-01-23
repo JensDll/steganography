@@ -1,7 +1,0 @@
-{
-  "app": "node --require source-map-support/register --loader @esbuild-kit/esm-loader src/index.ts",
-  "watch": {
-    "include": ["src/**"]
-  },
-  "versionReporting": false
-}

@@ -56,10 +56,6 @@ module.exports = {
         },
         scale: 1.5
       },
-      ic: {
-        includeAll: true,
-        scale: 1.5
-      },
       mdi: {
         includeAll: true,
         scale: 1.5

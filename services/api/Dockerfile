@@ -21,14 +21,13 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0.2-alpine3.17
 
 WORKDIR /app
 
-RUN apk -U upgrade && addgroup --system app_group && \
+RUN addgroup --system app_group && \
     adduser --system --no-create-home --disabled-password --gecos "App user" --ingroup app_group app_user
 
 COPY --from=build --chown=app_user:app_group /app/ ./
 
 USER app_user:app_group
 
-ENV ASPNETCORE_ENVIRONMENT="Deployment"
 ENV ASPNETCORE_URLS="http://+:8080"
 
 EXPOSE 8080

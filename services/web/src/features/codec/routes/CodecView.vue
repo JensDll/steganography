@@ -65,7 +65,7 @@
   .nav {
     grid-template-columns: unset;
     border-bottom: unset;
-    @apply m-0 gap-y-2 self-start;
+    @apply sticky top-28 m-0 gap-y-2 self-start;
     align-items: start;
   }
 

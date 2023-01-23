@@ -32,10 +32,10 @@ public partial class EncodeTextEndpoint : MinimalApiBuilderEndpoint
             request.CoverImage.Width, request.CoverImage.Height);
 
         int seed = RandomNumberGenerator.GetInt32(int.MaxValue);
+        int? messageLength;
+
         using AesCounterMode aes = new();
         using Encoder encoder = new(request.CoverImage, seed);
-
-        int? messageLength;
 
         try
         {
@@ -60,7 +60,8 @@ public partial class EncodeTextEndpoint : MinimalApiBuilderEndpoint
         }
 
         string base64Key =
-            endpoint._keyService.ToBase64String(MessageType.Text, seed, messageLength.Value, aes.Key, aes.IV);
+            endpoint._keyService.ToBase64String(MessageType.Text, seed, messageLength.Value, aes.Key,
+                aes.InitializationValue);
 
         return Results.Extensions.BodyWriterStream(async stream =>
             {
@@ -73,7 +74,7 @@ public partial class EncodeTextEndpoint : MinimalApiBuilderEndpoint
                     await using Stream coverImageStream = coverImageEntry.Open();
                     await request.CoverImage.SaveAsPngAsync(coverImageStream, cancellationToken);
                 }
-                catch (TaskCanceledException)
+                catch (OperationCanceledException)
                 {
                     return;
                 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using Domain.Enums;
 using Domain.Services;
+using NUnit.Framework;
 
 namespace Domain.UnitTests.Services;
 
@@ -46,14 +47,14 @@ internal class KeyServiceTests
     {
         foreach (int _ in Enumerable.Range(1, 5))
         {
-            MessageType messageType = (MessageType) TestContext.CurrentContext.Random.Next(0, 2);
+            MessageType messageType = (MessageType)TestContext.CurrentContext.Random.Next(0, 2);
             int seed = TestContext.CurrentContext.Random.Next();
             int messageLength = TestContext.CurrentContext.Random.Next();
             byte[] key = new byte[32];
             byte[] iv = new byte[12];
             TestContext.CurrentContext.Random.NextBytes(key);
             TestContext.CurrentContext.Random.NextBytes(iv);
-            yield return new object[] {messageType, seed, messageLength, key, iv};
+            yield return new object[] { messageType, seed, messageLength, key, iv };
         }
     }
 }

@@ -5,7 +5,7 @@ services:
       - ./services/web/nginx/nginx/:/etc/nginx/
       - ./services/web/nginx/www/config.js:/data/www/config.js
     ports:
-      - 4000:8080
+      - 5050:8080
     networks:
       - appnet
   api:
@@ -15,7 +15,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
     ports:
-      - 4001:8080
+      - 5051:8080
     networks:
       - appnet
 networks:
