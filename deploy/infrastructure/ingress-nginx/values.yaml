@@ -1,0 +1,6 @@
+controller:
+  config:
+    use-forwarded-headers: 'true'
+  service:
+    type: NodePort
+    externalTrafficPolicy: Local

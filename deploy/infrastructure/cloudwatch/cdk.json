@@ -1,7 +1,0 @@
-{
-  "app": "node --require source-map-support/register index.mjs",
-  "watch": {
-    "include": ["*.mjs"]
-  },
-  "versionReporting": false
-}

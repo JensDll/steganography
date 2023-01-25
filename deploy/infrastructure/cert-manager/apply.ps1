@@ -3,7 +3,6 @@ param (
   [Parameter(Position = 0, Mandatory)]
   [ValidateSet('install', 'delete')]
   [string]$Action,
-
   [Parameter(ValueFromRemainingArguments)]
   [string[]]$HelmArgs
 )
@@ -14,7 +13,7 @@ switch ($Action) {
   install {
     helm upgrade cert-manager jetstack/cert-manager --install --namespace=$namespace `
       --create-namespace `
-      --version="v1.10.1" `
+      --version="v1.11.0" `
       --values="$PSScriptRoot/values.yaml" $HelmArgs
   }
   delete {

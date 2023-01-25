@@ -21,15 +21,13 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0.2-alpine3.17
 
 WORKDIR /app
 
-RUN addgroup --system app_group && \
-    adduser --system --no-create-home --disabled-password --gecos "App user" --ingroup app_group app_user
+RUN addgroup --system appgroup && \
+    adduser --system --no-create-home --disabled-password --gecos "App user" --ingroup appgroup appuser
 
-COPY --from=build --chown=app_user:app_group /app/ ./
+COPY --from=build --chown=appuser:appgroup /app/ ./
 
-USER app_user:app_group
-
+USER appuser:appgroup
 ENV ASPNETCORE_URLS="http://+:8080"
-
 EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "WebApi.dll"]

@@ -3,7 +3,7 @@ services:
     build: services/web
     volumes:
       - ./services/web/nginx/nginx/:/etc/nginx/
-      - ./services/web/nginx/www/config.js:/data/www/config.js
+      - ./services/web/nginx/www/etc/:/data/www/etc/
     ports:
       - 5050:8080
     networks:

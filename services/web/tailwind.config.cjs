@@ -1,7 +1,7 @@
 const Forms = require('@tailwindcss/forms')
 const Typography = require('@tailwindcss/typography')
 const { register } = require('esbuild-register/dist/node')
-const { Icons, SCALE } = require('tailwindcss-plugin-icons')
+const { Icons } = require('tailwindcss-plugin-icons')
 
 const { unregister } = register()
 const { Common } = require('./tailwind/common')
@@ -24,37 +24,10 @@ module.exports = {
     Icons(() => ({
       heroicons: {
         icons: {
-          trash: {},
-          'trash?bg': {},
-          'ellipsis-vertical': {},
-          'x-mark': {},
-          moon: {},
-          sun: {},
-          'x-circle': {},
-          'computer-desktop': {},
-          'arrow-down-tray-20-solid': {
-            [SCALE]: 1.25
-          },
-          'paper-clip-20-solid': {
-            [SCALE]: 1.25
-          },
-          'lock-open-20-solid': {
-            [SCALE]: 1.25
-          },
-          'lock-closed-20-solid': {
-            [SCALE]: 1.25
-          },
-          'x-mark-20-solid': {
-            [SCALE]: 1.25
-          },
-          'x-circle-20-solid': {
-            [SCALE]: 1.25
-          },
-          'arrow-left-20-solid': {
-            [SCALE]: 1.25
-          }
+          'trash?bg': {}
         },
-        scale: 1.5
+        includeAll: true,
+        scale: iconName => (iconName.endsWith('-20-solid') ? 1.25 : 1.5)
       },
       mdi: {
         includeAll: true,
