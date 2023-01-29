@@ -7,4 +7,4 @@ resources:
   - web/config.yaml
   - web/deployment.yaml
   - web/service.yaml
-  - web/ingress.yaml
+  - web/route.yaml

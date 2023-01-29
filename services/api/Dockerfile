@@ -27,7 +27,9 @@ RUN addgroup --system appgroup && \
 COPY --from=build --chown=appuser:appgroup /app/ ./
 
 USER appuser:appgroup
-ENV ASPNETCORE_URLS="http://+:8080"
-EXPOSE 8080
+
+ENV ASPNETCORE_URLS=""
+
+EXPOSE 8443
 
 ENTRYPOINT ["dotnet", "WebApi.dll"]

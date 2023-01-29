@@ -1,6 +1,9 @@
 controller:
-  config:
-    use-forwarded-headers: 'true'
+  extraArgs:
+    enable-ssl-passthrough: 'true'
+  # scope:
+  # enabled: true
+  # namespace: services
   service:
-    type: NodePort
+    enableHttps: true
     externalTrafficPolicy: Local

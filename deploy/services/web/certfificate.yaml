@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: web-cert
+  namespace: services
+spec:
+  secretName: web-cert
+  dnsNames:
+    - doellmann.xyz
+  issuerRef:
+    kind: Issuer
+    name: services-issuer

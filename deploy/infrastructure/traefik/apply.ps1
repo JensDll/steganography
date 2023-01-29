@@ -1,9 +1,9 @@
 ﻿[CmdletBinding()]
 param (
   [Parameter(Position = 0, Mandatory)]
-  [ValidateSet('install', 'delete')]
+  [ValidateSet('install', 'delete', 'dashboard')]
   [string]$Action,
-  [string]$Version = '4.4.2',
+  [string]$Version = '20.8.0',
   [Parameter(ValueFromRemainingArguments)]
   [string[]]$HelmArgs
 )
@@ -23,12 +23,16 @@ if ($(kubectl apply -f $namespaceYaml $dryRun) -match '^namespace/(?<namespace>\
 
 switch ($Action) {
   install {
-    helm upgrade cert-manager jetstack/cert-manager --install --namespace=$namespace `
+    helm upgrade traefik traefik/traefik --install --namespace=$namespace `
       --version=$Version `
       --values=$valuesYaml $HelmArgs
   }
   delete {
-    helm delete cert-manager --namespace=$namespace $HelmArgs
+    helm delete traefik --namespace=$namespace $HelmArgs
     kubectl delete namespace $namespace $dryRun
+  }
+  dashboard {
+    $podName = kubectl get pods --selector 'app.kubernetes.io/name=traefik' --output=name --namespace=$namespace
+    kubectl port-forward $podName 9000:9000 --namespace=$namespace
   }
 }

@@ -52,6 +52,8 @@ data:
 
       keepalive_timeout 65;
 
+      ssl_session_cache shared:SSL:10m;
+
       gzip on;
       gzip_static on;
       gzip_comp_level 6;
@@ -62,12 +64,16 @@ data:
       brotli_comp_level 4;
       brotli_types application/javascript;
 
-      include /etc/nginx/conf.d/*.conf;
+      include /etc/nginx/conf/*.conf;
     }
 
   server.conf: |
     server {
-      listen 8080 default_server;
+      listen 8443 ssl;
+      server_name doellmann.xyz;
+      ssl_certificate     /usr/local/certificates/tls.crt;
+      ssl_certificate_key /usr/local/certificates/tls.key;
+
       root /data/www;
       charset utf-8;
       if_modified_since off;

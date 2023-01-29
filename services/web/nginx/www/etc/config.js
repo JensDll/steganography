@@ -1,6 +1,6 @@
 const $config = {
   API: {
-    URI: 'http://localhost:5051',
+    URI: 'https://api.localhost',
     RATE_LIMIT: 60
   }
 }
