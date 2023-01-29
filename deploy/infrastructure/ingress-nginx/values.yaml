@@ -1,0 +1,9 @@
+controller:
+  extraArgs:
+    enable-ssl-passthrough: 'true'
+  # scope:
+  # enabled: true
+  # namespace: services
+  service:
+    enableHttps: true
+    externalTrafficPolicy: Local

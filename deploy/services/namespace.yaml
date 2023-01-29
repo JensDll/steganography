@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: services
+  # labels:
+  #   pod-security.kubernetes.io/warn: restricted
+  #   pod-security.kubernetes.io/warn-version: v1.25

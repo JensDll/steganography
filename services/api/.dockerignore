@@ -2,8 +2,9 @@
 **/bin/
 **/obj/
 **/out/
+.idea/
+.vs/
 
 # Files
 Dockerfile*
-**/*.md
 public/config.js

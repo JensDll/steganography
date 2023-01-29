@@ -63,19 +63,19 @@ const totalFileSize = useFileSize(files)
         class="z-20"
         @remove="removeFile(i)"
       />
-      <template v-if="!files.length">
-        <div class="i-heroicons-paper-clip-20-solid mr-2"></div>
-        <p>
-          <span
-            class="font-semibold text-highlight"
-            :class="{ error: errors.length }"
-          >
-            Choose files
-          </span>
-          <span class="hidden md:inline-block">or drag and drop</span>
-          here
-        </p>
-      </template>
+      <div v-if="!files.length">
+        <span
+          class="i-heroicons-arrow-down-tray-20-solid mr-1 inline-block translate-y-[3.5px]"
+        ></span>
+        <span
+          class="font-semibold text-highlight"
+          :class="{ error: errors.length }"
+        >
+          Choose files
+        </span>
+        <span class="hidden md:inline-block">or drag and drop</span>
+        here
+      </div>
     </div>
     <div class="mt-2">{{ totalFileSize }}</div>
     <FormErrors :errors="errors" />
@@ -84,11 +84,8 @@ const totalFileSize = useFileSize(files)
     <label v-if="label" for="file-input">{{ label }}</label>
     <div class="flex items-center">
       <div
-        class="custom-file-input relative flex cursor-pointer items-center py-6 px-8"
-        :class="{
-          error: errors.length,
-          'mr-4': files[0]
-        }"
+        class="custom-file-input relative cursor-pointer py-6 px-10 text-center"
+        :class="{ error: errors.length }"
       >
         <input
           :id="id || 'file-input'"
@@ -97,26 +94,25 @@ const totalFileSize = useFileSize(files)
           :accept="accept"
           v-on="fileListeners"
         />
-        <div
+        <span
           v-if="!files.length"
-          class="i-heroicons-paper-clip-20-solid mr-2"
-        ></div>
-        <div>
-          <template v-if="files.length">
-            {{ files[0].name }}
-          </template>
-          <template v-else>
-            <span
-              class="font-semibold text-highlight"
-              :class="{ error: errors.length }"
-            >
-              Choose
-            </span>
-            <span class="hidden md:inline-block">or drag and drop</span> here
-          </template>
-        </div>
+          class="i-heroicons-paper-clip-20-solid mr-1 inline-block translate-y-1"
+        ></span>
+        <template v-if="files.length">
+          {{ files[0].name }}
+        </template>
+        <template v-else>
+          <span
+            class="font-semibold text-highlight"
+            :class="{ error: errors.length }"
+          >
+            Choose
+          </span>
+          <span class="hidden md:inline-block">or drag and drop</span> here
+        </template>
       </div>
       <BaseFilePreview
+        class="ml-6 mr-2"
         :file="files[0]"
         variant="reduced"
         @remove="removeFile(0)"

@@ -17,28 +17,23 @@
       crossorigin
     />
     <script>
-      function $changeTheme(theme) {
-        switch (theme) {
-          case 'light':
-            localStorage.setItem('theme', 'light')
-            document.documentElement.classList.remove('dark')
-            break
-          case 'dark':
-            localStorage.setItem('theme', 'dark')
+      switch (localStorage.theme) {
+        case 'light':
+          document.documentElement.classList.remove('dark')
+          break
+        case 'dark':
+          document.documentElement.classList.add('dark')
+          break
+        default:
+          localStorage.setItem('theme', 'system')
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.classList.add('dark')
-            break
-          default:
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-              document.documentElement.classList.add('dark')
-            } else {
-              document.documentElement.classList.remove('dark')
-            }
-            localStorage.setItem('theme', 'system')
-        }
+          } else {
+            document.documentElement.classList.remove('dark')
+          }
       }
-      $changeTheme(localStorage.theme)
     </script>
-    <script defer src="/config.js"></script>
+    <script defer src="/etc/config.js"></script>
   </head>
   <body>
     <div id="app"></div>

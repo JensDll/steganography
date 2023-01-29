@@ -1,5 +1,6 @@
 ﻿using System;
 using Domain.Entities;
+using NUnit.Framework;
 
 namespace Domain.UnitTests.Entities;
 
@@ -11,7 +12,7 @@ internal class AesCounterModeTests
     {
         // Arrange
         AesCounterMode encryptor = new();
-        AesCounterMode decryptor = new(encryptor.Key, encryptor.IV);
+        AesCounterMode decryptor = new(encryptor.Key, encryptor.InitializationValue);
 
         byte[] plaintextIn = new byte[length];
         TestContext.CurrentContext.Random.NextBytes(plaintextIn);
@@ -33,7 +34,7 @@ internal class AesCounterModeTests
     {
         // Arrange
         AesCounterMode encryptor = new();
-        AesCounterMode decryptor = new(encryptor.Key, encryptor.IV);
+        AesCounterMode decryptor = new(encryptor.Key, encryptor.InitializationValue);
 
         const int length = 4096;
         Span<byte> plaintextIn = new byte[length];
@@ -61,8 +62,8 @@ internal class AesCounterModeTests
         // Arrange
         AesCounterMode encryptor = new();
         byte[] alteredKey = encryptor.Key;
-        alteredKey[0]++;
-        AesCounterMode decryptor = new(alteredKey, encryptor.IV);
+        ++alteredKey[0];
+        AesCounterMode decryptor = new(alteredKey, encryptor.InitializationValue);
 
         byte[] plaintextIn = new byte[length];
         TestContext.CurrentContext.Random.NextBytes(plaintextIn);
@@ -80,7 +81,7 @@ internal class AesCounterModeTests
     }
 
     [Test]
-    public void InputShouldNotBeUsedTwice()
+    public void EqualPlaintextShouldResultInUnequalCiphertext()
     {
         // Arrange
         AesCounterMode encryptor = new();
@@ -92,7 +93,7 @@ internal class AesCounterModeTests
         encryptor.Transform(plaintextIn, ciphertext);
 
         // Assert
-        // If the same input is used for both blocks (i.e. by not changing the counter), this would fail.
+        // If the same input is used for both blocks (i.e. by not changing the counter), this would fail
         Assert.That(ciphertext[..16], Is.Not.EqualTo(ciphertext[16..]));
     }
 }

@@ -24,9 +24,10 @@ builder.Services
             corsBuilder => { corsBuilder.WithOrigins(builder.Configuration.AllowedOrigins()); });
     });
 
-builder.WebHost.ConfigureKestrel(options =>
+builder.WebHost.ConfigureKestrel((context, serverOptions) =>
 {
-    options.Limits.MaxRequestBodySize = 60 * 1024 * 1024; // 60 MB
+    serverOptions.Limits.MaxRequestBodySize = 60 * 1024 * 1024; // 60 MB
+    context.ConfigureCertificate(serverOptions);
 });
 
 WebApplication app = builder.Build();
@@ -48,6 +49,6 @@ codec.MapPost<EncodeBinaryEndpoint>("/encode/binary");
 codec.MapPost<DecodeEndpoint>("/decode");
 
 RouteGroupBuilder auxiliary = app.MapGroup("/").WithTags("Auxiliary");
-auxiliary.MapGet("/health", () => TypedResults.Ok());
+auxiliary.MapGet("/health", () => "Hello Api");
 
 app.Run();

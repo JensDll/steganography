@@ -1,11 +1,12 @@
 import { ref } from 'vue'
 
-import { useFetch, useDownload } from '~/composables'
 import {
+  useFetch,
+  useDownload,
   ApiError,
   API_ERROR_UNKNOWN,
   type ErrorResponse
-} from '~/composables/useFetch'
+} from '~/composables'
 
 const { post: doEncodeText } = useFetch('/codec/encode/text')
 

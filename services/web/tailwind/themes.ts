@@ -15,7 +15,7 @@ const base = {
   ...theme.typography.slate.css,
   '--highlight-encode': colors.rgb.encode['500'],
   '--highlight-decode': colors.rgb.decode['500'],
-  '--link': colors.rgb.orange['500'],
+  '--link': colors.rgb.fuchsia['600'],
   '--error': colors.rgb.red['500'],
   '--fill': colors.rgb.gray['50'],
   '--fill-form': colors.rgb.white,
@@ -28,11 +28,11 @@ const baseDark = {
   ...theme.typography.invert.css,
   '--highlight-encode': colors.rgb.encode['400'],
   '--highlight-decode': colors.rgb.decode['400'],
-  '--link': colors.rgb.orange['400'],
-  '--error': colors.rgb.red['500'],
+  '--link': colors.rgb.fuchsia['500'],
+  '--error': colors.rgb.red['600'],
   '--fill': colors.rgb.gray['900'],
   '--fill-form': colors.rgb.gray['800'],
-  '--border': colors.rgb.gray['800'],
+  '--border': colors.rgb.gray['700'],
   '--border-form': colors.rgb.gray['700']
 }
 

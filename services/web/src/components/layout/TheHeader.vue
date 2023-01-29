@@ -7,12 +7,11 @@ const isNavMobileOpen = ref(false)
 <template>
   <header
     id="the-header"
-    class="sticky top-0 z-50 border-b bg-fill backdrop-blur grid-area-[header] supports-backdrop-blur:bg-fill/80"
-    :class="{ '!border-b-0': $route.name === 'home' }"
+    class="sticky top-0 z-50 bg-fill backdrop-blur grid-area-[header] supports-backdrop-blur:bg-fill/80"
   >
     <div class="container flex items-center justify-between py-6 md:items-end">
       <TheLogo
-        class="h-7 cursor-pointer"
+        class="h-7 cursor-pointer dark:opacity-90"
         @click="$router.push({ name: 'home' })"
       />
       <TheNav class="hidden md:block" />

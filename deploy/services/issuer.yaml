@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: services-issuer
+  namespace: services
+spec:
+  acme:
+    email: jens@doellmann.com
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: services-issuer-key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx

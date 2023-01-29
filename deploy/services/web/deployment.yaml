@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  revisionHistoryLimit: 4
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: docker-pull
+      containers:
+        - name: web
+          image: jensdll/image-data-hiding:web.new.expose.all
+          imagePullPolicy: Always
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+            runAsNonRoot: true
+            runAsUser: 101
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: nginx
+              mountPath: /etc/nginx/
+              readOnly: true
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf/
+              readOnly: true
+            - name: www-etc
+              mountPath: /data/www/etc/
+              readOnly: true
+            - name: cert
+              mountPath: /usr/local/certificates/
+              readOnly: true
+          resources:
+            requests:
+              cpu: '100m'
+              memory: '128Mi'
+            limits:
+              cpu: '200m'
+              memory: '256Mi'
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8433
+              protocol: TCP
+      volumes:
+        - name: nginx
+          configMap:
+            name: web-config
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+              - key: mime.types
+                path: mime.types
+        - name: nginx-conf
+          configMap:
+            name: web-config
+            items:
+              - key: server.conf
+                path: server.conf
+        - name: www-etc
+          configMap:
+            name: web-config
+            items:
+              - key: config.js
+                path: config.js
+        - name: cert
+          secret:
+            secretName: web-cert
+            items:
+              - key: tls.crt
+                path: tls.crt
+              - key: tls.key
+                path: tls.key
+                mode: 0004

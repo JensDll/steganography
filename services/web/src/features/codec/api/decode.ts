@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 
-import { useDownload, useFetch } from '~/composables'
-import { ApiError } from '~/composables/useFetch'
+import { useDownload, useFetch, ApiError } from '~/composables'
 
 const { post: doDecode } = useFetch('/codec/decode')
 

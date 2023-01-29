@@ -111,7 +111,6 @@ public class EncodeBinary
         }
     }
 
-
     [Test]
     public async Task BadRequestWhenTheMessageIsTooLong()
     {
@@ -155,34 +154,27 @@ public class EncodeBinary
         Assert.That(encodeResponse.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/json"));
     }
 
-    private static File[] GetFiles(params int[] sizes)
+    private static File[] GetFiles(params int[] sizes) => sizes.Select((size, i) =>
     {
-        return sizes.Select((size, i) =>
-        {
-            byte[] content = new byte[size];
-            Random.Shared.NextBytes(content);
-            File file = new($"file@{i + 1}.txt", content);
-            return file;
-        }).ToArray();
-    }
+        byte[] content = new byte[size];
+        Random.Shared.NextBytes(content);
 
-    private static int GetMessageLength(IEnumerable<File> files)
-    {
-        return files.Sum(file =>
-            // File length + file name length + file name + file
-            4 + 2 + Encoding.UTF8.GetByteCount(file.Name) + file.Content.Length);
-    }
+        File file = new()
+        {
+            Name = $"file@{i + 1}.txt",
+            Content = content
+        };
+
+        return file;
+    }).ToArray();
+
+    private static int GetMessageLength(IEnumerable<File> files) =>
+        // File length + file name length + file name + file
+        files.Sum(file => 4 + 2 + Encoding.UTF8.GetByteCount(file.Name) + file.Content.Length);
 
     private class File
     {
-        public File(string name, byte[] content)
-        {
-            Name = name;
-            Content = content;
-        }
-
-        public string Name { get; }
-
-        public byte[] Content { get; }
+        public required string Name { get; init; }
+        public required byte[] Content { get; init; }
     }
 }

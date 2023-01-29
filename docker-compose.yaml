@@ -1,23 +1,53 @@
+version: '3.9'
+
 services:
+  proxy:
+    image: traefik:v2.9.6
+    ports:
+      - 80:80
+      - 443:443
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./services/traefik/traefik.yaml:/etc/traefik/traefik.yaml
+    labels:
+      - 'traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)'
+      - 'traefik.http.routers.dashboard.service=api@internal'
+      - 'traefik.http.routers.dashboard.entrypoints=traefik'
+    networks:
+      - appnet
+
   web:
     build: services/web
     volumes:
       - ./services/web/nginx/nginx/:/etc/nginx/
-      - ./services/web/nginx/www/config.js:/data/www/config.js
-    ports:
-      - 4000:8080
+      - ./services/web/nginx/www/etc/:/data/www/etc/
+      - ./certs/web/:/usr/local/certs/
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.tcp.routers.frontend.rule=HostSNI(`localhost`) || HostSNI(`www.localhost`)'
+      - 'traefik.tcp.routers.frontend.tls=true'
+      - 'traefik.tcp.routers.frontend.tls.passthrough=true'
+      - 'traefik.tcp.services.frontend.loadbalancer.server.port=8443'
     networks:
       - appnet
+
   api:
     build: services/api
     volumes:
-      - ./services/api/src/WebApi/appsettings.json:/app/appsettings.json
+      - ./services/api/src/WebApi/appsettings.Production.json:/app/appsettings.json
+      - ./certs/api/:/app/certs/
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-    ports:
-      - 4001:8080
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.tcp.routers.backend.rule=HostSNI(`api.localhost`)'
+      - 'traefik.tcp.routers.backend.tls=true'
+      - 'traefik.tcp.routers.backend.tls.passthrough=true'
+      - 'traefik.tcp.services.backend.loadbalancer.server.port=8443'
     networks:
       - appnet
+
 networks:
   appnet:
     driver: bridge

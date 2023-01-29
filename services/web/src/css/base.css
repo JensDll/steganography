@@ -42,10 +42,6 @@
     }
   }
 
-  html :where(h1):not(:where([class~='app-markdown'] *)) {
-    @apply m-0;
-  }
-
   html :where(a):not(:where([class~='app-markdown'] *)) {
     @apply text-inherit no-underline;
   }
