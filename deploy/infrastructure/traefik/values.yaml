@@ -1,3 +1,6 @@
 metrics:
   prometheus: null
 globalArguments: ''
+ports:
+  web:
+    redirectTo: websecure

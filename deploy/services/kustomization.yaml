@@ -4,6 +4,10 @@ kind: Kustomization
 namespace: services
 
 resources:
+  - api/config.yaml
+  - api/deployment.yaml
+  - api/service.yaml
+  - api/route.yaml
   - web/config.yaml
   - web/deployment.yaml
   - web/service.yaml

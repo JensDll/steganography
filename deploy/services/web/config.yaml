@@ -53,6 +53,8 @@ data:
       keepalive_timeout 65;
 
       ssl_session_cache shared:SSL:10m;
+      ssl_protocols TLSv1.2 TLSv1.3;
+      ssl_prefer_server_ciphers on;
 
       gzip on;
       gzip_static on;
@@ -64,15 +66,13 @@ data:
       brotli_comp_level 4;
       brotli_types application/javascript;
 
-      include /etc/nginx/conf/*.conf;
+      include /etc/nginx/server/*.conf;
     }
 
   server.conf: |
     server {
-      listen 8443 ssl;
       server_name doellmann.xyz;
-      ssl_certificate     /usr/local/certificates/tls.crt;
-      ssl_certificate_key /usr/local/certificates/tls.key;
+      include /etc/nginx/common/ssl.conf;
 
       root /data/www;
       charset utf-8;
@@ -82,32 +82,40 @@ data:
       location / {
         try_files $uri /index.html;
         add_header Cache-Control "no-cache";
-        add_header Last-Modified "";
-        add_header X-Content-Type-Options "nosniff";
+        include /etc/nginx/common/header.conf;
       }
 
       location /etc {
         add_header Cache-Control "no-store";
-        add_header Last-Modified "";
-        add_header X-Content-Type-Options "nosniff";
+        include /etc/nginx/common/header.conf;
       }
 
       location /assets {
         add_header Cache-Control "max-age=315360000, public, no-transform, immutable";
-        add_header Last-Modified "";
-        add_header X-Content-Type-Options "nosniff";
+        include /etc/nginx/common/header.conf;
       }
 
       location /fonts {
         add_header Cache-Control "max-age=315360000, public, no-transform, immutable";
-        add_header Last-Modified "";
-        add_header X-Content-Type-Options "nosniff";
-      }
-
-      location = /health {
-        access_log off;
-        return 200;
+        include /etc/nginx/common/header.conf;
       }
     }
 
-  config.js: const $config={API:{URI:'https://api.doellamnn.xyz',RATE_LIMIT:120}}
+    server {
+      server_name www.doellmann.xyz;
+      include /etc/nginx/common/ssl.conf;
+      include /etc/nginx/common/header.conf;
+      return 301 https://doellmann.xyz$request_uri;
+    }
+
+  header.conf: |
+    add_header Last-Modified "";
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Strict-Transport-Security "max-age=315360000; includeSubDomains" always;
+
+  ssl.conf: |
+    listen 8443 ssl;
+    ssl_certificate /usr/local/certs/tls.crt;
+    ssl_certificate_key /usr/local/certs/tls.key;
+
+  config.js: const $config={API:{URI:'https://api.doellmann.xyz',RATE_LIMIT:120}}

@@ -3,7 +3,7 @@ FROM node:18.12 as build
 WORKDIR /out
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@7.26.0 --activate
+RUN corepack enable && corepack prepare pnpm@7.26.3 --activate
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml .npmrc ./

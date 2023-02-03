@@ -35,8 +35,8 @@ services:
   api:
     build: services/api
     volumes:
-      - ./services/api/src/WebApi/appsettings.Production.json:/app/appsettings.json
-      - ./certs/api/:/app/certs/
+      - ./services/api/kestral/:/app/Properties/
+      - ./certs/api/:/usr/local/certs/
     environment:
       ASPNETCORE_ENVIRONMENT: Production
     labels:

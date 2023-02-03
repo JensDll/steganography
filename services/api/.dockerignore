@@ -2,8 +2,8 @@
 **/bin/
 **/obj/
 **/out/
-.idea/
-.vs/
+.*/
+src/WebApi/Properties/
 
 # Files
 Dockerfile*

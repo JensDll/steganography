@@ -8,7 +8,11 @@ using WebApi.Features.Codec.EncodeText;
 const string corsDevelopment = "cors:dev";
 const string corsProduction = "cors:prod";
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions()
+{
+    Args = args,
+    ContentRootPath = "Properties"
+});
 
 builder.AddSerilogLogger();
 

@@ -6,10 +6,10 @@ metadata:
 spec:
   acme:
     email: jens@doellmann.com
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: services-issuer-key
     solvers:
       - http01:
           ingress:
-            class: nginx
+            class: traefik

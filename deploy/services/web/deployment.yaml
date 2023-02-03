@@ -20,7 +20,7 @@ spec:
         - name: docker-pull
       containers:
         - name: web
-          image: jensdll/image-data-hiding:web.new.expose.all
+          image: jensdll/image-data-hiding:web.new.latest
           imagePullPolicy: Always
           securityContext:
             capabilities:
@@ -35,14 +35,17 @@ spec:
             - name: nginx
               mountPath: /etc/nginx/
               readOnly: true
-            - name: nginx-conf
-              mountPath: /etc/nginx/conf/
+            - name: nginx-common
+              mountPath: /etc/nginx/common/
+              readOnly: true
+            - name: nginx-server
+              mountPath: /etc/nginx/server/
               readOnly: true
             - name: www-etc
               mountPath: /data/www/etc/
               readOnly: true
             - name: cert
-              mountPath: /usr/local/certificates/
+              mountPath: /usr/local/certs/
               readOnly: true
           resources:
             requests:
@@ -52,8 +55,6 @@ spec:
               cpu: '200m'
               memory: '256Mi'
           ports:
-            - containerPort: 8080
-              protocol: TCP
             - containerPort: 8433
               protocol: TCP
       volumes:
@@ -65,18 +66,28 @@ spec:
                 path: nginx.conf
               - key: mime.types
                 path: mime.types
-        - name: nginx-conf
+        - name: nginx-common
+          configMap:
+            name: web-config
+            items:
+              - key: header.conf
+                path: header.conf
+              - key: ssl.conf
+                path: ssl.conf
+        - name: nginx-server
           configMap:
             name: web-config
             items:
               - key: server.conf
                 path: server.conf
+
         - name: www-etc
           configMap:
             name: web-config
             items:
               - key: config.js
                 path: config.js
+
         - name: cert
           secret:
             secretName: web-cert

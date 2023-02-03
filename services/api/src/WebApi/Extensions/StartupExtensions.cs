@@ -42,8 +42,21 @@ public static class StartupExtensions
         serverOptions.Configure(kestrelSection)
             .Endpoint("Https", endpoint =>
             {
-                string certPath = endpoint.ConfigSection["Path"]!;
-                string keyPath = endpoint.ConfigSection["KeyPath"]!;
+                string? certPath = endpoint.ConfigSection.GetValue<string>("Path");
+
+                if (certPath is null)
+                {
+                    throw new InvalidOperationException(
+                        "Failed to find certificate path on Https endpoint configuration");
+                }
+
+                string? keyPath = endpoint.ConfigSection.GetValue<string>("KeyPath");
+
+                if (keyPath is null)
+                {
+                    throw new InvalidOperationException(
+                        "Failed to find key path on Https endpoint configuration");
+                }
 
                 X509Certificate2 certificate = X509Certificate2.CreateFromPemFile(certPath, keyPath);
 

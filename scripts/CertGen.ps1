@@ -1,7 +1,11 @@
-﻿foreach ($service in $('web', 'api')) {
+﻿New-RootCA
+New-SubordinateCA -Name image_data_hiding -PermittedDNS localhost
+
+foreach ($service in 'web', 'api') {
   $in = Join-Path $PSScriptRoot .. services $service cert.conf
   $out = Join-Path $PSScriptRoot .. certs $service
 
-  New-DevOpToolsCertificate -Name tls -RequestConfig $in -Destination $out
+  New-Certificate -Issuer image_data_hiding -Name tls -Request $in -Destination $out
+
   wsl --exec chmod 444 $(ConvertTo-WSLPath $out/tls.key)
 }

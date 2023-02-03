@@ -1,14 +1,14 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRouteTCP
 metadata:
-  name: web-route-tcp
+  name: api-route-tcp
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: HostSNI(`doellmann.xyz`) || HostSNI(`www.doellmann.xyz`)
+    - match: HostSNI(`api.doellmann.xyz`)
       services:
-        - name: web-service
+        - name: api-service
           port: websecure
   tls:
     passthrough: true

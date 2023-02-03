@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  revisionHistoryLimit: 4
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: docker-pull
+      containers:
+        - name: api
+          image: jensdll/image-data-hiding:api.new.latest
+          imagePullPolicy: Always
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+            runAsNonRoot: true
+            runAsUser: 100
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: appsettings
+              mountPath: /app/Properties/
+              readOnly: true
+            - name: cert
+              mountPath: /usr/local/certs/
+              readOnly: true
+          resources:
+            requests:
+              cpu: '200m'
+              memory: '256Mi'
+            limits:
+              cpu: '400m'
+              memory: '512Mi'
+          ports:
+            - containerPort: 8433
+              protocol: TCP
+      volumes:
+        - name: appsettings
+          configMap:
+            name: api-config
+            items:
+              - key: appsettings.json
+                path: appsettings.json
+        - name: cert
+          secret:
+            secretName: api-cert
+            items:
+              - key: tls.crt
+                path: tls.crt
+              - key: tls.key
+                path: tls.key
+                mode: 0004
