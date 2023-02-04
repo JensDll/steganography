@@ -6,7 +6,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: HostSNI(`doellmann.xyz`) || HostSNI(`www.doellmann.xyz`)
+    - match: HostSNI(`steganography.app`) || HostSNI(`www.steganography.app`)
       services:
         - name: web-service
           port: websecure

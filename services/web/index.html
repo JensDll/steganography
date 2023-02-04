@@ -7,7 +7,7 @@
       name="description"
       content="Encrypted text and binary data image Steganography."
     />
-    <title>Image Data Hiding</title>
+    <title>Steganography</title>
     <link rel="icon" href="src/assets/favicon.svg" type="image/svg+xml" />
     <link
       rel="preload"
@@ -16,26 +16,11 @@
       type="font/woff2"
       crossorigin
     />
-    <script>
-      switch (localStorage.theme) {
-        case 'light':
-          document.documentElement.classList.remove('dark')
-          break
-        case 'dark':
-          document.documentElement.classList.add('dark')
-          break
-        default:
-          localStorage.setItem('theme', 'system')
-          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.classList.add('dark')
-          } else {
-            document.documentElement.classList.remove('dark')
-          }
-      }
-    </script>
+    <script type="module" src="src/composables/theme/head.ts"></script>
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
+    <script>0;</script>
   </body>
 </html>
