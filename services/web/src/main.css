@@ -1,6 +1,209 @@
-@import './css/font.css';
-@import './css/base.css';
-@import './css/form.css';
+@layer base {
+  @font-face {
+    font-family: Inter var;
+    font-weight: 100 800;
+    font-display: block;
+    font-style: normal;
+    src: url(~/assets/Inter-roman-latin.var.woff2) format('woff2');
+  }
+
+  @font-face {
+    font-family: Inter var;
+    font-weight: 100 800;
+    font-display: block;
+    font-style: italic;
+    src: url(~/assets/Inter-italic-latin.var.woff2) format('woff2');
+  }
+
+  html {
+    @apply prose theme-encode max-w-none;
+    --max-w-container: theme('maxWidth.5xl');
+    --spacing-container: theme('spacing.5');
+  }
+
+  html.dark {
+    @apply theme-encode-dark;
+  }
+
+  html.decode {
+    @apply theme-decode;
+  }
+
+  html.dark.decode {
+    @apply theme-decode-dark;
+  }
+
+  body {
+    @apply bg-fill;
+  }
+
+  #app {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'header'
+      'main';
+  }
+
+  @screen md {
+    html {
+      --spacing-container: theme('spacing.8');
+    }
+  }
+
+  @screen lg {
+    html {
+      @apply prose-lg;
+    }
+  }
+
+  html :where(a):not(:where([class~='app-markdown'] *)) {
+    @apply text-inherit no-underline;
+  }
+
+  html :where(ul):not(:where([class~='app-markdown'] *)) {
+    @apply m-0 list-none p-0;
+  }
+
+  html :where(ul > li):not(:where([class~='app-markdown'] *)) {
+    @apply m-0 p-0;
+  }
+
+  html :where(img):not(:where([class~='app-markdown'] *)) {
+    @apply m-0;
+  }
+
+  label {
+    @apply mb-1 block cursor-pointer font-medium;
+  }
+
+  textarea {
+    display: block;
+  }
+
+  [type='file'] {
+    appearance: none;
+    cursor: pointer;
+    font-size: 0;
+  }
+
+  [type='radio'] {
+    @apply border-border-form bg-fill-form text-border-form-highlight;
+  }
+
+  [type='text'],
+  [type='email'],
+  [type='url'],
+  [type='password'],
+  [type='number'],
+  [type='date'],
+  [type='datetime-local'],
+  [type='month'],
+  [type='search'],
+  [type='tel'],
+  [type='time'],
+  [type='week'],
+  [type='checkbox'],
+  [type='radio'] [multiple],
+  textarea,
+  select {
+    @apply rounded-md border border-border-form bg-fill-form;
+  }
+
+  .custom-file-input {
+    @apply rounded-md border-2 border-dashed border-border-form bg-fill-form;
+  }
+
+  [type='text'].error,
+  [type='email'].error,
+  [type='url'].error,
+  [type='password'].error,
+  [type='number'].error,
+  [type='date'].error,
+  [type='datetime-local'].error,
+  [type='month'].error,
+  [type='search'].error,
+  [type='tel'].error,
+  [type='time'].error,
+  [type='week'].error,
+  [type='checkbox'].error,
+  [type='radio'].error,
+  [type='radio'] [multiple].error,
+  textarea.error,
+  select.error,
+  .custom-file-input.error {
+    --highlight: var(--error);
+    --border-form: theme('colors.rgb.red.300');
+    --border-form-highlight: var(--error);
+  }
+
+  .dark [type='text'].error,
+  .dark [type='email'].error,
+  .dark [type='url'].error,
+  .dark [type='password'].error,
+  .dark [type='number'].error,
+  .dark [type='date'].error,
+  .dark [type='datetime-local'].error,
+  .dark [type='month'].error,
+  .dark [type='search'].error,
+  .dark [type='tel'].error,
+  .dark [type='time'].error,
+  .dark [type='week'].error,
+  .dark [type='checkbox'].error,
+  .dark [type='radio'].error,
+  .dark [type='radio'] [multiple].error,
+  .dark textarea.error,
+  .dark select.error,
+  .dark .custom-file-input.error {
+    --border-form: var(--error);
+    --border-form-highlight: var(--error);
+  }
+
+  [type='text']:focus,
+  [type='email']:focus,
+  [type='url']:focus,
+  [type='password']:focus,
+  [type='number']:focus,
+  [type='date']:focus,
+  [type='datetime-local']:focus,
+  [type='month']:focus,
+  [type='search']:focus,
+  [type='tel']:focus,
+  [type='time']:focus,
+  [type='week']:focus,
+  [type='checkbox'],
+  [type='radio']:focus,
+  [type='radio'] [multiple]:focus,
+  textarea:focus,
+  select:focus,
+  .custom-file-input:focus-within {
+    border-color: theme('colors.border-form-highlight');
+    box-shadow: 0 0 0 4px theme('colors.border-form-highlight' / 0.12);
+  }
+
+  .dark [type='text']:focus,
+  .dark [type='email']:focus,
+  .dark [type='url']:focus,
+  .dark [type='password']:focus,
+  .dark [type='number']:focus,
+  .dark [type='date']:focus,
+  .dark [type='datetime-local']:focus,
+  .dark [type='month']:focus,
+  .dark [type='search']:focus,
+  .dark [type='tel']:focus,
+  .dark [type='time']:focus,
+  .dark [type='week']:focus,
+  .dark [type='checkbox'],
+  .dark [type='radio']:focus,
+  .dark [type='radio'] [multiple]:focus,
+  .dark textarea:focus,
+  .dark select:focus,
+  .dark .custom-file-input:focus-within {
+    border-color: theme('colors.border-form-highlight');
+    box-shadow: 0 0 0 4px theme('colors.border-form-highlight' / 0.35);
+  }
+}
 
 @tailwind base;
 @tailwind components;

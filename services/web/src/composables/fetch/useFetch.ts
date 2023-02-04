@@ -20,14 +20,7 @@ export class ApiError {
 }
 
 export const API_ERROR_UNKNOWN = new ApiError(
-  h('span', { key: 'API_ERROR_UNKNOWN' }, [
-    'An unknown error occurred. Please try again. If the problem persists, email us at ',
-    h(
-      'a',
-      { href: `mailto:support@${window.location.hostname}` },
-      `support@${window.location.hostname}`
-    )
-  ])
+  'An unknown error occurred. Please try again.'
 )
 
 export const API_ERROR_REQUEST_TOO_LARGE = new ApiError(
@@ -35,7 +28,7 @@ export const API_ERROR_REQUEST_TOO_LARGE = new ApiError(
 )
 
 export const API_ERROR_RATE_LIMIT = new ApiError(
-  `You've exceeded the rate limit. There are ${$config.API.RATE_LIMIT} requests allowed per hour`
+  `You've exceeded the rate limit.`
 )
 
 const statusCodeInterceptor: ResponseInterceptor = {
@@ -55,7 +48,7 @@ const statusCodeInterceptor: ResponseInterceptor = {
 }
 
 export const useFetch = createFetch({
-  baseUri: $config.API.URI,
+  baseUri: import.meta.env.VITE_STEGANOGRAPHY_API_URI,
   interceptors: {
     response: [statusCodeInterceptor]
   }

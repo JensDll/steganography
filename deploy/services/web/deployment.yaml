@@ -35,14 +35,8 @@ spec:
             - name: nginx
               mountPath: /etc/nginx/
               readOnly: true
-            - name: nginx-common
-              mountPath: /etc/nginx/common/
-              readOnly: true
             - name: nginx-server
               mountPath: /etc/nginx/server/
-              readOnly: true
-            - name: www-etc
-              mountPath: /data/www/etc/
               readOnly: true
             - name: cert
               mountPath: /usr/local/certs/
@@ -64,30 +58,18 @@ spec:
             items:
               - key: nginx.conf
                 path: nginx.conf
-              - key: mime.types
-                path: mime.types
-        - name: nginx-common
-          configMap:
-            name: web-config
-            items:
-              - key: header.conf
-                path: header.conf
+              - key: mime_type.conf
+                path: mime_type.conf
               - key: ssl.conf
                 path: ssl.conf
+              - key: common_header.conf
+                path: common_header.conf
         - name: nginx-server
           configMap:
             name: web-config
             items:
               - key: server.conf
                 path: server.conf
-
-        - name: www-etc
-          configMap:
-            name: web-config
-            items:
-              - key: config.js
-                path: config.js
-
         - name: cert
           secret:
             secretName: web-cert

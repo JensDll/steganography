@@ -18,10 +18,13 @@ services:
       - appnet
 
   web:
-    build: services/web
+    image: jensdll/image-data-hiding:web
+    build:
+      context: services/web
+      args:
+        DOMAIN: localhost
     volumes:
-      - ./services/web/nginx/nginx/:/etc/nginx/
-      - ./services/web/nginx/www/etc/:/data/www/etc/
+      - ./services/web/nginx/:/etc/nginx/
       - ./certs/web/:/usr/local/certs/
     labels:
       - 'traefik.enable=true'
