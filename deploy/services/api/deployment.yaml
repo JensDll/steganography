@@ -20,7 +20,7 @@ spec:
         - name: docker-pull
       containers:
         - name: api
-          image: jensdll/image-data-hiding:api.new.latest
+          image: jensdll/steganography:api.latest
           imagePullPolicy: Always
           securityContext:
             capabilities:

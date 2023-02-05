@@ -20,7 +20,7 @@ spec:
         - name: docker-pull
       containers:
         - name: web
-          image: jensdll/image-data-hiding:web.new.latest
+          image: jensdll/steganography:web.latest
           imagePullPolicy: Always
           securityContext:
             capabilities:

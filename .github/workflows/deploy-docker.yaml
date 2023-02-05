@@ -46,12 +46,22 @@ jobs:
         uses: docker/build-push-action@v4.0.0
         with:
           context: services/web
-          platforms: linux/arm64,linux/amd64
+          build-args: |
+            DOMAIN=steganography.app
+          platforms: |
+            linux/arm64
+            linux/amd64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:web.latest,
-            ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:web.${{ needs.create-tag.outputs.tag }}
-          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:web.cache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:web.cache,mode=max
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/steganography:web.latest,
+            ${{ secrets.DOCKER_HUB_USERNAME }}/steganography:web.${{ needs.create-tag.outputs.tag }}
+          cache-from: |
+            type=registry
+            ref=${{ secrets.DOCKER_HUB_USERNAME }}/steganography:web.cache
+          cache-to: |
+            type=registry
+            ref=${{ secrets.DOCKER_HUB_USERNAME }}/steganography:web.cache
+            mode=max
 
   build-and-push-api:
     needs:
@@ -82,9 +92,17 @@ jobs:
         uses: docker/build-push-action@v4.0.0
         with:
           context: services/api
-          platforms: linux/arm64,linux/amd64
+          platforms: |
+            linux/arm64
+            linux/amd64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:api.latest,
-            ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:api.${{ needs.create-tag.outputs.tag }}
-          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:api.cache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:api.cache,mode=max
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/steganography:api.latest,
+            ${{ secrets.DOCKER_HUB_USERNAME }}/steganography:api.${{ needs.create-tag.outputs.tag }}
+          cache-from: |
+            type=registry
+            ref=${{ secrets.DOCKER_HUB_USERNAME }}/steganography:api.cache
+          cache-to: |
+            type=registry
+            ref=${{ secrets.DOCKER_HUB_USERNAME }}/steganography:api.cache
+            mode=max
