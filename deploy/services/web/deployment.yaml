@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: web-deployment
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: web
@@ -43,10 +43,10 @@ spec:
               readOnly: true
           resources:
             requests:
-              cpu: '100m'
+              cpu: '80m'
               memory: '128Mi'
             limits:
-              cpu: '200m'
+              cpu: '160m'
               memory: '256Mi'
           ports:
             - containerPort: 8433

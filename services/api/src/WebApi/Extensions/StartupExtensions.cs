@@ -12,7 +12,7 @@ public static class StartupExtensions
         webBuilder.Logging.ClearProviders();
 
         LoggerConfiguration loggerConfiguration = new();
-
+        loggerConfiguration.MinimumLevel.Debug();
         loggerConfiguration.WriteTo.Console();
 
         ILogger logger = loggerConfiguration.CreateLogger();
@@ -47,7 +47,7 @@ public static class StartupExtensions
                 if (certPath is null)
                 {
                     throw new InvalidOperationException(
-                        "Failed to find certificate path on Https endpoint configuration");
+                        "Failed to find certificate path on https endpoint configuration");
                 }
 
                 string? keyPath = endpoint.ConfigSection.GetValue<string>("KeyPath");
@@ -55,7 +55,7 @@ public static class StartupExtensions
                 if (keyPath is null)
                 {
                     throw new InvalidOperationException(
-                        "Failed to find key path on Https endpoint configuration");
+                        "Failed to find key path on https endpoint configuration");
                 }
 
                 X509Certificate2 certificate = X509Certificate2.CreateFromPemFile(certPath, keyPath);

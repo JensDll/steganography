@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: api-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: api
@@ -40,11 +40,11 @@ spec:
               readOnly: true
           resources:
             requests:
-              cpu: '200m'
-              memory: '256Mi'
+              cpu: '450m'
+              memory: '768Mi'
             limits:
-              cpu: '400m'
-              memory: '512Mi'
+              cpu: '700m'
+              memory: '1024Mi'
           ports:
             - containerPort: 8433
               protocol: TCP
