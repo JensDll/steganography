@@ -6,7 +6,7 @@ WORKDIR /build
 COPY src/Domain/Domain.csproj ./Domain/
 COPY src/WebApi/WebApi.csproj ./WebApi/
 
-RUN dotnet restore ./WebApi/WebApi.csproj
+RUN dotnet restore /build/WebApi/WebApi.csproj
 
 # Copy everything else and build
 COPY src/Domain ./Domain/
