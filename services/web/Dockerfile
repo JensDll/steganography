@@ -1,5 +1,8 @@
 FROM node:18.12 as build
 
+ARG DOMAIN
+ENV DOMAIN=${DOMAIN}
+
 WORKDIR /out
 
 # Install pnpm

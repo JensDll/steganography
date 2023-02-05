@@ -3,19 +3,6 @@ kind: ConfigMap
 metadata:
   name: web-config
 data:
-  mime.types: |
-    types {
-      text/html html htm shtml;
-      text/css css;
-
-      image/svg+xml svg svgz;
-
-      font/woff woff;
-      font/woff2 woff2;
-
-      application/javascript js;
-    }
-
   nginx.conf: |
     load_module /usr/lib/nginx/modules/ngx_http_brotli_filter_module.so;
     load_module /usr/lib/nginx/modules/ngx_http_brotli_static_module.so;
@@ -36,10 +23,6 @@ data:
       uwsgi_temp_path /tmp/uwsgi_temp;
       scgi_temp_path /tmp/scgi_temp;
 
-      include /etc/nginx/mime.types;
-      default_type application/octet-stream;
-      charset_types text/css image/svg+xml application/javascript;
-
       log_format main
         '$remote_addr - [$time_local] '
         '[$request $status $body_bytes_sent] '
@@ -52,9 +35,8 @@ data:
 
       keepalive_timeout 65;
 
-      ssl_session_cache shared:SSL:10m;
-      ssl_protocols TLSv1.2 TLSv1.3;
-      ssl_prefer_server_ciphers on;
+      include /etc/nginx/mime_type.conf;
+      include /etc/nginx/ssl.conf;
 
       gzip on;
       gzip_static on;
@@ -69,10 +51,40 @@ data:
       include /etc/nginx/server/*.conf;
     }
 
+  mime_type.conf: |
+    types {
+      text/html html;
+      text/css css;
+
+      image/svg+xml svg;
+
+      font/woff woff;
+      font/woff2 woff2;
+
+      application/javascript js;
+    }
+
+    default_type application/octet-stream;
+    charset_types text/css image/svg+xml application/javascript;
+
+  ssl.conf: |
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384;
+    ssl_conf_command Options PrioritizeChaCha;
+    ssl_prefer_server_ciphers on;
+    ssl_certificate /usr/local/certs/tls.crt;
+    ssl_certificate_key /usr/local/certs/tls.key;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1h;
+
+  common_header.conf: |
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Strict-Transport-Security "max-age=315360000;includeSubDomains;preload" always;
+
   server.conf: |
     server {
-      server_name doellmann.xyz;
-      include /etc/nginx/common/ssl.conf;
+      listen 8443 ssl http2;
+      server_name steganography.app;
 
       root /data/www;
       charset utf-8;
@@ -81,41 +93,21 @@ data:
 
       location / {
         try_files $uri /index.html;
-        add_header Cache-Control "no-cache";
-        include /etc/nginx/common/header.conf;
-      }
-
-      location /etc {
-        add_header Cache-Control "no-store";
-        include /etc/nginx/common/header.conf;
+        add_header Cache-Control "private,no-cache,no-store,must-revalidate,max-age=0";
+        add_header Content-Security-Policy "default-src 'self';script-src 'self' 'sha256-8atrH6Pge+As3TgWrRwcD2pUDCYuTIBfIIqQGFDl3eA=';img-src 'self' data: blob:;connect-src 'self' sentry.io https://api.steganography.app;upgrade-insecure-requests;form-action 'none';report-uri https://o4504621394165760.ingest.sentry.io/api/4504621566001152/security/?sentry_key=ab4ccfc57221482aafb411c6b9b4744a" always;
+        add_header X-XSS-Protection "0" always;
+        include /etc/nginx/common_header.conf;
       }
 
       location /assets {
-        add_header Cache-Control "max-age=315360000, public, no-transform, immutable";
-        include /etc/nginx/common/header.conf;
-      }
-
-      location /fonts {
-        add_header Cache-Control "max-age=315360000, public, no-transform, immutable";
-        include /etc/nginx/common/header.conf;
+        add_header Cache-Control "public,max-age=315360000,immutable";
+        include /etc/nginx/common_header.conf;
       }
     }
 
     server {
-      server_name www.doellmann.xyz;
-      include /etc/nginx/common/ssl.conf;
-      include /etc/nginx/common/header.conf;
-      return 301 https://doellmann.xyz$request_uri;
+      listen 8443 ssl http2;
+      server_name www.steganography.app;
+      include /etc/nginx/common_header.conf;
+      return 301 https://steganography.app$request_uri;
     }
-
-  header.conf: |
-    add_header Last-Modified "";
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header Strict-Transport-Security "max-age=315360000; includeSubDomains" always;
-
-  ssl.conf: |
-    listen 8443 ssl;
-    ssl_certificate /usr/local/certs/tls.crt;
-    ssl_certificate_key /usr/local/certs/tls.key;
-
-  config.js: const $config={API:{URI:'https://api.doellmann.xyz',RATE_LIMIT:120}}

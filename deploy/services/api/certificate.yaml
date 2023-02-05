@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: api-cert
   dnsNames:
-    - api.doellmann.xyz
+    - api.steganography.app
   privateKey:
     algorithm: ECDSA
   issuerRef:

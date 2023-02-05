@@ -2,6 +2,8 @@ import { createApp } from 'vue'
 
 import '~/main.css'
 import App from '~/App.vue'
+import favIconDark from '~/assets/favicon-dark.svg'
+import favIcon from '~/assets/favicon.svg'
 import { useMediaQuery } from '~/composables'
 import { directives } from '~/directives'
 import { router } from '~/lib/router'
@@ -21,8 +23,8 @@ const favicon = document.querySelector(
 
 useMediaQuery('(prefers-color-scheme: dark)', matches => {
   if (matches) {
-    favicon.setAttribute('href', '/favicon-dark.svg')
+    favicon.setAttribute('href', favIconDark)
   } else {
-    favicon.setAttribute('href', '/favicon.svg')
+    favicon.setAttribute('href', favIcon)
   }
 })

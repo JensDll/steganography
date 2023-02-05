@@ -6,7 +6,7 @@
       <h1
         class="container mb-0 text-center text-4xl font-extrabold tracking-tight md:text-5xl 2xl:text-6xl"
       >
-        Image Data Hiding
+        Steganography
       </h1>
       <p class="container my-8 max-w-3xl text-center text-lg">
         Hide encrypted text and binary data in cover images.

@@ -17,8 +17,7 @@ $dryRun = "--dry-run=$($isDryRun ? 'client' : 'none')"
 if ($(kubectl apply -f $namespaceYaml $dryRun) -match '^namespace/(?<namespace>\S+)') {
   $namespace = $Matches.namespace
 } else {
-  Write-Error 'Failed to configure namespace'
-  exit 1
+  throw 'Failed to configure namespace'
 }
 
 switch ($Action) {

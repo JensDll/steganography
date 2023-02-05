@@ -6,8 +6,8 @@ metadata:
 spec:
   secretName: web-cert
   dnsNames:
-    - doellmann.xyz
-    - www.doellmann.xyz
+    - steganography.app
+    - www.steganography.app
   privateKey:
     algorithm: ECDSA
   issuerRef:

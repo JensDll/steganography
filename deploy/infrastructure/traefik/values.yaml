@@ -4,3 +4,5 @@ globalArguments: ''
 ports:
   web:
     redirectTo: websecure
+service:
+  type: LoadBalancer

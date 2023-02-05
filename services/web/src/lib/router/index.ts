@@ -12,7 +12,7 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     component: HomeView,
     meta: {
-      title: 'Image Data Hiding'
+      title: 'Steganography'
     }
   },
   {

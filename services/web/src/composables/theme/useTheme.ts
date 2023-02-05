@@ -1,6 +1,6 @@
 import { createTheme } from './createTheme'
 
-export const useTheme = createTheme<'light' | 'dark'>(
+export const useTheme = createTheme(
   {
     light: {
       icon: 'i-heroicons-sun',

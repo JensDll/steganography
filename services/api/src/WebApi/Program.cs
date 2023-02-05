@@ -4,6 +4,7 @@ using WebApi.Extensions;
 using WebApi.Features.Codec.Decode;
 using WebApi.Features.Codec.EncodeBinary;
 using WebApi.Features.Codec.EncodeText;
+using WebApi.Middleware;
 
 const string corsDevelopment = "cors:dev";
 const string corsProduction = "cors:prod";
@@ -47,12 +48,14 @@ else
     app.UseCors(corsProduction);
 }
 
+app.UseMiddleware<LoggingMiddleware>();
+
 RouteGroupBuilder codec = app.MapGroup("/codec").WithTags("Codec");
 codec.MapPost<EncodeTextEndpoint>("/encode/text");
 codec.MapPost<EncodeBinaryEndpoint>("/encode/binary");
 codec.MapPost<DecodeEndpoint>("/decode");
 
 RouteGroupBuilder auxiliary = app.MapGroup("/").WithTags("Auxiliary");
-auxiliary.MapGet("/health", () => "Hello Api");
+auxiliary.MapGet("/health", () => TypedResults.Ok());
 
 app.Run();

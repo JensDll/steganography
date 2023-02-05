@@ -6,7 +6,7 @@ data:
   appsettings.json: |
     {
       "Cors": {
-        "AllowedOrigins": ["https://doellmann.xyz"]
+        "AllowedOrigins": ["https://steganography.app"]
       },
       "Kestrel": {
         "Endpoints": {
