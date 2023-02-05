@@ -14,7 +14,7 @@ jobs:
         uses: ./.github/actions/create-pull
         id: create-pull
         with:
-          # Make sure to trigger pull_request workflows.
+          # Make sure to trigger pull request workflows
           github_token: ${{ secrets.WORKFLOW_TOKEN }}
           base: main
           head: staging

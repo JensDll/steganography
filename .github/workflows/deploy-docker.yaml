@@ -66,7 +66,7 @@ jobs:
       - name: Setting up Quick Emulator (QEMU)
         uses: docker/setup-qemu-action@v2
         with:
-          platforms: linux/amd64
+          platforms: linux/arm64,linux/amd64
 
       - name: Setting up Docker Buildx
         id: buildx
@@ -82,7 +82,7 @@ jobs:
         uses: docker/build-push-action@v4.0.0
         with:
           context: services/api
-          platforms: linux/amd64
+          platforms: linux/arm64,linux/amd64
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:api.latest,
             ${{ secrets.DOCKER_HUB_USERNAME }}/image-data-hiding:api.${{ needs.create-tag.outputs.tag }}

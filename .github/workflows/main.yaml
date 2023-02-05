@@ -1,0 +1,55 @@
+name: Main
+
+on:
+  pull_request:
+    branches:
+      - main
+      - staging
+  push:
+    branches:
+      - staging
+
+jobs:
+  should-run:
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
+    with:
+      projects: services/web services/api
+
+  test-web:
+    needs: should-run
+    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true' ||
+      github.base_ref == 'main'
+    uses: ./.github/workflows/test-web.yaml
+
+  test-api:
+    needs: should-run
+    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true' ||
+      github.base_ref == 'main'
+    uses: ./.github/workflows/test-api.yaml
+
+  format-web:
+    needs: test-web
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/format-web.yaml
+
+  format-api:
+    needs: test-api
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/format-api.yaml
+
+  merge-main:
+    needs:
+      - test-web
+      - test-api
+    if: github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out the repository
+        uses: actions/checkout@v3
+
+      - name: Merging pull request
+        uses: ./.github/actions/merge-pull
+        with:
+          # Make sure to trigger push workflows
+          github_token: ${{ secrets.WORKFLOW_TOKEN }}
+          pull_number: ${{ github.event.number }}
