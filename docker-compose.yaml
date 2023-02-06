@@ -38,7 +38,7 @@ services:
   api:
     build: services/api
     volumes:
-      - ./services/api/kestral/:/app/Properties/
+      - ./services/api/kestrel/:/app/Properties/
       - ./certs/api/:/usr/local/certs/
     environment:
       ASPNETCORE_ENVIRONMENT: Production
