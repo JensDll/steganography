@@ -24,7 +24,7 @@ export const API_ERROR_UNKNOWN = new ApiError(
 )
 
 export const API_ERROR_REQUEST_TOO_LARGE = new ApiError(
-  'The request is too big. Please reduce its size and try again'
+  'The request is too large. Please reduce its size and try again'
 )
 
 export const API_ERROR_RATE_LIMIT = new ApiError(

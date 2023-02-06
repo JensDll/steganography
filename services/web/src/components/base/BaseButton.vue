@@ -42,7 +42,7 @@ const handleClick = (e: MouseEvent) => {
           'bg-decode-500 text-white hover:bg-decode-400 focus:outline-decode-300 dark:bg-decode-700 dark:hover:bg-decode-600 dark:focus:outline-decode-600'
       }[variant],
       {
-        'cursor-not-allowed opacity-30': disabled
+        'pointer-events-none opacity-25': disabled
       }
     ]"
     :disabled="disabled"

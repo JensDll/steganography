@@ -55,8 +55,8 @@
 @screen md {
   .main {
     grid-template-rows: unset;
-    @apply gap-y-0 gap-x-12;
-    grid-template-columns: 10rem 1fr;
+    @apply gap-y-0 gap-x-10;
+    grid-template-columns: 12rem 1fr;
     grid-template-areas:
       'nav header'
       'nav main';
@@ -83,8 +83,7 @@
 
 @screen lg {
   .main {
-    @apply gap-x-16;
-    grid-template-columns: 12rem 1fr;
+    @apply gap-x-14;
   }
 }
 </style>

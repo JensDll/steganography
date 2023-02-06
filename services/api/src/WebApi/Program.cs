@@ -31,7 +31,7 @@ builder.Services
 
 builder.WebHost.ConfigureKestrel((context, serverOptions) =>
 {
-    serverOptions.Limits.MaxRequestBodySize = 60 * 1024 * 1024; // 60 MB
+    context.Configuration.GetSection("Limits").Bind(serverOptions.Limits);
     context.ConfigureCertificate(serverOptions);
 });
 

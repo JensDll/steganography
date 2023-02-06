@@ -18,7 +18,7 @@ defineProps({
 
 <style scoped>
 .spin {
-  animation: spin 900ms linear infinite;
+  animation: spin 800ms linear infinite;
 }
 
 @keyframes spin {
@@ -29,7 +29,7 @@ defineProps({
 
 .loading-enter-active,
 .loading-leave-active {
-  transition: opacity 200ms;
+  transition: opacity 250ms;
 }
 
 .loading-enter-from,
