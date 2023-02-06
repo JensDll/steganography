@@ -15,6 +15,9 @@ data:
             "Path": "/usr/local/certs/tls.crt",
             "KeyPath": "/usr/local/certs/tls.key"
           }
+        },
+        "Limits": {
+          "MaxRequestBodySize": 31457280
         }
       }
     }

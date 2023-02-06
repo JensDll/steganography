@@ -6,9 +6,6 @@ using WebApi.Features.Codec.EncodeBinary;
 using WebApi.Features.Codec.EncodeText;
 using WebApi.Middleware;
 
-const string corsDevelopment = "cors:dev";
-const string corsProduction = "cors:prod";
-
 WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions()
 {
     Args = args,
@@ -22,16 +19,15 @@ builder.Services
     .AddSwaggerGen()
     .AddMinimalApiBuilderEndpoints()
     .AddDomain()
-    .AddCors(options =>
+    .AddCors(corsOptions =>
     {
-        options.AddPolicy(corsDevelopment, corsBuilder => { corsBuilder.AllowAnyOrigin(); });
-        options.AddPolicy(corsProduction,
+        corsOptions.AddDefaultPolicy(
             corsBuilder => { corsBuilder.WithOrigins(builder.Configuration.AllowedOrigins()); });
     });
 
 builder.WebHost.ConfigureKestrel((context, serverOptions) =>
 {
-    context.Configuration.GetSection("Limits").Bind(serverOptions.Limits);
+    context.Configuration.GetSection("Kestrel:Limits").Bind(serverOptions.Limits);
     context.ConfigureCertificate(serverOptions);
 });
 
@@ -41,12 +37,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseCors(corsDevelopment);
 }
-else
-{
-    app.UseCors(corsProduction);
-}
+
+app.UseCors();
 
 app.UseMiddleware<LoggingMiddleware>();
 
