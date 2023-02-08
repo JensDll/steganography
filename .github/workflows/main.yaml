@@ -28,11 +28,13 @@ jobs:
     uses: ./.github/workflows/test-api.yaml
 
   format-web:
+    needs: should-run
     if: github.event_name == 'push' &&
       fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     uses: ./.github/workflows/format-web.yaml
 
   format-api:
+    needs: should-run
     if: github.event_name == 'push' &&
       fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     uses: ./.github/workflows/format-api.yaml
