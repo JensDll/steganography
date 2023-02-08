@@ -22,12 +22,5 @@
     },
     "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"]
   },
-  "include": [
-    "*.ts",
-    "dts/*.d.ts",
-    "src/**/*",
-    "src/**/*.vue",
-    "tailwind",
-    "vite-plugin-compression"
-  ]
+  "include": ["*.ts", "src/**/*", "src/**/*.vue", "env/**/*"]
 }

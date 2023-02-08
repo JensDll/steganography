@@ -4,10 +4,10 @@ const { register } = require('esbuild-register/dist/node')
 const { Icons } = require('tailwindcss-plugin-icons')
 
 const { unregister } = register()
-const { Common } = require('./tailwind/common')
-const { theme } = require('./tailwind/theme')
-const { Themes } = require('./tailwind/themes')
-const { Variants } = require('./tailwind/variants')
+const { Common } = require('./src/styles/tailwind/common')
+const { theme } = require('./src/styles/tailwind/theme')
+const { Themes } = require('./src/styles/tailwind/themes')
+const { Variants } = require('./src/styles/tailwind/variants')
 unregister()
 
 /** @type {import('tailwindcss').Config} */

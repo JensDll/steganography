@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 
-import '~/main.css'
+import '~/styles/main.css'
 import App from '~/App.vue'
 import favIconDark from '~/assets/favicon-dark.svg'
 import favIcon from '~/assets/favicon.svg'

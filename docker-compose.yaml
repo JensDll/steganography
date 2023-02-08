@@ -24,7 +24,7 @@ services:
       args:
         DOMAIN: localhost
     volumes:
-      - ./services/web/nginx/:/etc/nginx/
+      - ./services/web/deploy/nginx/:/etc/nginx/
       - ./certs/web/:/usr/local/certs/
     labels:
       - 'traefik.enable=true'
@@ -38,7 +38,7 @@ services:
   api:
     build: services/api
     volumes:
-      - ./services/api/kestrel/:/app/Properties/
+      - ./services/api/deploy/kestrel/:/app/Properties/
       - ./certs/api/:/usr/local/certs/
     environment:
       ASPNETCORE_ENVIRONMENT: Production

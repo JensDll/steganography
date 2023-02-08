@@ -1,29 +1,25 @@
-import url from 'url'
+import url from 'node:url'
 
 import Vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 
-import { Compression } from './vite/plugin_compression'
+import { Compression } from './env/vite-plugin-compression'
 
 const srcPath = url.fileURLToPath(new url.URL('./src', import.meta.url))
-const tailwindThemePath = url.fileURLToPath(
-  new url.URL('./tailwind/theme', import.meta.url)
-)
 
 export default defineConfig({
-  envDir: 'vite',
+  envDir: 'env',
   resolve: {
     alias: {
-      '~': srcPath,
-      'tailwind-theme': tailwindThemePath
+      '~': srcPath
     }
   },
   plugins: [
     Vue(),
     Components({
       dirs: ['src/components', 'src/features/*/components'],
-      dts: './dts/components.d.ts'
+      dts: './env/components.d.ts'
     }),
     Compression()
   ]

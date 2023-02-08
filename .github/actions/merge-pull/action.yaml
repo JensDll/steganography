@@ -29,7 +29,7 @@ runs:
         github-token: ${{ inputs.github_token }}
         script: |
           const owner = 'JensDll'
-          const repo = 'image-data-hiding'
+          const repo = 'steganography'
 
           const { data: pullRequest } = await github.rest.pulls.get({
             owner,
@@ -84,7 +84,7 @@ runs:
       with:
         script: |
           const owner = 'JensDll'
-          const repo = 'image-data-hiding'
+          const repo = 'steganography'
 
           console.log('Overwriting merge commit (custom rebase) ...')
 

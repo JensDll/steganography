@@ -1,6 +1,7 @@
 import { tryOnBeforeMount, tryOnScopeDispose } from '@vueuse/core'
-import type { TailwindTheme } from 'tailwind-theme'
 import { ref } from 'vue'
+
+import type { TailwindTheme } from '~/styles/tailwind/theme'
 
 type MediaQuery =
   | '(prefers-reduced-motion: reduce)'

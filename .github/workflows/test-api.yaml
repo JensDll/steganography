@@ -9,21 +9,22 @@ jobs:
       run:
         shell: bash
         working-directory: services/api
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
     runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.3.0
 
       - name: Setting up dotnet
         uses: actions/setup-dotnet@v3.0.3
-        with:
-          dotnet-version: 7.0.x
 
-      - name: Installing dependencies
+      - name: Restoring solution
         run: dotnet restore
 
-      - name: Building the project
-        run: dotnet build --configuration Release --no-restore
+      - name: Building solution
+        run: dotnet build --no-restore --configuration ${{ matrix.configuration }}
 
       - name: Running tests
-        run: dotnet test --no-restore --verbosity normal
+        run: dotnet test --no-restore --no-build --configuration ${{ matrix.configuration }}

@@ -6,7 +6,7 @@ ENV DOMAIN=${DOMAIN}
 WORKDIR /out
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@7.26.3 --activate
+RUN corepack enable && corepack prepare pnpm@7.27.0 --activate
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml .npmrc ./

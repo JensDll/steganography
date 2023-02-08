@@ -30,7 +30,7 @@ runs:
         github-token: ${{ inputs.github_token }}
         script: |
           const owner = 'JensDll'
-          const repo = 'image-data-hiding'
+          const repo = 'steganography'
 
           const { data: pullRequest } = await github.rest.pulls.create({
             owner,

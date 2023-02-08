@@ -1,79 +1,4 @@
 @layer base {
-  @font-face {
-    font-family: Inter var;
-    font-weight: 100 800;
-    font-display: block;
-    font-style: normal;
-    src: url(~/assets/Inter-roman-latin.var.woff2) format('woff2');
-  }
-
-  @font-face {
-    font-family: Inter var;
-    font-weight: 100 800;
-    font-display: block;
-    font-style: italic;
-    src: url(~/assets/Inter-italic-latin.var.woff2) format('woff2');
-  }
-
-  html {
-    @apply prose theme-encode max-w-none;
-    --max-w-container: theme('maxWidth.5xl');
-    --spacing-container: theme('spacing.5');
-  }
-
-  html.dark {
-    @apply theme-encode-dark;
-  }
-
-  html.decode {
-    @apply theme-decode;
-  }
-
-  html.dark.decode {
-    @apply theme-decode-dark;
-  }
-
-  body {
-    @apply bg-fill;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      'header'
-      'main';
-  }
-
-  @screen md {
-    html {
-      --spacing-container: theme('spacing.8');
-    }
-  }
-
-  @screen lg {
-    html {
-      @apply prose-lg;
-    }
-  }
-
-  html :where(a):not(:where([class~='app-markdown'] *)) {
-    @apply text-inherit no-underline;
-  }
-
-  html :where(ul):not(:where([class~='app-markdown'] *)) {
-    @apply m-0 list-none p-0;
-  }
-
-  html :where(ul > li):not(:where([class~='app-markdown'] *)) {
-    @apply m-0 p-0;
-  }
-
-  html :where(img):not(:where([class~='app-markdown'] *)) {
-    @apply m-0;
-  }
-
   label {
     @apply mb-1 block cursor-pointer font-medium;
   }
@@ -204,7 +129,3 @@
     box-shadow: 0 0 0 4px theme('colors.border-form-highlight' / 0.35);
   }
 }
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
