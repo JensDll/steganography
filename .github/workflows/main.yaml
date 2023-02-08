@@ -28,13 +28,13 @@ jobs:
     uses: ./.github/workflows/test-api.yaml
 
   format-web:
-    needs: test-web
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' &&
+      fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
     uses: ./.github/workflows/format-web.yaml
 
   format-api:
-    needs: test-api
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' &&
+      fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
     uses: ./.github/workflows/format-api.yaml
 
   merge-main:
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.3.0
 
       - name: Merging pull request
         uses: ./.github/actions/merge-pull

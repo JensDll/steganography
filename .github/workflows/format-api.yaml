@@ -13,3 +13,13 @@ jobs:
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v3.3.0
+
+      - name: Setting up dotnet
+        uses: actions/setup-dotnet@v3.0.3
+
+      - name: Installing ReSharper command line tools
+        run: dotnet tool install --global JetBrains.ReSharper.CommandLineTools
+
+      - name: Formatting the code
+        shell: pwsh
+        run: ./scripts/format.ps1

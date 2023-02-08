@@ -1,3 +1,3 @@
-﻿$solution = Join-Path $PSScriptRoot .. api.sln
+﻿$solutionFile = Join-Path $PSScriptRoot .. api.sln
 
-jb cleanupcode --profile=Format $solution
+jb cleanupcode --profile=Format $solutionFile

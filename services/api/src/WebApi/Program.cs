@@ -24,10 +24,7 @@ builder.Services.AddCors(corsOptions =>
         corsBuilder => { corsBuilder.WithOrigins(builder.Configuration.AllowedOrigins()); });
 });
 
-builder.WebHost.ConfigureKestrel((context, serverOptions) =>
-{
-    context.ConfigureCertificate(serverOptions);
-});
+builder.WebHost.ConfigureKestrel((context, serverOptions) => { context.ConfigureCertificate(serverOptions); });
 
 WebApplication app = builder.Build();
 
@@ -40,7 +37,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors();
 
 RouteGroupBuilder codec = app.MapGroup("/codec").WithTags("Codec");
-codec.MapPost<EncodeTextEndpoint>("/encode/text").RequireHost();
+codec.MapPost<EncodeTextEndpoint>("/encode/text");
 codec.MapPost<EncodeBinaryEndpoint>("/encode/binary");
 codec.MapPost<DecodeEndpoint>("/decode");
 
