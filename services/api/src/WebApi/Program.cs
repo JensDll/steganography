@@ -16,7 +16,7 @@ builder.AddSerilogLogger();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMinimalApiBuilderEndpoints();
-builder.Services.AddDomain();
+    builder.Services.AddDomain();
 
 builder.Services.AddCors(corsOptions =>
 {
