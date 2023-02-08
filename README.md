@@ -1,6 +1,4 @@
-# Steganography
-
-Image Steganography with web interface.
+# Image Steganography with Web Interface
 
 ## Example
 
