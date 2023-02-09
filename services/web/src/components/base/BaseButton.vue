@@ -33,7 +33,7 @@ const handleClick = (e: MouseEvent) => {
     :class="[
       {
         default:
-          'bg-white shadow  hover:bg-gray-100 focus:outline-gray-400  dark:bg-gray-800  dark:hover:bg-gray-700 dark:focus:outline-gray-400',
+          'border bg-fill-form hover:bg-gray-100 focus:outline-gray-300  dark:hover:bg-gray-700/60 dark:focus:outline-gray-500',
         landing:
           ' bg-gray-900 px-6 text-white outline-none hover:bg-gray-700 dark:hover:bg-gray-800',
         encode:

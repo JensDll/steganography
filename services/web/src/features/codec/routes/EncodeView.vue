@@ -123,7 +123,6 @@ async function handleSubmit() {
       <LoadingIndicator class="mr-6 text-highlight-encode" :loading="loading" />
       <BaseButton class="mr-4" @click="abort()">Cancel</BaseButton>
       <BaseButton type="submit" variant="encode" :disabled="loading">
-        <span class="i-mdi-image-lock-outline mr-1 inline-block"></span>
         Encode
       </BaseButton>
     </section>

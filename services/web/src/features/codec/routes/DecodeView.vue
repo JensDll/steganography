@@ -74,7 +74,6 @@ async function handleSubmit() {
         variant="decode"
         :disabled="decode.loading.value"
       >
-        <span class="i-mdi-image-search-outline mr-1 inline-block"></span>
         Decode
       </BaseButton>
     </section>

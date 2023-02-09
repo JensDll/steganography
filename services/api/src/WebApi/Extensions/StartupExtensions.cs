@@ -12,7 +12,7 @@ public static class StartupExtensions
         webBuilder.Logging.ClearProviders();
 
         LoggerConfiguration loggerConfiguration = new();
-        loggerConfiguration.MinimumLevel.Debug();
+        loggerConfiguration.MinimumLevel.Information();
         loggerConfiguration.WriteTo.Console();
 
         ILogger logger = loggerConfiguration.CreateLogger();

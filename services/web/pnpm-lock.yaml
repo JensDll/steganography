@@ -23,7 +23,7 @@ specifiers:
   tailwindcss: 3.2.6
   tailwindcss-plugin-icons: 2.1.0
   typescript: 4.9.5
-  unplugin-auto-import: 0.13.0
+  unplugin-auto-import: 0.14.2
   unplugin-vue-components: 0.23.0
   validierung: 1.0.3
   vite: 4.1.1
@@ -55,7 +55,7 @@ dependencies:
   tailwindcss: 3.2.6_postcss@8.4.21
   tailwindcss-plugin-icons: 2.1.0_tailwindcss@3.2.6
   typescript: 4.9.5
-  unplugin-auto-import: 0.13.0_@vueuse+core@9.12.0
+  unplugin-auto-import: 0.14.2_@vueuse+core@9.12.0
   unplugin-vue-components: 0.23.0_vue@3.2.47
   validierung: 1.0.3_vue@3.2.47
   vite: 4.1.1_@types+node@18.13.0
@@ -3450,8 +3450,8 @@ packages:
       - rollup
     dev: false
 
-  /unplugin-auto-import/0.13.0_@vueuse+core@9.12.0:
-    resolution: {integrity: sha512-nKMxDbkjM4FRPInFfm7sWrJOKgxfKKwb5yLPP+DEGl/SG0/FtBoW1LnZL4PQfx0FXjertoHO1P/5nDf+RSip2Q==}
+  /unplugin-auto-import/0.14.2_@vueuse+core@9.12.0:
+    resolution: {integrity: sha512-6DptcCD+bKlxwK0yS4ehleZTvtG4Xl9k/XxhKWxc9ii2uE28HvcA3KbYpoHAzTlHDXRBrtcCAohR8vtIRB5bfg==}
     engines: {node: '>=14'}
     peerDependencies:
       '@vueuse/core': '*'
@@ -3460,6 +3460,7 @@ packages:
         optional: true
     dependencies:
       '@antfu/utils': 0.7.2
+      '@nuxt/kit': 3.1.2
       '@rollup/pluginutils': 5.0.2
       '@vueuse/core': 9.12.0_vue@3.2.47
       local-pkg: 0.4.3
@@ -3468,6 +3469,7 @@ packages:
       unplugin: 1.0.1
     transitivePeerDependencies:
       - rollup
+      - supports-color
     dev: false
 
   /unplugin-vue-components/0.23.0_vue@3.2.47:
