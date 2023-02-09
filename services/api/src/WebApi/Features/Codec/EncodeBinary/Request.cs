@@ -28,7 +28,9 @@ public class EncodeBinaryRequest
             return null;
         }
 
-        NextSection? nextSection = await multipartReader.ReadNextSectionAsync();
+        CancellationToken cancellationToken = context.RequestAborted;
+
+        NextSection? nextSection = await multipartReader.ReadNextSectionAsync(cancellationToken);
         FileMultipartSection? fileSection = nextSection?.AsFileSection("coverImage");
 
         if (fileSection is null)
@@ -36,7 +38,7 @@ public class EncodeBinaryRequest
             return null;
         }
 
-        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync();
+        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync(cancellationToken);
 
         if (coverImage is null)
         {

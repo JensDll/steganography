@@ -8,7 +8,7 @@ namespace WebApi.Extensions;
 public static class FileMultipartSectionExtensions
 {
     public static async Task<Image<Rgb24>?> ReadCoverImageAsync(this FileMultipartSection fileSection,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         try
         {
@@ -20,7 +20,7 @@ public static class FileMultipartSectionExtensions
     }
 
     public static async Task<Image<Rgb24>?> ReadCoverImageAsync<TImageFormat>(this FileMultipartSection fileSection,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
         where TImageFormat : IImageFormat
     {
         try

@@ -23,7 +23,9 @@ public class DecodeRequest
             return null;
         }
 
-        NextSection? nextSection = await multipartReader.ReadNextSectionAsync();
+        CancellationToken cancellationToken = context.RequestAborted;
+
+        NextSection? nextSection = await multipartReader.ReadNextSectionAsync(cancellationToken);
         FileMultipartSection? fileSection = nextSection?.AsFileSection("coverImage");
 
         if (fileSection is null)
@@ -31,7 +33,7 @@ public class DecodeRequest
             return null;
         }
 
-        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync<PngFormat>();
+        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync<PngFormat>(cancellationToken);
 
         if (coverImage is null)
         {
@@ -40,7 +42,7 @@ public class DecodeRequest
 
         context.Response.RegisterForDispose(coverImage);
 
-        nextSection = await multipartReader.ReadNextSectionAsync();
+        nextSection = await multipartReader.ReadNextSectionAsync(cancellationToken);
         FormMultipartSection? formSection = nextSection?.AsFormSection("key");
 
         if (formSection is null)
@@ -48,7 +50,7 @@ public class DecodeRequest
             return null;
         }
 
-        string key = await formSection.GetValueAsync();
+        string key = await formSection.GetValueAsync(cancellationToken);
 
         return new DecodeRequest()
         {
