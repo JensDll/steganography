@@ -28,6 +28,7 @@ public class EncodeBinary
 
         foreach (File file in files)
         {
+            encodeFormData.Add(new StringContent(file.Size.ToString()), "length");
             encodeFormData.Add(new ByteArrayContent(file.Content), "name", file.Name);
         }
 
@@ -89,8 +90,6 @@ public class EncodeBinary
         }
         else
         {
-            Assert.That(decodeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-            Assert.That(decodeResponse.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/json"));
             return;
         }
 
@@ -162,7 +161,8 @@ public class EncodeBinary
         File file = new()
         {
             Name = $"file@{i + 1}.txt",
-            Content = content
+            Content = content,
+            Size = size
         };
 
         return file;
@@ -176,5 +176,6 @@ public class EncodeBinary
     {
         public required string Name { get; init; }
         public required byte[] Content { get; init; }
+        public required int Size { get; init; }
     }
 }

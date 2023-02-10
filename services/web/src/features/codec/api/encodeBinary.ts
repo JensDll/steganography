@@ -19,6 +19,7 @@ export async function encodeBinary(coverImage: File, files: File[]) {
   const formData = new FormData()
   formData.append('coverImage', coverImage)
   for (const file of files) {
+    formData.append('', file.size.toString())
     formData.append('', file)
   }
 

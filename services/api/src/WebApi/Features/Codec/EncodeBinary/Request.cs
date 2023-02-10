@@ -47,8 +47,6 @@ public class EncodeBinaryRequest
 
         context.Response.RegisterForDispose(coverImage);
 
-        context.Response.RegisterForDispose(coverImage);
-
         Pipe pipe = new();
 
         return new EncodeBinaryRequest
@@ -61,76 +59,86 @@ public class EncodeBinaryRequest
         };
     }
 
-    public async Task<int?> FillPipeAsync(AesCounterMode aes,
-        Action<string> addValidationError,
+    public async Task<int?> FillPipeAsync(
+        AesCounterMode aes,
+        List<string> validationErrors,
         CancellationToken cancellationToken)
     {
-        IReadOnlyList<FormFile>? files = await MultipartReader.ReadFilesBufferedAsync(cancellationToken);
-
-        if (files is null)
-        {
-            PipeReader.CancelPendingRead();
-            await PipeWriter.CompleteAsync();
-            return null;
-        }
-
         int messageLength = 0;
-        int[] sizeHints = new int[files.Count];
 
-        for (int i = 0; i < files.Count; ++i)
+        while (await MultipartReader.ReadNextSectionAsync(cancellationToken) is { } nextSection)
         {
-            FormFile file = files[i];
+            FormMultipartSection? lengthSection = nextSection.AsFormSection();
 
-            int filenameSize = Encoding.UTF8.GetByteCount(file.FileName);
+            if (lengthSection is null)
+            {
+                PipeReader.CancelPendingRead();
+                return null;
+            }
+
+            string length = await lengthSection.GetValueAsync(cancellationToken);
+
+            if (!int.TryParse(length, out int fileLength))
+            {
+                PipeReader.CancelPendingRead();
+                return null;
+            }
+
+            nextSection = await MultipartReader.ReadNextSectionAsync(cancellationToken);
+
+            FileMultipartSection? fileSection = nextSection?.AsFileSection();
+
+            if (fileSection is null)
+            {
+                PipeReader.CancelPendingRead();
+                return null;
+            }
+
+            Stream? fileStream = fileSection.FileStream;
+
+            if (fileStream is null)
+            {
+                PipeReader.CancelPendingRead();
+                return null;
+            }
+
+            int filenameSize = Encoding.UTF8.GetByteCount(fileSection.FileName);
 
             if (filenameSize > 256)
             {
-                addValidationError("The filename cannot be longer than 256 bytes");
+                validationErrors.Add("The filename cannot be longer than 256 bytes");
                 PipeReader.CancelPendingRead();
-                await PipeWriter.CompleteAsync();
                 return null;
             }
 
             int sizeHint = 6 + filenameSize;
-            messageLength += sizeHint + (int)file.Length;
+            messageLength += sizeHint + fileLength;
 
             if (messageLength > CoverImageCapacity)
             {
-                addValidationError("The message is too long for the cover image");
+                validationErrors.Add("The message is too long for the cover image");
                 PipeReader.CancelPendingRead();
-                await PipeWriter.CompleteAsync();
                 return null;
             }
 
-            sizeHints[i] = sizeHint;
-        }
-
-        for (int i = 0; i < files.Count; ++i)
-        {
-            FormFile file = files[i];
-            int sizeHint = sizeHints[i];
-
             Memory<byte> buffer = PipeWriter.GetMemory(sizeHint);
+
             // Write the file length (4-byte)
-            BitConverter.TryWriteBytes(buffer.Span, (int)file.Length);
+            BitConverter.TryWriteBytes(buffer.Span, fileLength);
             // Write the file name size (2-byte)
-            BitConverter.TryWriteBytes(buffer.Span[4..], (short)(sizeHint - 6));
+            BitConverter.TryWriteBytes(buffer.Span[4..], (short)filenameSize);
             // Write the file name (max 256-byte)
-            Encoding.UTF8.GetBytes(file.FileName, buffer.Span[6..]);
+            Encoding.UTF8.GetBytes(fileSection.FileName, buffer.Span[6..]);
 
             aes.Transform(buffer.Span[..sizeHint], buffer.Span);
+
             PipeWriter.Advance(sizeHint);
 
             await PipeWriter.FlushAsync(cancellationToken);
-        }
-
-        foreach (FormFile file in files)
-        {
-            Stream fileStream = file.OpenReadStream();
 
             while (true)
             {
-                Memory<byte> buffer = PipeWriter.GetMemory();
+                buffer = PipeWriter.GetMemory();
                 int bytesRead = await fileStream.ReadAsync(buffer, cancellationToken);
 
                 if (bytesRead == 0)
@@ -139,6 +147,7 @@ public class EncodeBinaryRequest
                 }
 
                 aes.Transform(buffer.Span[..bytesRead], buffer.Span);
+
                 PipeWriter.Advance(bytesRead);
 
                 FlushResult result = await PipeWriter.FlushAsync(cancellationToken);

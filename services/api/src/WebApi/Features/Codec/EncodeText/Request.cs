@@ -59,25 +59,16 @@ public class EncodeTextRequest
     }
 
     public async Task<int?> FillPipeAsync(AesCounterMode aes,
-        Action<string> addValidationError,
+        List<string> validationErrors,
         CancellationToken cancellationToken)
     {
         NextSection? nextSection = await MultipartReader.ReadNextSectionAsync(cancellationToken);
+        FormMultipartSection? messageSection = nextSection?.AsFormSection("message");
 
-        if (nextSection is null)
+        if (messageSection is null)
         {
-            addValidationError("The request does not contain a message");
+            validationErrors.Add("The request does not contain a message");
             PipeReader.CancelPendingRead();
-            await PipeWriter.CompleteAsync();
-            return null;
-        }
-
-        FormMultipartSection? formSection = nextSection.AsFormSection("message");
-
-        if (formSection is null)
-        {
-            PipeReader.CancelPendingRead();
-            await PipeWriter.CompleteAsync();
             return null;
         }
 
@@ -87,7 +78,7 @@ public class EncodeTextRequest
         {
             Memory<byte> buffer = PipeWriter.GetMemory();
 
-            int bytesRead = await formSection.Section.Body.ReadAsync(buffer, cancellationToken);
+            int bytesRead = await messageSection.Section.Body.ReadAsync(buffer, cancellationToken);
 
             if (bytesRead == 0)
             {
@@ -98,11 +89,8 @@ public class EncodeTextRequest
 
             if (messageLength > CoverImageCapacity)
             {
-                addValidationError("The message is too long for the cover image");
+                validationErrors.Add("The message is too long for the cover image");
                 PipeReader.CancelPendingRead();
-                PipeWriter.CancelPendingFlush();
-                await PipeWriter.FlushAsync(cancellationToken);
-                await PipeWriter.CompleteAsync();
                 return null;
             }
 

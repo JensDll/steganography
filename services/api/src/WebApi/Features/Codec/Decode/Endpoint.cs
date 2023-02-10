@@ -3,6 +3,7 @@ using System.IO.Pipelines;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
+using Microsoft.Net.Http.Headers;
 using MinimalApiBuilder;
 using ILogger = Serilog.ILogger;
 
@@ -21,7 +22,7 @@ public partial class DecodeEndpoint : MinimalApiBuilderEndpoint
 
     public static void Configure(RouteHandlerBuilder builder) { }
 
-    private static async Task<IResult> HandleAsync(
+    private static async Task HandleAsync(
         DecodeRequest request,
         DecodeEndpoint endpoint,
         HttpContext httpContext,
@@ -35,48 +36,43 @@ public partial class DecodeEndpoint : MinimalApiBuilderEndpoint
 
         if (!isValidKey || messageLength < 1 || messageLength > request.CoverImageCapacity)
         {
-            return endpoint.ErrorResult("Decoding failed");
+            await endpoint.SendErrorAsync(httpContext, "Decoding failed", cancellationToken: cancellationToken);
+            return;
         }
 
-        AesCounterMode aes = new(key, iV);
-        httpContext.Response.RegisterForDispose(aes);
-
-        Decoder decoder = new(request.CoverImage, seed, messageLength, aes);
-        httpContext.Response.RegisterForDispose(decoder);
+        using AesCounterMode aes = new(key, iV);
+        using Decoder decoder = new(request.CoverImage, seed, messageLength, aes);
 
         if (messageType == MessageType.Text)
         {
             httpContext.Response.ContentType = "text/plain";
+
             try
             {
                 await decoder.DecodeAsync(httpContext.Response.BodyWriter, cancellationToken);
             }
             catch (OperationCanceledException) { }
 
-            return Results.Empty;
+            return;
         }
 
-        if (!decoder.TryDecodeFileInformation(out List<(string fileName, int fileLength)> fileInformation))
+        ContentDispositionHeaderValue contentDisposition = new("attachment");
+        contentDisposition.SetHttpFileName("result.zip");
+        httpContext.Response.Headers.ContentDisposition = contentDisposition.ToString();
+        httpContext.Response.ContentType = "application/zip";
+
+        using ZipArchive archive = new(httpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+
+        while (decoder.DecodeNextFileInformation() is var (fileName, fileLength))
         {
-            return endpoint.ErrorResult("Decoding failed");
-        }
-
-        return Results.Extensions.BodyWriterStream(async stream =>
+            ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+            await using Stream entryStream = entry.Open();
+            PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
+            try
             {
-                using ZipArchive archive = new(stream, ZipArchiveMode.Create);
-
-                foreach ((string fileName, int fileLength) in fileInformation)
-                {
-                    ZipArchiveEntry entry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
-                    await using Stream entryStream = entry.Open();
-                    PipeWriter entryStreamWriter = PipeWriter.Create(entryStream);
-                    try
-                    {
-                        await decoder.DecodeAsync(entryStreamWriter, fileLength, cancellationToken);
-                    }
-                    catch (OperationCanceledException) { }
-                }
-            },
-            "application/zip", "result.zip");
+                await decoder.DecodeAsync(entryStreamWriter, fileLength, cancellationToken);
+            }
+            catch (OperationCanceledException) { }
+        }
     }
 }

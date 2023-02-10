@@ -9,7 +9,7 @@ namespace Domain.Entities;
 
 public class Decoder : ImageCodec
 {
-    private readonly int _messageLength;
+    private int _messageLength;
     private readonly AesCounterMode _aes;
 
     public Decoder(Image<Rgb24> coverImage, int seed, int messageLength, AesCounterMode aes) :
@@ -29,45 +29,37 @@ public class Decoder : ImageCodec
         await WriteMessageAsync(writer, messageLength, cancellationToken);
     }
 
-    public bool TryDecodeFileInformation(out List<(string fileName, int fileLength)> fileInformation)
+    public (string FileName, int FileLength)? DecodeNextFileInformation()
     {
-        fileInformation = new List<(string fileName, int fileLength)>();
-        int messageLength = _messageLength;
+        if (_messageLength == 0)
+        {
+            return null;
+        }
 
         Span<byte> buffer = stackalloc byte[6];
         Span<byte> fileNameBytes = stackalloc byte[256];
 
-        while (true)
+        ReadNextBytes(buffer);
+        int fileLength = BitConverter.ToInt32(buffer[..4]);
+        short fileNameLength = BitConverter.ToInt16(buffer[4..]);
+
+        if (fileLength < 0 || fileNameLength is <= 0 or > 256)
         {
-            ReadNextBytes(buffer);
-            int fileLength = BitConverter.ToInt32(buffer[..4]);
-            short fileNameLength = BitConverter.ToInt16(buffer[4..]);
-
-            if (fileLength < 0 || fileNameLength is <= 0 or > 256)
-            {
-                return false;
-            }
-
-            messageLength -= 6 + fileLength + fileNameLength;
-
-            if (messageLength < 0)
-            {
-                return false;
-            }
-
-            Span<byte> fileNameBuffer = fileNameBytes[..fileNameLength];
-            ReadNextBytes(fileNameBuffer);
-            string fileName = Encoding.UTF8.GetString(fileNameBuffer);
-
-            fileInformation.Add((fileName, fileLength));
-
-            if (messageLength == 0)
-            {
-                break;
-            }
+            return null;
         }
 
-        return true;
+        _messageLength -= 6 + fileLength + fileNameLength;
+
+        if (_messageLength < 0)
+        {
+            return null;
+        }
+
+        Span<byte> fileNameBuffer = fileNameBytes[..fileNameLength];
+        ReadNextBytes(fileNameBuffer);
+        string fileName = Encoding.UTF8.GetString(fileNameBuffer);
+
+        return (fileName, fileLength);
     }
 
     private void ReadNextBytes(Span<byte> buffer)

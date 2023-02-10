@@ -3,6 +3,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="WebApi.IntegrationTests" />
@@ -11,7 +12,7 @@
         <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="MinimalApiBuilder" Version="1.0.0" />
+        <PackageReference Include="MinimalApiBuilder" Version="1.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 </Project>
