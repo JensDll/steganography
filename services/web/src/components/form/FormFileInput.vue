@@ -65,7 +65,7 @@ const totalFileSize = useFileSize(files)
       />
       <div v-if="!files.length">
         <span
-          class="i-heroicons-arrow-down-tray-20-solid mr-1 inline-block translate-y-[3.5px]"
+          class="i-heroicons-arrow-down-tray-20-solid mr-1 inline-block translate-y-[4.5px]"
         ></span>
         <span
           class="font-semibold text-highlight"
