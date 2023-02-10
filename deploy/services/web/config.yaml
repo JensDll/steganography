@@ -38,15 +38,9 @@ data:
       include /etc/nginx/mime_type.conf;
       include /etc/nginx/ssl.conf;
 
-      gzip on;
       gzip_static on;
-      gzip_comp_level 6;
-      gzip_types application/javascript;
 
-      brotli on;
       brotli_static on;
-      brotli_comp_level 4;
-      brotli_types application/javascript;
 
       include /etc/nginx/server/*.conf;
     }
