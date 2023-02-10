@@ -40,7 +40,7 @@ const { activeTheme, themes } = useTheme()
         <li>
           <a
             class="cursor-pointer font-medium hover:text-link"
-            href="https://github.com/JensDll/image-data-hiding"
+            href="https://github.com/JensDll/steganography"
             aria-label="Link to the source code on GitHub"
           >
             GitHub
