@@ -22,7 +22,7 @@ public class Encoder : ImageCodec
                 break;
             }
 
-            ProcessMessage(ref buffer);
+            ProcessMessage(buffer);
 
             pipeReader.AdvanceTo(buffer.End, buffer.End);
 
@@ -35,7 +35,7 @@ public class Encoder : ImageCodec
         await pipeReader.CompleteAsync();
     }
 
-    private void ProcessMessage(ref ReadOnlySequence<byte> message)
+    private void ProcessMessage(ReadOnlySequence<byte> message)
     {
         SequenceReader<byte> reader = new(message);
 
