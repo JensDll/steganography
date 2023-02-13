@@ -20,7 +20,7 @@ export class ApiError {
 }
 
 export const API_ERROR_UNKNOWN = new ApiError(
-  'An unknown error occurred. Please try again.'
+  'An unknown error occurred. Please try again'
 )
 
 export const API_ERROR_REQUEST_TOO_LARGE = new ApiError(
@@ -28,7 +28,7 @@ export const API_ERROR_REQUEST_TOO_LARGE = new ApiError(
 )
 
 export const API_ERROR_RATE_LIMIT = new ApiError(
-  `You've exceeded the rate limit.`
+  `You've exceeded the rate limit`
 )
 
 const statusCodeInterceptor: ResponseInterceptor = {
