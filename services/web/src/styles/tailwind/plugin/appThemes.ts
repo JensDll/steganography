@@ -1,7 +1,7 @@
 import plugin from 'tailwindcss/plugin'
 
-import { colors } from './defaults/colors'
-import { theme } from './theme'
+import { colors } from '../defaults/colors'
+import { theme } from '../theme'
 
 function withAlphaValue(variable: string) {
   return `rgb(${asVar(variable)} / <alpha-value>)`
@@ -60,7 +60,7 @@ const decodeDark = {
   '--border-form-highlight': colors.rgb.decode['600']
 }
 
-export function Themes() {
+export function AppThemes() {
   return plugin(
     ({ addComponents }) => {
       addComponents({

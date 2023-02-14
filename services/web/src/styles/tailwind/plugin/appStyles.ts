@@ -1,8 +1,8 @@
 import plugin from 'tailwindcss/plugin'
 
-export function Common() {
+export function AppStyles() {
   return plugin(
-    ({ addUtilities, matchUtilities, theme, addBase }) => {
+    ({ addUtilities, matchUtilities, addVariant, theme, addBase }) => {
       addBase({
         '.container': {
           width: '100%',
@@ -44,6 +44,11 @@ export function Common() {
           }
         }
       })
+
+      addVariant(
+        'supports-backdrop-blur',
+        '@supports (backdrop-filter: blur(4px))'
+      )
     },
     {
       corePlugins: {
