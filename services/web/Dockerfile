@@ -1,4 +1,4 @@
-FROM node:18.12 as build
+FROM node:19.7 as build
 
 ARG DOMAIN
 ENV DOMAIN=${DOMAIN}
