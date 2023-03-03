@@ -33,9 +33,9 @@ public class DecodeRequest
             return null;
         }
 
-        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync<PngFormat>(cancellationToken);
+        Image<Rgb24>? coverImage = await fileSection.ReadCoverImageAsync(cancellationToken);
 
-        if (coverImage is null)
+        if (coverImage?.Metadata.DecodedImageFormat is not PngFormat)
         {
             return null;
         }

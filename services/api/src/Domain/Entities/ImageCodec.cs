@@ -1,7 +1,5 @@
 ﻿using System.Buffers;
 using Domain.Extensions;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 
 namespace Domain.Entities;
 

@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Text;
-using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.PixelFormats;
 
 namespace Domain.Entities;
 
