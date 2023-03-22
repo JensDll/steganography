@@ -18,7 +18,7 @@ RUN dotnet publish --configuration Release --runtime linux-x64 \
     --no-self-contained --output /app --no-restore
 
 # Final image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0.3-alpine3.17
+FROM mcr.microsoft.com/dotnet/aspnet:7.0.4-alpine3.17
 
 WORKDIR /app
 
