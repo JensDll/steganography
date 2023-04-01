@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -8,7 +8,7 @@
     <ItemGroup>
         <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0"/>
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.0.0"/>
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1"/>
     </ItemGroup>
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
