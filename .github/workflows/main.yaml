@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.5.2
 
       - name: Merging pull request
         uses: ./.github/actions/merge-pull

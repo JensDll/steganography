@@ -12,7 +12,7 @@ jobs:
         working-directory: services/web
     steps:
       - name: Checking out the repository
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.5.2
 
       - name: Using pnpm version 7.x.x
         uses: pnpm/action-setup@v2.2.4
@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'pnpm'
+          cache: "pnpm"
           cache-dependency-path: services/web/pnpm-lock.yaml
 
       - name: Installing dependencies
@@ -57,7 +57,7 @@ jobs:
           github_token: ${{ secrets.github_token }}
           base: staging
           head: ${{ steps.prepare.outputs.TEMP_BRANCH  }}
-          title: 'github-actions: fix code style'
+          title: "github-actions: fix code style"
 
       - name: Merging pull request
         if: steps.create-pull.outputs.pull_number != null
@@ -65,5 +65,5 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           pull_number: ${{ steps.create-pull.outputs.pull_number }}
-          merge_method: 'github_squash'
+          merge_method: "github_squash"
           delete_head: true

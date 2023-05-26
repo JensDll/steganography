@@ -18,7 +18,7 @@ inputs:
 outputs:
   pull_number:
     description: The pull request number
-    value: '${{ steps.create-pull.outputs.pull_number }}'
+    value: "${{ steps.create-pull.outputs.pull_number }}"
 
 runs:
   using: composite

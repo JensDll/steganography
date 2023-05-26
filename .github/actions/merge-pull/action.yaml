@@ -7,14 +7,14 @@ inputs:
     description: The pull request number
     required: true
   merge_method:
-    description: 'The merge method to use. Valid values are:
-      github_merge, github_squash, github_rebase, rebase'
+    description: "The merge method to use. Valid values are:
+      github_merge, github_squash, github_rebase, rebase"
     required: false
-    default: 'rebase'
+    default: "rebase"
   delete_head:
     description: Delete the head branch after merge
     required: false
-    default: 'false'
+    default: "false"
   github_token:
     description: The GitHub token to use
     required: true

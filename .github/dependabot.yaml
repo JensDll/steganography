@@ -1,26 +1,25 @@
 version: 2
 updates:
-  - package-ecosystem: 'github-actions'
-    directory: '/.github/'
-    target-branch: 'staging'
+  - package-ecosystem: "github-actions"
+    directory: "/.github"
+    target-branch: "staging"
     schedule:
-      interval: 'weekly'
-      day: 'saturday'
+      interval: "daily"
 
-  - package-ecosystem: 'nuget'
-    directory: '/services/api'
-    target-branch: 'staging'
+  - package-ecosystem: "nuget"
+    directory: "/services/api"
+    target-branch: "staging"
     schedule:
-      interval: 'weekly'
-      day: 'saturday'
+      interval: "weekly"
+      day: "saturday"
 
-  - package-ecosystem: 'docker'
-    directory: '/services/web'
-    target-branch: 'staging'
+  - package-ecosystem: "docker"
+    directory: "/services/web"
+    target-branch: "staging"
     schedule:
-      interval: 'daily'
-  - package-ecosystem: 'docker'
-    directory: '/services/api'
-    target-branch: 'staging'
+      interval: "daily"
+  - package-ecosystem: "docker"
+    directory: "/services/api"
+    target-branch: "staging"
     schedule:
-      interval: 'daily'
+      interval: "daily"

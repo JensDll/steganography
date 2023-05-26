@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.5.2
 
       - name: Creating pull request
         uses: ./.github/actions/create-pull
@@ -18,4 +18,4 @@ jobs:
           github_token: ${{ secrets.WORKFLOW_TOKEN }}
           base: main
           head: staging
-          title: 'github-actions: merge staging into main'
+          title: "github-actions: merge staging into main"
