@@ -49,7 +49,7 @@ jobs:
           build-args: |
             DOMAIN=steganography.app
           platforms: |
-            linux/amd64
+            linux/amd64,linux/arm64
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/steganography:web.latest,
@@ -89,7 +89,7 @@ jobs:
           # Build sometimes fails on ARM
           # https://github.com/NuGet/Home/issues/12227
           platforms: |
-            linux/amd64
+            linux/amd64,linux/arm64
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/steganography:api.latest,

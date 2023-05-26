@@ -1,12 +1,14 @@
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:7.0.302-alpine3.17 as build
 
+ARG TARGETARCH
+
 WORKDIR /build
 
 # Copy csproj and restore as distinct layers
 COPY src/Domain/Domain.csproj ./Domain/
 COPY src/WebApi/WebApi.csproj ./WebApi/
 
-RUN dotnet restore --runtime linux-x64 ./WebApi/WebApi.csproj
+RUN dotnet restore --arch $TARGETARCH ./WebApi/WebApi.csproj
 
 # Copy everything else and build
 COPY src/Domain ./Domain/
@@ -14,7 +16,7 @@ COPY src/WebApi ./WebApi/
 
 WORKDIR /build/WebApi
 
-RUN dotnet publish --configuration Release --runtime linux-x64 \
+RUN dotnet publish --configuration Release --arch $TARGETARCH \
   --no-self-contained --output /app --no-restore
 
 # Final image
