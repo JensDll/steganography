@@ -12,10 +12,10 @@ const { activeTheme, themes } = useTheme()
     @click.self="$emit('close')"
   >
     <div
-      class="fixed top-5 right-5 left-5 rounded-lg bg-fill p-6 shadow-lg dark:bg-gray-800 sm:left-auto sm:w-full sm:max-w-xs"
+      class="fixed left-5 right-5 top-5 rounded-lg bg-fill p-6 shadow-lg dark:bg-gray-800 sm:left-auto sm:w-full sm:max-w-xs"
     >
       <div
-        class="i-heroicons-x-mark absolute top-6 right-6 cursor-pointer text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
+        class="i-heroicons-x-mark absolute right-6 top-6 cursor-pointer text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
         @click="$emit('close')"
       ></div>
       <ul class="space-y-6">

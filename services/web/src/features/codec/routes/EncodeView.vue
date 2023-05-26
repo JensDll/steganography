@@ -81,7 +81,7 @@ async function handleSubmit() {
             />
             Text data
           </label>
-          <label class="ml-3 mb-0 flex cursor-pointer items-center font-normal">
+          <label class="mb-0 ml-3 flex cursor-pointer items-center font-normal">
             <input
               v-model="messageMode"
               class="mr-1 cursor-pointer"
