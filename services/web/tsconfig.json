@@ -1,26 +1,25 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "outDir": "dist",
     "target": "ESNext",
+    "useDefineForClassFields": true,
+    "verbatimModuleSyntax": false,
     "module": "ESNext",
     "moduleResolution": "Node",
-    "isolatedModules": true,
-    "preserveValueImports": true,
-    "importsNotUsedAsValues": "error",
-    "allowJs": false,
     "strict": true,
     "jsx": "preserve",
-    "sourceMap": true,
+    "allowJs": true,
     "resolveJsonModule": true,
+    "isolatedModules": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"],
     "skipLibCheck": true,
+    "noEmit": true,
     "types": ["vite/client"],
     "paths": {
-      "tailwind-theme": ["./tailwind/theme"],
       "~/*": ["src/*"]
-    },
-    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"]
+    }
   },
   "include": ["*.ts", "src/**/*", "src/**/*.vue", "env/**/*"]
 }

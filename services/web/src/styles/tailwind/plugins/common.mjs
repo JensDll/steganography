@@ -1,6 +1,6 @@
 import plugin from 'tailwindcss/plugin'
 
-export function AppStyles() {
+export function Common() {
   return plugin(
     ({ addUtilities, matchUtilities, addVariant, theme, addBase }) => {
       addBase({

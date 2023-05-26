@@ -1,11 +1,8 @@
 import { tryOnBeforeMount, tryOnScopeDispose } from '@vueuse/core'
 import { ref } from 'vue'
 
-import type { TailwindTheme } from '~/styles/tailwind/theme'
-
 type MediaQuery =
   | '(prefers-reduced-motion: reduce)'
-  | `(max-width: ${TailwindTheme['screens'][keyof TailwindTheme['screens']]})`
   | `(orientation: ${'landscape' | 'portrait'})`
   | `(prefers-color-scheme: ${'dark' | 'light'})`
 

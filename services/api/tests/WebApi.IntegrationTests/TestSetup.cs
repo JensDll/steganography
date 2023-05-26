@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 
 namespace WebApi.IntegrationTests;
@@ -27,11 +26,4 @@ public class TestSetup
 
 public class TestWebApplicationFactory<TProgram>
     : WebApplicationFactory<TProgram> where TProgram : class
-{
-    protected override IHost CreateHost(IHostBuilder builder)
-    {
-        // ReSharper disable once UnusedParameter.Local
-        builder.ConfigureServices(services => { });
-        return base.CreateHost(builder);
-    }
-}
+{ }

@@ -1,17 +1,17 @@
-const Forms = require('@tailwindcss/forms')
-const Typography = require('@tailwindcss/typography')
-const { register } = require('esbuild-register/dist/node')
-const { Icons } = require('tailwindcss-plugin-icons')
+import Forms from '@tailwindcss/forms'
+import Typography from '@tailwindcss/typography'
+import type { Config } from 'tailwindcss'
+import { Icons } from 'tailwindcss-plugin-icons'
 
-const { unregister } = register()
-const { AppStyles } = require('./src/styles/tailwind/plugin/appStyles')
-const { AppThemes } = require('./src/styles/tailwind/plugin/appThemes')
-const { theme } = require('./src/styles/tailwind/theme')
-unregister()
+import { theme } from './src/styles/tailwind/defaults/theme.mjs'
+import { Common } from './src/styles/tailwind/plugins/common.mjs'
+import { Themes } from './src/styles/tailwind/plugins/themes.mjs'
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+export default {
+  content: {
+    relative: true,
+    files: ['./index.html', './src/**/*.{vue,js,ts}']
+  },
   darkMode: 'class',
   theme,
   experimental: {
@@ -39,8 +39,8 @@ module.exports = {
           'https://gist.githubusercontent.com/JensDll/4e59cf6005f585581975941a94bc1d88/raw/0e70bdac81224add27d8f0576ab15406709e5938/icons.json'
       }
     })),
-    AppStyles(),
-    AppThemes()
+    Common(),
+    Themes()
   ],
   corePlugins: {
     ringColor: false,
@@ -49,4 +49,4 @@ module.exports = {
     ringOpacity: false,
     ringWidth: false
   }
-}
+} as Config

@@ -3,6 +3,7 @@ using System.IO.Pipelines;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using MinimalApiBuilder;
 using ILogger = Serilog.ILogger;
@@ -11,27 +12,18 @@ namespace WebApi.Features.Codec.Decode;
 
 public partial class DecodeEndpoint : MinimalApiBuilderEndpoint
 {
-    private readonly IKeyService _keyService;
-    private readonly ILogger _logger;
-
-    public DecodeEndpoint(IKeyService keyService, ILogger logger)
-    {
-        _keyService = keyService;
-        _logger = logger;
-    }
-
-    public static void Configure(RouteHandlerBuilder builder) { }
-
     private static async Task HandleAsync(
         DecodeRequest request,
-        DecodeEndpoint endpoint,
+        [FromServices] DecodeEndpoint endpoint,
+        [FromServices] ILogger logger,
+        [FromServices] IKeyService keyService,
         HttpContext httpContext,
         CancellationToken cancellationToken)
     {
-        bool isValidKey = endpoint._keyService.TryParse(request.Key, out MessageType messageType, out int seed,
+        bool isValidKey = keyService.TryParse(request.Key, out MessageType messageType, out int seed,
             out int messageLength, out byte[] key, out byte[] iV);
 
-        endpoint._logger.Information("Decoding {MessageType} message with valid key {IsValidKey}",
+        logger.Information("Decoding {MessageType} message with valid key {IsValidKey}",
             messageType, isValidKey);
 
         if (!isValidKey || messageLength < 1 || messageLength > request.CoverImageCapacity)
@@ -51,7 +43,8 @@ public partial class DecodeEndpoint : MinimalApiBuilderEndpoint
             {
                 await decoder.DecodeAsync(httpContext.Response.BodyWriter, cancellationToken);
             }
-            catch (OperationCanceledException) { }
+            catch (OperationCanceledException)
+            { }
 
             return;
         }
@@ -72,7 +65,8 @@ public partial class DecodeEndpoint : MinimalApiBuilderEndpoint
             {
                 await decoder.DecodeAsync(entryStreamWriter, fileLength, cancellationToken);
             }
-            catch (OperationCanceledException) { }
+            catch (OperationCanceledException)
+            { }
         }
     }
 }

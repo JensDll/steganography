@@ -1,6 +1,6 @@
 import tailwindcssTheme from 'tailwindcss/defaultTheme'
 
-import { typography } from './defaults/typography'
+import { typography } from './typography'
 
 export const theme = {
   screens: {
@@ -22,6 +22,4 @@ export const theme = {
       sans: ['Inter var', ...tailwindcssTheme.fontFamily.sans]
     }
   }
-} as const
-
-export type TailwindTheme = typeof theme
+}

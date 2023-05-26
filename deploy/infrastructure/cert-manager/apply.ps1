@@ -3,7 +3,7 @@ param (
   [Parameter(Position = 0, Mandatory)]
   [ValidateSet('install', 'delete')]
   [string]$Action,
-  [string]$Version = '4.4.2',
+  [string]$Version = 'v1.12.1',
   [Parameter(ValueFromRemainingArguments)]
   [string[]]$HelmArgs
 )

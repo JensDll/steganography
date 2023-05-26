@@ -8,5 +8,6 @@
     }
   },
   "volar.completion.preferredTagNameCase": "pascal",
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "vue.codeActions.enabled": false
 }

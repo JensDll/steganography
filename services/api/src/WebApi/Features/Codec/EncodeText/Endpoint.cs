@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using MinimalApiBuilder;
 using SixLabors.ImageSharp;
@@ -12,24 +13,15 @@ namespace WebApi.Features.Codec.EncodeText;
 
 public partial class EncodeTextEndpoint : MinimalApiBuilderEndpoint
 {
-    private readonly IKeyService _keyService;
-    private readonly ILogger _logger;
-
-    public EncodeTextEndpoint(IKeyService keyService, ILogger logger)
-    {
-        _keyService = keyService;
-        _logger = logger;
-    }
-
-    public static void Configure(RouteHandlerBuilder builder) { }
-
     private static async Task HandleAsync(
         EncodeTextRequest request,
-        EncodeTextEndpoint endpoint,
+        [FromServices] EncodeTextEndpoint endpoint,
+        [FromServices] ILogger logger,
+        [FromServices] IKeyService keyService,
         HttpContext httpContext,
         CancellationToken cancellationToken)
     {
-        endpoint._logger.Information("Encoding text message with cover image (width: {Width}, height: {Height})",
+        logger.Information("Encoding text message with cover image (width: {Width}, height: {Height})",
             request.CoverImage.Width, request.CoverImage.Height);
 
         int seed = RandomNumberGenerator.GetInt32(int.MaxValue);
@@ -62,9 +54,8 @@ public partial class EncodeTextEndpoint : MinimalApiBuilderEndpoint
             return;
         }
 
-        string base64Key =
-            endpoint._keyService.ToBase64String(MessageType.Text, seed, messageLength.Value, aes.Key,
-                aes.InitializationValue);
+        string base64Key = keyService.ToBase64String(MessageType.Text, seed, messageLength.Value, aes.Key,
+            aes.InitializationValue);
 
         ContentDispositionHeaderValue contentDisposition = new("attachment");
         contentDisposition.SetHttpFileName("secret.zip");

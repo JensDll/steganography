@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using MinimalApiBuilder;
 using SixLabors.ImageSharp;
@@ -13,23 +14,21 @@ namespace WebApi.Features.Codec.EncodeBinary;
 public partial class EncodeBinaryEndpoint : MinimalApiBuilderEndpoint
 {
     private readonly IKeyService _keyService;
-    private readonly ILogger _logger;
 
-    public EncodeBinaryEndpoint(IKeyService keyService, ILogger logger)
+    public EncodeBinaryEndpoint(IKeyService keyService)
     {
         _keyService = keyService;
-        _logger = logger;
     }
-
-    public static void Configure(RouteHandlerBuilder builder) { }
 
     private static async Task HandleAsync(
         EncodeBinaryRequest request,
-        EncodeBinaryEndpoint endpoint,
+        [FromServices] EncodeBinaryEndpoint endpoint,
+        [FromServices] ILogger logger,
+        [FromServices] IKeyService keyService,
         HttpContext httpContext,
         CancellationToken cancellationToken)
     {
-        endpoint._logger.Information(
+        logger.Information(
             "Encoding binary message with cover image (width: {Width}, height: {Height})",
             request.CoverImage.Width, request.CoverImage.Height);
 

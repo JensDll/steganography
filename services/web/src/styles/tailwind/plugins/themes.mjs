@@ -1,13 +1,13 @@
 import plugin from 'tailwindcss/plugin'
 
-import { colors } from '../defaults/colors'
-import { theme } from '../theme'
+import { colors } from '../defaults/colors.mjs'
+import { theme } from '../defaults/theme.mjs'
 
-function withAlphaValue(variable: string) {
+function withAlphaValue(variable) {
   return `rgb(${asVar(variable)} / <alpha-value>)`
 }
 
-function asVar(variable: string) {
+function asVar(variable) {
   return `var(${variable})`
 }
 
@@ -60,7 +60,7 @@ const decodeDark = {
   '--border-form-highlight': colors.rgb.decode['600']
 }
 
-export function AppThemes() {
+export function Themes() {
   return plugin(
     ({ addComponents }) => {
       addComponents({
@@ -77,7 +77,7 @@ export function AppThemes() {
           ...Object.entries(encode).reduce((result, [key]) => {
             result[key.replace('--', '')] = withAlphaValue(key)
             return result
-          }, {} as Record<string, string>)
+          }, {})
         },
         extend: {
           borderColor: {

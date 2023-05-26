@@ -15,7 +15,7 @@ COPY src/WebApi ./WebApi/
 WORKDIR /build/WebApi
 
 RUN dotnet publish --configuration Release --runtime linux-x64 \
-    --no-self-contained --output /app --no-restore
+  --no-self-contained --output /app --no-restore
 
 # Final image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0.5-alpine3.17
@@ -23,7 +23,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0.5-alpine3.17
 WORKDIR /app
 
 RUN addgroup --system appgroup && \
-    adduser --system --no-create-home --disabled-password --gecos "App user" --ingroup appgroup appuser
+  adduser --system --no-create-home --disabled-password --gecos "App user" --ingroup appgroup appuser
 
 COPY --from=build --chown=appuser:appgroup /app/ ./
 

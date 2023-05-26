@@ -5,23 +5,26 @@ using WebApi.Features.Codec.Decode;
 using WebApi.Features.Codec.EncodeBinary;
 using WebApi.Features.Codec.EncodeText;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions()
-{
-    Args = args,
-    ContentRootPath = "Properties"
-});
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.AddSerilogLogger();
+builder.Logging.AddSerilogLogger();
+
+builder.Configuration.AddDefaultJson();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMinimalApiBuilderEndpoints();
 builder.Services.AddDomain();
+
 builder.Services.AddCors(corsOptions =>
 {
     corsOptions.AddDefaultPolicy(
-        corsBuilder => { corsBuilder.WithOrigins(builder.Configuration.AllowedOrigins()); });
+        corsBuilder =>
+        {
+            corsBuilder.WithOrigins(builder.Configuration.AllowedOrigins());
+        });
 });
+
 builder.Services.AddHsts(hstsOptions =>
 {
     hstsOptions.Preload = true;

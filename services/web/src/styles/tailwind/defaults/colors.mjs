@@ -1,41 +1,36 @@
 import tailwindColors from 'tailwindcss/colors'
 import { parseColor } from 'tailwindcss/lib/util/color'
 
-// Delete deprecated colors
-delete (tailwindColors as any).lightBlue
-delete (tailwindColors as any).warmGray
-delete (tailwindColors as any).trueGray
-delete (tailwindColors as any).coolGray
-delete (tailwindColors as any).blueGray
+const deprecatedColors = [
+  'lightBlue',
+  'warmGray',
+  'trueGray',
+  'coolGray',
+  'blueGray'
+]
+deprecatedColors.forEach(color => delete tailwindColors[color])
 
-export const colors: any = {
+export const colors = {
   ...tailwindColors,
   gray: tailwindColors.slate,
   encode: tailwindColors.emerald,
   decode: tailwindColors.sky
 }
 
-// Delete aliased colors
-delete colors.emerald
-delete colors.blue
+const unusedGrays = ['slate', 'zinc', 'neutral', 'stone']
+unusedGrays.forEach(color => delete colors[color])
 
-// Delete unused grays
-delete colors.slate
-delete colors.zinc
-delete colors.neutral
-delete colors.stone
-
-const rgb: any = {}
+const rgb = {}
 
 for (const [colorName, value] of Object.entries(colors)) {
   if (colorName === 'white' || colorName === 'black') {
-    const parts = parseColor(value as string).color.join(' ')
+    const parts = parseColor(value).color.join(' ')
     rgb[colorName] = parts
     continue
   }
 
   if (value !== null && typeof value === 'object') {
-    const shades: Record<string, string> = {}
+    const shades = {}
     rgb[colorName] = shades
 
     for (const [shade, color] of Object.entries(value)) {

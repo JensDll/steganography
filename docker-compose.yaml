@@ -1,8 +1,8 @@
-version: '3.9'
+version: "3.9"
 
 services:
   proxy:
-    image: traefik:v2.9.6
+    image: traefik:v2.10.1
     ports:
       - 80:80
       - 443:443
@@ -11,9 +11,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./services/traefik/traefik.yaml:/etc/traefik/traefik.yaml
     labels:
-      - 'traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)'
-      - 'traefik.http.routers.dashboard.service=api@internal'
-      - 'traefik.http.routers.dashboard.entrypoints=traefik'
+      - "traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.entrypoints=traefik"
     networks:
       - appnet
 
@@ -27,11 +27,11 @@ services:
       - ./services/web/deploy/nginx/:/etc/nginx/
       - ./certs/web/:/usr/local/certs/
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.tcp.routers.frontend.rule=HostSNI(`localhost`) || HostSNI(`www.localhost`)'
-      - 'traefik.tcp.routers.frontend.tls=true'
-      - 'traefik.tcp.routers.frontend.tls.passthrough=true'
-      - 'traefik.tcp.services.frontend.loadbalancer.server.port=8443'
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.frontend.rule=HostSNI(`localhost`) || HostSNI(`www.localhost`)"
+      - "traefik.tcp.routers.frontend.tls=true"
+      - "traefik.tcp.routers.frontend.tls.passthrough=true"
+      - "traefik.tcp.services.frontend.loadbalancer.server.port=8443"
     networks:
       - appnet
 
@@ -43,11 +43,11 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.tcp.routers.backend.rule=HostSNI(`api.localhost`)'
-      - 'traefik.tcp.routers.backend.tls=true'
-      - 'traefik.tcp.routers.backend.tls.passthrough=true'
-      - 'traefik.tcp.services.backend.loadbalancer.server.port=8443'
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.backend.rule=HostSNI(`api.localhost`)"
+      - "traefik.tcp.routers.backend.tls=true"
+      - "traefik.tcp.routers.backend.tls.passthrough=true"
+      - "traefik.tcp.services.backend.loadbalancer.server.port=8443"
     networks:
       - appnet
 

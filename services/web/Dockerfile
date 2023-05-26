@@ -6,7 +6,7 @@ ENV DOMAIN=${DOMAIN}
 WORKDIR /out
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@7.27.0 --activate
+RUN corepack enable && corepack prepare pnpm@8.5.1 --activate
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml .npmrc ./
@@ -19,7 +19,7 @@ COPY . ./
 RUN pnpm run build
 
 # Final image
-FROM jensdll/bases:nginx-unprivileged-brotli-1.23.3-alpine
+FROM jensdll/bases:nginx-unprivileged-brotli-1.24.0-alpine
 
 COPY --from=build /out/dist/ /data/www/
 
