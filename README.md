@@ -1,4 +1,4 @@
-# 🖼️ Steganography 
+# Image Steganography
 
 ## Example
 
