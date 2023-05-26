@@ -41,12 +41,12 @@ function closeDropdown() {
         <ul
           v-if="isDropdownOpen"
           v-on-click-outside="closeDropdown"
-          class="absolute top-12 right-0 w-32 rounded-lg border border-border-form bg-white py-1 shadow dark:bg-gray-800"
+          class="absolute right-0 top-12 w-32 rounded-lg border border-border-form bg-white py-1 shadow dark:bg-gray-800"
         >
           <li
             v-for="theme in themes"
             :key="theme.name"
-            class="flex cursor-pointer items-center py-1 px-2 font-semibold hover:bg-gray-50 dark:hover:bg-gray-600/30"
+            class="flex cursor-pointer items-center px-2 py-1 font-semibold hover:bg-gray-50 dark:hover:bg-gray-600/30"
             :class="{ 'text-link': theme.isActive }"
             @click="activeTheme = theme"
           >

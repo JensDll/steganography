@@ -55,7 +55,7 @@
 @screen md {
   .main {
     grid-template-rows: unset;
-    @apply gap-y-0 gap-x-10;
+    @apply gap-x-10 gap-y-0;
     grid-template-columns: 12rem 1fr;
     grid-template-areas:
       'nav header'

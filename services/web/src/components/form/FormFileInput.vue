@@ -84,7 +84,7 @@ const totalFileSize = useFileSize(files)
     <label v-if="label" for="file-input">{{ label }}</label>
     <div class="flex items-center">
       <div
-        class="custom-file-input relative cursor-pointer py-6 px-10 text-center"
+        class="custom-file-input relative cursor-pointer px-10 py-6 text-center"
         :class="{ error: errors.length }"
       >
         <input
