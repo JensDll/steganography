@@ -10,39 +10,41 @@ on:
       - staging
 
 jobs:
-  should-run:
+  should_run:
     uses: JensDll/should-run/.github/workflows/main.yaml@main
     with:
-      projects: services/web services/api
+      projects: services/steganography.web services/steganography.api
 
-  test-web:
-    needs: should-run
-    if: fromJSON(needs.should-run.outputs.result)['services/web'] == 'true' ||
+  test_web:
+    needs: should_run
+    if:
+      fromJSON(needs.should-run.outputs.result)['services/steganography.web'] == 'true' ||
       github.base_ref == 'main'
-    uses: ./.github/workflows/test-web.yaml
+    uses: ./.github/workflows/test_steganography.web.yaml
 
-  test-api:
-    needs: should-run
-    if: fromJSON(needs.should-run.outputs.result)['services/api'] == 'true' ||
+  test_api:
+    needs: should_run
+    if:
+      fromJSON(needs.should-run.outputs.result)['services/steganography.api'] == 'true' ||
       github.base_ref == 'main'
-    uses: ./.github/workflows/test-api.yaml
+    uses: ./.github/workflows/test_steganography.api.yaml
 
-  format-web:
-    needs: should-run
+  format_web:
+    needs: should_run
     if: github.event_name == 'push' &&
-      fromJSON(needs.should-run.outputs.result)['services/web'] == 'true'
-    uses: ./.github/workflows/format-web.yaml
+      fromJSON(needs.should-run.outputs.result)['services/steganography.web'] == 'true'
+    uses: ./.github/workflows/format_steganography.web.yaml
 
-  format-api:
-    needs: should-run
+  format_api:
+    needs: should_run
     if: github.event_name == 'push' &&
-      fromJSON(needs.should-run.outputs.result)['services/api'] == 'true'
-    uses: ./.github/workflows/format-api.yaml
+      fromJSON(needs.should-run.outputs.result)['services/steganography.api'] == 'true'
+    uses: ./.github/workflows/format_steganography.api.yaml
 
-  merge-main:
+  merge_main:
     needs:
-      - test-web
-      - test-api
+      - test_web
+      - test_api
     if: github.base_ref == 'main'
     runs-on: ubuntu-latest
     steps:

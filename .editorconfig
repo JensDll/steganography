@@ -314,4 +314,6 @@ resharper_csharp_keep_existing_attribute_arrangement = true
 resharper_csharp_max_attribute_length_for_same_line = 9999
 # https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_BracesPageSchema.html#resharper_csharp_empty_block_style
 resharper_csharp_empty_block_style = together
+# https://www.jetbrains.com/help/resharper/Reference__Code_Inspections_CSHARP.html#LanguageUsage
+resharper_introduce_optional_parameters_global_highlighting = hint
 ######## RESHARPER ########

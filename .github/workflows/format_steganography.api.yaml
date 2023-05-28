@@ -1,0 +1,15 @@
+name: Format api
+
+on:
+  workflow_call:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: services/steganography.api
+    steps:
+      - name: Checking out the repository
+        uses: actions/checkout@v3.5.2
