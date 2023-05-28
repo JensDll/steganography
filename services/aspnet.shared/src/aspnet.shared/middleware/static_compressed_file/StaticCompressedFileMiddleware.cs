@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 
@@ -14,12 +15,15 @@ public class StaticCompressedFileMiddleware : IMiddleware
     private readonly ILogger _logger;
     private readonly IFileProvider _fileProvider;
     private readonly IContentTypeProvider _contentTypeProvider;
+    private readonly StaticCompressedFileOptions _options;
 
-    public StaticCompressedFileMiddleware(IWebHostEnvironment environment, ILoggerFactory loggerFactory)
+    public StaticCompressedFileMiddleware(IOptions<StaticCompressedFileOptions> options,
+        IWebHostEnvironment environment, ILoggerFactory loggerFactory)
     {
+        _options = options.Value;
         _logger = loggerFactory.CreateLogger<StaticCompressedFileMiddleware>();
         _fileProvider = environment.WebRootFileProvider;
-        _contentTypeProvider = StaticCompressedFileContentTypeProvider.Instance;
+        _contentTypeProvider = new FileExtensionContentTypeProvider();
     }
 
     public Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -42,13 +46,23 @@ public class StaticCompressedFileMiddleware : IMiddleware
         {
             _logger.VerbMismatch(context.Request.Method);
         }
-        else if (!_contentTypeProvider.TryGetContentType(requestPath, out string? contentType))
+        else if (!Helper.TryMatchPath(requestPath, _options.RequestPath, out PathString subPath))
+        {
+            _logger.PathMismatch();
+        }
+        else if (!_contentTypeProvider.TryGetContentType(subPath.Value!, out string? contentType))
         {
             _logger.ContentTypeMismatch(contentType);
         }
         else
         {
-            return TryServeStaticCompressedFile(next, context, requestPath, contentEncoding.ToString(), contentType);
+            IFileInfo fileInfo = _fileProvider.GetFileInfo($"{subPath.Value}.{contentEncoding}");
+
+            if (fileInfo.Exists)
+            {
+                return TryServeStaticCompressedFileAsync(context.Response, fileInfo,
+                    contentEncoding.ToString(), contentType, context.RequestAborted);
+            }
         }
 
         return next(context);
@@ -59,22 +73,13 @@ public class StaticCompressedFileMiddleware : IMiddleware
     private static bool IsValidMethod(HttpContext context)
         => HttpMethods.IsGet(context.Request.Method);
 
-    private async Task TryServeStaticCompressedFile(
-        RequestDelegate next,
-        HttpContext context,
-        PathString subPath,
+    private static async Task TryServeStaticCompressedFileAsync(
+        HttpResponse response,
+        IFileInfo fileInfo,
         string contentEncoding,
-        string contentType)
+        string contentType,
+        CancellationToken cancellationToken)
     {
-        IFileInfo fileInfo = _fileProvider.GetFileInfo($"{subPath}.{contentEncoding}");
-
-        if (!fileInfo.Exists)
-        {
-            await next(context);
-            return;
-        }
-
-        HttpResponse response = context.Response;
         ResponseHeaders responseHeaders = response.GetTypedHeaders();
 
         DateTimeOffset last = fileInfo.LastModified;
@@ -102,6 +107,6 @@ public class StaticCompressedFileMiddleware : IMiddleware
         responseHeaders.CacheControl = cacheControlHeader;
         responseHeaders.Headers[HeaderNames.ContentEncoding] = contentEncoding;
 
-        await response.SendFileAsync(fileInfo, 0, fileInfo.Length, context.RequestAborted);
+        await response.SendFileAsync(fileInfo, 0, fileInfo.Length, cancellationToken);
     }
 }

@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "vite --host --mode=development",
     "build": "pnpm run typecheck && vite build --mode=production",
+    "build:Debug": "vite build --mode=development",
+    "build:Release": "vite build --mode=production",
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --max-warnings 0",
     "lint:no-console": "eslint dist --parser-options=ecmaVersion:latest,sourceType:module --rule \"no-console: [\"error\", { allow: [\"warn\", \"error\"] }]\" --no-eslintrc --max-warnings 0",

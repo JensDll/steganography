@@ -6,14 +6,15 @@
     <minimalapibuilder_assign_name_to_endpoint>true</minimalapibuilder_assign_name_to_endpoint>
   </PropertyGroup>
   <ItemGroup>
-    <InternalsVisibleTo Include="steganography.api.tests"/>
+    <InternalsVisibleTo Include="steganography.api.tests" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\aspnet.shared\src\aspnet.shared\aspnet.shared.csproj"/>
-    <ProjectReference Include="..\steganography.domain\steganography.domain.csproj"/>
+    <ProjectReference Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' == 'true'" Include="..\aspnet.shared\aspnet.shared.csproj" />
+    <ProjectReference Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' != 'true'" Include="..\..\..\aspnet.shared\src\aspnet.shared\aspnet.shared.csproj" />
+    <ProjectReference Include="..\steganography.domain\steganography.domain.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MinimalApiBuilder" Version="1.3.3"/>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+    <PackageReference Include="MinimalApiBuilder" Version="1.3.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 </Project>

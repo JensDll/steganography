@@ -32,13 +32,15 @@ public static class DependencyInjection
         serverOptions.Configure(kestrelSection)
             .Endpoint("Https", endpoint =>
             {
-                string certPath = endpoint.ConfigSection.GetValue<string>("Path")
-                                  ?? throw new InvalidOperationException(
-                                      "Failed to find certificate path on https endpoint configuration");
+                string certPath =
+                    endpoint.ConfigSection.GetValue<string>("Path") ??
+                    throw new InvalidOperationException(
+                        "Failed to find certificate path on https endpoint configuration");
 
-                string keyPath = endpoint.ConfigSection.GetValue<string>("KeyPath") ??
-                                 throw new InvalidOperationException(
-                                     "Failed to find key path on https endpoint configuration");
+                string keyPath =
+                    endpoint.ConfigSection.GetValue<string>("KeyPath") ??
+                    throw new InvalidOperationException(
+                        "Failed to find key path on https endpoint configuration");
 
                 X509Certificate2 certificate = X509Certificate2.CreateFromPemFile(certPath, keyPath);
 

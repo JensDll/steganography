@@ -7,6 +7,7 @@ public static class Extensions
 {
     public static IServiceCollection AddStaticCompressedFileMiddleware(this IServiceCollection services)
     {
+        services.AddOptions<StaticCompressedFileOptions>();
         services.AddScoped<StaticCompressedFileMiddleware>();
         return services;
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.Headers;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 
@@ -35,5 +36,15 @@ internal static class Helper
         }
 
         return best > -1;
+    }
+
+    internal static bool PathEndsInSlash(PathString path)
+    {
+        return path.HasValue && path.Value!.EndsWith("/", StringComparison.Ordinal);
+    }
+
+    internal static bool TryMatchPath(PathString path, PathString other, out PathString subPath)
+    {
+        return path.StartsWithSegments(other, out subPath);
     }
 }

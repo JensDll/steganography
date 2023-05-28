@@ -8,7 +8,8 @@ public class StaticCompressedFileContentTypeProvider : IContentTypeProvider
     private static readonly IReadOnlyDictionary<string, string> s_mappings = new Dictionary<string, string>
     {
         { ".css", "text/css" },
-        { ".js", "application/javascript" }
+        { ".js", "application/javascript" },
+        { ".html", "text/html" }
     };
 
     public static StaticCompressedFileContentTypeProvider Instance { get; } = new();

@@ -12,11 +12,6 @@ public static class Extensions
         return services;
     }
 
-    public static void UseDevelopmentProxy(this WebApplication app)
-    {
-        UseDevelopmentProxy(app, "http://localhost:5173");
-    }
-
     public static void UseDevelopmentProxy(this WebApplication app, string baseUri)
     {
         if (!app.Environment.IsDevelopment())
