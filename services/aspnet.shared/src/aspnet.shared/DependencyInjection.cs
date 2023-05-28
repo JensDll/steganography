@@ -11,7 +11,7 @@ public static class DependencyInjection
 {
     public static void AddDefaultJson(this IConfigurationBuilder builder)
     {
-        builder.AddJsonFile(Path.Join("Properties", "appsettings.json"),
+        builder.AddJsonFile(Path.Join("properties", "appsettings.json"),
             optional: false, reloadOnChange: true);
     }
 
