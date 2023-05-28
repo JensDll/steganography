@@ -1,15 +1,24 @@
-name: Format web
+name: Format steganography.web
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - staging
 
 jobs:
-  main:
-    runs-on: ubuntu-latest
+  should_run:
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
+    with:
+      projects: services/steganography.web
+
+  format:
+    needs: should_run
+    if: fromJSON(needs.should_run.outputs.result)['services/steganography.web'] == 'true'
     defaults:
       run:
         shell: bash
         working-directory: services/steganography.web
+    runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
         uses: actions/checkout@v3.5.2

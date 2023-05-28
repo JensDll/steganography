@@ -1,10 +1,19 @@
-name: Format api
+name: Format steganography.api
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - staging
 
 jobs:
-  main:
+  should_run:
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
+    with:
+      projects: services/steganography.api
+
+  format:
+    needs: should_run
+    if: fromJSON(needs.should_run.outputs.result)['services/steganography.api'] == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:

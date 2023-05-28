@@ -1,10 +1,23 @@
-name: Test web
+name: Test steganography.web
 
 on:
-  workflow_call:
+  pull_request:
+    branches:
+      - main
+      - staging
+  push:
+    branches:
+      - staging
 
 jobs:
-  main:
+  should_run:
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
+    with:
+      projects: services/steganography.web
+
+  test:
+    needs: should_run
+    if: fromJSON(needs.should_run.outputs.result)['services/steganography.web'] == 'true'
     defaults:
       run:
         shell: bash
