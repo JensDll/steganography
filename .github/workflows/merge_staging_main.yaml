@@ -1,4 +1,4 @@
-name: Pull request main
+name: Merge staging into main
 
 on:
   workflow_dispatch:
