@@ -1,8 +1,0 @@
-# Directories
-**/node_modules/
-**/dist/
-nginx/
-
-# Files
-Dockerfile*
-public/config.js

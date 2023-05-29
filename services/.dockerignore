@@ -1,0 +1,12 @@
+# Directories
+**/bin/
+**/obj/
+**/out/
+**/node_modules/
+**/dist/
+**/.*
+
+# Files
+*/Dockerfile*
+
+!*/.npmrc
