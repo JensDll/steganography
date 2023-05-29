@@ -28,12 +28,13 @@ COPY steganography.api/src/steganography.api/steganography.api.csproj ./steganog
 
 RUN dotnet restore --arch $TARGETARCH ./steganography.api/steganography.api.csproj
 
-# Copy everything else and build
-COPY aspnet.common/src/aspnet.common ./aspnet.common/
-COPY steganography.api/src/steganography.domain ./steganography.domain/
-COPY steganography.api/src/steganography.api ./steganography.api/
+# Copy everything else
+COPY aspnet.common/src/aspnet.common/ ./aspnet.common/
+COPY steganography.api/src/steganography.domain/ ./steganography.domain/
+COPY steganography.api/src/steganography.api/ ./steganography.api/
 COPY --from=build_web /out/dist/ ./steganography.api/wwwroot/
 
+# Build the project
 RUN dotnet publish --configuration Release --arch $TARGETARCH \
   --no-self-contained --output /app --no-restore \
   ./steganography.api/steganography.api.csproj
