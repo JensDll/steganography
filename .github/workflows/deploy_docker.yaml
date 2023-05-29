@@ -46,9 +46,8 @@ jobs:
       - name: Building and pushing container image
         uses: docker/build-push-action@v4.0.0
         with:
-          context: services/steganography.api
-          # Build sometimes fails on ARM
-          # https://github.com/NuGet/Home/issues/12227
+          context: services
+          file: services/steganography.api/Dockerfile
           platforms: |
             linux/amd64,linux/arm64
           push: true
