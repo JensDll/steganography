@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Filters;
 
-namespace aspnet.shared.logging;
+namespace aspnet.common.logging;
 
 public static class Extensions
 {

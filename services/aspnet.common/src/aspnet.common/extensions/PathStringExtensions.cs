@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace aspnet.shared.extensions;
+namespace aspnet.common.extensions;
 
 public static class PathStringExtensions
 {

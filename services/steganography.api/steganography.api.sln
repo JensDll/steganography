@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "domain", "src\steganography
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "domain.tests", "src\steganography.domain.tests\steganography.domain.tests.csproj", "{AC8F8B72-EC36-4577-A92B-6955B375A553}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aspnet.shared", "..\aspnet.shared\src\aspnet.shared\aspnet.shared.csproj", "{FB3168E8-E539-48E8-B168-FC754DB46FC2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aspnet.common", "..\aspnet.common\src\aspnet.common\aspnet.common.csproj", "{FB3168E8-E539-48E8-B168-FC754DB46FC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

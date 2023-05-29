@@ -1,10 +1,10 @@
-﻿using aspnet.shared.extensions;
+﻿using aspnet.common.extensions;
 using Microsoft.AspNetCore.Http;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Filters;
 
-namespace aspnet.shared.logging;
+namespace aspnet.common.logging;
 
 public class ExcludeStaticFileLogEventFilter : ILogEventFilter
 {

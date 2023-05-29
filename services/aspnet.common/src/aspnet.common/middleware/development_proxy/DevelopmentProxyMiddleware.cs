@@ -1,8 +1,8 @@
 ﻿using System.Net;
-using aspnet.shared.extensions;
+using aspnet.common.extensions;
 using Microsoft.AspNetCore.Http;
 
-namespace aspnet.shared.middleware.development_proxy;
+namespace aspnet.common.middleware.development_proxy;
 
 public class DevelopmentProxyMiddleware : IMiddleware
 {

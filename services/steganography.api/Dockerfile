@@ -22,14 +22,14 @@ ARG TARGETARCH
 WORKDIR /build
 
 # Copy csproj and restore as distinct layers
-COPY aspnet.shared/src/aspnet.shared/aspnet.shared.csproj ./aspnet.shared/
+COPY aspnet.common/src/aspnet.common/aspnet.common.csproj ./aspnet.common/
 COPY steganography.api/src/steganography.domain/steganography.domain.csproj ./steganography.domain/
 COPY steganography.api/src/steganography.api/steganography.api.csproj ./steganography.api/
 
 RUN dotnet restore --arch $TARGETARCH ./steganography.api/steganography.api.csproj
 
 # Copy everything else and build
-COPY aspnet.shared/src/aspnet.shared ./aspnet.shared/
+COPY aspnet.common/src/aspnet.common ./aspnet.common/
 COPY steganography.api/src/steganography.domain ./steganography.domain/
 COPY steganography.api/src/steganography.api ./steganography.api/
 COPY --from=build_web /out/dist/ ./steganography.api/wwwroot/

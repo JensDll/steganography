@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace aspnet.shared.options.http_headers;
+namespace aspnet.common.options.http_headers;
 
 public class HttpHeadersOptionsValidator : AbstractValidator<HttpHeadersOptions>
 {

@@ -1,9 +1,9 @@
-using aspnet.shared;
-using aspnet.shared.logging;
-using aspnet.shared.middleware.development_proxy;
-using aspnet.shared.middleware.static_compressed_file;
-using aspnet.shared.options.http_headers;
-using aspnet.shared.options.kestrel;
+using aspnet.common;
+using aspnet.common.logging;
+using aspnet.common.middleware.development_proxy;
+using aspnet.common.middleware.static_compressed_file;
+using aspnet.common.options.http_headers;
+using aspnet.common.options.kestrel;
 using Microsoft.AspNetCore.Rewrite;
 using MinimalApiBuilder;
 using steganography.api.extensions;
@@ -37,8 +37,18 @@ builder.Services.AddHsts(hstsOptions =>
 
 builder.AddHttpHeadersOptions();
 
+StaticCompressedFileOptions staticFileOptions = new()
+{
+    OnPrepareResponse = StaticCompressedFileOptions.DefaultOnPrepareResponse
+};
+
+StaticCompressedFileOptions indexStaticFileOptions = new()
+{
+    OnPrepareResponse = StaticCompressedFileOptions.IndexOnPrepareResponse
+};
+
 builder.Services.AddDevelopmentProxyMiddleware()
-    .AddStaticCompressedFileMiddleware("/assets");
+    .AddStaticCompressedFileMiddleware(staticFileOptions);
 
 WebApplication app = builder.Build();
 
@@ -59,14 +69,6 @@ rewriteOptions.AddRedirectToNonWww();
 
 app.UseRewriter(rewriteOptions);
 
-StaticFileOptions staticFileOptions = new()
-{
-    OnPrepareResponse = static context =>
-    {
-        StaticCompressedFileOptions.AddCacheBustingHeaders(context.Context.Response);
-    }
-};
-
 app.UseStaticCompressedFiles();
 app.UseStaticFiles(staticFileOptions);
 
@@ -76,17 +78,9 @@ RouteGroupBuilder api = app.MapGroup("/api");
 api.MapCodecFeature();
 api.MapHealthChecks("/health");
 
-StaticFileOptions indexHtmlOptions = new()
-{
-    OnPrepareResponse = static context =>
-    {
-        StaticCompressedFileOptions.AddIndexHtmlHeaders(context.Context);
-    }
-};
-
 if (app.Environment.IsRunningInContainer())
 {
-    app.MapFallbackToFile("index.html", indexHtmlOptions);
+    app.MapFallbackToFile("index.html", indexStaticFileOptions);
 }
 
 app.UseDevelopmentProxy("http://localhost:5173");

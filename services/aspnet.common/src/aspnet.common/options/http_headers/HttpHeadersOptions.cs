@@ -1,4 +1,4 @@
-﻿namespace aspnet.shared.options.http_headers;
+﻿namespace aspnet.common.options.http_headers;
 
 public class HttpHeadersOptions
 {

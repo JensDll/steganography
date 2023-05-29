@@ -1,8 +1,8 @@
-﻿using aspnet.shared.options.fluent_validation;
+﻿using aspnet.common.options.fluent_validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace aspnet.shared.options.http_headers;
+namespace aspnet.common.options.http_headers;
 
 public static class Extensions
 {

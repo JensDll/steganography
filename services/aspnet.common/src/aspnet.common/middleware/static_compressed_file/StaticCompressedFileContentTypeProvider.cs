@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.StaticFiles;
 
-namespace aspnet.shared.middleware.static_compressed_file;
+namespace aspnet.common.middleware.static_compressed_file;
 
 public class StaticCompressedFileContentTypeProvider : IContentTypeProvider
 {

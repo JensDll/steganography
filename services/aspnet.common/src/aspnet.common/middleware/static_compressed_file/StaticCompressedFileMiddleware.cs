@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 
-namespace aspnet.shared.middleware.static_compressed_file;
+namespace aspnet.common.middleware.static_compressed_file;
 
 public class StaticCompressedFileMiddleware : IMiddleware
 {
@@ -60,7 +60,7 @@ public class StaticCompressedFileMiddleware : IMiddleware
 
             if (fileInfo.Exists)
             {
-                return TryServeStaticCompressedFileAsync(context.Response, fileInfo,
+                return TryServeStaticCompressedFileAsync(context, fileInfo,
                     contentEncoding.ToString(), contentType, context.RequestAborted);
             }
         }
@@ -73,14 +73,15 @@ public class StaticCompressedFileMiddleware : IMiddleware
     private static bool IsValidMethod(HttpContext context)
         => HttpMethods.IsGet(context.Request.Method);
 
-    private static async Task TryServeStaticCompressedFileAsync(
-        HttpResponse response,
+    private async Task TryServeStaticCompressedFileAsync(
+        HttpContext httpContext,
         IFileInfo fileInfo,
         string contentEncoding,
         string contentType,
         CancellationToken cancellationToken)
     {
-        ResponseHeaders responseHeaders = StaticCompressedFileOptions.AddCacheBustingHeaders(response);
+        HttpResponse response = httpContext.Response;
+        ResponseHeaders responseHeaders = response.GetTypedHeaders();
 
         DateTimeOffset last = fileInfo.LastModified;
         // Truncate to seconds precision
@@ -98,6 +99,9 @@ public class StaticCompressedFileMiddleware : IMiddleware
         responseHeaders.ContentLength = fileInfo.Length;
         responseHeaders.ContentType = contentTypeHeader;
         responseHeaders.Headers.ContentEncoding = contentEncoding;
+
+        StaticFileResponseContext responseContext = new(httpContext, fileInfo);
+        _options.OnPrepareResponse(responseContext);
 
         await response.SendFileAsync(fileInfo, 0, fileInfo.Length, cancellationToken);
     }

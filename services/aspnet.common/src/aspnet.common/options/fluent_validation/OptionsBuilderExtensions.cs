@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
-namespace aspnet.shared.options.fluent_validation;
+namespace aspnet.common.options.fluent_validation;
 
 public static class OptionsBuilderExtensions
 {

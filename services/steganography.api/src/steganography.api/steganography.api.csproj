@@ -9,8 +9,8 @@
     <InternalsVisibleTo Include="steganography.api.tests" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' == 'true'" Include="..\aspnet.shared\aspnet.shared.csproj" />
-    <ProjectReference Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' != 'true'" Include="..\..\..\aspnet.shared\src\aspnet.shared\aspnet.shared.csproj" />
+    <ProjectReference Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' == 'true'" Include="..\aspnet.common\aspnet.common.csproj" />
+    <ProjectReference Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' != 'true'" Include="..\..\..\aspnet.common\src\aspnet.common\aspnet.common.csproj" />
     <ProjectReference Include="..\steganography.domain\steganography.domain.csproj" />
   </ItemGroup>
   <ItemGroup>

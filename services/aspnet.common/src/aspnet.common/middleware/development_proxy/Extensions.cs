@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace aspnet.shared.middleware.development_proxy;
+namespace aspnet.common.middleware.development_proxy;
 
 public static class Extensions
 {

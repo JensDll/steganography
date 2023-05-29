@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
-namespace aspnet.shared.middleware.static_compressed_file;
+namespace aspnet.common.middleware.static_compressed_file;
 
 internal static class LoggerExtensions
 {

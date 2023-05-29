@@ -2,7 +2,7 @@
 using FluentValidation.Results;
 using Microsoft.Extensions.Options;
 
-namespace aspnet.shared.options.fluent_validation;
+namespace aspnet.common.options.fluent_validation;
 
 public class FluentValidationValidateOptions<TOptions> : IValidateOptions<TOptions>
     where TOptions : class

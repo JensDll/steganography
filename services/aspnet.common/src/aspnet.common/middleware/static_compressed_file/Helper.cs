@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 
-namespace aspnet.shared.middleware.static_compressed_file;
+namespace aspnet.common.middleware.static_compressed_file;
 
 internal static class Helper
 {

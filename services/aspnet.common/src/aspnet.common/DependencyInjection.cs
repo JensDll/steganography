@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace aspnet.shared;
+namespace aspnet.common;
 
 public static class DependencyInjection
 {
