@@ -1,0 +1,24 @@
+name: Format steganography.api
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  should_run:
+    uses: JensDll/should-run/.github/workflows/main.yaml@main
+    with:
+      projects: services/steganography.api
+
+  format:
+    needs: should_run
+    if: fromJSON(needs.should_run.outputs.result)['services/steganography.api'] == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: services/steganography.api
+    steps:
+      - name: Checking out the repository
+        uses: actions/checkout@v3.5.2
