@@ -24,7 +24,7 @@ public class FluentValidationValidateOptions<TOptions> : IValidateOptions<TOptio
         }
 
         IEnumerable<string> errors = result.Errors.Select(failure =>
-            $"Options validation failed for property '{failure.PropertyName}': {failure.ErrorMessage}");
+            $"{options.GetType().Name} validation failed for '{failure.PropertyName}': {failure.ErrorMessage}");
 
         return ValidateOptionsResult.Fail(errors);
     }

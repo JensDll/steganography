@@ -19,8 +19,10 @@ public class EncodeTextTests
         await using MemoryStream coverImageStream = new();
         await coverImage.SaveAsPngAsync(coverImageStream);
 
-        MultipartFormDataContent encodeFormData = new();
-        encodeFormData.Add(new StreamContent(coverImageStream), "coverImage", "coverImage.png");
+        MultipartFormDataContent encodeFormData = new()
+        {
+            { new StreamContent(coverImageStream), "coverImage", "coverImage.png" }
+        };
 
         string message = new('a', 750_000);
         encodeFormData.Add(new StringContent(message), "message");
@@ -67,9 +69,11 @@ public class EncodeTextTests
         await using MemoryStream resultImageStream = new();
         await resultImage.SaveAsPngAsync(resultImageStream);
 
-        MultipartFormDataContent decodeFormData = new();
-        decodeFormData.Add(new StreamContent(resultImageStream), "coverImage", "coverImage.png");
-        decodeFormData.Add(new StringContent(key), "key");
+        MultipartFormDataContent decodeFormData = new()
+        {
+            { new StreamContent(resultImageStream), "coverImage", "coverImage.png" },
+            { new StringContent(key), "key" }
+        };
 
         // Act
         HttpResponseMessage decodeResponse =
@@ -92,9 +96,11 @@ public class EncodeTextTests
         await using MemoryStream coverImageStream = new();
         await coverImage.SaveAsPngAsync(coverImageStream);
 
-        MultipartFormDataContent formData = new();
-        formData.Add(new StreamContent(coverImageStream), "coverImage", "coverImage.png");
-        formData.Add(new StringContent(new string('a', 750_001)), "message");
+        MultipartFormDataContent formData = new()
+        {
+            { new StreamContent(coverImageStream), "coverImage", "coverImage.png" },
+            { new StringContent(new string('a', 750_001)), "message" }
+        };
 
         // Act
         HttpResponseMessage encodeResponse =
@@ -113,9 +119,11 @@ public class EncodeTextTests
         await using MemoryStream coverImageStream = new();
         await coverImage.SaveAsPngAsync(coverImageStream);
 
-        MultipartFormDataContent formData = new();
-        formData.Add(new StreamContent(coverImageStream), "coverImage", "coverImage.png");
-        formData.Add(new StringContent(new string('a', 10)), "invalid");
+        MultipartFormDataContent formData = new()
+        {
+            { new StreamContent(coverImageStream), "coverImage", "coverImage.png" },
+            { new StringContent(new string('a', 10)), "invalid" }
+        };
 
         // Act
         HttpResponseMessage encodeResponse =

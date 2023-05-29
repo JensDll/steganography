@@ -1,4 +1,5 @@
-﻿using System.IO.Compression;
+﻿using System.Globalization;
+using System.IO.Compression;
 using System.Net;
 using System.Text;
 using NUnit.Framework;
@@ -19,15 +20,17 @@ public class EncodeBinaryTests
         await using MemoryStream coverImageStream = new();
         await coverImage.SaveAsPngAsync(coverImageStream);
 
-        MultipartFormDataContent encodeFormData = new();
-        encodeFormData.Add(new StreamContent(coverImageStream), "coverImage", "coverImage.png");
+        MultipartFormDataContent encodeFormData = new()
+        {
+            { new StreamContent(coverImageStream), "coverImage", "coverImage.png" }
+        };
 
         File[] files = GetFiles(10, 10_000, 120_000);
         int inMessageLength = GetMessageLength(files);
 
         foreach (File file in files)
         {
-            encodeFormData.Add(new StringContent(file.Size.ToString()), "length");
+            encodeFormData.Add(new StringContent(file.Size.ToString(CultureInfo.InvariantCulture)), "length");
             encodeFormData.Add(new ByteArrayContent(file.Content), "name", file.Name);
         }
 
@@ -73,9 +76,11 @@ public class EncodeBinaryTests
         await using MemoryStream resultImageStream = new();
         await resultImage.SaveAsPngAsync(resultImageStream);
 
-        MultipartFormDataContent decodeFormData = new();
-        decodeFormData.Add(new StreamContent(resultImageStream), "coverImage", "coverImage.png");
-        decodeFormData.Add(new StringContent(key), "key");
+        MultipartFormDataContent decodeFormData = new()
+        {
+            { new StreamContent(resultImageStream), "coverImage", "coverImage.png" },
+            { new StringContent(key), "key" }
+        };
 
         // Act
         HttpResponseMessage decodeResponse =
@@ -117,9 +122,11 @@ public class EncodeBinaryTests
         await using MemoryStream coverImageStream = new();
         await coverImage.SaveAsPngAsync(coverImageStream);
 
-        MultipartFormDataContent formData = new();
-        formData.Add(new StreamContent(coverImageStream), "coverImage", "coverImage.png");
-        formData.Add(new ByteArrayContent(new byte[750_000]), "name", "file.png");
+        MultipartFormDataContent formData = new()
+        {
+            { new StreamContent(coverImageStream), "coverImage", "coverImage.png" },
+            { new ByteArrayContent(new byte[750_000]), "name", "file.png" }
+        };
 
         // Act
         HttpResponseMessage encodeResponse =
@@ -138,10 +145,12 @@ public class EncodeBinaryTests
         await using MemoryStream coverImageStream = new();
         await coverImage.SaveAsPngAsync(coverImageStream);
 
-        MultipartFormDataContent formData = new();
-        formData.Add(new StreamContent(coverImageStream), "coverImage", "coverImage.png");
-        formData.Add(new ByteArrayContent(new byte[3]), "name", "file.png");
-        formData.Add(new StringContent("invalid"), "name");
+        MultipartFormDataContent formData = new()
+        {
+            { new StreamContent(coverImageStream), "coverImage", "coverImage.png" },
+            { new ByteArrayContent(new byte[3]), "name", "file.png" },
+            { new StringContent("invalid"), "name" }
+        };
 
         // Act
         HttpResponseMessage encodeResponse =
@@ -171,7 +180,7 @@ public class EncodeBinaryTests
         // File length + file name length + file name + file
         files.Sum(file => 4 + 2 + Encoding.UTF8.GetByteCount(file.Name) + file.Content.Length);
 
-    private class File
+    private sealed class File
     {
         public required string Name { get; init; }
         public required byte[] Content { get; init; }

@@ -27,9 +27,7 @@ public static class DependencyInjection
             return;
         }
 
-        IConfigurationSection kestrelSection = context.Configuration.GetSection("Kestrel");
-
-        serverOptions.Configure(kestrelSection)
+        serverOptions.Configure(context.Configuration.GetRequiredSection(options.kestrel.KestrelServerOptions.Section))
             .Endpoint("Https", endpoint =>
             {
                 string certPath =

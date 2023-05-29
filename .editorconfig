@@ -213,10 +213,11 @@ dotnet_naming_rule.constants.symbols = constants
 dotnet_naming_rule.constants.style = constants
 dotnet_naming_rule.constants.severity = warning
 
-# Namespaces are PascalCase
+# Namespaces are lower case
 dotnet_naming_symbols.namespaces.applicable_kinds = namespace
 
-dotnet_naming_style.namespaces.capitalization = pascal_case
+dotnet_naming_style.namespaces.capitalization = all_lower
+dotnet_naming_style.namespaces.word_separator = _
 
 dotnet_naming_rule.namespaces.symbols = namespaces
 dotnet_naming_rule.namespaces.style = namespaces

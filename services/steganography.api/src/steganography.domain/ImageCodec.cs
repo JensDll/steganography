@@ -9,19 +9,25 @@ public abstract class ImageCodec : IDisposable
     private readonly int _permutationStep;
     private readonly int _permutationEnd;
 
-    protected readonly Image<Rgb24> CoverImage;
+    protected Image<Rgb24> CoverImage { get; }
 
-    protected byte BitPosition;
-    protected byte ByteShift;
-    protected byte PixelValueMask = 0b1111_1110;
-    protected byte PixelIdx;
+    protected byte BitPosition { get; private set; }
 
-    protected int[] Permutation;
-    protected int PermutationCount;
-    protected int PermutationIdx;
+    protected byte ByteShift { get; set; }
 
-    protected readonly int StartPermutationCount;
-    protected int StartPermutationIdx = 1;
+    protected byte PixelValueMask { get; private set; } = 0b1111_1110;
+
+    protected byte PixelIdx { get; set; }
+
+    protected int[] Permutation { get; private set; }
+
+    protected int PermutationCount { get; private set; }
+
+    protected int PermutationIdx { get; set; }
+
+    protected int StartPermutationCount { get; }
+
+    protected int StartPermutationIdx { get; private set; } = 1;
 
     protected ImageCodec(Image<Rgb24> coverImage, int seed)
     {

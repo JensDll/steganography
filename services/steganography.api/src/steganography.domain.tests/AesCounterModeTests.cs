@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace steganography.domain.tests;
 
 [TestFixture]
-internal class AesCounterModeTests
+internal sealed class AesCounterModeTests
 {
     [Test]
     public void PlainTextAreEqualAfterTransformation([Random(500, 100_100, 5)] int length)

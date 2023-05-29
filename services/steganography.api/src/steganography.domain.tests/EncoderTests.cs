@@ -9,7 +9,7 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace steganography.domain.tests;
 
 [TestFixture]
-internal class EncoderTests
+internal sealed class EncoderTests
 {
     [TestCase(8, 8)]
     [TestCase(64, 64)]

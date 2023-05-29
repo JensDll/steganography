@@ -1,6 +1,8 @@
 ﻿using aspnet.shared.options.fluent_validation;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace steganography.api.options.http_headers;
+namespace aspnet.shared.options.http_headers;
 
 public static class Extensions
 {

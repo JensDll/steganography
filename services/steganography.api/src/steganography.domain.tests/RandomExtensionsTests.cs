@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace steganography.domain.tests;
 
 [TestFixture]
-internal class RandomExtensionsTests
+internal sealed class RandomExtensionsTests
 {
     [TestCase(0, 10, 5, new[] { 0, 5, 10 })]
     [TestCase(1, 10, 5, new[] { 1, 6 })]

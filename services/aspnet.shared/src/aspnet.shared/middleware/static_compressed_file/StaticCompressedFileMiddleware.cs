@@ -56,7 +56,7 @@ public class StaticCompressedFileMiddleware : IMiddleware
         }
         else
         {
-            IFileInfo fileInfo = _fileProvider.GetFileInfo($"{subPath.Value}.{contentEncoding}");
+            IFileInfo fileInfo = _fileProvider.GetFileInfo($"{requestPath.Value}.{contentEncoding}");
 
             if (fileInfo.Exists)
             {
@@ -80,7 +80,7 @@ public class StaticCompressedFileMiddleware : IMiddleware
         string contentType,
         CancellationToken cancellationToken)
     {
-        ResponseHeaders responseHeaders = response.GetTypedHeaders();
+        ResponseHeaders responseHeaders = StaticCompressedFileOptions.AddCacheBustingHeaders(response);
 
         DateTimeOffset last = fileInfo.LastModified;
         // Truncate to seconds precision
@@ -92,20 +92,12 @@ public class StaticCompressedFileMiddleware : IMiddleware
             Charset = "utf-8"
         };
 
-        CacheControlHeaderValue cacheControlHeader = new()
-        {
-            Public = true,
-            MaxAge = TimeSpan.FromDays(365),
-            Extensions = { new NameValueHeaderValue("immutable") }
-        };
-
         response.StatusCode = StatusCodes.Status200OK;
 
         responseHeaders.LastModified = lastModified;
         responseHeaders.ContentLength = fileInfo.Length;
         responseHeaders.ContentType = contentTypeHeader;
-        responseHeaders.CacheControl = cacheControlHeader;
-        responseHeaders.Headers[HeaderNames.ContentEncoding] = contentEncoding;
+        responseHeaders.Headers.ContentEncoding = contentEncoding;
 
         await response.SendFileAsync(fileInfo, 0, fileInfo.Length, cancellationToken);
     }

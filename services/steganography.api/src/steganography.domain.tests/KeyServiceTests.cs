@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace steganography.domain.tests;
 
 [TestFixture]
-internal class KeyServiceTests
+internal sealed class KeyServiceTests
 {
     [TestCaseSource(nameof(TestData))]
     public void ToBase64String_TryParse_AllKeyPartsShouldMatch(MessageType inMessageType, int inSeed,

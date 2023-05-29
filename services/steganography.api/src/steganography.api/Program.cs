@@ -2,13 +2,12 @@ using aspnet.shared;
 using aspnet.shared.logging;
 using aspnet.shared.middleware.development_proxy;
 using aspnet.shared.middleware.static_compressed_file;
+using aspnet.shared.options.http_headers;
+using aspnet.shared.options.kestrel;
 using Microsoft.AspNetCore.Rewrite;
-using Microsoft.Extensions.Options;
 using MinimalApiBuilder;
 using steganography.api.extensions;
 using steganography.api.features.codec;
-using steganography.api.options.http_headers;
-using steganography.api.options.kestrel;
 using steganography.domain;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -36,8 +35,10 @@ builder.Services.AddHsts(hstsOptions =>
     hstsOptions.MaxAge = TimeSpan.FromDays(3650);
 });
 
+builder.AddHttpHeadersOptions();
+
 builder.Services.AddDevelopmentProxyMiddleware()
-    .AddStaticCompressedFileMiddleware();
+    .AddStaticCompressedFileMiddleware("/assets");
 
 WebApplication app = builder.Build();
 
@@ -58,8 +59,16 @@ rewriteOptions.AddRedirectToNonWww();
 
 app.UseRewriter(rewriteOptions);
 
+StaticFileOptions staticFileOptions = new()
+{
+    OnPrepareResponse = static context =>
+    {
+        StaticCompressedFileOptions.AddCacheBustingHeaders(context.Context.Response);
+    }
+};
+
 app.UseStaticCompressedFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(staticFileOptions);
 
 app.UseRouting();
 
@@ -67,25 +76,11 @@ RouteGroupBuilder api = app.MapGroup("/api");
 api.MapCodecFeature();
 api.MapHealthChecks("/health");
 
-StaticFileOptions indexHtmlOptions = new StaticFileOptions
+StaticFileOptions indexHtmlOptions = new()
 {
     OnPrepareResponse = static context =>
     {
-        HttpHeadersOptions options =
-            context.Context.RequestServices.GetRequiredService<IOptions<HttpHeadersOptions>>().Value;
-
-        IHeaderDictionary headers = context.Context.Response.Headers;
-        headers.CacheControl = "private,no-cache,no-store,must-revalidate,max-age=0";
-        headers.XXSSProtection = "0";
-
-        if (options.ContentSecurityPolicyPolicy is not null)
-        {
-            headers.ContentSecurityPolicy = options.ContentSecurityPolicyPolicy;
-        }
-        else if (options.ContentSecurityPolicyPolicyReportOnly is not null)
-        {
-            headers.ContentSecurityPolicyReportOnly = options.ContentSecurityPolicyPolicyReportOnly;
-        }
+        StaticCompressedFileOptions.AddIndexHtmlHeaders(context.Context);
     }
 };
 
