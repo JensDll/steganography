@@ -1,10 +1,14 @@
 name: Merge staging into main
 
 on:
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  create_pull:
+  create_pull_request:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
@@ -18,3 +22,17 @@ jobs:
           base: main
           head: staging
           title: "github-actions: merge staging into main"
+
+  merge_pull_request:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out the repository
+        uses: actions/checkout@v3.5.2
+
+      - name: Merging pull request
+        uses: ./.github/actions/merge_pull
+        with:
+          # Make sure to trigger push workflows
+          github_token: ${{ secrets.WORKFLOW_TOKEN }}
+          pull_number: ${{ github.event.number }}
