@@ -1,9 +1,9 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace aspnet.common;
 
@@ -22,32 +22,38 @@ public static class DependencyInjection
 
     public static void ConfigureCertificate(this WebHostBuilderContext context, KestrelServerOptions serverOptions)
     {
-        if (context.HostingEnvironment.IsDevelopment())
+        IConfigurationSection kestrelSection =
+            context.Configuration.GetRequiredSection(options.kestrel.KestrelServerOptions.Section);
+
+        IConfigurationSection httpsSection = kestrelSection.GetSection("Endpoints:Https");
+
+        if (!httpsSection.Exists())
         {
             return;
         }
 
-        serverOptions.Configure(context.Configuration.GetRequiredSection(options.kestrel.KestrelServerOptions.Section))
-            .Endpoint("Https", endpoint =>
+        KestrelConfigurationLoader loader = serverOptions.Configure(kestrelSection);
+
+        loader.Endpoint("Https", endpoint =>
+        {
+            string certPath =
+                endpoint.ConfigSection.GetValue<string>("Path") ??
+                throw new InvalidOperationException(
+                    "Failed to find certificate path on https endpoint configuration");
+
+            string keyPath =
+                endpoint.ConfigSection.GetValue<string>("KeyPath") ??
+                throw new InvalidOperationException(
+                    "Failed to find key path on https endpoint configuration");
+
+            X509Certificate2 certificate = X509Certificate2.CreateFromPemFile(certPath, keyPath);
+
+            endpoint.ListenOptions.UseHttps(certificate, httpsOptions =>
             {
-                string certPath =
-                    endpoint.ConfigSection.GetValue<string>("Path") ??
-                    throw new InvalidOperationException(
-                        "Failed to find certificate path on https endpoint configuration");
-
-                string keyPath =
-                    endpoint.ConfigSection.GetValue<string>("KeyPath") ??
-                    throw new InvalidOperationException(
-                        "Failed to find key path on https endpoint configuration");
-
-                X509Certificate2 certificate = X509Certificate2.CreateFromPemFile(certPath, keyPath);
-
-                endpoint.ListenOptions.UseHttps(certificate, httpsOptions =>
-                {
-                    X509Certificate2Collection chain = new();
-                    chain.ImportFromPemFile(certPath);
-                    httpsOptions.ServerCertificateChain = chain;
-                });
+                X509Certificate2Collection chain = new();
+                chain.ImportFromPemFile(certPath);
+                httpsOptions.ServerCertificateChain = chain;
             });
+        });
     }
 }
