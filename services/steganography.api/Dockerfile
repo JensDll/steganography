@@ -53,6 +53,6 @@ USER appuser:appgroup
 
 ENV ASPNETCORE_URLS=""
 
-EXPOSE 8443
+EXPOSE 8080 8443
 
 ENTRYPOINT ["dotnet", "steganography.api.dll"]
