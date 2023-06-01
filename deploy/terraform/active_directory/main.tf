@@ -22,7 +22,7 @@ resource "azuread_application" "app" {
 resource "azuread_application_federated_identity_credential" "app" {
   application_object_id = azuread_application.app.object_id
   display_name          = "steganography_azure"
-  description           = "Azure environment on GitHub 3"
+  description           = "Azure environment on GitHub"
   audiences             = ["api://AzureADTokenExchange"]
   issuer                = "https://token.actions.githubusercontent.com"
   subject               = "repo:JensDll/steganography:environment:Azure"
