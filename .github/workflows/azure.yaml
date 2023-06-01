@@ -4,10 +4,15 @@ on:
   workflow_dispatch:
   push:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   main:
     runs-on: ubuntu-latest
-    environment: Azure
+    environment:
+      name: Azure
     steps:
       - name: Logging into Azure
         uses: azure/login@v1
