@@ -18,6 +18,6 @@ data:
         }
       },
       "HttpHeaders": {
-        "ContentSecurityPolicy": "default-src 'self';upgrade-insecure-requests;script-src 'self' 'sha256-8atrH6Pge+As3TgWrRwcD2pUDCYuTIBfIIqQGFDl3eA=';form-action 'none';img-src 'self' data: blob:; connect-src 'self';report-uri https:localhost"
+        "ContentSecurityPolicy": "default-src 'self';upgrade-insecure-requests;script-src 'self' 'sha256-8atrH6Pge+As3TgWrRwcD2pUDCYuTIBfIIqQGFDl3eA=';form-action 'none';img-src 'self' data: blob:; connect-src 'self' sentry.io;report-uri https://o4504621394165760.ingest.sentry.io/api/4504621566001152/security/?sentry_key=ab4ccfc57221482aafb411c6b9b4744a"
       }
     }
