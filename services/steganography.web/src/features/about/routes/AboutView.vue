@@ -20,9 +20,10 @@
       Before writing the message to the image, the AES cipher encrypts it in
       Counter (CTR) mode. The implementation can be found in the
       <a
-        href="https://github.com/JensDll/image-data-hiding/blob/main/services/api/src/Domain/Entities/AesCounterMode.cs"
-        >source code</a
+        href="https://github.com/JensDll/steganography/blob/staging/services/steganography.api/src/steganography.domain/AesCounterMode.cs"
       >
+        source code
+      </a>
       of the Web API project.
     </p>
     <h2>What information is part of the generated Base64 key?</h2>
