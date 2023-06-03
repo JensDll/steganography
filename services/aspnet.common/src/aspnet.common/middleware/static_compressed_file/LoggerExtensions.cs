@@ -23,23 +23,23 @@ internal static class LoggerExtensions
         s_servingStaticCompressedFile = LoggerMessage.DefineScope<PathString>(
             "Serving static compressed file: {Path}");
 
-        s_acceptEncodingMismatch = LoggerMessage.Define(LogLevel.Information,
+        s_acceptEncodingMismatch = LoggerMessage.Define(LogLevel.Debug,
             new EventId(1, nameof(AcceptEncodingMismatch)),
             $"Skipped as the request does not have an {HeaderNames.AcceptEncoding} header");
 
-        s_pathMismatch = LoggerMessage.Define(LogLevel.Information,
+        s_pathMismatch = LoggerMessage.Define(LogLevel.Debug,
             new EventId(2, nameof(PathMismatch)),
             "Skipped as the request path does start with the configured path");
 
-        s_endpointMatched = LoggerMessage.Define(LogLevel.Information,
+        s_endpointMatched = LoggerMessage.Define(LogLevel.Debug,
             new EventId(3, nameof(EndpointMatched)),
             "Skipped as the request already matched an endpoint");
 
-        s_verbMismatch = LoggerMessage.Define<string>(LogLevel.Information,
+        s_verbMismatch = LoggerMessage.Define<string>(LogLevel.Debug,
             new EventId(4, nameof(VerbMismatch)),
             "Skipped as {RequestMethod} requests are not supported");
 
-        s_contentTypeMismatch = LoggerMessage.Define<string?>(LogLevel.Information,
+        s_contentTypeMismatch = LoggerMessage.Define<string?>(LogLevel.Debug,
             new EventId(5, nameof(ContentTypeMismatch)),
             "Skipped as the {ContentType} content type is not supported");
     }
