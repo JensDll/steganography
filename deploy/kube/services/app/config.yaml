@@ -1,13 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: api-config
+  name: app-config
 data:
   appsettings.json: |
     {
-      "Cors": {
-        "AllowedOrigins": ["https://steganography.app"]
-      },
       "Kestrel": {
         "Endpoints": {
           "Https": {
@@ -19,5 +16,8 @@ data:
         "Limits": {
           "MaxRequestBodySize": 31457280
         }
+      },
+      "HttpHeaders": {
+        "ContentSecurityPolicy": "default-src 'self';upgrade-insecure-requests;script-src 'self' 'sha256-8atrH6Pge+As3TgWrRwcD2pUDCYuTIBfIIqQGFDl3eA=';form-action 'none';img-src 'self' data: blob:; connect-src 'self';report-uri https:localhost"
       }
     }

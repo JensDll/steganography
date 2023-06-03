@@ -1,24 +1,3 @@
-terraform {
-  required_providers {
-    azuread = {
-      source  = "hashicorp/azuread"
-      version = "2.39.0"
-    }
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "3.58.0"
-    }
-  }
-
-  required_version = ">= 1.4.0"
-}
-
-provider "azurerm" {
-  features {}
-}
-
-data "azuread_client_config" "current" {}
-
 resource "azuread_application" "app" {
   display_name = "steganography"
   owners       = [data.azuread_client_config.current.object_id]
@@ -41,8 +20,6 @@ resource "azuread_service_principal" "app" {
   app_role_assignment_required = true
   owners                       = [data.azuread_client_config.current.object_id]
 }
-
-data "azurerm_subscription" "primary" {}
 
 resource "azurerm_role_assignment" "example" {
   scope                = data.azurerm_subscription.primary.id

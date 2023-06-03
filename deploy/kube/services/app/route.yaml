@@ -1,14 +1,14 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRouteTCP
 metadata:
-  name: api-route-tcp
+  name: app-route-tcp
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: HostSNI(`api.steganography.app`)
+    - match: HostSNI(`steganography.app`) || HostSNI(`www.steganography.app`)
       services:
-        - name: api-service
+        - name: app-service
           port: websecure
   tls:
     passthrough: true

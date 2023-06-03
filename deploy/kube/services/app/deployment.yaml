@@ -1,26 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-deployment
+  name: app-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: api
+      app: app
   revisionHistoryLimit: 4
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: api
+        app: app
     spec:
       automountServiceAccountToken: false
       imagePullSecrets:
         - name: docker-pull
+      volumes:
+        - name: appsettings
+          configMap:
+            name: app-config
+            items:
+              - key: appsettings.json
+                path: appsettings.json
+        - name: cert
+          secret:
+            secretName: app-cert
+            items:
+              - key: tls.crt
+                path: tls.crt
+              - key: tls.key
+                path: tls.key
+                mode: 0004
       containers:
-        - name: api
-          image: jensdll/steganography:api.latest
+        - name: app
+          image: jensdll/steganography:app.latest
           imagePullPolicy: Always
           securityContext:
             capabilities:
@@ -33,34 +49,18 @@ spec:
             allowPrivilegeEscalation: false
           volumeMounts:
             - name: appsettings
-              mountPath: /app/Properties/
+              mountPath: /app/properties/
               readOnly: true
             - name: cert
               mountPath: /usr/local/certs/
               readOnly: true
           resources:
             requests:
-              cpu: '450m'
-              memory: '768Mi'
+              cpu: "256m"
+              memory: "768Mi"
             limits:
-              cpu: '700m'
-              memory: '1024Mi'
+              cpu: "512m"
+              memory: "1024Mi"
           ports:
             - containerPort: 8433
               protocol: TCP
-      volumes:
-        - name: appsettings
-          configMap:
-            name: api-config
-            items:
-              - key: appsettings.json
-                path: appsettings.json
-        - name: cert
-          secret:
-            secretName: api-cert
-            items:
-              - key: tls.crt
-                path: tls.crt
-              - key: tls.key
-                path: tls.key
-                mode: 0004

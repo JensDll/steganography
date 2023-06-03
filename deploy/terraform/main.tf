@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "3.58.0"
     }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "2.39.0"
+    }
   }
 
   required_version = ">= 1.4.0"
@@ -13,19 +17,11 @@ provider "azurerm" {
   features {}
 }
 
+data "azurerm_subscription" "primary" {}
+
+data "azuread_client_config" "current" {}
+
 resource "azurerm_resource_group" "resources" {
   name     = "steganography_resources"
   location = "francecentral"
-}
-
-# resource "azurerm_service_plan" "service_plan" {
-#   name                = "steg_service_plan"
-#   resource_group_name = azurerm_resource_group.rg.name
-#   location            = azurerm_resource_group.rg.location
-#   os_type             = "Linux"
-#   sku_name            = "B1"
-# }
-
-module "active_directory" {
-  source = "./active_directory"
 }
