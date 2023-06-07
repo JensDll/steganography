@@ -76,7 +76,7 @@ app.UseRouting();
 
 RouteGroupBuilder api = app.MapGroup("/api");
 api.MapCodecFeature();
-api.MapHealthChecks("/health");
+api.MapHealthChecks("/healthz");
 
 if (app.Environment.IsRunningInContainer())
 {

@@ -12,8 +12,7 @@ tab_width = 2
 indent_size = 4
 tab_width = 4
 
-# At the time of writing, the following rules cannot be enforced on the command line:
-# IDE0001 IDE0002 IDE0003 IDE0009 IDE0049 IDE0050 IDE0035 IDE0079
+# Compare the following link for a list of rules that cannot be enforced on the command line:
 # https://github.com/dotnet/roslyn/tree/252def9efa028af3f0562929b4b0e8a74dcd3124/src/Analyzers/Core/Analyzers/EnforceOnBuildValues.cs#L120
 
 ######## LANGUAGE RULES ########
