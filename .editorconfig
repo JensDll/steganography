@@ -320,4 +320,10 @@ resharper_csharp_max_attribute_length_for_same_line = 9999
 resharper_csharp_empty_block_style = together
 # https://www.jetbrains.com/help/resharper/Reference__Code_Inspections_CSHARP.html#LanguageUsage
 resharper_introduce_optional_parameters_global_highlighting = hint
+# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_CSharpCodeStylePageImplSchema.html#resharper_csharp_for_built_in_types
+resharper_csharp_for_built_in_types = use_explicit_type
+# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_CSharpCodeStylePageImplSchema.html#resharper_csharp_for_simple_types
+resharper_csharp_for_simple_types = use_explicit_type
+# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_CSharpCodeStylePageImplSchema.html#resharper_csharp_for_other_types
+resharper_csharp_for_other_types = use_explicit_type
 ######## RESHARPER ########

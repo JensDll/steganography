@@ -6,20 +6,21 @@ namespace steganography.api.tests;
 [SetUpFixture]
 public class TestSetup
 {
-    internal static TestWebApplicationFactory<Program> Factory = null!;
+    private static TestWebApplicationFactory<Program> s_factory = null!;
+
     internal static HttpClient Client = null!;
 
     [OneTimeSetUp]
     public void RunBeforeAnyTests()
     {
-        Factory = new TestWebApplicationFactory<Program>();
-        Client = Factory.CreateClient();
+        s_factory = new TestWebApplicationFactory<Program>();
+        Client = s_factory.CreateClient();
     }
 
     [OneTimeTearDown]
     public void RunAfterAnyTests()
     {
-        Factory.Dispose();
+        s_factory.Dispose();
         Client.Dispose();
     }
 }

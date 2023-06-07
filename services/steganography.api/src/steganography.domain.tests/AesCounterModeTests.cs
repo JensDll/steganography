@@ -42,8 +42,8 @@ internal sealed class AesCounterModeTests
         Span<byte> plaintextOut = new byte[length];
 
         // Act
-        encryptor.Transform(plaintextIn[..500], ciphertext); // Transform the first 500 bytes
-        encryptor.Transform(plaintextIn[500..1000], ciphertext[500..]); // the next 500
+        encryptor.Transform(plaintextIn[..500], ciphertext); // Transform the first 500-byte
+        encryptor.Transform(plaintextIn[500..1000], ciphertext[500..]); // the next 500-byte
         encryptor.Transform(plaintextIn[1000..], ciphertext[1000..]); // and the rest
         decryptor.Transform(ciphertext, plaintextOut); // Decrypt all
 
