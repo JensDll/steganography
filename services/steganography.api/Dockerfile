@@ -1,4 +1,4 @@
-FROM node:20.2 as build_web
+FROM node:21.0 as build_web
 
 WORKDIR /out
 
