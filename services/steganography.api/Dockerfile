@@ -40,7 +40,7 @@ RUN dotnet publish --configuration Release --arch $TARGETARCH \
   ./steganography.api/steganography.api.csproj
 
 # Final image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0.5-alpine3.17
+FROM mcr.microsoft.com/dotnet/aspnet:7.0.10-alpine3.17
 
 WORKDIR /app
 
