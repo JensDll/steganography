@@ -3,7 +3,7 @@ export function useScrollTo(id: string) {
     const target = document.getElementById(id)
     if (target) {
       target.scrollIntoView({
-        behavior: 'smooth'
+        behavior: 'smooth',
       })
     }
   }

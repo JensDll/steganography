@@ -6,7 +6,7 @@ import { decode } from '../api'
 import { required, minMax } from '~/common/rules'
 import {
   BaseErrorListAdd,
-  BaseErrorListClear
+  BaseErrorListClear,
 } from '~/components/base/BaseErrorList.vue'
 import { ApiError } from '~/composables'
 
@@ -18,12 +18,12 @@ type FormData = {
 const { form, validateFields } = useValidation<FormData>({
   key: {
     $value: '',
-    $rules: [required('Please enter a key')]
+    $rules: [required('Please enter a key')],
   },
   coverImage: {
     $value: [],
-    $rules: [minMax(1, 1)('Please attach a cover image')]
-  }
+    $rules: [minMax(1, 1)('Please attach a cover image')],
+  },
 })
 
 const errors = ref<VNode[]>([])

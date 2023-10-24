@@ -10,8 +10,8 @@ export function Common() {
           marginRight: 'auto',
           maxWidth: theme('maxWidth.container'),
           paddingLeft: theme('padding.container'),
-          paddingRight: theme('padding.container')
-        }
+          paddingRight: theme('padding.container'),
+        },
       })
 
       addUtilities({
@@ -22,38 +22,38 @@ export function Common() {
           placeItems: 'center',
           gridTemplateAreas: "'main'",
           '& > *': {
-            gridArea: 'main'
-          }
-        }
+            gridArea: 'main',
+          },
+        },
       })
 
       addUtilities({
         '.firefox-border-animation-fix': {
           border: '0.05px solid rgba(0, 0, 0, 0)',
-          backgroundClip: 'padding-box'
+          backgroundClip: 'padding-box',
         },
         '.safari-overflow-fix': {
-          maskImage: 'radial-gradient(white, black)'
-        }
+          maskImage: 'radial-gradient(white, black)',
+        },
       })
 
       matchUtilities({
         'grid-area': values => {
           return {
-            gridArea: values
+            gridArea: values,
           }
-        }
+        },
       })
 
       addVariant(
         'supports-backdrop-blur',
-        '@supports (backdrop-filter: blur(4px))'
+        '@supports (backdrop-filter: blur(4px))',
       )
     },
     {
       corePlugins: {
-        container: false
-      }
-    }
+        container: false,
+      },
+    },
   )
 }

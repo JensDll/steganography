@@ -9,16 +9,16 @@ const emit = defineEmits(['remove'])
 const props = defineProps({
   file: {
     type: File as PropType<File | undefined>,
-    default: undefined
+    default: undefined,
   },
   alt: {
     type: String,
-    default: 'image'
+    default: 'image',
   },
   variant: {
     type: String as PropType<'default' | 'reduced'>,
-    default: 'default'
-  }
+    default: 'default',
+  },
 })
 
 const loading = ref(false)
@@ -49,8 +49,8 @@ watch(
     }
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
 function handleClick() {
@@ -72,8 +72,8 @@ function handleLoad() {
       { 'cursor-pointer': !isImage || loaded },
       {
         default: 'flex flex-col items-center justify-center rounded-lg',
-        reduced: 'relative center-children'
-      }[variant]
+        reduced: 'relative center-children',
+      }[variant],
     ]"
     @click="handleClick"
   >
@@ -82,7 +82,7 @@ function handleLoad() {
       v-show="loaded || loading"
       :class="[
         'h-12 w-12 overflow-hidden rounded-full shadow center-children',
-        { 'group-hover:opacity-30': loaded }
+        { 'group-hover:opacity-30': loaded },
       ]"
     >
       <img
@@ -95,7 +95,7 @@ function handleLoad() {
       <div
         :class="{
           'group-hover:bg-heroicons-trash-black dark:group-hover:bg-heroicons-trash-white':
-            loaded
+            loaded,
         }"
       ></div>
     </div>
@@ -109,12 +109,12 @@ function handleLoad() {
       :class="[
         'whitespace-nowrap pt-1 text-xs text-gray-600 dark:text-gray-300',
         {
-          'group-hover:line-through ': !isImage || loaded
+          'group-hover:line-through ': !isImage || loaded,
         },
         {
           default: '',
-          reduced: 'absolute top-full pt-2'
-        }[variant]
+          reduced: 'absolute top-full pt-2',
+        }[variant],
       ]"
     >
       {{ fileSize }}

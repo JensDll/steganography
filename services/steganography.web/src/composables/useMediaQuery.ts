@@ -8,7 +8,7 @@ type MediaQuery =
 
 export function useMediaQuery(
   query: MediaQuery,
-  onUpdate?: (matches: boolean) => void
+  onUpdate?: (matches: boolean) => void,
 ) {
   const mediaQuery = window.matchMedia(query)
   const matches = ref(false)

@@ -22,5 +22,5 @@ export const onClickOutside: Directive<DirectiveElement> = {
   },
   unmounted(el) {
     el.__directive_onUnmount()
-  }
+  },
 }

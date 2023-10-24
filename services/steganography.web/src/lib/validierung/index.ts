@@ -7,8 +7,8 @@ export const validierung = createValidation({
     lazy: ({ touched }) => touched,
     lazier: ({ force, touched, submit, hasError }) =>
       force || submit || (touched && hasError),
-    submit: ({ submit, hasError }) => submit || hasError
-  }
+    submit: ({ submit, hasError }) => submit || hasError,
+  },
 })
 
 declare module 'validierung' {

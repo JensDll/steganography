@@ -16,7 +16,7 @@ export async function decode(coverImage: File, key: string) {
 
   try {
     const { response, responseType } = await doDecode({
-      body: formData
+      body: formData,
     })
 
     if (response.ok) {

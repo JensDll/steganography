@@ -12,15 +12,15 @@ export default defineConfig({
   envDir: 'env',
   resolve: {
     alias: {
-      '~': srcPath
-    }
+      '~': srcPath,
+    },
   },
   plugins: [
     Vue(),
     Components({
       dirs: ['src/components', 'src/features/*/components'],
-      dts: './env/components.d.ts'
+      dts: './env/components.d.ts',
     }),
-    Compression()
-  ]
+    Compression(),
+  ],
 })

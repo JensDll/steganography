@@ -17,6 +17,6 @@ export function useDownload(fileName: string) {
     text(content: string) {
       const file = new Blob([content], { type: 'text/plain' })
       createAndDownload(file)
-    }
+    },
   }
 }

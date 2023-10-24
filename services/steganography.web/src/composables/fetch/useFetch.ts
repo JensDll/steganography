@@ -20,15 +20,15 @@ export class ApiError {
 }
 
 export const API_ERROR_UNKNOWN = new ApiError(
-  'An unknown error occurred. Please try again'
+  'An unknown error occurred. Please try again',
 )
 
 export const API_ERROR_REQUEST_TOO_LARGE = new ApiError(
-  'The request is too large. Please reduce its size and try again'
+  'The request is too large. Please reduce its size and try again',
 )
 
 export const API_ERROR_RATE_LIMIT = new ApiError(
-  `You've exceeded the rate limit`
+  `You've exceeded the rate limit`,
 )
 
 const statusCodeInterceptor: ResponseInterceptor = {
@@ -44,14 +44,14 @@ const statusCodeInterceptor: ResponseInterceptor = {
   },
   error() {
     return Promise.reject(API_ERROR_UNKNOWN)
-  }
+  },
 }
 
 export const useFetch = createFetch({
   baseUri: '/api',
   interceptors: {
-    response: [statusCodeInterceptor]
-  }
+    response: [statusCodeInterceptor],
+  },
 })
 
 export interface ErrorResponse {

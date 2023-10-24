@@ -6,17 +6,17 @@ export function useFileSize(files: AnyRef<File[]>): ComputedRef<string>
 
 export function useFileSize(
   files: { file?: File },
-  key?: 'file'
+  key?: 'file',
 ): ComputedRef<string>
 
 export function useFileSize<T extends { [key in K]?: File }, K extends string>(
   files: T,
-  key: K
+  key: K,
 ): ComputedRef<string>
 
 export function useFileSize(
   files: { [key: string]: File | undefined } | AnyRef<File[]>,
-  key = 'file'
+  key = 'file',
 ) {
   return computed<string>(() => {
     const size = isRef(files)

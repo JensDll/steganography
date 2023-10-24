@@ -5,7 +5,7 @@ import {
   useDownload,
   ApiError,
   API_ERROR_UNKNOWN,
-  type ErrorResponse
+  type ErrorResponse,
 } from '~/composables'
 
 const { post: doEncodeText } = useFetch('/codec/encode/text')

@@ -28,8 +28,8 @@ import type { PropType, Ref, VNode } from 'vue'
 defineProps({
   errors: {
     type: Array as PropType<VNode[]>,
-    default: () => []
-  }
+    default: () => [],
+  },
 })
 
 function BaseErrorListRemove(errors: VNode[], idx: number) {

@@ -12,16 +12,16 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     component: HomeView,
     meta: {
-      title: 'Steganography'
-    }
+      title: 'Steganography',
+    },
   },
   {
     name: 'about',
     path: '/about',
     component: AboutViewVue,
     meta: {
-      title: 'About'
-    }
+      title: 'About',
+    },
   },
   {
     name: 'codec',
@@ -35,30 +35,30 @@ const routes: RouteRecordRaw[] = [
         alias: '',
         component: EncodeView,
         meta: {
-          title: 'Encode'
-        }
+          title: 'Encode',
+        },
       },
       {
         name: 'decode',
         path: 'decode',
         component: DecodeView,
         meta: {
-          title: 'Decode'
-        }
-      }
-    ]
+          title: 'Decode',
+        },
+      },
+    ],
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'notFound',
     component: () => import('~/features/not_found/routes/NotFoundView.vue'),
-    meta: { title: 'Not Found' }
-  }
+    meta: { title: 'Not Found' },
+  },
 ]
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
 })
 
 const titleTag = document.head.querySelector('title')!

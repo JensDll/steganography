@@ -6,7 +6,7 @@ import { encodeText, encodeBinary } from '../api'
 import { withPrecondition, required, min, minMax } from '~/common/rules'
 import {
   BaseErrorListAdd,
-  BaseErrorListClear
+  BaseErrorListClear,
 } from '~/components/base/BaseErrorList.vue'
 import { ApiError } from '~/composables'
 
@@ -23,23 +23,23 @@ const isBinaryMode = computed(() => messageMode.value === 'binary')
 const { form, validateFields } = useValidation<FormData>({
   textData: {
     $value: '',
-    $rules: [withPrecondition(isTextMode)(required('Please enter a message'))]
+    $rules: [withPrecondition(isTextMode)(required('Please enter a message'))],
   },
   binaryData: {
     $value: [],
     $rules: [
-      withPrecondition(isBinaryMode)(min(1)('Please attach one or more files'))
-    ]
+      withPrecondition(isBinaryMode)(min(1)('Please attach one or more files')),
+    ],
   },
   coverImage: {
     $value: [],
-    $rules: [minMax(1, 1)('Please attach a cover image')]
-  }
+    $rules: [minMax(1, 1)('Please attach a cover image')],
+  },
 })
 
 const errors = ref<VNode[]>([])
 const loading = computed(
-  () => encodeText.loading.value || encodeBinary.loading.value
+  () => encodeText.loading.value || encodeBinary.loading.value,
 )
 
 const abort = () => {

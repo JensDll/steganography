@@ -26,17 +26,17 @@ export type CreateThemeResult<TThemeName extends string = never> = () => {
 }
 
 export function createTheme<TThemeName extends string>(
-  themes: Record<TThemeName, Theme>
+  themes: Record<TThemeName, Theme>,
 ): CreateThemeResult<TThemeName>
 
 export function createTheme<TThemeName extends string>(
   themes: Record<TThemeName, Theme>,
-  systemTheme: SystemTheme<NoInfer<TThemeName>>
+  systemTheme: SystemTheme<NoInfer<TThemeName>>,
 ): CreateThemeResult<TThemeName | 'system'>
 
 export function createTheme<TThemeName extends string>(
   themes: Record<TThemeName, Theme>,
-  systemTheme?: SystemTheme<NoInfer<TThemeName>>
+  systemTheme?: SystemTheme<NoInfer<TThemeName>>,
 ) {
   let createdThemes: Record<string, CreatedTheme> = {}
 
@@ -46,7 +46,7 @@ export function createTheme<TThemeName extends string>(
       name: themeName,
       isActive: localStorage.theme == themeName,
       activeClass: themeName,
-      activeIcon: theme.icon
+      activeIcon: theme.icon,
     }
   }
 
@@ -54,12 +54,12 @@ export function createTheme<TThemeName extends string>(
     createdThemes.system = {
       ...systemTheme,
       name: 'system',
-      isActive: localStorage.theme == 'system'
+      isActive: localStorage.theme == 'system',
     }
   }
 
   const activeTheme = ref<CreatedTheme>(
-    createdThemes[localStorage.theme || 'system']
+    createdThemes[localStorage.theme || 'system'],
   )
 
   createdThemes = reactive(createdThemes)
@@ -76,7 +76,7 @@ export function createTheme<TThemeName extends string>(
 
     return {
       themes: createdThemes,
-      activeTheme
+      activeTheme,
     }
   }
 }

@@ -2,8 +2,8 @@
 defineProps({
   loading: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 </script>
 

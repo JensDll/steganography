@@ -11,7 +11,7 @@ type FetchResult = Promise<{
 async function makeRequest(
   uri: string,
   init: RequestInit,
-  interceptors: Interceptors
+  interceptors: Interceptors,
 ): FetchResult {
   let response: Response | undefined
   let responseType: 'json' | 'text' | 'blob' | undefined
@@ -26,8 +26,8 @@ async function makeRequest(
     if (error instanceof Error && error.name !== 'AbortError') {
       await Promise.all(
         interceptors.response.map(interceptor =>
-          interceptor.error(error as Error)
-        )
+          interceptor.error(error as Error),
+        ),
       )
     }
 
@@ -38,12 +38,12 @@ async function makeRequest(
     console.log(
       `[FETCH] ${uri} ${response.headers.get('Content-Type')} ${
         response.status
-      }`
+      }`,
     )
   }
 
   await Promise.all(
-    interceptors.response.map(interceptor => interceptor.response(response!))
+    interceptors.response.map(interceptor => interceptor.response(response!)),
   )
 
   switch (response.headers.get('Content-Type')?.split(';')[0]) {
@@ -59,7 +59,7 @@ async function makeRequest(
 
   return {
     response,
-    responseType
+    responseType,
   }
 }
 
@@ -122,7 +122,7 @@ function verbs(uri: string, interceptors: Interceptors) {
     get: Get,
     post: Post,
     put: Put,
-    delete: Delete
+    delete: Delete,
   }
 }
 
@@ -148,7 +148,7 @@ type UseFetchOptions = {
 
 export function createFetch({
   baseUri,
-  interceptors: { request = [], response = [] } = {}
+  interceptors: { request = [], response = [] } = {},
 }: CreateFetchOptions) {
   return (uri: string, { params = {} }: UseFetchOptions = {}) => {
     uri = baseUri + uri

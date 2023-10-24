@@ -5,7 +5,7 @@ import {
   useFetch,
   ApiError,
   API_ERROR_UNKNOWN,
-  type ErrorResponse
+  type ErrorResponse,
 } from '~/composables'
 
 const { post: doEncodeBinary } = useFetch('/codec/encode/binary')

@@ -18,7 +18,7 @@ app.use(directives)
 app.mount('#app')
 
 const favicon = document.querySelector(
-  'head > link[rel="icon"]'
+  'head > link[rel="icon"]',
 ) as HTMLLinkElement
 
 useMediaQuery('(prefers-color-scheme: dark)', matches => {

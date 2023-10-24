@@ -6,16 +6,16 @@ const emit = defineEmits(['click'])
 defineProps({
   variant: {
     type: String as PropType<'default' | 'encode' | 'decode' | 'landing'>,
-    default: 'default'
+    default: 'default',
   },
   type: {
     type: String as PropType<'button' | 'submit' | 'reset'>,
-    default: 'button'
+    default: 'button',
   },
   disabled: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const handleClick = (e: MouseEvent) => {
@@ -39,11 +39,11 @@ const handleClick = (e: MouseEvent) => {
         encode:
           'bg-encode-500 text-white hover:bg-encode-400 focus:outline-encode-300 dark:bg-encode-700 dark:hover:bg-encode-600 dark:focus:outline-encode-600',
         decode:
-          'bg-decode-500 text-white hover:bg-decode-400 focus:outline-decode-300 dark:bg-decode-700 dark:hover:bg-decode-600 dark:focus:outline-decode-600'
+          'bg-decode-500 text-white hover:bg-decode-400 focus:outline-decode-300 dark:bg-decode-700 dark:hover:bg-decode-600 dark:focus:outline-decode-600',
       }[variant],
       {
-        'pointer-events-none opacity-25': disabled
-      }
+        'pointer-events-none opacity-25': disabled,
+      },
     ]"
     :disabled="disabled"
     @click="handleClick"

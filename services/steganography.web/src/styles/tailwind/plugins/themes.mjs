@@ -20,7 +20,7 @@ const base = {
   '--fill': colors.rgb.gray['50'],
   '--fill-form': colors.rgb.white,
   '--border': colors.rgb.gray['200'],
-  '--border-form': colors.rgb.gray['200']
+  '--border-form': colors.rgb.gray['200'],
 }
 
 const baseDark = {
@@ -33,31 +33,31 @@ const baseDark = {
   '--fill': colors.rgb.gray['900'],
   '--fill-form': colors.rgb.gray['800'],
   '--border': colors.rgb.gray['700'],
-  '--border-form': colors.rgb.gray['700']
+  '--border-form': colors.rgb.gray['700'],
 }
 
 const encode = {
   ...base,
   '--highlight': base['--highlight-encode'],
-  '--border-form-highlight': base['--highlight-encode']
+  '--border-form-highlight': base['--highlight-encode'],
 }
 
 const encodeDark = {
   ...baseDark,
   '--highlight': baseDark['--highlight-encode'],
-  '--border-form-highlight': colors.rgb.encode['600']
+  '--border-form-highlight': colors.rgb.encode['600'],
 }
 
 const decode = {
   ...base,
   '--highlight': base['--highlight-decode'],
-  '--border-form-highlight': base['--highlight-decode']
+  '--border-form-highlight': base['--highlight-decode'],
 }
 
 const decodeDark = {
   ...baseDark,
   '--highlight': baseDark['--highlight-decode'],
-  '--border-form-highlight': colors.rgb.decode['600']
+  '--border-form-highlight': colors.rgb.decode['600'],
 }
 
 export function Themes() {
@@ -67,7 +67,7 @@ export function Themes() {
         '.theme-encode': encode,
         '.theme-encode-dark': encodeDark,
         '.theme-decode': decode,
-        '.theme-decode-dark': decodeDark
+        '.theme-decode-dark': decodeDark,
       })
     },
     {
@@ -77,14 +77,14 @@ export function Themes() {
           ...Object.entries(encode).reduce((result, [key]) => {
             result[key.replace('--', '')] = withAlphaValue(key)
             return result
-          }, {})
+          }, {}),
         },
         extend: {
           borderColor: {
-            DEFAULT: 'rgb(var(--border))'
-          }
-        }
-      }
-    }
+            DEFAULT: 'rgb(var(--border))',
+          },
+        },
+      },
+    },
   )
 }

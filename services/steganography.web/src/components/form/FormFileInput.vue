@@ -4,33 +4,33 @@ import type { PropType } from 'vue'
 import { useFileSize, useVModelFiles } from '~/composables'
 
 const emit = defineEmits({
-  'update:modelValue': (files: File[]) => Array.isArray(files)
+  'update:modelValue': (files: File[]) => Array.isArray(files),
 })
 
 const props = defineProps({
   label: {
     type: String,
-    default: ''
+    default: '',
   },
   id: {
     type: String,
-    default: ''
+    default: '',
   },
   modelValue: {
     type: Array as PropType<File[]>,
-    required: true
+    required: true,
   },
   errors: {
     type: Array as PropType<string[]>,
-    default: () => []
+    default: () => [],
   },
   multiple: {
-    type: Boolean
+    type: Boolean,
   },
   accept: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 })
 
 const { files, fileListeners, removeFile } = useVModelFiles(props, emit)
@@ -45,7 +45,9 @@ const totalFileSize = useFileSize(files)
       class="custom-file-input relative min-h-[8rem]"
       :class="[
         { error: errors.length },
-        files.length ? 'card-grid p-6' : 'flex items-center justify-center px-6'
+        files.length
+          ? 'card-grid p-6'
+          : 'flex items-center justify-center px-6',
       ]"
     >
       <input

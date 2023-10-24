@@ -6,7 +6,7 @@ const deprecatedColors = [
   'warmGray',
   'trueGray',
   'coolGray',
-  'blueGray'
+  'blueGray',
 ]
 deprecatedColors.forEach(color => delete tailwindColors[color])
 
@@ -14,7 +14,7 @@ export const colors = {
   ...tailwindColors,
   gray: tailwindColors.slate,
   encode: tailwindColors.emerald,
-  decode: tailwindColors.sky
+  decode: tailwindColors.sky,
 }
 
 const unusedGrays = ['slate', 'zinc', 'neutral', 'stone']

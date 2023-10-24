@@ -9,10 +9,13 @@ export type FileHelper = {
 
 export function useVModelFiles<
   TProps extends Record<'modelValue', any>,
-  TEmit extends (event: `update:modelValue`, value: TProps['modelValue']) => any
+  TEmit extends (
+    event: `update:modelValue`,
+    value: TProps['modelValue'],
+  ) => any,
 >(
   props: TProps,
-  emit: TEmit
+  emit: TEmit,
 ): {
   files: ComputedRef<File[]>
   removeFile: (i: number) => void
@@ -22,11 +25,11 @@ export function useVModelFiles<
 export function useVModelFiles<
   TProps extends Record<TEvent, any>,
   TEmit extends (event: `update:${TEvent}`, value: TProps[TEvent]) => any,
-  TEvent extends string
+  TEvent extends string,
 >(
   props: TProps,
   emit: TEmit,
-  event: TEvent
+  event: TEvent,
 ): {
   files: ComputedRef<File[]>
   removeFile: (i: number) => void
@@ -36,7 +39,7 @@ export function useVModelFiles<
 export function useVModelFiles(
   props: Record<string, any>,
   emit: (event: `update:${string}`, value: unknown) => any,
-  event = 'modelValue'
+  event = 'modelValue',
 ) {
   let input: HTMLInputElement
 
@@ -46,7 +49,7 @@ export function useVModelFiles(
     },
     set(files) {
       emit(`update:${event}`, files)
-    }
+    },
   })
 
   const removeFile = (i: number) => {
@@ -72,12 +75,12 @@ export function useVModelFiles(
   }
 
   const fileListeners: Record<string, any> = {
-    change
+    change,
   }
 
   return {
     files,
     removeFile,
-    fileListeners
+    fileListeners,
   }
 }

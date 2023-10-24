@@ -4,8 +4,8 @@ import type { PropType } from 'vue'
 defineProps({
   errors: {
     type: Array as PropType<string[]>,
-    required: true
-  }
+    required: true,
+  },
 })
 </script>
 

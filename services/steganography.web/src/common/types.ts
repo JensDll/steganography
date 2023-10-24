@@ -4,7 +4,7 @@ import type {
   ComputedRef,
   Ref,
   RendererElement,
-  VNode
+  VNode,
 } from 'vue'
 
 export type AnyFunction = (...args: any[]) => any

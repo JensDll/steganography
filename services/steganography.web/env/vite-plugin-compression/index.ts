@@ -12,7 +12,7 @@ export interface Options {
 
 export function Compression({
   test = /\.(js|css|html|txt|xml|json|svg|ico|ttf|otf|eot)$/,
-  limit = 512
+  limit = 512,
 }: Options = {}): Plugin {
   return {
     name: 'compression',
@@ -33,23 +33,23 @@ export function Compression({
           brotliCompressFile(path, {
             params: {
               [zlib.constants.BROTLI_PARAM_QUALITY]:
-                zlib.constants.BROTLI_MAX_QUALITY
-            }
+                zlib.constants.BROTLI_MAX_QUALITY,
+            },
           }),
           gzipCompressFile(path, {
-            level: zlib.constants.Z_BEST_COMPRESSION
-          })
+            level: zlib.constants.Z_BEST_COMPRESSION,
+          }),
         )
       }
 
       await Promise.all(promises)
-    }
+    },
   }
 }
 
 async function* recursiveReadDir(
   dir: string,
-  limit: number
+  limit: number,
 ): AsyncGenerator<string> {
   const dirents = await fs.readdir(dir, { withFileTypes: true })
 

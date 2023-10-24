@@ -4,12 +4,12 @@ export const useTheme = createTheme(
   {
     light: {
       icon: 'i-heroicons-sun',
-      text: 'Light'
+      text: 'Light',
     },
     dark: {
       icon: 'i-heroicons-moon',
-      text: 'Dark'
-    }
+      text: 'Dark',
+    },
   },
   {
     text: 'System',
@@ -27,6 +27,6 @@ export const useTheme = createTheme(
       }
 
       return 'i-heroicons-sun'
-    }
-  }
+    },
+  },
 )
