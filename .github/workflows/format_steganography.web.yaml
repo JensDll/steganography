@@ -21,17 +21,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checking out the repository
-        uses: actions/checkout@v3.5.2
+        uses: actions/checkout@v4.1.1
 
-      - name: Using pnpm version 7.x.x
-        uses: pnpm/action-setup@v2.2.4
+      - name: Using pnpm version 8.x.x
+        uses: pnpm/action-setup@v2.4.0
         with:
-          version: 7.x.x
+          version: 8.x.x
 
-      - name: Using node version 18
-        uses: actions/setup-node@v3
+      - name: Using node version 20
+        uses: actions/setup-node@v4.0.0
         with:
-          node-version: 18
+          node-version: 20
           cache: "pnpm"
           cache-dependency-path: services/steganography.web/pnpm-lock.yaml
 
@@ -73,6 +73,6 @@ jobs:
         uses: ./.github/actions/merge-pull
         with:
           github_token: ${{ secrets.github_token }}
-          pull_number: ${{ steps.create-pull.outputs.pull_number }}
+          pull_number: ${{ steps.create_pull.outputs.pull_number }}
           merge_method: "github_squash"
           delete_head: true

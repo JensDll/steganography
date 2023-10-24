@@ -4,17 +4,16 @@ updates:
     directory: "/"
     target-branch: "staging"
     schedule:
-      interval: "daily"
+      interval: "weekly"
 
   - package-ecosystem: "docker"
     directory: "/services/steganography.api"
     target-branch: "staging"
     schedule:
-      interval: "daily"
+      interval: "weekly"
 
   - package-ecosystem: "nuget"
     directory: "/services/steganography.api"
     target-branch: "staging"
     schedule:
       interval: "weekly"
-      day: "saturday"
