@@ -70,7 +70,7 @@ jobs:
 
       - name: Merging pull request
         if: steps.create_pull.outputs.pull_number != null
-        uses: ./.github/actions/merge-pull
+        uses: ./.github/actions/merge_pull
         with:
           github_token: ${{ secrets.github_token }}
           pull_number: ${{ steps.create_pull.outputs.pull_number }}
