@@ -15,7 +15,7 @@ COPY steganography.web ./
 # Build the project
 RUN pnpm run build
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:7.0.302-alpine3.17 as build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:7.0.400-alpine3.17 as build
 
 ARG TARGETARCH
 
