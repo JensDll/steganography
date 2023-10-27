@@ -325,3 +325,7 @@ resharper_csharp_for_simple_types = use_explicit_type
 # https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_CSharpCodeStylePageImplSchema.html#resharper_csharp_for_other_types
 resharper_csharp_for_other_types = use_explicit_type
 ######## RESHARPER ########
+
+######## MINIMAL API BUILDER ########
+minimalapibuilder_assign_name_to_endpoint = true
+######## MINIMAL API BUILDER ########
