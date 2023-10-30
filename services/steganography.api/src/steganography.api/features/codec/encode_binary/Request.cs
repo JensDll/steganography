@@ -61,7 +61,7 @@ public class EncodeBinaryRequest
 
     public async Task<int?> FillPipeAsync(
         AesCounterMode aes,
-        List<string> validationErrors,
+        ICollection<string> validationErrors,
         CancellationToken cancellationToken)
     {
         int messageLength = 0;

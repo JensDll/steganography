@@ -59,7 +59,7 @@ public class EncodeTextRequest
     }
 
     public async Task<int?> FillPipeAsync(AesCounterMode aes,
-        List<string> validationErrors,
+        ICollection<string> validationErrors,
         CancellationToken cancellationToken)
     {
         NextSection? nextSection = await MultipartReader.ReadNextSectionAsync(cancellationToken);

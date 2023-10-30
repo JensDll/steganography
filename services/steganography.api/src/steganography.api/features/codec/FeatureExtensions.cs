@@ -2,7 +2,7 @@
 
 namespace steganography.api.features.codec;
 
-public static class Extensions
+public static class FeatureExtensions
 {
     public static IEndpointRouteBuilder MapCodecFeature(this IEndpointRouteBuilder endpoints)
     {
