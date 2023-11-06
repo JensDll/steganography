@@ -161,24 +161,29 @@ public class EncodeBinaryTests
         Assert.That(encodeResponse.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/json"));
     }
 
-    private static File[] GetFiles(params int[] sizes) => sizes.Select((size, i) =>
+    private static File[] GetFiles(params int[] sizes)
     {
-        byte[] content = new byte[size];
-        Random.Shared.NextBytes(content);
-
-        File file = new()
+        return sizes.Select((size, i) =>
         {
-            Name = $"file@{i + 1}.txt",
-            Content = content,
-            Size = size
-        };
+            byte[] content = new byte[size];
+            Random.Shared.NextBytes(content);
 
-        return file;
-    }).ToArray();
+            File file = new()
+            {
+                Name = $"file@{i + 1}.txt",
+                Content = content,
+                Size = size
+            };
 
-    private static int GetMessageLength(IEnumerable<File> files) =>
+            return file;
+        }).ToArray();
+    }
+
+    private static int GetMessageLength(IEnumerable<File> files)
+    {
         // File length + file name length + file name + file
-        files.Sum(file => 4 + 2 + Encoding.UTF8.GetByteCount(file.Name) + file.Content.Length);
+        return files.Sum(file => 4 + 2 + Encoding.UTF8.GetByteCount(file.Name) + file.Content.Length);
+    }
 
     private sealed class File
     {

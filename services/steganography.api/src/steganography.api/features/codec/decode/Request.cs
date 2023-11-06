@@ -16,9 +16,11 @@ public class DecodeRequest
 
     public static async ValueTask<DecodeRequest?> BindAsync(HttpContext context)
     {
-        MultipartReader? multipartReader = MultipartReader.Create(context);
+        DecodeEndpoint endpoint = context.RequestServices.GetRequiredService<DecodeEndpoint>();
 
-        if (multipartReader is null)
+        MultipartReader multipartReader = new(context, endpoint);
+
+        if (endpoint.HasValidationError)
         {
             return null;
         }
@@ -52,7 +54,7 @@ public class DecodeRequest
 
         string key = await formSection.GetValueAsync(cancellationToken);
 
-        return new DecodeRequest()
+        return new DecodeRequest
         {
             CoverImage = coverImage,
             CoverImageCapacity = coverImage.Width * coverImage.Height * 3,

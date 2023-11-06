@@ -21,9 +21,11 @@ public class EncodeBinaryRequest
 
     public static async ValueTask<EncodeBinaryRequest?> BindAsync(HttpContext context)
     {
-        MultipartReader? multipartReader = MultipartReader.Create(context);
+        DecodeEndpoint endpoint = context.RequestServices.GetRequiredService<DecodeEndpoint>();
 
-        if (multipartReader is null)
+        MultipartReader multipartReader = new(context, endpoint);
+
+        if (endpoint.HasValidationError)
         {
             return null;
         }
