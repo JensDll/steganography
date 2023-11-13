@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace aspnet.common.options.http_headers;
 
-public static class Extensions
+public static class HttpHeadersOptionsExtensions
 {
     public static void AddHttpHeadersOptions(this WebApplicationBuilder builder)
     {

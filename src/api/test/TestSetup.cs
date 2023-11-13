@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using NUnit.Framework;
 
-namespace steganography.api.tests;
+namespace api.test;
 
 [SetUpFixture]
-internal class TestSetup
+internal sealed class TestSetup
 {
     private static TestWebApplicationFactory<Program> s_factory = null!;
 
@@ -25,6 +25,6 @@ internal class TestSetup
     }
 }
 
-internal class TestWebApplicationFactory<TProgram>
+internal sealed class TestWebApplicationFactory<TProgram>
     : WebApplicationFactory<TProgram> where TProgram : class
 { }

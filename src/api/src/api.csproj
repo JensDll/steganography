@@ -6,10 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-
   <ItemGroup>
-    <ProjectReference Include="..\aspnet.common\aspnet.common.csproj"/>
-    <ProjectReference Include="..\domain\domain.csproj"/>
+    <ProjectReference Include="..\..\aspnet.common\src\aspnet.common.csproj"/>
+    <ProjectReference Include="..\..\domain\src\domain.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -18,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="steganography.api.tests"/>
+    <InternalsVisibleTo Include="api.test"/>
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace steganography.domain;
+﻿namespace domain;
 
 public class KeyService : IKeyService
 {

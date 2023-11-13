@@ -1,14 +1,14 @@
+using api.extensions;
+using api.features.codec;
 using aspnet.common;
 using aspnet.common.logging;
 using aspnet.common.middleware.development_proxy;
 using aspnet.common.middleware.static_compressed_file;
 using aspnet.common.options.http_headers;
 using aspnet.common.options.kestrel;
+using domain;
 using Microsoft.AspNetCore.Rewrite;
 using MinimalApiBuilder;
-using steganography.api.extensions;
-using steganography.api.features.codec;
-using steganography.domain;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

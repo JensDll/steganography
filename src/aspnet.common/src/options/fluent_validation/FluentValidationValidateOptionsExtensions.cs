@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace aspnet.common.options.fluent_validation;
 
-public static class OptionsBuilderExtensions
+public static class FluentValidationValidateOptionsExtensions
 {
     public static OptionsBuilder<TOptions> ValidateFluentValidation<TOptions, TValidator>(
         this OptionsBuilder<TOptions> optionsBuilder)

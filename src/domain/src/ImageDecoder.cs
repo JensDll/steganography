@@ -3,14 +3,14 @@ using System.IO.Pipelines;
 using System.Text;
 using SixLabors.ImageSharp.Advanced;
 
-namespace steganography.domain;
+namespace domain;
 
-public class Decoder : ImageCodec
+public class ImageDecoder : ImageCodec
 {
-    private int _messageLength;
     private readonly AesCounterMode _aes;
+    private int _messageLength;
 
-    public Decoder(Image<Rgb24> coverImage, int seed, int messageLength, AesCounterMode aes) :
+    public ImageDecoder(Image<Rgb24> coverImage, int seed, int messageLength, AesCounterMode aes) :
         base(coverImage, seed)
     {
         _messageLength = messageLength;

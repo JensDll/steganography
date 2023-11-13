@@ -1,14 +1,14 @@
 ﻿using System.IO.Compression;
 using System.Net;
 using System.Text;
+using domain;
 using NUnit.Framework;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using steganography.domain;
 
-namespace steganography.api.tests.features.codec;
+namespace api.test.features.codec;
 
-public class EncodeTextTests
+internal sealed class EncodeTextTests
 {
     [TestCase(true)]
     [TestCase(false)]
@@ -92,7 +92,7 @@ public class EncodeTextTests
     }
 
     [Test]
-    public async Task BadRequest_When_The_Message_Is_Too_Long()
+    public async Task Bad_Request_When_The_Message_Is_Too_Long()
     {
         // Arrange
         using Image<Rgb24> coverImage = new(500, 500);
@@ -117,7 +117,7 @@ public class EncodeTextTests
     }
 
     [Test]
-    public async Task BadRequest_For_Invalid_FormData()
+    public async Task Bad_Request_For_Invalid_Form_Data()
     {
         // Arrange
         using Image<Rgb24> coverImage = new(500, 500);

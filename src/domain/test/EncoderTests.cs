@@ -6,7 +6,7 @@ using NUnit.Framework;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace steganography.domain.tests;
+namespace domain.test;
 
 [TestFixture]
 internal sealed class EncoderTests
@@ -17,26 +17,24 @@ internal sealed class EncoderTests
     [TestCase(256, 256)]
     [TestCase(512, 512)]
     [TestCase(1000, 1000)]
-    public void EncodeAsync_ShouldNotThrowForMessageWithMaximumLength(int width, int height)
+    public void EncodeAsync_Should_Not_Throw_For_Message_With_Maximum_Length(int width, int height)
     {
-        // Arrange
-        Image<Rgb24> coverImage = new(width, height);
+        Assert.That(Action, Throws.Nothing);
+        return;
 
-        // Act
         async Task Action()
         {
-            Encoder encoder = new(coverImage, 42);
+            using Image<Rgb24> coverImage = new(width, height);
+
+            ImageEncoder imageEncoder = new(coverImage, 42);
             int messageLength = coverImage.Width * coverImage.Height * 3;
 
             Pipe pipe = new();
             Task writing = WriteAsync(pipe.Writer, messageLength);
-            Task reading = encoder.EncodeAsync(pipe.Reader, CancellationToken.None);
+            Task reading = imageEncoder.EncodeAsync(pipe.Reader, CancellationToken.None);
 
             await Task.WhenAll(writing, reading);
         }
-
-        // Assert
-        Assert.That(Action, Throws.Nothing);
     }
 
     [TestCase(8, 8)]
@@ -44,26 +42,24 @@ internal sealed class EncoderTests
     [TestCase(128, 128)]
     [TestCase(256, 256)]
     [TestCase(512, 512)]
-    public void EncodeAsync_ShouldThrowWhenTheMessageIsTooLong(int width, int height)
+    public void EncodeAsync_Should_Throw_When_The_Message_Is_Too_Long(int width, int height)
     {
-        // Arrange
-        Image<Rgb24> coverImage = new(width, height);
+        Assert.That(Action, Throws.InvalidOperationException);
+        return;
 
-        // Act
         async Task Action()
         {
-            Encoder encoder = new(coverImage, 42);
+            using Image<Rgb24> coverImage = new(width, height);
+
+            ImageEncoder imageEncoder = new(coverImage, 42);
             int messageLength = coverImage.Width * coverImage.Height * 3 + 1;
 
             Pipe pipe = new();
             Task writing = WriteAsync(pipe.Writer, messageLength);
-            Task reading = encoder.EncodeAsync(pipe.Reader, CancellationToken.None);
+            Task reading = imageEncoder.EncodeAsync(pipe.Reader, CancellationToken.None);
 
             await Task.WhenAll(writing, reading);
         }
-
-        // Assert
-        Assert.That(Action, Throws.InvalidOperationException);
     }
 
     private static async Task WriteAsync(PipeWriter writer, int messageLength)

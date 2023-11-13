@@ -1,11 +1,12 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
-namespace steganography.domain;
+namespace domain;
 
 public sealed class AesCounterMode : IDisposable
 {
     private readonly Aes _aes;
+
     // The first 4-byte represent the counter and the last 12-byte are the initialization value
     private readonly byte[] _counterAndInitializationValue = new byte[16];
     private readonly ICryptoTransform _encryptor;

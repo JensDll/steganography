@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace steganography.domain;
+namespace domain;
 
 public static class DependencyInjectionExtensions
 {

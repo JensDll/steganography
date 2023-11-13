@@ -1,17 +1,17 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace steganography.domain.tests;
+namespace domain.test;
 
 [TestFixture]
 internal sealed class AesCounterModeTests
 {
     [Test]
-    public void PlainTextAreEqualAfterTransformation([Random(500, 100_100, 5)] int length)
+    public void Plaintext_Are_Equal_After_Transformation([Random(500, 100_100, 5)] int length)
     {
         // Arrange
-        AesCounterMode encryptor = new();
-        AesCounterMode decryptor = new(encryptor.Key, encryptor.InitializationValue);
+        using AesCounterMode encryptor = new();
+        using AesCounterMode decryptor = new(encryptor.Key, encryptor.InitializationValue);
 
         byte[] plaintextIn = new byte[length];
         TestContext.CurrentContext.Random.NextBytes(plaintextIn);
@@ -29,11 +29,11 @@ internal sealed class AesCounterModeTests
     }
 
     [Test]
-    public void PlainTextAreEqualAfterBlockwiseTransformation()
+    public void Plaintext_Are_Equal_After_Blockwise_Transformation()
     {
         // Arrange
-        AesCounterMode encryptor = new();
-        AesCounterMode decryptor = new(encryptor.Key, encryptor.InitializationValue);
+        using AesCounterMode encryptor = new();
+        using AesCounterMode decryptor = new(encryptor.Key, encryptor.InitializationValue);
 
         const int length = 4096;
         Span<byte> plaintextIn = new byte[length];
@@ -56,13 +56,13 @@ internal sealed class AesCounterModeTests
     [TestCase(4)]
     [TestCase(8)]
     [TestCase(32)]
-    public void PlainTextAreDifferentWhenTheKeyChanges(int length)
+    public void Plaintext_Are_Different_When_The_Key_Changes(int length)
     {
         // Arrange
-        AesCounterMode encryptor = new();
+        using AesCounterMode encryptor = new();
         byte[] alteredKey = encryptor.Key;
         ++alteredKey[0];
-        AesCounterMode decryptor = new(alteredKey, encryptor.InitializationValue);
+        using AesCounterMode decryptor = new(alteredKey, encryptor.InitializationValue);
 
         byte[] plaintextIn = new byte[length];
         TestContext.CurrentContext.Random.NextBytes(plaintextIn);
@@ -80,10 +80,10 @@ internal sealed class AesCounterModeTests
     }
 
     [Test]
-    public void EqualPlaintextShouldResultInUnequalCiphertext()
+    public void Equal_Plaintext_Should_Result_In_Unequal_Ciphertext()
     {
         // Arrange
-        AesCounterMode encryptor = new();
+        using AesCounterMode encryptor = new();
 
         byte[] plaintextIn = new byte[32];
         byte[] ciphertext = new byte[32];

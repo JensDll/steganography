@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace aspnet.common.middleware.development_proxy;
 
-public static class Extensions
+public static class DevelopmentProxyMiddlewareExtensions
 {
     public static IServiceCollection AddDevelopmentProxyMiddleware(this IServiceCollection services)
     {

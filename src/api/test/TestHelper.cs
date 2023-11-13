@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace steganography.api.tests;
+namespace api.test;
 
 internal static class TestHelper
 {

@@ -1,4 +1,4 @@
-﻿namespace steganography.api.extensions;
+﻿namespace api.extensions;
 
 public static class EnvironmentExtensions
 {

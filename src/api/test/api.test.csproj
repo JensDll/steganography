@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\api.csproj"/>
+    <ProjectReference Include="..\src\api.csproj"/>
   </ItemGroup>
 
   <ItemGroup>

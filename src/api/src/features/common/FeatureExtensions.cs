@@ -1,6 +1,6 @@
 ﻿namespace api.features.common;
 
-public static class Extensions
+public static class FeatureExtensions
 {
     public static IEndpointRouteBuilder MapCommonFeature(this IEndpointRouteBuilder endpoints)
     {

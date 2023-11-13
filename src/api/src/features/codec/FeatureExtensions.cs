@@ -1,6 +1,6 @@
 ﻿using MinimalApiBuilder;
 
-namespace steganography.api.features.codec;
+namespace api.features.codec;
 
 public static class FeatureExtensions
 {

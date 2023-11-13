@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace steganography.api.extensions;
+namespace api.extensions;
 
 public static class FileMultipartSectionExtensions
 {

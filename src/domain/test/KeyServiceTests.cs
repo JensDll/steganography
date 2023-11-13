@@ -2,13 +2,13 @@
 using System.Linq;
 using NUnit.Framework;
 
-namespace steganography.domain.tests;
+namespace domain.test;
 
 [TestFixture]
 internal sealed class KeyServiceTests
 {
     [TestCaseSource(nameof(TestData))]
-    public void ToBase64String_TryParse_AllKeyPartsShouldMatch(MessageType inMessageType, int inSeed,
+    public void ToBase64String_TryParse_All_Key_Parts_Should_Match(MessageType inMessageType, int inSeed,
         int inMessageLength, byte[] inKey, byte[] inIv)
     {
         // Arrange
@@ -29,7 +29,7 @@ internal sealed class KeyServiceTests
     }
 
     [Test]
-    public void TryParse_ShouldFailForInvalidKey()
+    public void TryParse_Should_Fail_For_Invalid_Key()
     {
         // Arrange
         KeyService keyService = new();

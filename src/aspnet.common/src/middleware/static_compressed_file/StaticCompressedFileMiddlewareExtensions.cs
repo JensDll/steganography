@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace aspnet.common.middleware.static_compressed_file;
 
-public static class Extensions
+public static class StaticCompressedFileMiddlewareExtensions
 {
     public static IServiceCollection AddStaticCompressedFileMiddleware(
         this IServiceCollection services,

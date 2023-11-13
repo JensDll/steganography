@@ -2,14 +2,14 @@
 using System.IO.Compression;
 using System.Net;
 using System.Text;
+using domain;
 using NUnit.Framework;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using steganography.domain;
 
-namespace steganography.api.tests.features.codec;
+namespace api.test.features.codec;
 
-public class EncodeBinaryTests
+internal sealed class EncodeBinaryTests
 {
     [TestCase(true)]
     [TestCase(false)]
@@ -65,7 +65,9 @@ public class EncodeBinaryTests
         encodeFormData.Add(file3LengthContent, "length");
         encodeFormData.Add(file3ContentContent, "name", file3.Name);
 
-        int inMessageLength = GetMessageLength(file1, file2, file3);
+        File[] files = { file1, file2, file3 };
+
+        int inMessageLength = GetMessageLength(files);
 
         // Act
         HttpResponseMessage encodeResponse =
@@ -135,22 +137,22 @@ public class EncodeBinaryTests
         await using Stream decodeResponseStream = await decodeResponse.Content.ReadAsStreamAsync();
         using ZipArchive decodeArchive = new(decodeResponseStream, ZipArchiveMode.Read);
 
-        Assert.That(decodeArchive.Entries, Has.Count.EqualTo(3));
+        Assert.That(decodeArchive.Entries, Has.Count.EqualTo(files.Length));
 
-        // for (int i = 0; i < files.Length; i++)
-        // {
-        //     ZipArchiveEntry entry = decodeArchive.Entries[i];
-        //     await using MemoryStream fileStream = new();
-        //     await using Stream entryStream = entry.Open();
-        //     await entryStream.CopyToAsync(fileStream);
-        //
-        //     Assert.That(entry.Name, Is.EqualTo(files[i].Name));
-        //     Assert.That(fileStream.ToArray(), Is.EqualTo(files[i].Content));
-        // }
+        for (int i = 0; i < files.Length; i++)
+        {
+            ZipArchiveEntry entry = decodeArchive.Entries[i];
+            await using MemoryStream fileStream = new();
+            await using Stream entryStream = entry.Open();
+            await entryStream.CopyToAsync(fileStream);
+
+            Assert.That(entry.Name, Is.EqualTo(files[i].Name));
+            Assert.That(fileStream.ToArray(), Is.EqualTo(files[i].Content));
+        }
     }
 
     [Test]
-    public async Task BadRequestWhenTheMessageIsTooLong()
+    public async Task Bad_Request_When_The_Message_Is_Too_Long()
     {
         // Arrange
         using Image<Rgb24> coverImage = new(500, 500);
@@ -175,7 +177,7 @@ public class EncodeBinaryTests
     }
 
     [Test]
-    public async Task BadRequest_For_Invalid_FormData()
+    public async Task Bad_Request_For_Invalid_Form_Data()
     {
         // Arrange
         using Image<Rgb24> coverImage = new(500, 500);

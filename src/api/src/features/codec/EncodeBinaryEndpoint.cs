@@ -1,14 +1,94 @@
-﻿using System.IO.Pipelines;
+using System.IO.Compression;
+using System.IO.Pipelines;
+using System.Security.Cryptography;
 using System.Text;
+using api.extensions;
+using domain;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Net.Http.Headers;
 using MinimalApiBuilder;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using steganography.api.extensions;
-using steganography.domain;
+using ILogger = Serilog.ILogger;
 using MultipartReader = MinimalApiBuilder.MultipartReader;
 
-namespace steganography.api.features.codec;
+namespace api.features.codec;
+
+public partial class EncodeBinaryEndpoint : MinimalApiBuilderEndpoint
+{
+    private static async Task<Results<EmptyHttpResult, ValidationProblem>> HandleAsync(
+        EncodeBinaryRequest request,
+        [FromServices] EncodeBinaryEndpoint endpoint,
+        [FromServices] ILogger logger,
+        [FromServices] IKeyService keyService,
+        HttpContext httpContext,
+        CancellationToken cancellationToken)
+    {
+        logger.Information(
+            "Encoding binary message with cover image width {Width} and height {Height}",
+            request.CoverImage.Width, request.CoverImage.Height);
+
+        int seed = RandomNumberGenerator.GetInt32(int.MaxValue);
+        int? messageLength;
+
+        using AesCounterMode aes = new();
+        using ImageEncoder imageEncoder = new(request.CoverImage, seed);
+
+        try
+        {
+            Task<int?> writing = request.FillPipeAsync(aes, endpoint, cancellationToken);
+            Task reading = imageEncoder.EncodeAsync(request.PipeReader, cancellationToken);
+            await Task.WhenAll(writing, reading);
+#pragma warning disable CA1849 // The task is guaranteed to be completed at this point.
+            messageLength = writing.Result;
+#pragma warning restore CA1849
+        }
+        catch (OperationCanceledException)
+        {
+            return TypedResults.Empty;
+        }
+        catch (InvalidOperationException)
+        {
+            return TypedResults.ValidationProblem(endpoint.ValidationErrors, title: "Encoding failed.");
+        }
+
+        if (!messageLength.HasValue)
+        {
+            return TypedResults.ValidationProblem(endpoint.ValidationErrors, title: "Encoding failed.");
+        }
+
+        string base64Key = keyService.ToBase64String(MessageType.Binary, seed,
+            messageLength.Value, aes.Key, aes.InitializationValue);
+
+        ContentDispositionHeaderValue contentDisposition = new("attachment");
+        contentDisposition.SetHttpFileName("secret.zip");
+        httpContext.Response.Headers.ContentDisposition = contentDisposition.ToString();
+        httpContext.Response.ContentType = "application/zip";
+
+        using ZipArchive archive = new(httpContext.Response.BodyWriter.AsStream(), ZipArchiveMode.Create);
+
+        ZipArchiveEntry coverImageEntry = archive.CreateEntry("image.png", CompressionLevel.Fastest);
+
+        try
+        {
+            await using Stream coverImageStream = coverImageEntry.Open();
+            await request.CoverImage.SaveAsPngAsync(coverImageStream, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            return TypedResults.Empty;
+        }
+
+        ZipArchiveEntry keyEntry = archive.CreateEntry("key.txt", CompressionLevel.Fastest);
+        await using Stream keyStream = keyEntry.Open();
+        await using StreamWriter keyStreamWriter = new(keyStream);
+        await keyStreamWriter.WriteAsync(base64Key);
+
+        return TypedResults.Empty;
+    }
+}
 
 public class EncodeBinaryRequest
 {
@@ -22,7 +102,9 @@ public class EncodeBinaryRequest
     }
 
     public required Image<Rgb24> CoverImage { get; init; }
+
     public required int CoverImageCapacity { get; init; }
+
     public required PipeReader PipeReader { get; init; }
 
     public static async ValueTask<EncodeBinaryRequest?> BindAsync(HttpContext context)

@@ -6,7 +6,7 @@ using Serilog.Filters;
 
 namespace aspnet.common.logging;
 
-public static class Extensions
+public static class LoggingExtensions
 {
     private static Serilog.ILogger? s_logger;
 

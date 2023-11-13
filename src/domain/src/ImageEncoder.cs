@@ -2,11 +2,11 @@
 using System.IO.Pipelines;
 using SixLabors.ImageSharp.Advanced;
 
-namespace steganography.domain;
+namespace domain;
 
-public class Encoder : ImageCodec
+public class ImageEncoder : ImageCodec
 {
-    public Encoder(Image<Rgb24> coverImage, int seed) : base(coverImage, seed)
+    public ImageEncoder(Image<Rgb24> coverImage, int seed) : base(coverImage, seed)
     { }
 
     public async Task EncodeAsync(PipeReader pipeReader, CancellationToken cancellationToken)

@@ -1,6 +1,6 @@
 ﻿using System.Buffers;
 
-namespace steganography.domain;
+namespace domain;
 
 public abstract class ImageCodec : IDisposable
 {

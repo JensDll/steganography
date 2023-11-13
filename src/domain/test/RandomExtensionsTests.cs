@@ -2,7 +2,7 @@
 using System.Buffers;
 using NUnit.Framework;
 
-namespace steganography.domain.tests;
+namespace domain.test;
 
 [TestFixture]
 internal sealed class RandomExtensionsTests
@@ -16,7 +16,7 @@ internal sealed class RandomExtensionsTests
     [TestCase(5, 18, 7, new[] { 5, 12 })]
     [TestCase(6, 18, 7, new[] { 6, 13 })]
     [TestCase(7, 18, 7, new[] { 7, 14 })]
-    public void RentPermutation_ShouldGenerateRentedPermutation(int start, int end, int step, int[] expectedValues)
+    public void RentPermutation_Should_Generate_Rented_Permutation(int start, int end, int step, int[] expectedValues)
     {
         // Act
         (int[] permutation, int count) = Random.Shared.RentPermutation(start, end, step);
@@ -29,7 +29,7 @@ internal sealed class RandomExtensionsTests
     }
 
     [Test]
-    public void RentPermutation_ShouldThrowArgumentExceptionWhenStartIsGreaterThanEnd()
+    public void RentPermutation_Should_Throw_ArgumentException_When_Start_Is_Greater_Than_End()
     {
         // Assert
         Assert.That(static () => /* Act */ Random.Shared.RentPermutation(10, 5), Throws.ArgumentException);
