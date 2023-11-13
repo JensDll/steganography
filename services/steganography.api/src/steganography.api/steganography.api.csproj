@@ -13,7 +13,7 @@
     <ProjectReference Include="..\steganography.domain\steganography.domain.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MinimalApiBuilder" Version="3.0.0"/>
+    <PackageReference Include="MinimalApiBuilder" Version="4.0.0"/>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
   </ItemGroup>
 </Project>
