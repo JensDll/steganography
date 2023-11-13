@@ -12,9 +12,9 @@ namespace aspnet.common.middleware.static_compressed_file;
 
 public class StaticCompressedFileMiddleware : IMiddleware
 {
-    private readonly ILogger _logger;
-    private readonly IFileProvider _fileProvider;
     private readonly IContentTypeProvider _contentTypeProvider;
+    private readonly IFileProvider _fileProvider;
+    private readonly ILogger _logger;
     private readonly StaticCompressedFileOptions _options;
 
     public StaticCompressedFileMiddleware(IOptions<StaticCompressedFileOptions> options,
@@ -68,10 +68,15 @@ public class StaticCompressedFileMiddleware : IMiddleware
         return next(context);
     }
 
-    private static bool HasEndpointDelegate(HttpContext context) => context.GetEndpoint()?.RequestDelegate is not null;
+    private static bool HasEndpointDelegate(HttpContext context)
+    {
+        return context.GetEndpoint()?.RequestDelegate is not null;
+    }
 
     private static bool IsValidMethod(HttpContext context)
-        => HttpMethods.IsGet(context.Request.Method);
+    {
+        return HttpMethods.IsGet(context.Request.Method);
+    }
 
     private async Task TryServeStaticCompressedFileAsync(
         HttpContext httpContext,

@@ -7,10 +7,15 @@ public sealed class AesCounterMode : IDisposable
 {
     private readonly Aes _aes;
 
-    // The first 4-byte represent the counter and the last 12-byte are the initialization value
+    /// <summary>
+    /// The first 4-byte represent the counter and the last 12-byte are the initialization value.
+    /// </summary>
     private readonly byte[] _counterAndInitializationValue = new byte[16];
+
     private readonly ICryptoTransform _encryptor;
+
     private readonly byte[] _keyStream = new byte[16];
+
     private int _keyStreamIdx;
 
     public AesCounterMode() :
@@ -33,6 +38,8 @@ public sealed class AesCounterMode : IDisposable
         Key = key;
         InitializationValue = initializationValue;
 #pragma warning disable CA5358
+        // AES is only used to generate the key stream, which is initialized randomly
+        // and thus does not suffer from deterministic encryption issues.
         _aes.Mode = CipherMode.ECB;
 #pragma warning restore CA5358
         _aes.Padding = PaddingMode.None;

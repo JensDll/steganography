@@ -3,14 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Filters;
+using ILogger = Serilog.ILogger;
 
 namespace aspnet.common.logging;
 
 public static class LoggingExtensions
 {
-    private static Serilog.ILogger? s_logger;
+    private static ILogger? s_logger;
 
-    public static Serilog.ILogger AddSerilogLogger(this ILoggingBuilder builder)
+    public static ILogger AddSerilogLogger(this ILoggingBuilder builder)
     {
         // const string outputTemplate =
         //     "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";

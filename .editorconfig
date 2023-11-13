@@ -343,6 +343,10 @@ resharper_csharp_for_built_in_types = use_explicit_type
 resharper_csharp_for_simple_types = use_explicit_type
 # https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_CSharpCodeStylePageImplSchema.html#resharper_csharp_for_other_types
 resharper_csharp_for_other_types = use_explicit_type
+# https://www.jetbrains.com/help/resharper/EditorConfig_XMLDOC_XmlDocCodeStylePageSchema.html#resharper_xmldoc_indent_style
+resharper_xmldoc_indent_text = zero_indent
+# https://www.jetbrains.com/help/resharper/EditorConfig_XMLDOC_XmlDocCodeStylePageSchema.html#resharper_xmldoc_wrap_tags_and_pi
+resharper_xmldoc_wrap_tags_and_pi = false
 ######## RESHARPER ########
 
 ######## MINIMAL API BUILDER ########
