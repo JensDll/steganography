@@ -12,8 +12,27 @@ tab_width = 2
 indent_size = 4
 tab_width = 4
 
-# Compare the following link for a list of rules that cannot be enforced on the command line:
-# https://github.com/dotnet/roslyn/tree/252def9efa028af3f0562929b4b0e8a74dcd3124/src/Analyzers/Core/Analyzers/EnforceOnBuildValues.cs#L120
+######## DESIGN RULES ########
+# Don't require argument null checks
+dotnet_diagnostic.CA1062.severity = none
+######## DESIGN RULES ########
+
+######## RELIABILITY RULES ########
+# Ignore `ConfigureAwait` on awaited `Task`s
+dotnet_diagnostic.CA2007.severity = none
+######## RELIABILITY RULES ########
+
+######## PERFORMANCE RULES ########
+# Avoid uninstantiated internal classes
+dotnet_diagnostic.CA1812.severity = none
+# Properties should not return arrays
+dotnet_diagnostic.CA1819.severity = none
+######## PERFORMANCE RULES ########
+
+######## SECURITY RULES ########
+# Do not use insecure randomness
+dotnet_diagnostic.CA5394.severity = none
+######## SECURITY RULES ########
 
 ######## LANGUAGE RULES ########
 # Avoid `this` qualifier
