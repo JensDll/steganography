@@ -13,9 +13,9 @@ using SixLabors.ImageSharp.PixelFormats;
 using ILogger = Serilog.ILogger;
 using MultipartReader = MinimalApiBuilder.MultipartReader;
 
-namespace api.features.codec;
+namespace api.features.v1.codec;
 
-public partial class EncodeTextEndpoint : MinimalApiBuilderEndpoint
+internal sealed partial class EncodeTextEndpoint : MinimalApiBuilderEndpoint
 {
     private static async Task<Results<EmptyHttpResult, ValidationProblem>> HandleAsync(
         EncodeTextRequest request,
@@ -89,7 +89,7 @@ public partial class EncodeTextEndpoint : MinimalApiBuilderEndpoint
     }
 }
 
-public class EncodeTextRequest
+internal sealed class EncodeTextRequest
 {
     private readonly MultipartReader _multipartReader;
     private readonly PipeWriter _pipeWriter;

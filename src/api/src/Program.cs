@@ -1,5 +1,7 @@
+using api;
 using api.extensions;
-using api.features.codec;
+using api.features.v1.codec;
+using Asp.Versioning.Builder;
 using aspnet.common;
 using aspnet.common.logging;
 using aspnet.common.middleware.development_proxy;
@@ -8,7 +10,9 @@ using aspnet.common.options.http_headers;
 using aspnet.common.options.kestrel;
 using domain;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.Extensions.Options;
 using MinimalApiBuilder;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +32,9 @@ builder.Services.AddMinimalApiBuilderEndpoints();
 builder.Services.AddDomain();
 builder.Services.AddHealthChecks();
 builder.Services.AddProblemDetails();
+builder.Services.AddApiVersioning();
+
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
 builder.Services.Configure<RouteHandlerOptions>(static options =>
 {
@@ -87,9 +94,14 @@ app.UseStatusCodePages();
 
 app.UseRouting();
 
-RouteGroupBuilder api = app.MapGroup("/api");
-api.MapCodecFeature();
-api.MapHealthChecks("/healthz");
+IVersionedEndpointRouteBuilder versioned = app.NewVersionedApi();
+
+RouteGroupBuilder api = versioned.MapGroup("/api");
+
+api.MapHealthChecks("/healthz").IsApiVersionNeutral();
+
+RouteGroupBuilder v1 = api.MapGroup("/v{version:apiVersion}").HasApiVersion(1.0);
+v1.MapCodecFeature();
 
 if (app.Environment.IsRunningInContainer())
 {

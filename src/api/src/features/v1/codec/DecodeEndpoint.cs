@@ -13,9 +13,9 @@ using SixLabors.ImageSharp.PixelFormats;
 using ILogger = Serilog.ILogger;
 using MultipartReader = MinimalApiBuilder.MultipartReader;
 
-namespace api.features.codec;
+namespace api.features.v1.codec;
 
-public partial class DecodeEndpoint : MinimalApiBuilderEndpoint
+internal partial class DecodeEndpoint : MinimalApiBuilderEndpoint
 {
     private static async Task<Results<EmptyHttpResult, ValidationProblem>> HandleAsync(
         DecodeRequest request,

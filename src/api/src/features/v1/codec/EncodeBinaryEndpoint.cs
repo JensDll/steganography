@@ -14,9 +14,9 @@ using SixLabors.ImageSharp.PixelFormats;
 using ILogger = Serilog.ILogger;
 using MultipartReader = MinimalApiBuilder.MultipartReader;
 
-namespace api.features.codec;
+namespace api.features.v1.codec;
 
-public partial class EncodeBinaryEndpoint : MinimalApiBuilderEndpoint
+internal sealed partial class EncodeBinaryEndpoint : MinimalApiBuilderEndpoint
 {
     private static async Task<Results<EmptyHttpResult, ValidationProblem>> HandleAsync(
         EncodeBinaryRequest request,
@@ -90,7 +90,7 @@ public partial class EncodeBinaryEndpoint : MinimalApiBuilderEndpoint
     }
 }
 
-public class EncodeBinaryRequest
+internal sealed class EncodeBinaryRequest
 {
     private readonly MultipartReader _multipartReader;
     private readonly PipeWriter _pipeWriter;

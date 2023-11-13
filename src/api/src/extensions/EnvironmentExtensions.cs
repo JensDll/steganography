@@ -1,6 +1,6 @@
 ﻿namespace api.extensions;
 
-public static class EnvironmentExtensions
+internal static class EnvironmentExtensions
 {
     public static bool IsRunningInContainer(this IWebHostEnvironment environment)
     {

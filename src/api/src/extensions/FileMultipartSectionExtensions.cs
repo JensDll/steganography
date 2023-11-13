@@ -4,7 +4,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace api.extensions;
 
-public static class FileMultipartSectionExtensions
+internal static class FileMultipartSectionExtensions
 {
     public static async Task<Image<Rgb24>?> ReadCoverImageAsync(this FileMultipartSection fileSection,
         CancellationToken cancellationToken)

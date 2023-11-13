@@ -1,8 +1,8 @@
 ﻿using MinimalApiBuilder;
 
-namespace api.features.codec;
+namespace api.features.v1.codec;
 
-public static class FeatureExtensions
+internal static class FeatureExtensions
 {
     public static IEndpointRouteBuilder MapCodecFeature(this IEndpointRouteBuilder endpoints)
     {
