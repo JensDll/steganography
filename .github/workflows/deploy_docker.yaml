@@ -44,7 +44,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Building and pushing container image
-        uses: docker/build-push-action@v5.0.0
+        uses: docker/build-push-action@v5.1.0
         with:
           context: services
           file: services/steganography.api/Dockerfile
