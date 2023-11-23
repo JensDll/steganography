@@ -13,9 +13,6 @@ public static class LoggingExtensions
 
     public static ILogger AddSerilogLogger(this ILoggingBuilder builder)
     {
-        // const string outputTemplate =
-        //     "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
-
         if (s_logger is not null)
         {
             return s_logger;

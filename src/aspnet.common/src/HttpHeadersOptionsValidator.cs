@@ -2,7 +2,7 @@
 
 namespace aspnet.common.options.http_headers;
 
-public class HttpHeadersOptionsValidator : AbstractValidator<HttpHeadersOptions>
+internal sealed class HttpHeadersOptionsValidator : AbstractValidator<HttpHeadersOptions>
 {
     public HttpHeadersOptionsValidator()
     {
