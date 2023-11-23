@@ -1,0 +1,11 @@
+# Directories
+**/bin/
+**/obj/
+**/out/
+**/node_modules/
+**/dist/
+**/.*/
+
+# Files
+src/*/Dockerfile*
+!.editorconfig

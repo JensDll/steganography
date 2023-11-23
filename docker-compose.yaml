@@ -2,14 +2,14 @@ version: "3.9"
 
 services:
   proxy:
-    image: traefik:v2.10.1
+    image: traefik:v2.10.5
     ports:
       - 80:80
       - 443:443
       - 9000:9000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./services/steganography.traefik/traefik.yaml:/etc/traefik/traefik.yaml
+      - ./src/Traefik/traefik.yaml:/etc/traefik/traefik.yaml
     labels:
       - "traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
       - "traefik.http.routers.dashboard.service=api@internal"
@@ -19,11 +19,10 @@ services:
 
   app:
     build:
-      context: services/
-      dockerfile: steganography.api/Dockerfile
+      dockerfile: src/Steganography/Dockerfile
     volumes:
-      - ./services/steganography.api/deploy/kestrel/:/app/properties/
-      - ./certs/steganography.api/:/usr/local/certs/
+      - ./src/Steganography/deploy/kestrel/:/app/Properties/
+      - ./certs/Steganography/:/usr/local/certs/
     environment:
       ASPNETCORE_ENVIRONMENT: Production
     labels:

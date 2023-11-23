@@ -1,0 +1,15 @@
+<Project>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>8.0-all</AnalysisLevel>
+    <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors Condition="'$(Configuration)' != 'Release'">false</TreatWarningsAsErrors>
+    <DefineConstants Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' == 'true'">RUNNING_IN_CONTAINER</DefineConstants>
+    <DefineConstants Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' != 'true'">NOT_RUNNING_IN_CONTAINER</DefineConstants>
+  </PropertyGroup>
+
+</Project>

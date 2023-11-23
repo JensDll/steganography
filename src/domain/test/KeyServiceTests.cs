@@ -2,7 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 
-namespace domain.test;
+namespace Domain.Test;
 
 [TestFixture]
 internal sealed class KeyServiceTests

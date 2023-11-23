@@ -1,4 +1,4 @@
-﻿namespace domain;
+﻿namespace Domain;
 
 public class KeyService : IKeyService
 {

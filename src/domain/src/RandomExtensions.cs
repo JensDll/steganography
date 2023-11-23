@@ -1,6 +1,6 @@
 ﻿using System.Buffers;
 
-namespace domain;
+namespace Domain;
 
 public static class RandomExtensions
 {

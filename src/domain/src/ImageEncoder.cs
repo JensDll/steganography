@@ -2,7 +2,7 @@
 using System.IO.Pipelines;
 using SixLabors.ImageSharp.Advanced;
 
-namespace domain;
+namespace Domain;
 
 public class ImageEncoder : ImageCodec
 {

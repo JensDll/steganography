@@ -27,6 +27,8 @@ dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.CA1812.severity = none
 # Properties should not return arrays
 dotnet_diagnostic.CA1819.severity = none
+# Call async methods when in an async method
+dotnet_diagnostic.CA1849.severity = none
 ######## PERFORMANCE RULES ########
 
 ######## SECURITY RULES ########
@@ -144,6 +146,10 @@ csharp_prefer_braces = true
 # Place `using` directives outside of namespace
 dotnet_diagnostic.IDE0065.severity = warning
 csharp_using_directive_placement = outside_namespace
+
+# Primary constructor preferences
+dotnet_diagnostic.IDE0290.severity = warning
+csharp_style_prefer_primary_constructors = false
 ######## LANGUAGE RULES ########
 
 ######## UNNECESSARY CODE RULES ########
@@ -233,11 +239,10 @@ dotnet_naming_rule.constants.symbols = constants
 dotnet_naming_rule.constants.style = constants
 dotnet_naming_rule.constants.severity = warning
 
-# Namespaces are lower case
+# Namespaces are PascalCase
 dotnet_naming_symbols.namespaces.applicable_kinds = namespace
 
-dotnet_naming_style.namespaces.capitalization = all_lower
-dotnet_naming_style.namespaces.word_separator = _
+dotnet_naming_style.namespaces.capitalization = pascal_case
 
 dotnet_naming_rule.namespaces.symbols = namespaces
 dotnet_naming_rule.namespaces.style = namespaces
@@ -323,30 +328,19 @@ dotnet_naming_rule.private_fields.severity = warning
 ######## NAMING RULES ########
 
 ######## RESHARPER ########
-# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_LineBreaksPageSchema.html#resharper_csharp_place_simple_anonymousmethod_on_single_line
 resharper_place_simple_anonymousmethod_on_single_line = false
-# https://www.jetbrains.com/help/resharper/Reference__Code_Inspections_CSHARP.html#ConstraintViolation
 resharper_inconsistent_naming_highlighting = none
-# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_CSharpIndentStylePageSchema.html#resharper_csharp_outdent_statement_labels
 resharper_csharp_outdent_statement_labels = true
-# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_LineBreaksPageSchema.html#resharper_csharp_keep_existing_attribute_arrangement
 resharper_csharp_keep_existing_attribute_arrangement = true
-# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_LineBreaksPageSchema.html#resharper_csharp_max_attribute_length_for_same_line
 resharper_csharp_max_attribute_length_for_same_line = 9999
-# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_BracesPageSchema.html#resharper_csharp_empty_block_style
 resharper_csharp_empty_block_style = together
-# https://www.jetbrains.com/help/resharper/Reference__Code_Inspections_CSHARP.html#LanguageUsage
 resharper_introduce_optional_parameters_global_highlighting = hint
-# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_CSharpCodeStylePageImplSchema.html#resharper_csharp_for_built_in_types
 resharper_csharp_for_built_in_types = use_explicit_type
-# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_CSharpCodeStylePageImplSchema.html#resharper_csharp_for_simple_types
 resharper_csharp_for_simple_types = use_explicit_type
-# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_CSharpCodeStylePageImplSchema.html#resharper_csharp_for_other_types
 resharper_csharp_for_other_types = use_explicit_type
-# https://www.jetbrains.com/help/resharper/EditorConfig_XMLDOC_XmlDocCodeStylePageSchema.html#resharper_xmldoc_indent_style
 resharper_xmldoc_indent_text = zero_indent
-# https://www.jetbrains.com/help/resharper/EditorConfig_XMLDOC_XmlDocCodeStylePageSchema.html#resharper_xmldoc_wrap_tags_and_pi
 resharper_xmldoc_wrap_tags_and_pi = false
+resharper_convert_to_primary_constructor_highlighting = none
 ######## RESHARPER ########
 
 ######## MINIMAL API BUILDER ########

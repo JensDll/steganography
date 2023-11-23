@@ -3,7 +3,7 @@ using System.IO.Pipelines;
 using System.Text;
 using SixLabors.ImageSharp.Advanced;
 
-namespace domain;
+namespace Domain;
 
 public class ImageDecoder : ImageCodec
 {

@@ -6,7 +6,7 @@ using NUnit.Framework;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace domain.test;
+namespace Domain.Test;
 
 [TestFixture]
 internal sealed class EncoderTests

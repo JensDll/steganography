@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace domain;
+namespace Domain;
 
 public static class DependencyInjectionExtensions
 {

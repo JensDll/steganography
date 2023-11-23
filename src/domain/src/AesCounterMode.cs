@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
-namespace domain;
+namespace Domain;
 
 public sealed class AesCounterMode : IDisposable
 {
