@@ -81,7 +81,7 @@ rewriteOptions.AddRedirectToNonWww();
 
 app.UseRewriter(rewriteOptions);
 
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsProduction())
 {
     app.UseExceptionHandler();
 }
@@ -107,7 +107,7 @@ Configure(
     codec.MapPost("/decode", DecodeEndpoint.Handle));
 
 RouteGroupBuilder v2 = api.MapGroup("/v2");
-v2.MapGet("/hello", () => "Hello, World!");
+v2.MapGet("/env", static (IWebHostEnvironment env) => $"The current environment is: {env.EnvironmentName}");
 
 #if NOT_RUNNING_IN_CONTAINER
 app.UseSwagger();
@@ -139,7 +139,6 @@ internal sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOpti
         {
             Title = "Steganography API",
             Version = version,
-            Contact = new OpenApiContact { Name = "Jens Döllmann", Email = "jens@doellmann.com" },
             Description = "An image steganography API used to embed encrypted information in cover images."
         };
 

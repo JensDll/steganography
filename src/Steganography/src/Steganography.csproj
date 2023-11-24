@@ -1,8 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <PublishAot Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' != 'true'">false</PublishAot>
-    <PublishAot Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' == 'true'">true</PublishAot>
+  <PropertyGroup Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' == 'true'">
+    <PublishAot>true</PublishAot>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' != 'true'">
+    <PublishAot>false</PublishAot>
+    <IsAotCompatible>true</IsAotCompatible>
+    <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+    <EnableRequestDelegateGenerator>true</EnableRequestDelegateGenerator>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' == 'true'">
@@ -18,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MinimalApiBuilder" Version="5.0.0-beta.1"/>
+    <PackageReference Include="MinimalApiBuilder" Version="5.0.0-beta.3" />
   </ItemGroup>
 
   <ItemGroup>
