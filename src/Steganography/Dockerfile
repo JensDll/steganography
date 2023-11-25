@@ -23,8 +23,8 @@ RUN dotnet publish --configuration Release --no-restore --self-contained \
 
 RUN ls -lah /app
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0-jammy-chiseled
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/nightly/runtime-deps:8.0-jammy-chiseled-aot
 WORKDIR /app
 COPY --from=build /app/Steganography ./app.exe
-USER app
+USER $APP_UID
 ENTRYPOINT ["./app.exe"]
