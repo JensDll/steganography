@@ -8,4 +8,7 @@
 
 # Files
 src/*/Dockerfile*
+
+# Exceptions
 !.editorconfig
+!src/*/.npmrc

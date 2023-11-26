@@ -3,17 +3,12 @@ import Typography from '@tailwindcss/typography'
 import type { Config } from 'tailwindcss'
 import { Icons } from 'tailwindcss-plugin-icons'
 
-import { theme } from './src/styles/tailwind/defaults/theme.mjs'
-import { Common } from './src/styles/tailwind/plugins/common.mjs'
-import { Themes } from './src/styles/tailwind/plugins/themes.mjs'
-
 export default {
   content: {
     relative: true,
     files: ['./index.html', './src/**/*.{vue,js,ts}'],
   },
   darkMode: 'class',
-  theme,
   experimental: {
     optimizeUniversalDefaults: true,
   },
@@ -39,8 +34,6 @@ export default {
           'https://gist.githubusercontent.com/JensDll/4e59cf6005f585581975941a94bc1d88/raw/0e70bdac81224add27d8f0576ab15406709e5938/icons.json',
       },
     })),
-    Common(),
-    Themes(),
   ],
   corePlugins: {
     ringColor: false,
