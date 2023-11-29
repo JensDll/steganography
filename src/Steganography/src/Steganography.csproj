@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MinimalApiBuilder" Version="5.0.0-beta.3" />
+    <PackageReference Include="MinimalApiBuilder" Version="5.0.0-beta.4" />
   </ItemGroup>
 
   <ItemGroup>
