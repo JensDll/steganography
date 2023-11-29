@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    --max-w-container: theme('maxWidth.5xl');
+    --spacing-container: theme('spacing.16');
+  }
+
+  label {
+    @apply mb-1 block cursor-pointer font-medium;
+  }
+
+  ul.reset-prose {
+    @apply list-none pl-0;
+  }
+
+  ul.reset-prose > li {
+    @apply pl-0;
+  }
+
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: theme('maxWidth.container');
+    padding-left: theme('padding.container');
+    padding-right: theme('padding.container');
+  }
+}

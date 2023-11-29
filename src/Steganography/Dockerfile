@@ -2,7 +2,10 @@ FROM node:20-slim as build_frontend
 
 WORKDIR /build
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN <<EOF
+corepack enable
+corepack prepare pnpm@latest --activate
+EOF
 
 COPY src/Frontend/package.json src/Frontend/pnpm-lock.yaml src/Frontend/.npmrc ./
 RUN pnpm install --frozen-lockfile
@@ -15,7 +18,10 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-jammy as build_s
 
 ARG TARGETARCH
 
-RUN apt-get update && apt-get install clang zlib1g-dev -y
+RUN <<EOF
+apt-get update
+apt-get install -y clang zlib1g-dev
+EOF
 
 WORKDIR /build
 

@@ -7,10 +7,10 @@ declare module '*.vue' {
   export default component
 }
 
-interface ImportMetaEnv {
-  readonly VITE_STEGANOGRAPHY_API_URI: string
-}
+// interface ImportMetaEnv {
+//   readonly VITE_STEGANOGRAPHY_API_URI: string
+// }
 
-interface ImportMeta {
-  readonly env: ImportMetaEnv
-}
+// interface ImportMeta {
+//   readonly env: ImportMetaEnv
+// }

@@ -8,9 +8,18 @@ export default {
     relative: true,
     files: ['./index.html', './src/**/*.{vue,js,ts}'],
   },
-  darkMode: 'class',
   experimental: {
     optimizeUniversalDefaults: true,
+  },
+  theme: {
+    extend: {
+      maxWidth: {
+        container: 'var(--max-w-container)',
+      },
+      spacing: {
+        container: 'var(--spacing-container)',
+      },
+    },
   },
   plugins: [
     Typography(),
@@ -41,5 +50,6 @@ export default {
     ringOffsetWidth: false,
     ringOpacity: false,
     ringWidth: false,
+    container: false,
   },
 } as Config
