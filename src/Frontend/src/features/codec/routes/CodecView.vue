@@ -2,7 +2,7 @@
 
 <template>
   <nav class="container">
-    <ul class="reset-prose flex space-x-2">
+    <ul class="reset-prose flex space-x-3">
       <li>
         <RouterLink :to="{ name: 'encode' }">Encode</RouterLink>
       </li>

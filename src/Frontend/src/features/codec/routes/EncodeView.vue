@@ -9,7 +9,7 @@ const isTextMode = computed(() => messageMode.value === 'text')
 <template>
   <h2 class="container">Encode</h2>
   <form
-    class="mx-auto w-full bg-gray-50 pb-8 pt-6 min-[1200px]:max-w-container"
+    class="bg-gray-50 pb-10 pt-6 xl:mx-auto xl:w-[calc(var(--max-w-container)+4rem)] xl:rounded-xl"
   >
     <div class="container">
       <section>
@@ -52,8 +52,11 @@ const isTextMode = computed(() => messageMode.value === 'text')
           <input id="cover-image" type="file" accept="image/*" />
         </div>
       </section>
-      <section class="float-right mt-16">
-        <button type="submit" class="bg-black px-4 py-1 text-white">
+      <section class="float-right mt-20">
+        <button
+          type="submit"
+          class="bg-black px-4 py-1 font-medium text-white hover:bg-gray-700"
+        >
           Encode
         </button>
       </section>
