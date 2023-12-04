@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="7.0.13"/>
     <PackageReference Include="FluentValidation" Version="11.8.0"/>
     <PackageReference Include="Serilog.Extensions.Logging" Version="7.0.0"/>
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0"/>
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1"/>
   </ItemGroup>
 
   <ItemGroup>
