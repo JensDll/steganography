@@ -1,0 +1,17 @@
+.output/
+.data/
+.nuxt/
+.nitro/
+.cache/
+.DS_Store/
+.fleet/
+.idea/
+.vscode/
+node_modules/
+dist/
+
+logs
+*.log
+.env
+.env.*
+!.env.example
