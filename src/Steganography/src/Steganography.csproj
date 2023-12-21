@@ -12,19 +12,17 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' == 'true'">
-    <ProjectReference Include="..\AspNetShared\AspNetShared.csproj"/>
     <ProjectReference Include="..\Domain\Domain.csproj"/>
   </ItemGroup>
 
   <ItemGroup Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' != 'true'">
-    <ProjectReference Include="..\..\AspNetShared\src\AspNetShared.csproj"/>
     <ProjectReference Include="..\..\Domain\src\Domain.csproj"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MinimalApiBuilder" Version="5.0.0-beta.4" />
+    <PackageReference Include="MinimalApiBuilder" Version="5.0.0-beta.6"/>
   </ItemGroup>
 
   <ItemGroup>

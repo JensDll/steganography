@@ -498,3 +498,4 @@ terraform.rc
 logs
 *.log*
 certs
+wwwroot/

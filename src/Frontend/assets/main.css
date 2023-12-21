@@ -1,0 +1,24 @@
+@import url('form.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    --max-w-container: theme('maxWidth.4xl');
+    --spacing-container: theme('spacing.3');
+  }
+
+  @screen sm {
+    html {
+      --spacing-container: theme('spacing.6');
+    }
+  }
+
+  @screen lg {
+    html {
+      --spacing-container: theme('spacing.8');
+    }
+  }
+}

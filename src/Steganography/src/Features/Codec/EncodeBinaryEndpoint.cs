@@ -7,11 +7,12 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
-using MinimalApiBuilder;
+using MinimalApiBuilder.Generator;
+using MinimalApiBuilder.Multipart;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using Steganography.Extensions;
-using MultipartReader = MinimalApiBuilder.MultipartReader;
+using Steganography.Common;
+using MultipartReader = MinimalApiBuilder.Multipart.MultipartReader;
 
 namespace Steganography.Features.Codec;
 

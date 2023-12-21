@@ -1,14 +1,12 @@
-using AspNetShared;
-using AspNetShared.Middleware.DevelopmentProxy;
-using AspNetShared.Middleware.StaticCompressedFile;
 using Domain;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Options;
-using MinimalApiBuilder;
+using MinimalApiBuilder.Generator;
+using MinimalApiBuilder.Middleware;
 using Steganography.Features.Codec;
-using static MinimalApiBuilder.ConfigureEndpoints;
+using static MinimalApiBuilder.Generator.ConfigureEndpoints;
 #if NOT_RUNNING_IN_CONTAINER
-using Microsoft.OpenApi.Models;
+using Steganography.Common;
 using Swashbuckle.AspNetCore.SwaggerGen;
 #endif
 
@@ -19,9 +17,6 @@ builder.Logging.AddConsole();
 
 builder.Configuration.Sources.Clear();
 builder.Configuration.AddJsonFile(Path.Join("Properties", "appSettings.json"), false, false);
-
-builder.ConfigureKestrel();
-builder.AddHttpHeadersOptions();
 
 builder.Services.AddMinimalApiBuilderEndpoints();
 builder.Services.AddDomain();
@@ -48,22 +43,27 @@ builder.Services.AddHsts(static hstsOptions =>
 });
 #endif
 
-StaticCompressedFileOptions staticFileOptions = new()
+CompressedStaticFileOptions staticFileOptions = new()
 {
-    OnPrepareResponse = StaticCompressedFileOptions.DefaultOnPrepareResponse
+    OnPrepareResponse = static context =>
+    {
+        IHeaderDictionary headers = context.Context.Response.Headers;
+
+        headers.XContentTypeOptions = Headers.NoSniff;
+
+        if (context.Filename.EndsWith(".html", StringComparison.Ordinal))
+        {
+            headers.CacheControl = Headers.CacheControlHtml;
+            headers.XXSSProtection = Headers.XXSSProtection;
+            return;
+        }
+
+        headers.CacheControl = Headers.CacheControl;
+    },
+    ContentTypeProvider = ContentTypeProvider.Instance
 };
 
-#if RUNNING_IN_CONTAINER
-StaticCompressedFileOptions indexStaticFileOptions = new()
-{
-    OnPrepareResponse = StaticCompressedFileOptions.IndexOnPrepareResponse
-};
-#endif
-
-#if NOT_RUNNING_IN_CONTAINER
-builder.Services.AddDevelopmentProxyMiddleware();
-#endif
-builder.Services.AddStaticCompressedFileMiddleware(staticFileOptions);
+builder.Services.AddCompressedStaticFileMiddleware(staticFileOptions);
 
 WebApplication app = builder.Build();
 
@@ -81,13 +81,12 @@ rewriteOptions.AddRedirectToNonWww();
 
 app.UseRewriter(rewriteOptions);
 
+app.UseCompressedStaticFiles();
+
 if (app.Environment.IsProduction())
 {
     app.UseExceptionHandler();
 }
-
-app.UseStaticCompressedFiles();
-app.UseStaticFiles(staticFileOptions);
 
 app.UseStatusCodePages();
 
@@ -109,40 +108,11 @@ Configure(
 RouteGroupBuilder v2 = api.MapGroup("/v2");
 v2.MapGet("/env", static (IWebHostEnvironment env) => $"The current environment is: {env.EnvironmentName}");
 
+app.MapFallbackToIndexHtml();
+
 #if NOT_RUNNING_IN_CONTAINER
 app.UseSwagger();
 app.UseSwaggerUI();
 #endif
 
-#if RUNNING_IN_CONTAINER
-app.MapFallbackToFile("index.html", indexStaticFileOptions);
-#endif
-
-#if NOT_RUNNING_IN_CONTAINER
-app.UseDevelopmentProxy(new Uri("http://localhost:5173"));
-#endif
-
 app.Run();
-
-#if NOT_RUNNING_IN_CONTAINER
-internal sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
-{
-    public void Configure(SwaggerGenOptions options)
-    {
-        options.SwaggerDoc("v1", CreateInfoForApiVersion("v1"));
-        options.SwaggerDoc("v2", CreateInfoForApiVersion("v2"));
-    }
-
-    private static OpenApiInfo CreateInfoForApiVersion(string version)
-    {
-        OpenApiInfo info = new()
-        {
-            Title = "Steganography API",
-            Version = version,
-            Description = "An image steganography API used to embed encrypted information in cover images."
-        };
-
-        return info;
-    }
-}
-#endif

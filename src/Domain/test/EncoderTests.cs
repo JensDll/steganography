@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO.Pipelines;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.IO.Pipelines;
 using NUnit.Framework;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
