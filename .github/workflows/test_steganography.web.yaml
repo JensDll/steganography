@@ -33,7 +33,7 @@ jobs:
           version: 8.x.x
 
       - name: Using node version 20
-        uses: actions/setup-node@v4.0.0
+        uses: actions/setup-node@v4.0.1
         with:
           node-version: 20
           cache: "pnpm"
