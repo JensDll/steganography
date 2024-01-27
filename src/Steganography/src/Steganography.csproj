@@ -17,16 +17,20 @@
 
   <ItemGroup Condition="'$(DOTNET_RUNNING_IN_CONTAINER)' != 'true'">
     <ProjectReference Include="..\..\Domain\src\Domain.csproj"/>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1"/>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MinimalApiBuilder" Version="5.0.0-beta.6"/>
+    <PackageReference Include="MinimalApiBuilder" Version="5.0.0-beta.10"/>
   </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="Steganography.Test"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\"/>
   </ItemGroup>
 
 </Project>

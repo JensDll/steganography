@@ -3,36 +3,32 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace Steganography.Common;
 
-public class ContentTypeProvider : IContentTypeProvider
+public class LinearSearchContentTypeProvider : IContentTypeProvider
 {
     private static readonly string[] s_values =
     [
         "html",
         "text/html",
         "js",
-        "application/javascript",
+        "text/javascript",
         "css",
         "text/css",
         "json",
         "application/json",
         "svg",
-        "image/svg+xml"
+        "image/svg+xml",
+        "woff2",
+        "font/woff2",
+        "ico",
+        "image/x-icon"
     ];
 
-    public static ContentTypeProvider Instance { get; } = new();
+    public static readonly LinearSearchContentTypeProvider Instance = new();
 
     public bool TryGetContentType(string subpath, [MaybeNullWhen(false)] out string contentType)
     {
-        contentType = null;
-
         ReadOnlySpan<char> path = subpath.AsSpan();
         int index = path.LastIndexOf('.') + 1;
-
-        if (index == 0)
-        {
-            return false;
-        }
-
         ReadOnlySpan<char> extension = path[index..];
 
         for (int i = 0; i < s_values.Length; i += 2)
@@ -44,6 +40,7 @@ public class ContentTypeProvider : IContentTypeProvider
             }
         }
 
+        contentType = null;
         return false;
     }
 }

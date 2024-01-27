@@ -1,19 +1,13 @@
-<script setup></script>
+<script setup lang="ts"></script>
 
 <template>
-  <nav class="fixed bottom-0 grid grid-flow-col bg-slate-50 container">
-    <NuxtLink to="/encode" class="link">
-      <div class="i-heroicons-lock-closed"></div>
-    </NuxtLink>
-    <NuxtLink to="/decode" class="link">
-      <div class="i-heroicons-lock-open"></div>
-    </NuxtLink>
+  <nav
+    class="fixed bottom-0 grid grid-flow-col py-4 container md:static md:block md:space-x-4 md:pt-10"
+  >
+    <NuxtLink to="/encode" class="text-center">Encode</NuxtLink>
+    <NuxtLink to="/decode" class="text-center">Decode</NuxtLink>
   </nav>
   <NuxtPage />
 </template>
 
-<style scoped>
-.link {
-  @apply flex items-center justify-center py-3  underline;
-}
-</style>
+<style scoped></style>

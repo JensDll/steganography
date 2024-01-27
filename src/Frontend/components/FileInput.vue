@@ -49,24 +49,22 @@ const filename = computed(() => {
 
 <template>
   <section
-    class="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-4 md:space-y-0"
+    class="flex flex-col space-y-3 md:flex-row md:items-center md:space-x-4 md:space-y-0"
   >
     <div
       class="file-input relative flex flex-col items-center justify-center border-2 border-dashed px-8 py-4 md:py-6"
     >
       <input :id="id" type="file" v-on="listeners" />
       <span>
-        <slot>
-          Choose
-          <span class="hidden md:inline-block">or drag and drop</span>
-          here
-        </slot>
+        <slot></slot>
       </span>
     </div>
     <div v-if="files.length" class="text-right">
       {{ filename.join('&hellip;') }}
     </div>
-    <div v-else class="text-right">No file selected</div>
+    <div v-else class="text-right">
+      <slot name="file-placeholder"></slot>
+    </div>
   </section>
 </template>
 

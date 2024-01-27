@@ -42,7 +42,7 @@ const listeners = {
     class="file-input relative flex flex-col items-center justify-center border-2 border-dashed"
   >
     <input :id="id" type="file" multiple v-on="listeners" />
-    <slot>Choose files or drag and drop here</slot>
+    <slot></slot>
   </div>
 </template>
 

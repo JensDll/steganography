@@ -6,6 +6,9 @@ export default defineNuxtConfig({
       tailwindcss: {},
     },
   },
+  routeRules: {
+    '/': { redirect: '/encode' },
+  },
   nitro: {
     compressPublicAssets: true,
   },

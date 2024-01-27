@@ -26,5 +26,4 @@ internal sealed class TestSetup
 }
 
 internal sealed class TestWebApplicationFactory<TProgram>
-    : WebApplicationFactory<TProgram> where TProgram : class
-{ }
+    : WebApplicationFactory<TProgram> where TProgram : class;

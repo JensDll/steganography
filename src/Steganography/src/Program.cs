@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Options;
 using MinimalApiBuilder.Generator;
 using MinimalApiBuilder.Middleware;
+using Steganography.Common;
 using Steganography.Features.Codec;
 using static MinimalApiBuilder.Generator.ConfigureEndpoints;
 #if NOT_RUNNING_IN_CONTAINER
-using Steganography.Common;
 using Swashbuckle.AspNetCore.SwaggerGen;
 #endif
 
@@ -50,17 +50,15 @@ CompressedStaticFileOptions staticFileOptions = new()
         IHeaderDictionary headers = context.Context.Response.Headers;
 
         headers.XContentTypeOptions = Headers.NoSniff;
+        headers.CacheControl = Headers.CacheControl;
 
         if (context.Filename.EndsWith(".html", StringComparison.Ordinal))
         {
             headers.CacheControl = Headers.CacheControlHtml;
             headers.XXSSProtection = Headers.XXSSProtection;
-            return;
         }
-
-        headers.CacheControl = Headers.CacheControl;
     },
-    ContentTypeProvider = ContentTypeProvider.Instance
+    ContentTypeProvider = LinearSearchContentTypeProvider.Instance
 };
 
 builder.Services.AddCompressedStaticFileMiddleware(staticFileOptions);

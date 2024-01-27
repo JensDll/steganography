@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import colors from 'tailwindcss/colors'
 import { Icons } from 'tailwindcss-plugin-icons'
 
 import { Common } from './tailwind.common'
@@ -17,6 +18,20 @@ export default {
     ],
   },
   theme: {
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      black: colors.black,
+      white: colors.white,
+      gray: colors.slate,
+      red: colors.red,
+      indigo: colors.indigo,
+      blue: colors.blue,
+      green: colors.emerald,
+    },
+    fontFamily: {
+      sans: ['Neon var'],
+    },
     extend: {
       maxWidth: {
         container: 'var(--max-w-container)',

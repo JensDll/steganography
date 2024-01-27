@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { type Field, useValidation } from 'validierung'
-import { ref, computed } from 'vue'
-
-import FileInput from '~/components/FileInput.vue'
 
 type FormData = {
   textData: Field<string>
@@ -49,11 +46,11 @@ async function handleSubmit() {
         <section>
           <div class="mb-4">
             <label for="message" class="mb-0">Secret message</label>
-            <fieldset class="mb-2 flex">
+            <fieldset class="mb-2 mt-1 flex">
               <label class="mb-0 flex items-center font-normal">
                 <input
                   v-model="messageMode"
-                  class="mr-2 cursor-pointer"
+                  class="mr-1 cursor-pointer"
                   type="radio"
                   name="messageType"
                   value="text"
@@ -63,7 +60,7 @@ async function handleSubmit() {
               <label class="mb-0 ml-4 flex items-center font-normal">
                 <input
                   v-model="messageMode"
-                  class="mr-2 cursor-pointer"
+                  class="mr-1 cursor-pointer"
                   type="radio"
                   name="messageType"
                   value="binary"
@@ -85,13 +82,10 @@ async function handleSubmit() {
               v-model="form.binaryData.$value"
               class="max-h-[24rem] min-h-[8rem]"
             >
-              <p class="not-prose">
-                Choose files
+              <p>
+                <span class="font-semibold text-green-600">Choose files </span>
                 <span class="hidden md:inline-block">or drag and drop</span>
                 here
-              </p>
-              <p class="not-prose text-sm">
-                Must not be much larger than the cover image
               </p>
             </FileInputMultiple>
           </div>
@@ -102,13 +96,21 @@ async function handleSubmit() {
               v-model="form.coverImage.$value"
               accept="image/*"
             >
+              <span class="font-semibold text-green-600">Choose </span>
+              <span class="hidden md:inline-block">or drag and drop</span> here
+              <template #file-placeholder>No image chosen</template>
             </FileInput>
           </div>
         </section>
-        <section class="float-right mt-20">
+        <section class="float-right mt-16 space-x-4">
+          <button
+            class="rounded border bg-gray-100 px-3 py-2 font-medium hover:bg-gray-50"
+          >
+            Cancel
+          </button>
           <button
             type="submit"
-            class="bg-indigo-600 px-4 py-1 font-medium text-white hover:bg-indigo-500"
+            class="rounded bg-green-600 px-3 py-2 font-semibold text-white hover:bg-green-500"
           >
             Encode
           </button>

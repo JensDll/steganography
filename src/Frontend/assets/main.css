@@ -1,13 +1,72 @@
-@import url('form.css');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+a.router-link-exact-active {
+  @apply text-green-600;
+}
+
 @layer base {
+  @font-face {
+    font-family: Neon var;
+    font-weight: 100 800;
+    font-display: block;
+    font-style: normal;
+    src: url(~/assets/fonts/monaspace-neon-var.woff2) format('woff2');
+  }
+
+  @font-face {
+    font-family: Neon var;
+    font-weight: 100 800;
+    font-display: block;
+    font-style: italic;
+    src: url(~/assets/fonts/monaspace-neon-var.woff2) format('woff2');
+  }
+
   html {
     --max-w-container: theme('maxWidth.4xl');
     --spacing-container: theme('spacing.3');
+  }
+
+  label {
+    @apply mb-1 block cursor-pointer font-medium;
+  }
+
+  a {
+    @apply underline;
+  }
+
+  [type='file'] {
+    @apply absolute inset-0 z-10 h-full w-full cursor-pointer appearance-none text-0 opacity-0;
+  }
+
+  [type='file']::-webkit-file-upload-button {
+    @apply cursor-pointer;
+  }
+
+  .file-input {
+    @apply border;
+  }
+
+  [type='radio'],
+  [type='checkbox'] {
+    @apply text-green-600;
+  }
+
+  [type='radio']:focus,
+  [type='radio']:focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-green-600;
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-green-600;
+  }
+
+  [type='text']:focus,
+  textarea:focus,
+  .file-input:focus-within {
+    @apply border-green-600 outline outline-2 outline-green-100;
   }
 
   @screen sm {

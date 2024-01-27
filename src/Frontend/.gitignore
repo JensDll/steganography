@@ -11,6 +11,7 @@ node_modules/
 dist/
 .vscode/
 
+dist
 logs
 *.log
 .env
