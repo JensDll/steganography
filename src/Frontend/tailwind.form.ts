@@ -22,7 +22,7 @@ const checkboxIndeterminate = "[type='checkbox']:indeterminate"
 const radio = "[type='radio']"
 const radioChecked = "[type='radio']:checked"
 
-export const Form = plugin.withOptions<null>(() => ({ addBase, theme }) => {
+export const Form = plugin.withOptions<null>(() => ({ addBase }) => {
   addBase({
     [[text, textaera].toString()]: {
       display: 'block',

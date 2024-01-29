@@ -1,6 +1,8 @@
-import type { ComputedRef, Ref } from 'vue'
+export interface Lengthy {
+  length: number
+}
 
-import type { AnyFunction, Lengthy } from './types'
+export type AnyFunction = (...args: any[]) => any
 
 export const required = (msg: string) => (value: unknown) => !value && msg
 

@@ -18,6 +18,8 @@ builder.Logging.AddConsole();
 builder.Configuration.Sources.Clear();
 builder.Configuration.AddJsonFile(Path.Join("Properties", "appSettings.json"), false, false);
 
+builder.WebHost.ConfigureKestrel();
+
 builder.Services.AddMinimalApiBuilderEndpoints();
 builder.Services.AddDomain();
 builder.Services.AddHealthChecks();
@@ -27,6 +29,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.AddDevelopmentProxyMiddleware();
 #endif
 
 builder.Services.Configure<RouteHandlerOptions>(static options =>
@@ -50,13 +53,15 @@ CompressedStaticFileOptions staticFileOptions = new()
         IHeaderDictionary headers = context.Context.Response.Headers;
 
         headers.XContentTypeOptions = Headers.NoSniff;
-        headers.CacheControl = Headers.CacheControl;
 
         if (context.Filename.EndsWith(".html", StringComparison.Ordinal))
         {
             headers.CacheControl = Headers.CacheControlHtml;
             headers.XXSSProtection = Headers.XXSSProtection;
+            return;
         }
+
+        headers.CacheControl = Headers.CacheControl;
     },
     ContentTypeProvider = LinearSearchContentTypeProvider.Instance
 };
@@ -106,11 +111,14 @@ Configure(
 RouteGroupBuilder v2 = api.MapGroup("/v2");
 v2.MapGet("/env", static (IWebHostEnvironment env) => $"The current environment is: {env.EnvironmentName}");
 
+#if RUNNING_IN_CONTAINER
 app.MapFallbackToIndexHtml();
+#endif
 
 #if NOT_RUNNING_IN_CONTAINER
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseDevelopmentProxy("http://localhost:3000");
 #endif
 
 app.Run();

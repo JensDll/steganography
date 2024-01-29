@@ -1,6 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
+  <Title>Steganography</Title>
   <nav
     class="fixed bottom-0 grid grid-flow-col py-4 container md:static md:block md:space-x-4 md:pt-10"
   >

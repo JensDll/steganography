@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@iconify-json/heroicons": "1.1.19",
+    "@iconify-json/svg-spinners": "1.1.2",
     "@nuxt/devtools": "latest",
     "@tailwindcss/typography": "0.5.10",
     "nuxt": "3.9.3",
@@ -17,7 +18,7 @@
     "prettier": "3.2.4",
     "prettier-plugin-tailwindcss": "0.5.11",
     "tailwindcss": "3.4.1",
-    "tailwindcss-plugin-icons": "2.2.1",
+    "tailwindcss-plugin-icons": "2.2.2",
     "validierung": "1.0.4",
     "vue": "3.4.15",
     "vue-router": "4.2.5"

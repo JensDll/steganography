@@ -1,6 +1,7 @@
 root = true
 
 [*]
+charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
@@ -70,7 +71,7 @@ dotnet_style_object_initializer = true
 dotnet_diagnostic.IDE0018.severity = warning
 csharp_style_inlined_variable_declaration = true
 
-dotnet_diagnostic.IDE0028.severity = warning
+dotnet_diagnostic.IDE0028.severity = suggestion
 dotnet_style_collection_initializer = true
 
 dotnet_diagnostic.IDE0032.severity = warning
@@ -147,7 +148,7 @@ csharp_prefer_braces = true
 dotnet_diagnostic.IDE0065.severity = warning
 csharp_using_directive_placement = outside_namespace
 
-# Primary constructor preferences
+# Avoid primary constructors
 dotnet_diagnostic.IDE0290.severity = warning
 csharp_style_prefer_primary_constructors = false
 ######## LANGUAGE RULES ########
@@ -156,6 +157,7 @@ csharp_style_prefer_primary_constructors = false
 dotnet_diagnostic.IDE0001.severity = warning
 dotnet_diagnostic.IDE0002.severity = warning
 dotnet_diagnostic.IDE0004.severity = warning
+# dotnet_diagnostic.IDE0005.severity = warning
 dotnet_diagnostic.IDE0035.severity = warning
 dotnet_diagnostic.IDE0051.severity = warning
 dotnet_diagnostic.IDE0052.severity = warning
@@ -197,7 +199,7 @@ csharp_indent_switch_labels = true
 csharp_indent_labels = one_less_than_current
 csharp_indent_block_contents = true
 csharp_indent_braces = false
-csharp_indent_case_contents_when_block = true
+csharp_indent_case_contents_when_block = false
 
 csharp_space_after_cast = false
 csharp_space_after_colon_in_inheritance_clause = true
@@ -225,9 +227,6 @@ csharp_space_between_square_brackets = false
 
 ######## NAMING RULES ########
 dotnet_diagnostic.IDE1006.severity = warning
-
-# https://learn.microsoft.com/en-gb/dotnet/fundamentals/code-analysis/quality-rules/ca1707
-dotnet_diagnostic.CA1707.severity = none
 
 # All constants are PascalCase
 dotnet_naming_symbols.constants.applicable_kinds = field
@@ -328,19 +327,42 @@ dotnet_naming_rule.private_fields.severity = warning
 ######## NAMING RULES ########
 
 ######## RESHARPER ########
-resharper_place_simple_anonymousmethod_on_single_line = false
-resharper_inconsistent_naming_highlighting = none
-resharper_csharp_outdent_statement_labels = true
-resharper_csharp_keep_existing_attribute_arrangement = true
-resharper_csharp_max_attribute_length_for_same_line = 9999
-resharper_csharp_empty_block_style = together
-resharper_introduce_optional_parameters_global_highlighting = hint
-resharper_csharp_for_built_in_types = use_explicit_type
-resharper_csharp_for_simple_types = use_explicit_type
-resharper_csharp_for_other_types = use_explicit_type
-resharper_xmldoc_indent_text = zero_indent
-resharper_xmldoc_wrap_tags_and_pi = false
+# C# Syntax Style
+# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_CSharpCodeStylePageImplSchema.html
+csharp_for_built_in_types = use_explicit_type
+csharp_for_simple_types = use_explicit_type
+csharp_for_other_types = use_explicit_type
+
+# C# Braces Layout
+# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_BracesPageSchema.html
+csharp_empty_block_style = together_same_line
+
+# C# Line Breaks
+# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_LineBreaksPageSchema.html
+csharp_place_simple_anonymousmethod_on_single_line = false
+
+# C# Tabs, Indents, Alignment
+# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_CSharpIndentStylePageSchema.html
+csharp_outdent_statement_labels = true
+csharp_indent_raw_literal_string = do_not_change
+csharp_align_multiline_binary_expressions_chain = true
+
+# C# Blank Lines
+# https://www.jetbrains.com/help/resharper/EditorConfig_CSHARP_BlankLinesPageScheme.html
+csharp_blank_lines_around_field = 0
+
+# C# Code Inspections
+# https://www.jetbrains.com/help/resharper/Reference__Code_Inspections_CSHARP.html
+resharper_inconsistent_naming_highlighting = suggestion
 resharper_convert_to_primary_constructor_highlighting = none
+resharper_for_can_be_converted_to_foreach_highlighting = none
+resharper_null_coalescing_condition_is_always_not_null_according_to_api_contract_highlighting = suggestion
+
+# XMLDOC Formatting Style
+# https://www.jetbrains.com/help/resharper/EditorConfig_XMLDOC_XmlDocCodeStylePageSchema.html
+xmldoc_indent_text = zero_indent
+xmldoc_wrap_tags_and_pi = false
+xmldoc_wrap_lines = false
 ######## RESHARPER ########
 
 ######## MINIMAL API BUILDER ########

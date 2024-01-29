@@ -6,13 +6,16 @@ export default defineNuxtConfig({
       tailwindcss: {},
     },
   },
+  imports: {
+    dirs: ['api'],
+  },
   routeRules: {
     '/': { redirect: '/encode' },
   },
   nitro: {
     compressPublicAssets: true,
   },
-  experimental: {
-    inlineSSRStyles: false,
+  features: {
+    inlineStyles: false,
   },
 })

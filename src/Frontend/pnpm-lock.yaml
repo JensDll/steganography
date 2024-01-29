@@ -8,6 +8,9 @@ dependencies:
   '@iconify-json/heroicons':
     specifier: 1.1.19
     version: 1.1.19
+  '@iconify-json/svg-spinners':
+    specifier: 1.1.2
+    version: 1.1.2
   '@nuxt/devtools':
     specifier: latest
     version: 1.0.8(nuxt@3.9.3)(vite@5.0.12)
@@ -30,8 +33,8 @@ dependencies:
     specifier: 3.4.1
     version: 3.4.1
   tailwindcss-plugin-icons:
-    specifier: 2.2.1
-    version: 2.2.1(tailwindcss@3.4.1)
+    specifier: 2.2.2
+    version: 2.2.2(tailwindcss@3.4.1)
   validierung:
     specifier: 1.0.4
     version: 1.0.4(vue@3.4.15)
@@ -614,6 +617,12 @@ packages:
 
   /@iconify-json/heroicons@1.1.19:
     resolution: {integrity: sha512-uW2F9vdGll59W21ocBl+wR4Ve+/1CsmzBqPTuOaR3CbKzqnJKwzGASvC4Op0uTieFVWfBaevnzcRxwNo73J29g==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: false
+
+  /@iconify-json/svg-spinners@1.1.2:
+    resolution: {integrity: sha512-Aab6SqkORaTJ1W+ooufn6C8BsBitrn3uk8iRQLPA6pjhyvQAhkKCGMctyXIL5ZjrycnoFVsZ4mx7KnwEMra8qg==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: false
@@ -1545,11 +1554,11 @@ packages:
   /@types/http-proxy@1.17.14:
     resolution: {integrity: sha512-SSrD0c1OQzlFX7pGu1eXxSEjemej64aaNPRhhVYUGqXh0BtldAAx37MG8btcumvpgKyZp1F5Gn3JkktdxiFv6w==}
     dependencies:
-      '@types/node': 20.11.7
+      '@types/node': 20.11.9
     dev: false
 
-  /@types/node@20.11.7:
-    resolution: {integrity: sha512-GPmeN1C3XAyV5uybAf4cMLWT9fDWcmQhZVtMFu7OR32WjrqGG+Wnk2V1d0bmtUyE/Zy1QJ9BxyiTih9z8Oks8A==}
+  /@types/node@20.11.9:
+    resolution: {integrity: sha512-CQXNuMoS/VcoAMISe5pm4JnEd1Br5jildbQEToEMQvutmv+EaQr90ry9raiudgpyDuqFiV9e4rnjSfLNq12M5w==}
     dependencies:
       undici-types: 5.26.5
     dev: false
@@ -1970,7 +1979,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.22.3
-      caniuse-lite: 1.0.30001580
+      caniuse-lite: 1.0.30001581
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -2030,7 +2039,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001580
+      caniuse-lite: 1.0.30001581
       electron-to-chromium: 1.4.648
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.22.3)
@@ -2115,13 +2124,13 @@ packages:
     resolution: {integrity: sha512-bsTwuIg/BZZK/vreVTYYbSWoe2F+71P7K5QGEX+pT250DZbfU1MQ5prOKpPR+LL6uWKK3KMwMCAS74QB3Um1uw==}
     dependencies:
       browserslist: 4.22.3
-      caniuse-lite: 1.0.30001580
+      caniuse-lite: 1.0.30001581
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
     dev: false
 
-  /caniuse-lite@1.0.30001580:
-    resolution: {integrity: sha512-mtj5ur2FFPZcCEpXFy8ADXbDACuNFXg6mxVDqp7tqooX6l3zwm+d8EPoeOSIFRDvHs8qu7/SLFOGniULkcH2iA==}
+  /caniuse-lite@1.0.30001581:
+    resolution: {integrity: sha512-whlTkwhqV2tUmP3oYhtNfaWGYHDdS3JYFQBKXxcUR9qqPWsRhFHhoISO2Xnl/g0xyKzht9mI1LZpiNWfMzHixQ==}
     dev: false
 
   /chalk@2.4.2:
@@ -5426,8 +5435,8 @@ packages:
     engines: {node: '>=18'}
     dev: false
 
-  /tailwindcss-plugin-icons@2.2.1(tailwindcss@3.4.1):
-    resolution: {integrity: sha512-YpdVIKWql/c+I13AdnEbLgC8hK6xY9RZcRdNq84cAa4ohywKlz0+F3o7IPbmOrQ43k1koM1FYm6kzQfqJkMPAQ==}
+  /tailwindcss-plugin-icons@2.2.2(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-PSqlQgHIrhCgijAJaFSkKkPdf6UY1omEVUKUu+aFGPeWHiQ/8xVn50dprAUl7Tg9+nsyU9pumM2mbQYgbYlmKQ==}
     peerDependencies:
       tailwindcss: 3.x
     dependencies:

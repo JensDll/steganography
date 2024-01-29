@@ -28,18 +28,29 @@ const { form, validateFields, errors } = useValidation<FormData>({
   },
 })
 
+const pending = computed(
+  () => encodeText.pending.value || encodeBinary.pending.value,
+)
+
+const abort = () => {
+  encodeText.abort()
+  encodeBinary.abort()
+}
+
 async function handleSubmit() {
   try {
     const formData = await validateFields()
-    console.log(formData)
-  } catch (error) {
-    console.log(errors.value)
-  }
+    if (messageMode.value === 'text') {
+      await encodeText(formData.coverImage[0], formData.textData)
+    } else {
+      await encodeBinary(formData.coverImage[0], formData.binaryData)
+    }
+  } catch (error) {}
 }
 </script>
 
 <template>
-  <section class="pb-12 pt-8">
+  <section class="pb-24 pt-8">
     <h1 class="mb-6 text-3xl font-bold container">Encode</h1>
     <form @submit.prevent="handleSubmit">
       <div class="container">
@@ -73,38 +84,45 @@ async function handleSubmit() {
               id="message"
               v-model="form.textData.$value"
               placeholder="Your data will be hidden and encrypted. Nothing gets logged or saved anywhere"
-              class="max-h-[24rem] min-h-[8rem] w-full"
+              class="max-h-96 min-h-32 w-full"
               :class="{ 'form-error': form.textData.$hasError }"
             ></textarea>
-            <FileInputMultiple
+            <AppFileInputMultiple
               v-else
               id="message"
               v-model="form.binaryData.$value"
-              class="max-h-[24rem] min-h-[8rem]"
+              class="min-h-32"
             >
               <p>
                 <span class="font-semibold text-green-600">Choose files </span>
                 <span class="hidden md:inline-block">or drag and drop</span>
                 here
               </p>
-            </FileInputMultiple>
+            </AppFileInputMultiple>
           </div>
           <div>
             <label for="cover-image">Cover image</label>
-            <FileInput
+            <AppFileInput
               id="cover-image"
-              v-model="form.coverImage.$value"
               accept="image/*"
+              v-model="form.coverImage.$value"
             >
               <span class="font-semibold text-green-600">Choose </span>
               <span class="hidden md:inline-block">or drag and drop</span> here
-              <template #file-placeholder>No image chosen</template>
-            </FileInput>
+            </AppFileInput>
           </div>
         </section>
-        <section class="float-right mt-16 space-x-4">
+        <section class="mt-12 flex items-center justify-end space-x-4">
+          <div class="flex items-center space-x-4 pr-4" v-if="pending">
+            <span class="text-sm">please wait</span>
+            <div
+              class="i-svg-spinners-bars-rotate-fade ml-2 text-green-600"
+            ></div>
+          </div>
           <button
+            type="button"
             class="rounded border bg-gray-100 px-3 py-2 font-medium hover:bg-gray-50"
+            @click="abort"
           >
             Cancel
           </button>
@@ -117,7 +135,10 @@ async function handleSubmit() {
         </section>
       </div>
     </form>
+    <section class="mt-6 container">
+      <ul>
+        <li v-for="error in errors" :key="error">{{ error }}</li>
+      </ul>
+    </section>
   </section>
 </template>
-
-<style scoped></style>
